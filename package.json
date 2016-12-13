@@ -1,0 +1,30 @@
+{
+  "name": "bookings",
+  "version": "1.0.0",
+  "description": "WCF Booking system",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1"
+  },
+  "dependencies": {
+    "acl": "^0.4.9",
+    "cookie-session": "^2.0.0-alpha.2",
+    "express-session": "^1.14.2",
+    "react-router": "^3.0.0",
+    "redux-thunk": "^2.1.0",
+    "sequelize": "^3.27.0",
+    "sqlite": "^2.2.3"
+  }
+}
