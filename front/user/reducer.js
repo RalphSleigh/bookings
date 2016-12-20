@@ -1,7 +1,8 @@
 import Immutable from 'immutable'
 import * as a from './actions.js'
 
-const initalUserState = Immutable.fromJS({id:0, name:"Guest"});
+//const initalUserState = Immutable.fromJS({id:0, name:"Guest", roles:[]});
+const initalUserState = null;
 
 export default function User(state = initalUserState, action) {
 	

@@ -7,7 +7,7 @@ export default class EditForm extends React.Component {
 	constructor(props) {
       super(props);
 
-      this.state = this.props.Event.toJS();
+      this.state = this.props.event;
 	  this.state.delete = false;
 
 	  this.updateName = this.updateName.bind(this);
@@ -18,6 +18,7 @@ export default class EditForm extends React.Component {
 
 	  this.clickRevert = this.clickRevert.bind(this);
 	  this.clickDeleteLock = this.clickDeleteLock.bind(this);
+	  this.clickDelete = this.clickDelete.bind(this);
 	  this.clickSave = this.clickSave.bind(this);
     }
 
@@ -42,12 +43,17 @@ export default class EditForm extends React.Component {
 	}
 
 	clickRevert(e) {
-		this.setState(this.props.Event.toJS());
+		this.setState(this.props.event);
 		e.preventDefault();
 	}
 
 	clickDeleteLock(e) {
 		this.setState({delete:!this.state.delete});
+		e.preventDefault();
+	}
+
+	clickDelete(e) {
+		this.props.deleteEvent({id:this.props.event.id});
 		e.preventDefault();
 	}
 
@@ -67,6 +73,9 @@ export default class EditForm extends React.Component {
 	}
 
 	render() {	
+
+		let deleteButtons = this.props.new ? null : [<button key="deletelock" type="submit" disabled={!this.state.delete} onClick={this.clickDelete} className="btn btn-danger pull-right">Delete</button>,
+								 <button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
 
 		return(<div className="col-sm-12">
 				<form className="form-horizontal">
@@ -112,8 +121,7 @@ export default class EditForm extends React.Component {
      						 	<button type="submit" className="btn btn-success" onClick={this.clickSave}>Save</button>
 							 	<button type="submit" className="btn btn-warning" onClick={this.clickRevert}>Revert</button>
 								
-							 	<button type="submit" disabled={!this.state.delete} className="btn btn-danger pull-right">Delete</button>
-								 <button type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>
+								 {deleteButtons}
 							</div>
     					</div>
   					</div>

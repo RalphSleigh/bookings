@@ -11,4 +11,10 @@ permission.editEvent = (req, res, next) => {
 
 }
 
+permission.createEvent = (req, res, next) => {
+	if(P.createEvent(req.session.user))next();
+	else res.status(401).end();
+
+}
+
 module.exports = permission;

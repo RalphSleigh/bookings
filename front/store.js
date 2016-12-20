@@ -6,6 +6,7 @@ import { combineReducers } from 'redux-immutable';
 import user from './user'
 import messages from './messages'
 import events from './events'
+import bookings from './bookings'
 
 
 
@@ -28,6 +29,7 @@ function bookingsApp(state, action) {
 const rootReducer = combineReducers({
 	User:user.reducer, 
 	Messages:messages.reducer, 
-	Events:events.reducer});
+	Events:events.reducer,
+	Bookings:bookings.reducer});
 
 export default createStore(rootReducer, Immutable.Map(), applyMiddleware(thunk));

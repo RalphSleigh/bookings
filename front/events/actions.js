@@ -39,7 +39,7 @@ export const getEvent = (id) => {
 	}
 }
 
-export const saveEvent = (event) => {
+export const saveEvent = event => {
 	return (dispatch) => {
 		fetch('/api/event/edit',"POST",event)
 		.then(j => {
@@ -49,4 +49,30 @@ export const saveEvent = (event) => {
 		}).catch(r => console.log(r));
 	}
 
+}
+
+export const createEvent = event => {
+	return dispatch => {
+		fetch('/api/event/create',"POST", event)
+		.then(j => {
+			dispatch({
+				type:GET_EVENTS,
+				data:j
+			});
+			dispatch(m.actions.setSuccess("Event Created"));
+			browserHistory.push('/');
+		}).catch(r => {
+			console.log(r);
+		});
+	}
+}
+
+export const deleteEvent = event => {
+	return dispatch => {
+		fetch('/api/event/delete',"POST", event)
+		.then(() => {
+			dispatch(m.actions.setSuccess("Event Deleted"));
+			browserHistory.push('/');
+		})
+	}
 }

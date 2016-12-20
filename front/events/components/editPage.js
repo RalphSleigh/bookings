@@ -3,23 +3,25 @@ import { connect } from 'react-redux'
 import { Link  } from 'react-router'
 import EventForm from './eventForm.js'
 
-import { getEvent, saveEvent } from '../actions.js'
+import { getEvent, saveEvent, deleteEvent } from '../actions.js'
 import { editEventCheck } from '../permission.js'
 
 class EditPage extends React.Component {
 	
 	render() {
-		if(this.props.Event === undefined)return null; 
+		if(this.props.Event === undefined)return null;
+
+		let event = this.props.Event.toJS();
 		//const data = this.props.user.toObject();
 		return(
 			<div>
 				<div className="row">
 					<div className="col-sm-12">
-						<h3>Edit Event - {this.props.Event.get("Name")}</h3>
+						<h3>Edit Event - {event.Name}</h3>
 					</div>
 				</div>
 				<div className="row">
-					<EventForm {...this.props} />
+					<EventForm event={event} saveEvent={this.props.saveEvent} deleteEvent={this.props.deleteEvent} />
 				</div>
 			</div>
 		)
@@ -35,7 +37,7 @@ const mapStateToProps = (state, props) => {
  	return {Event}
 }
 
-const mapDispatchToProps = {getEvent, saveEvent};
+const mapDispatchToProps = {getEvent, saveEvent, deleteEvent};
 
 var VisibleEditPage = connect(
   mapStateToProps,

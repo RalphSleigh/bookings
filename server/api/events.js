@@ -29,5 +29,21 @@ event.editEvent = (req, res) => {
 	})
 }
 
+event.createEvent = (req, res) => {
+	Event.create(req.body)
+	.then(() => Event.findAll())
+	.then(events => {
+			let data = {};
+			events.map(e => data[e.id] = e);
+			res.json(data);
+		});
+}
+
+event.deleteEvent = (req, res) => {
+	Event.findOne({where:{id:req.body.id}})
+	.then(event => event.destroy())
+	.then(() => res.json({}));
+}
+
 module.exports = event;
 

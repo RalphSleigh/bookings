@@ -15,6 +15,19 @@ export const editEventCheck = UserAuthWrapper({
 	wrapperDisplayName: "Edit Event Check"
 });
 
+export const createEventCheck = UserAuthWrapper({
+	authSelector: (state, props) => {
+
+		return state.get("User")
+	},
+	predicate: (data) => {
+
+		return P.createEvent(data.toJS());
+	},
+	failureRedirectPath:"/user",
+	wrapperDisplayName: "Create Event Check"
+});
+
 export const showEditLink = UserAuthWrapper({
 	authSelector: (state, props) => {
 
@@ -22,6 +35,17 @@ export const showEditLink = UserAuthWrapper({
 	},
 	predicate: (data) => {
 		return P.editEvent(data.user.toJS(), data.event);
+	},
+	FailureComponent: null,
+	wrapperDisplayName: "showEventLink"
+});
+
+export const showCreateLink = UserAuthWrapper({
+	authSelector: (state) => {
+		return state.get("User")
+	},
+	predicate: (data) => {
+		return P.createEvent(data.toJS());
 	},
 	FailureComponent: null,
 	wrapperDisplayName: "showEventLink"

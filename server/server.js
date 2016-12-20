@@ -32,6 +32,8 @@ server.post('/api/user/logout', auth.doLogout);
 server.get('/api/events', events.getEvents);
 server.get('/api/event/:eventId', events.getEvent);
 server.post('/api/event/edit', P.editEvent, events.editEvent);
+server.post('/api/event/create', P.createEvent, events.createEvent);
+server.post('/api/event/delete', P.createEvent, events.deleteEvent);
 
 
 server.get('/api/*', function(req, res) {

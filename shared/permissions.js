@@ -7,5 +7,9 @@ permissions.editEvent = (user, event) => {
 	return user.id === event.userId
 }
 
+permissions.createEvent = user => {
+		if(user.roles.find(role => role.Name === "admin"))return true //admin can always
+		return false;
+} 
 
 module.exports = permissions;
