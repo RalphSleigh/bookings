@@ -3,7 +3,7 @@ import * as a from './actions.js'
 
 
 //should Events be a map or list? both suck sometimes..
-const initalEventState = Immutable.fromJS({});
+const initalEventState = null
 
 export default function Events(state = initalEventState, action) {
 	

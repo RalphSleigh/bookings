@@ -12,7 +12,8 @@ var User = o.define('user', {
     type: Sequelize.STRING
   },
   Email: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+	unique: true
   }
 });
 

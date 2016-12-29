@@ -2,10 +2,11 @@
 
 import Cookies from 'js-cookie'
 
+
 export default function rfetch(url, method, data) {
 	var options = {	method:method,
 					headers: {  
-                  		"Content-type": "application/json; charset=UTF-8",},
+                  		"Content-type": "application/json; charset=UTF-8"},
 					credentials: "same-origin",
 					};
 

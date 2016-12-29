@@ -1,6 +1,7 @@
 var User = require('./models/user.js');
 var Event = require('./models/event.js');
 var Role = require('./models/role.js');
+var Booking = require('./models/booking.js');
 var o = require('./orm.js');
 
 //do the thingie

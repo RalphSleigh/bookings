@@ -25,20 +25,9 @@ auth.doLogin = function(req, res) {
 }
 
 auth.getUser = function(req, res) {
-
-	if(!req.session.user) {
-		User.findOne({where:{UserName:'Guest'},include:[{model:Role}]})
-		.then((user) => {
-			req.session.user = user;
-			var resUser = extend({}, user.dataValues);
-			delete resUser.Password
-			res.send(resUser).end();
-		})
-	} else {
-		var resUser = extend({}, req.session.user);
-		delete resUser.Password
-		res.send(resUser).end();
-	}
+	var resUser = extend({}, req.session.user);
+	delete resUser.Password
+	res.send(resUser).end();
 }
 
 auth.doLogout = function(req, res) {

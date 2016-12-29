@@ -6,10 +6,10 @@ import { Link  } from 'react-router'
 import event from '../../events'
 import BookingForm from './bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
-import { updateQuickList, createBooking } from '../actions.js'
+import { updateQuickList, getBooking } from '../actions.js'
 
 
-class CreatePage extends React.Component{
+class EditPage extends React.Component{
 	
 	constructor(props) {
       super(props);
@@ -21,6 +21,7 @@ class CreatePage extends React.Component{
 		if(this.props.Event === undefined)return null;
 
 		const event = this.props.Event.toJS();
+		const booking = this.props.Booking.toJS();
 		const user = this.props.User.toJS();
 		const quickList = this.props.QuickList.toJS();
 		//const data = this.props.user.toObject();
@@ -29,7 +30,7 @@ class CreatePage extends React.Component{
 						<div className="col-sm-12 col-md-10">
 							<h3>Booking for {event.Name}</h3>
 							<div className="row">
-								<BookingForm user={user} event={event} submit={this.props.createBooking} updateQuickList={this.props.updateQuickList}/>
+								<BookingForm user={user} booking={booking} event={event} submit={this.props.createBooking} updateQuickList={this.props.updateQuickList}/>
 							</div>
 						</div>
 						<ParticipantQuickList quickList={quickList}/>		
@@ -39,24 +40,25 @@ class CreatePage extends React.Component{
 	}
 
 	
-	componentWillMount() {
-    	if(this.props.Event === undefined)this.props.getEvent(this.props.params.eventId);
+	componentWillMount() { //messy, really need a proper data preload component
+		if(this.props.Booking === undefined)this.props.getBooking(this.props.params.bookingId);
   	}
 }
 
 const mapStateToProps = (state, props) => {
 	let User = state.get("User");
-  	let Event = state.getIn(["Events", props.params.eventId]);
+	let Booking = state.getIn(["Bookings","bookings", props.params.bookingId]);
+  	let Event = Booking !== undefined ? state.getIn(["Events", Booking.get("eventId").toString()]) : undefined;
 	let QuickList = state.getIn(["Bookings","quickList"]);
-	return {User, Event, QuickList}
+	return {User, Booking, Event, QuickList}
 }
 
 const getEvent = event.actions.getEvent
-const mapDispatchToProps = {getEvent, updateQuickList, createBooking};
+const mapDispatchToProps = {getEvent, updateQuickList, getBooking};
 
-var VisibleCreatePage = connect(
+var VisibleEditPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreatePage);
+)(EditPage);
 
-export default VisibleCreatePage;
+export default VisibleEditPage;

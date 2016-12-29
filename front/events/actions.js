@@ -10,9 +10,9 @@ import m from '../messages'
 export const UPDATE_EVENT = 'EVENT_UPDATE_EVENT';
 export const GET_EVENTS = 'EVENT_GET_EVENTS';
 
-const updateEvent = e => {
+export const updateEvent = e => {
 	return {type:UPDATE_EVENT,
-			key: e.id,
+			key: e.id.toString(),
 			data:e};
 }
 

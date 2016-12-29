@@ -4,17 +4,30 @@ import { connect } from 'react-redux'
 
 import messages from '../messages'
 import user from '../user'
-
+import events from '../events'
+import bookings from '../bookings'
 
 class App extends React.Component {
 	
   constructor(props) {
     super(props);
   }
+
+  componentWillMount() {
+	  	this.props.getUser();
+    	this.props.getEvents();
+		this.props.getUserBookings();
+  }
+
+  componentWillReceiveProps(nextProps) { //refresh bookings if wwe log in/out
+	  if(this.props.User !== null && this.props.User !== nextProps.User) this.props.getUserBookings();
+  }
   
   render() {
-	//prevent render until we have a user,, to prevent permission errors on deep links for logged in users.
-	if(this.props.User === null) return <div>Loading</div>;
+
+	//prevent render until we have the basic data available, this makes child components much simpler.
+	if(this.props.User === null || this.props.Events === null || this.props.Bookings === null) return <div>Loading Data</div>;
+
     return (
       <div className="container">
           <div className="row">
@@ -28,12 +41,20 @@ class App extends React.Component {
   }
 }
 
+//store.dispatch(user.actions.getUser());
+
 const mapStateToProps = (state) => {
   let User = state.get("User");
-  return {User};
+  let Events = state.get("Events");
+  let Bookings = state.getIn(["Bookings","bookings"])
+  return {User, Events, Bookings};
 }
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+		getUser:user.actions.getUser,
+		getEvents:events.actions.getEvents,
+		getUserBookings:bookings.actions.getUserBookings
+};
 
 var VisibleApp = connect(
   mapStateToProps,

@@ -26,10 +26,6 @@ class EditPage extends React.Component {
 			</div>
 		)
 	}
-
-	componentWillMount() {
-    	if(this.props.Event === undefined)this.props.getEvent(this.props.params.eventId);
-  }
 }
 
 const mapStateToProps = (state, props) => {

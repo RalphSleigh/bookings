@@ -50,3 +50,27 @@ export const showCreateLink = UserAuthWrapper({
 	FailureComponent: null,
 	wrapperDisplayName: "showEventLink"
 });
+
+export const showBookLink = UserAuthWrapper({
+	authSelector: (state, props) => {
+		return {user: state.get("User"), event: props.event};
+	},
+	predicate: (data) => {
+		return P.bookEvent(data.user.toJS(), data.event);
+	},
+	FailureComponent: null,
+	wrapperDisplayName: "showBookLink"
+});
+
+export const showManageLink = UserAuthWrapper({
+	authSelector: (state, props) => {
+
+		return {user: state.get("User"), event: props.event}
+	},
+	predicate: (data) => {
+		if(data.event === undefined)return true;
+		return P.manageEvent(data.user.toJS(), data.event);
+	},
+	FailureComponent: null,
+	wrapperDisplayName: "showManageLink"
+});

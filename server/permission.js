@@ -17,4 +17,19 @@ permission.createEvent = (req, res, next) => {
 
 }
 
+//todo: make these actually check something
+
+permission.bookEvent = (req, res, next) => {
+	next();
+}
+
+permission.getEventBookings = (req, res, next) => {
+	if(P.manageEvent(req.session.user))next();
+	else res.status(401).end();
+}
+
+permission.getBooking = (req, res, next) => {
+	next();
+}
+
 module.exports = permission;
