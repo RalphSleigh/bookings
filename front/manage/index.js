@@ -1,5 +1,7 @@
-import loader from './components/loader.js'
-import overviewPage from './components/overviewPage.js'
+import containerPage from './components/containerPage.js'
+import participants from './components/participants.js'
+import bookings from './components/bookings.js'
+import kp from './components/kp.js'
 
 
-export default {loader, overviewPage}
+export default {containerPage, participants, bookings, kp}

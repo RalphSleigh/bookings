@@ -21,7 +21,9 @@ var Booking = o.define('booking', {
   }
 });
 
-Booking.Participant = Booking.hasMany(Participant);
+Booking.Participant = Booking.hasMany(Participant, {foreignKey: {
+    allowNull: false,
+  }});
 
 Booking.belongsTo(User);//this one can be null in case of guest booking
 

@@ -18,9 +18,11 @@ export default (<Router history={browserHistory}>
 							<Route path="book" component={bookings.myBookingPage} />
 							<Route path="book/thanks" component={bookings.thanksPage}/>
 							<Route path="edit" component={events.editPage} />
-							<Route path="manage" component={manage.loader}>
-								<IndexRoute component={manage.overviewPage} />
-								<Route path="overview" component={manage.overviewPage} />
+							<Route path="manage" component={manage.containerPage /* Loads all Bookings for an event */}>
+								<IndexRoute component={manage.participants} />
+								<Route path="participants" component={manage.participants} />
+								<Route path="bookings" component={manage.bookings} />
+								<Route path="kp" component={manage.kp} />
 							</Route>
 						</Route>
 						<Route path="booking/:bookingId/">

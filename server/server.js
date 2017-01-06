@@ -34,6 +34,7 @@ function ensureUser (req, res, next) {
 		.finally(() => next());
 }
 
+server.use(require('morgan')('common'));
 server.use(cookieParser());
 server.use(expressSession({secret: 'woodcraft'}));
 server.use(bodyParser.json());

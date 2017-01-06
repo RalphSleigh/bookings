@@ -1,6 +1,8 @@
 //utility functions
 import Cookies from 'js-cookie'
 
+
+//set up a UUID as a bookings key in local storage so guest users can edit previous bookings done in their browser.
 let guestUUID = '';
 
 if(localStorage.guestUUID) guestUUID = localStorage.guestUUID;
