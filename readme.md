@@ -4,6 +4,8 @@ This is a web-based bookings system for woodcraft events. Not finished, many tod
 
 Written in javascipt using Express/React/Redux. Currently stores data in a sqlite DB in the project directory.
 
+Currently perfecting it for district events before adding features for larger ones.
+
 Next to add: 
  * Fees/payment tracker
  * Validation on user facing forms
