@@ -43,16 +43,16 @@ const ManageLink = showManageLink(Link)
 
 const Event = (props) => {
 
-	const bookLink = props => props.booking !== undefined ? <Link event={props} to={"/event/"+props.id+"/book"}>Edit My Booking</Link> : <Link to={"/event/"+props.id+"/book"}>Book</Link>
+	const bookLink = props => props.booking !== undefined ? <Link to={"/event/"+props.id+"/book"}>Edit My Booking</Link> : <Link to={"/event/"+props.id+"/book"}>Book</Link>
 
 	const PermBookLink =  showBookLink(bookLink);
 
 	return(<div>
 		<EditLink event={props} className="pull-right" to={"/event/"+props.id+"/edit"}>Edit</EditLink>
 		<ManageLink event={props} className="pull-right" to={"/event/"+props.id+"/manage"}>Manage</ManageLink>
-		<h1>{props.Name}</h1>
-		<h3>{props.StartDate} - {props.EndDate}</h3>
-		<p>{props.Description}</p>
+		<h1>{props.name}</h1>
+		<h3>{props.startDate} - {props.endDate}</h3>
+		<p>{props.description}</p>
 		<PermBookLink event={props} {...props}/>
 	</div>)}
 

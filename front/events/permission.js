@@ -37,7 +37,8 @@ export const showEditLink = UserAuthWrapper({
 		return P.editEvent(data.user.toJS(), data.event);
 	},
 	FailureComponent: null,
-	wrapperDisplayName: "showEventLink"
+	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
+	wrapperDisplayName: "showEventEditLink"
 });
 
 export const showCreateLink = UserAuthWrapper({
@@ -48,7 +49,8 @@ export const showCreateLink = UserAuthWrapper({
 		return P.createEvent(data.toJS());
 	},
 	FailureComponent: null,
-	wrapperDisplayName: "showEventLink"
+	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
+	wrapperDisplayName: "showEventCreateLink"
 });
 
 export const showBookLink = UserAuthWrapper({
@@ -59,6 +61,7 @@ export const showBookLink = UserAuthWrapper({
 		return P.bookEvent(data.user.toJS(), data.event);
 	},
 	FailureComponent: null,
+	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
 	wrapperDisplayName: "showBookLink"
 });
 
@@ -72,5 +75,6 @@ export const showManageLink = UserAuthWrapper({
 		return P.manageEvent(data.user.toJS(), data.event);
 	},
 	FailureComponent: null,
+	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
 	wrapperDisplayName: "showManageLink"
 });

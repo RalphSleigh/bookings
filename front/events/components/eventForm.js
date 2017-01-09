@@ -23,23 +23,23 @@ export default class EditForm extends React.Component {
     }
 
 	updateName(e) {
-		this.setState({Name:e.target.value})
+		this.setState({name:e.target.value})
 	}
 
 	updateDescription(e) {
-		this.setState({Description:e.target.value})
+		this.setState({description:e.target.value})
 	}
 
 	updateStartDate(e) {
-		this.setState({StartDate:e.target.value})
+		this.setState({startDate:e.target.value})
 	}
 
 	updateEndDate(e) {
-		this.setState({EndDate:e.target.value})
+		this.setState({endDate:e.target.value})
 	}
 
 	updateBookingDeadline(e) {
-		this.setState({BookingDeadline:e.target.value})
+		this.setState({bookingDeadline:e.target.value})
 	}
 
 	clickRevert(e) {
@@ -60,12 +60,12 @@ export default class EditForm extends React.Component {
 	clickSave(e) {
 		let event = {
 			id:this.state.id,
-			Name:this.state.Name,
-			Description:this.state.Description,
-			StartDate:this.state.StartDate,
-			EndDate:this.state.EndDate,
-			BookingDeadline:this.state.BookingDeadline,
-			AllowGuestBookings:this.state.AllowGuestBookings
+			name:this.state.name,
+			description:this.state.description,
+			startDate:this.state.startDate,
+			endDate:this.state.endDate,
+			bookingDeadline:this.state.bookingDeadline,
+			allowGuestBookings:this.state.allowGuestBookings
 		}
 
 		this.props.saveEvent(event);
@@ -82,37 +82,37 @@ export default class EditForm extends React.Component {
   					<div className="form-group">
 						<label className="col-sm-2 control-label">Name:</label>
 						 <div className="col-sm-10">
-      						<input type="text" className="form-control" placeholder="Name" value={this.state.Name} onChange={this.updateName}/>
+      						<input type="text" className="form-control" placeholder="Name" value={this.state.name} onChange={this.updateName}/>
     					</div>
   					</div>
   					<div className="form-group">
     					<label className="col-sm-2 control-label">Description:</label>
     					<div className="col-sm-10">
-     						<textarea className="form-control" rows="5" value={this.state.Description} onChange={this.updateDescription}></textarea>
+     						<textarea className="form-control" rows="5" value={this.state.description} onChange={this.updateDescription}></textarea>
     					</div>
   					</div>
   					<div className="form-group">
 						<label className="col-sm-2 control-label">Start date:</label>
 						 <div className="col-sm-10">
-      						<input type="date" className="form-control" value={Moment(this.state.StartDate).format("YYYY-MM-DD")} onChange={this.updateStartDate}/>
+      						<input type="date" className="form-control" value={Moment(this.state.startDate).format("YYYY-MM-DD")} onChange={this.updateStartDate}/>
     					</div>
   					</div>
 					<div className="form-group">
 						<label className="col-sm-2 control-label">End date:</label>
 						 <div className="col-sm-10">
-      						<input type="date" className="form-control" value={Moment(this.state.EndDate).format("YYYY-MM-DD")} onChange={this.updateEndDate}/>
+      						<input type="date" className="form-control" value={Moment(this.state.endDate).format("YYYY-MM-DD")} onChange={this.updateEndDate}/>
     					</div>
   					</div>
 					<div className="form-group">
 						<label className="col-sm-2 control-label">Booking Deadline:</label>
 						 <div className="col-sm-10">
-      						<input type="date" className="form-control" value={Moment(this.state.BookingDeadline).format("YYYY-MM-DD")} onChange={this.updateBookingDeadline}/>
+      						<input type="date" className="form-control" value={Moment(this.state.bookingDeadline).format("YYYY-MM-DD")} onChange={this.updateBookingDeadline}/>
     					</div>
   					</div>
 					<div className="form-group">
 						<label className="col-sm-2 control-label">Allow Guest Bookings:</label>
 						 <div className="col-sm-10">
-      						<Switch checked={this.state.AllowGuestBookings} onChange={() => this.setState({AllowGuestBookings:!this.state.AllowGuestBookings})}  value='yes'/>
+      						<Switch checked={this.state.allowGuestBookings} onChange={() => this.setState({allowGuestBookings:!this.state.allowGuestBookings})}  value='yes'/>
     					</div>
   					</div>
   					<div className="form-group">

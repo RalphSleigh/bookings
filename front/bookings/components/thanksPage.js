@@ -37,7 +37,7 @@ class ThanksPage extends React.Component{
 		return(<div> 
 					<div className="row">
 						<div className="col-sm-12">
-							<h3>Thanks for booking for {event.Name}</h3>
+							<h3>Thanks for booking for {event.name}</h3>
 							<p>You can come back and <Link to={"/event/"+event.id+"/book"}>edit</Link> your booking at any time before the deadline</p>
 							<h4>Participants booked</h4>
 							<table className="table">

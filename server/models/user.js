@@ -5,13 +5,13 @@ var o = require('../orm.js');
 var Role = require('./role.js');
 
 var User = o.define('user', {
-  UserName: {
+  userName: {
     type: Sequelize.STRING
   },
-  Password: {
+  password: {
     type: Sequelize.STRING
   },
-  Email: {
+  email: {
     type: Sequelize.STRING,
 	unique: true
   }

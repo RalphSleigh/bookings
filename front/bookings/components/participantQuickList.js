@@ -19,7 +19,7 @@ export default class CreatePage extends React.Component{
 		});
 
 		return (<StickyContainer className="hidden-sm-down col-md-2" style={{alignItems:"stretch"}}> 
-					<Sticky debug={true}>
+					<Sticky>
 						<div>
 							<div style={{height:"100px"}}> 
 								<h3>Participants Added</h3>

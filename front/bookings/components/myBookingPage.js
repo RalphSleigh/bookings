@@ -32,7 +32,7 @@ class MyBookingPage extends React.Component{
 		return(<div> 
 					<div className="row" style={{display:"flex"}}>
 						<div className="col-sm-12 col-md-10">
-							<h3>Booking for {event.Name}</h3>
+							<h3>Booking for {event.name}</h3>
 							<div className="row">
 								{form}
 							</div>

@@ -15,8 +15,8 @@ export default class BookingForm extends React.Component {
 			//new booking, create blank data
 		
 			this.state = {
-							user: {	name: this.guest? '' : props.user.UserName,
-		  							email: this.guest? '' : props.user.Email,
+							user: {	name: this.guest? '' : props.user.userName,
+		  							email: this.guest? '' : props.user.email,
 					 				phone:''},
 							participants: [blankParticipant(),blankParticipant()],
 							permission:false,

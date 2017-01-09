@@ -8,15 +8,15 @@ var auth = {};
 
 
 auth.doLogin = function(req, res) {
-		User.findOne({where:{Email:req.body.email}, include:[{model:Role}]})
+		User.findOne({where:{email:req.body.email}, include:[{model:Role}]})
 		.then((user) => {
-			if(user !== null && bcrypt.compareSync(req.body.password, user.Password)) {
+			if(user !== null && bcrypt.compareSync(req.body.password, user.password)) {
 								
 				req.session.user = user;
 
 				//send client a copy of user object without password field
 				var resUser = extend({}, user.dataValues);
-				delete resUser.Password
+				delete resUser.password
 				res.send(resUser).end();
 			} else {
 				res.status(401).end();
@@ -32,11 +32,11 @@ auth.getUser = function(req, res) {
 
 auth.doLogout = function(req, res) {
 	delete req.session.user;
-	User.findOne({where:{UserName:'Guest'},include:[{model:Role}]})
+	User.findOne({where:{userName:'Guest'},include:[{model:Role}]})
 		.then((user) => {
 			req.session.user = user;
 			var resUser = extend({}, user.dataValues);
-			delete resUser.Password
+			delete resUser.password
 			res.send(resUser).end();
 		});
 }

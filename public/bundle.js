@@ -6344,7 +6344,7 @@ webpackJsonp([0],[
 							{ className: 'form-group' },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'LoginFormEmail' },
+								{ htmlFor: 'LoginFormEmail' },
 								'Email address'
 							),
 							_react2.default.createElement('input', { type: 'email', value: this.state.email, className: 'form-control', id: 'LoginFormEmail', placeholder: 'Email', onChange: this.updateEmail })
@@ -6354,14 +6354,14 @@ webpackJsonp([0],[
 							{ className: 'form-group' },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'LoginFormPassword' },
+								{ htmlFor: 'LoginFormPassword' },
 								'Password'
 							),
 							_react2.default.createElement('input', { type: 'password', value: this.state.password, className: 'form-control', id: 'LoginFormPassword', placeholder: 'Password', onChange: this.updatePassword })
 						),
 						_react2.default.createElement(
 							'button',
-							{ type: 'submit', onClick: this.submit, 'class': 'btn btn-default' },
+							{ type: 'submit', onClick: this.submit, className: 'btn btn-default' },
 							'Submit'
 						)
 					)
@@ -6391,9 +6391,9 @@ webpackJsonp([0],[
 						'p',
 						null,
 						'Logged in as ',
-						this.props.user.UserName,
+						this.props.user.userName,
 						', email: ',
-						this.props.user.Email,
+						this.props.user.email,
 						' '
 					)
 				);
@@ -6476,7 +6476,7 @@ webpackJsonp([0],[
 						_react2.default.createElement(
 							'b',
 							null,
-							data.UserName
+							data.userName
 						),
 						' (',
 						link,
@@ -6786,7 +6786,7 @@ webpackJsonp([0],[
 		var bookLink = function bookLink(props) {
 			return props.booking !== undefined ? _react2.default.createElement(
 				_reactRouter.Link,
-				{ event: props, to: "/event/" + props.id + "/book" },
+				{ to: "/event/" + props.id + "/book" },
 				'Edit My Booking'
 			) : _react2.default.createElement(
 				_reactRouter.Link,
@@ -6813,19 +6813,19 @@ webpackJsonp([0],[
 			_react2.default.createElement(
 				'h1',
 				null,
-				props.Name
+				props.name
 			),
 			_react2.default.createElement(
 				'h3',
 				null,
-				props.StartDate,
+				props.startDate,
 				' - ',
-				props.EndDate
+				props.endDate
 			),
 			_react2.default.createElement(
 				'p',
 				null,
-				props.Description
+				props.description
 			),
 			_react2.default.createElement(PermBookLink, _extends({ event: props }, props))
 		);
@@ -6866,6 +6866,8 @@ webpackJsonp([0],[
 	});
 	exports.showManageLink = exports.showBookLink = exports.showCreateLink = exports.showEditLink = exports.createEventCheck = exports.editEventCheck = undefined;
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _reduxAuthWrapper = __webpack_require__(307);
 	
 	var _permissions = __webpack_require__(310);
@@ -6873,6 +6875,8 @@ webpackJsonp([0],[
 	var P = _interopRequireWildcard(_permissions);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 	
 	var editEventCheck = exports.editEventCheck = (0, _reduxAuthWrapper.UserAuthWrapper)({
 		authSelector: function authSelector(state, props) {
@@ -6900,7 +6904,7 @@ webpackJsonp([0],[
 		wrapperDisplayName: "Create Event Check"
 	});
 	
-	var showEditLink = exports.showEditLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
+	var showEditLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
 		authSelector: function authSelector(state, props) {
 	
 			return { user: state.get("User"), event: props.event };
@@ -6909,10 +6913,21 @@ webpackJsonp([0],[
 			return P.editEvent(data.user.toJS(), data.event);
 		},
 		FailureComponent: null,
-		wrapperDisplayName: "showEventLink"
+		propMapper: function propMapper(_ref) {
+			var redirect = _ref.redirect,
+			    authData = _ref.authData,
+			    isAuthenticating = _ref.isAuthenticating,
+			    failureRedirectPath = _ref.failureRedirectPath,
+			    event = _ref.event,
+			    otherProps = _objectWithoutProperties(_ref, ['redirect', 'authData', 'isAuthenticating', 'failureRedirectPath', 'event']);
+	
+			return _extends({}, otherProps);
+		},
+		wrapperDisplayName: "showEventEditLink"
 	});
 	
-	var showCreateLink = exports.showCreateLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
+	exports.showEditLink = showEditLink;
+	var showCreateLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
 		authSelector: function authSelector(state) {
 			return state.get("User");
 		},
@@ -6920,10 +6935,21 @@ webpackJsonp([0],[
 			return P.createEvent(data.toJS());
 		},
 		FailureComponent: null,
-		wrapperDisplayName: "showEventLink"
+		propMapper: function propMapper(_ref2) {
+			var redirect = _ref2.redirect,
+			    authData = _ref2.authData,
+			    isAuthenticating = _ref2.isAuthenticating,
+			    failureRedirectPath = _ref2.failureRedirectPath,
+			    event = _ref2.event,
+			    otherProps = _objectWithoutProperties(_ref2, ['redirect', 'authData', 'isAuthenticating', 'failureRedirectPath', 'event']);
+	
+			return _extends({}, otherProps);
+		},
+		wrapperDisplayName: "showEventCreateLink"
 	});
 	
-	var showBookLink = exports.showBookLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
+	exports.showCreateLink = showCreateLink;
+	var showBookLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
 		authSelector: function authSelector(state, props) {
 			return { user: state.get("User"), event: props.event };
 		},
@@ -6931,10 +6957,21 @@ webpackJsonp([0],[
 			return P.bookEvent(data.user.toJS(), data.event);
 		},
 		FailureComponent: null,
+		propMapper: function propMapper(_ref3) {
+			var redirect = _ref3.redirect,
+			    authData = _ref3.authData,
+			    isAuthenticating = _ref3.isAuthenticating,
+			    failureRedirectPath = _ref3.failureRedirectPath,
+			    event = _ref3.event,
+			    otherProps = _objectWithoutProperties(_ref3, ['redirect', 'authData', 'isAuthenticating', 'failureRedirectPath', 'event']);
+	
+			return _extends({}, otherProps);
+		},
 		wrapperDisplayName: "showBookLink"
 	});
 	
-	var showManageLink = exports.showManageLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
+	exports.showBookLink = showBookLink;
+	var showManageLink = (0, _reduxAuthWrapper.UserAuthWrapper)({
 		authSelector: function authSelector(state, props) {
 	
 			return { user: state.get("User"), event: props.event };
@@ -6944,8 +6981,19 @@ webpackJsonp([0],[
 			return P.manageEvent(data.user.toJS(), data.event);
 		},
 		FailureComponent: null,
+		propMapper: function propMapper(_ref4) {
+			var redirect = _ref4.redirect,
+			    authData = _ref4.authData,
+			    isAuthenticating = _ref4.isAuthenticating,
+			    failureRedirectPath = _ref4.failureRedirectPath,
+			    event = _ref4.event,
+			    otherProps = _objectWithoutProperties(_ref4, ['redirect', 'authData', 'isAuthenticating', 'failureRedirectPath', 'event']);
+	
+			return _extends({}, otherProps);
+		},
 		wrapperDisplayName: "showManageLink"
 	});
+	exports.showManageLink = showManageLink;
 
 /***/ },
 /* 307 */,
@@ -6962,21 +7010,21 @@ webpackJsonp([0],[
 	
 	permissions.editEvent = function (user, event) {
 			if (user.roles.find(function (role) {
-					return role.Name === "admin";
+					return role.name === "admin";
 			})) return true; //admin can always
 			return user.id === event.userId;
 	};
 	
 	permissions.createEvent = function (user) {
 			if (user.roles.find(function (role) {
-					return role.Name === "admin";
+					return role.name === "admin";
 			})) return true; //admin can always
 			return false;
 	};
 	
 	permissions.bookEvent = function (user, event) {
 			if (user.roles.find(function (role) {
-					return role.Name === "admin";
+					return role.name === "admin";
 			})) return true; //admin can always
 			if (user.id !== 1) return true; //non guest can
 			if (event.AllowGuestBookings === true) return true; //anyone can book 
@@ -6985,7 +7033,7 @@ webpackJsonp([0],[
 	
 	permissions.manageEvent = function (user) {
 			if (user.roles.find(function (role) {
-					return role.Name === "admin";
+					return role.name === "admin";
 			})) return true; //admin can always
 			return false;
 	};
@@ -7392,27 +7440,27 @@ webpackJsonp([0],[
 		_createClass(EditForm, [{
 			key: 'updateName',
 			value: function updateName(e) {
-				this.setState({ Name: e.target.value });
+				this.setState({ name: e.target.value });
 			}
 		}, {
 			key: 'updateDescription',
 			value: function updateDescription(e) {
-				this.setState({ Description: e.target.value });
+				this.setState({ description: e.target.value });
 			}
 		}, {
 			key: 'updateStartDate',
 			value: function updateStartDate(e) {
-				this.setState({ StartDate: e.target.value });
+				this.setState({ startDate: e.target.value });
 			}
 		}, {
 			key: 'updateEndDate',
 			value: function updateEndDate(e) {
-				this.setState({ EndDate: e.target.value });
+				this.setState({ endDate: e.target.value });
 			}
 		}, {
 			key: 'updateBookingDeadline',
 			value: function updateBookingDeadline(e) {
-				this.setState({ BookingDeadline: e.target.value });
+				this.setState({ bookingDeadline: e.target.value });
 			}
 		}, {
 			key: 'clickRevert',
@@ -7437,12 +7485,12 @@ webpackJsonp([0],[
 			value: function clickSave(e) {
 				var event = {
 					id: this.state.id,
-					Name: this.state.Name,
-					Description: this.state.Description,
-					StartDate: this.state.StartDate,
-					EndDate: this.state.EndDate,
-					BookingDeadline: this.state.BookingDeadline,
-					AllowGuestBookings: this.state.AllowGuestBookings
+					name: this.state.name,
+					description: this.state.description,
+					startDate: this.state.startDate,
+					endDate: this.state.endDate,
+					bookingDeadline: this.state.bookingDeadline,
+					allowGuestBookings: this.state.allowGuestBookings
 				};
 	
 				this.props.saveEvent(event);
@@ -7480,7 +7528,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Name', value: this.state.Name, onChange: this.updateName })
+								_react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Name', value: this.state.name, onChange: this.updateName })
 							)
 						),
 						_react2.default.createElement(
@@ -7494,7 +7542,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('textarea', { className: 'form-control', rows: '5', value: this.state.Description, onChange: this.updateDescription })
+								_react2.default.createElement('textarea', { className: 'form-control', rows: '5', value: this.state.description, onChange: this.updateDescription })
 							)
 						),
 						_react2.default.createElement(
@@ -7508,7 +7556,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.StartDate).format("YYYY-MM-DD"), onChange: this.updateStartDate })
+								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.startDate).format("YYYY-MM-DD"), onChange: this.updateStartDate })
 							)
 						),
 						_react2.default.createElement(
@@ -7522,7 +7570,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.EndDate).format("YYYY-MM-DD"), onChange: this.updateEndDate })
+								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.endDate).format("YYYY-MM-DD"), onChange: this.updateEndDate })
 							)
 						),
 						_react2.default.createElement(
@@ -7536,7 +7584,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.BookingDeadline).format("YYYY-MM-DD"), onChange: this.updateBookingDeadline })
+								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.bookingDeadline).format("YYYY-MM-DD"), onChange: this.updateBookingDeadline })
 							)
 						),
 						_react2.default.createElement(
@@ -7550,8 +7598,8 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement(_reactToggle2.default, { checked: this.state.AllowGuestBookings, onChange: function onChange() {
-										return _this2.setState({ AllowGuestBookings: !_this2.state.AllowGuestBookings });
+								_react2.default.createElement(_reactToggle2.default, { checked: this.state.allowGuestBookings, onChange: function onChange() {
+										return _this2.setState({ allowGuestBookings: !_this2.state.allowGuestBookings });
 									}, value: 'yes' })
 							)
 						),
@@ -8348,7 +8396,7 @@ webpackJsonp([0],[
 								'h3',
 								null,
 								'Booking for ',
-								event.Name
+								event.name
 							),
 							_react2.default.createElement(
 								'div',
@@ -8433,8 +8481,8 @@ webpackJsonp([0],[
 				//new booking, create blank data
 	
 				_this.state = {
-					user: { name: _this.guest ? '' : props.user.UserName,
-						email: _this.guest ? '' : props.user.Email,
+					user: { name: _this.guest ? '' : props.user.userName,
+						email: _this.guest ? '' : props.user.email,
 						phone: '' },
 					participants: [blankParticipant(), blankParticipant()],
 					permission: false,
@@ -9043,7 +9091,7 @@ webpackJsonp([0],[
 					{ className: 'hidden-sm-down col-md-2', style: { alignItems: "stretch" } },
 					_react2.default.createElement(
 						_reactSticky.Sticky,
-						{ debug: true },
+						null,
 						_react2.default.createElement(
 							'div',
 							null,
@@ -9785,7 +9833,7 @@ webpackJsonp([0],[
 								'h3',
 								null,
 								'Thanks for booking for ',
-								event.Name
+								event.name
 							),
 							_react2.default.createElement(
 								'p',
@@ -10242,7 +10290,7 @@ webpackJsonp([0],[
 	            'h3',
 	            null,
 	            'Report for ',
-	            event.Name
+	            event.name
 	          ),
 	          _react2.default.createElement(
 	            'ul',

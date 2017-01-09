@@ -67,14 +67,14 @@ class LoginForm extends React.Component{
 		<h3>Log in</h3>
 		<form>
 			<div className="form-group">
- 			   <label for="LoginFormEmail">Email address</label>
+ 			   <label htmlFor="LoginFormEmail">Email address</label>
   				<input type="email" value={this.state.email} className="form-control" id="LoginFormEmail" placeholder="Email" onChange={this.updateEmail}/>
   			</div>
   			<div className="form-group">
-    			<label for="LoginFormPassword">Password</label>
+    			<label htmlFor="LoginFormPassword">Password</label>
     			<input type="password" value={this.state.password} className="form-control" id="LoginFormPassword" placeholder="Password" onChange={this.updatePassword} />
  			 </div>
-			  <button type="submit" onClick={this.submit} class="btn btn-default">Submit</button>
+			  <button type="submit" onClick={this.submit} className="btn btn-default">Submit</button>
 		</form>
 		</div>
 		)
@@ -87,7 +87,7 @@ class UserProfile extends React.Component{
 	render() {
 		return (
 			<div className="col-sm-12">
-				<p>Logged in as {this.props.user.UserName}, email: {this.props.user.Email} </p>
+				<p>Logged in as {this.props.user.userName}, email: {this.props.user.email} </p>
 			</div>
 		)
 	}

@@ -4,22 +4,22 @@ var o = require('../orm.js');
 var User = require('./user.js');
 
 var Event = o.define('event', {
-  Name: {
+  name: {
     type: Sequelize.STRING
   },
-  Description: {
+  description: {
     type: Sequelize.TEXT
   },
-  StartDate: {
+  startDate: {
     type: Sequelize.DATE
   },
-  EndDate: {
+  endDate: {
     type: Sequelize.DATE
   },
-  BookingDeadline: {
+  bookingDeadline: {
     type: Sequelize.DATE
   },
-  AllowGuestBookings: {
+  allowGuestBookings: {
 	type: Sequelize.BOOLEAN
   }
 });

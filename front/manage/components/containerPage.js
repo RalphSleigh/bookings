@@ -33,7 +33,7 @@ class ManageContainerPage extends React.Component {
 
     return(<div className="row">
 						<div className="col-sm-12">
-							<h3>Report for {event.Name}</h3>
+							<h3>Report for {event.name}</h3>
 							<ul className="nav nav-tabs">
 								<NavTab to={"/event/"+this.props.params.eventId+"/manage"}>Participants</NavTab>
   								<NavTab to={"/event/"+this.props.params.eventId+"/manage/bookings"}>Bookings</NavTab>

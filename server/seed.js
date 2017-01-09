@@ -36,13 +36,13 @@ if(process.argv && process.argv[2] === "sync") {
 		data.password = a;
 		return o.sync({force: true})
 	}).then(() => User.create({
-    	UserName: 'Guest',
-    	Password: '',
-	 	Email: ''
-	})).then(() => Promise.all([Role.create({Name:"admin"}),User.create({
-    	UserName: data.username,
-		Password: bcrypt.hashSync(data.password, bcrypt.genSaltSync()), //todo, actual salt
-		Email: data.email}
+    	userName: 'Guest',
+    	password: '',
+	 	email: ''
+	})).then(() => Promise.all([Role.create({name:"admin"}),User.create({
+    	userName: data.username,
+		password: bcrypt.hashSync(data.password, bcrypt.genSaltSync()), 
+		email: data.email}
 	)])).then(results => {
 		results[1].addRole(results[0]);
 	});
@@ -53,39 +53,39 @@ if(process.argv && process.argv[2] === "sync") {
 
 	o.sync({force: true})
 	.then(() => User.create({
-  	  	UserName: 'Guest',
-   	 	Password: '',
-	  	Email: ''
-	})).then(() => Promise.all([Role.create({Name:"admin"}),User.create({
-    	UserName: 'Ralph',
-    	Password: '$2a$10$Eg7ZnRfw9s1H/rrYqzNZ5exaYkhKhQvTN3TNhsm5CluiEbhcv5EL6',
-		Email: 'ralph.sleigh@woodcraft.org.uk',
+  	  	userName: 'Guest',
+   	 	password: '',
+	  	email: ''
+	})).then(() => Promise.all([Role.create({name:"admin"}),User.create({
+    	userName: 'Ralph',
+    	password: '$2a$10$Eg7ZnRfw9s1H/rrYqzNZ5exaYkhKhQvTN3TNhsm5CluiEbhcv5EL6',
+		email: 'ralph.sleigh@woodcraft.org.uk',
 	})])).then(results => {
 		results[1].addRole(results[0]);
 		return results[1];
 	}).then(user => Promise.all([Event.create({
-    			Name: 'Ralphs Event',
-   				Description: 'Empty Event',
-				StartDate: new Date("2017-8-8"),
-				EndDate: new Date("2017-8-10"),
-				BookingDeadline: new Date("2017-8-4"),
-				AllowGuestBookings:false,
+    			name: 'Ralphs Event',
+   				description: 'Empty Event',
+				startDate: new Date("2017-8-8"),
+				endDate: new Date("2017-8-10"),
+				bookingDeadline: new Date("2017-8-4"),
+				allowGuestBookings:false,
 				userId: user.id}),
 			Event.create({
-    			Name: 'This is a large event with many people',
-   				Description: 'Gonna be good fun',
-				StartDate: new Date("2017-10-8"),
-				EndDate: new Date("2017-10-10"),
-				BookingDeadline: new Date("2017-10-4"),
-				AllowGuestBookings:true,
+    			name: 'This is a large event with many people',
+   				description: 'Gonna be good fun',
+				startDate: new Date("2017-10-8"),
+				endDate: new Date("2017-10-10"),
+				bookingDeadline: new Date("2017-10-4"),
+				allowGuestBookings:true,
 				userId: user.id}),
 			Event.create({
-    			Name: 'Past deadline',
-   				Description: 'Gonna be good fun',
-				StartDate: new Date("2016-4-8"),
-				EndDate: new Date("2016-4-10"),
-				BookingDeadline: new Date("2016-11-4"),
-				AllowGuestBookings:false,
+    			name: 'Past deadline',
+   				description: 'Gonna be good fun',
+				startDate: new Date("2016-4-8"),
+				endDate: new Date("2016-4-10"),
+				bookingDeadline: new Date("2016-11-4"),
+				allowGuestBookings:false,
 				userId: user.id})
 	])).then(events => {
 		let bookings = [];

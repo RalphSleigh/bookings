@@ -9,8 +9,13 @@ Currently perfecting it for district events before adding features for larger on
 Next to add: 
  * Fees/payment tracker
  * Validation on user facing forms
- * deCaptialise model properties (in general inital caps are for Immutable stuff)
  * sort SSL/spin up demo instance 
  * Unit tests.. 
 
 Will contain bugs. Also possibly weird issues due to being developed on windows.
+
+
+In General: 
+
+ * components that end in page are rendered as children of App
+ * props with an InitalCaptial are Immutable structures and toJS()ed in the render of a xPage component.

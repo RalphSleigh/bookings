@@ -27,7 +27,7 @@ function logErrors (err, req, res, next) {
 function ensureUser (req, res, next) {
 	if(req.session.user)return next();
 
-	User.findOne({where:{UserName:'Guest'},include:[{model:Role}]})
+	User.findOne({where:{userName:'Guest'},include:[{model:Role}]})
 		.then((user) => {
 			req.session.user = user;
 		})

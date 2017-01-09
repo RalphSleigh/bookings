@@ -25,7 +25,7 @@ class LoginStatus extends React.Component{
 		
 		return(
 			<div className="col-md-3">
-				<p className="pull-right">Logged in as: <b>{data.UserName}</b> ({link})</p>
+				<p className="pull-right">Logged in as: <b>{data.userName}</b> ({link})</p>
 			</div>
 		)
 	}	
