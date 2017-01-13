@@ -2,6 +2,7 @@ import React from 'react'
 import BookingUserDetails from './BookingUserDetails.js'
 import ParticipantForm from './participantsForm.js'
 import PermissionForm from './permissionForm.js'
+import FeeForm from './feeForm.js' 
 
 //this is a massive component that handles the state of the booking form.
 export default class BookingForm extends React.Component {
@@ -75,6 +76,7 @@ export default class BookingForm extends React.Component {
 	}
 
 	render() {
+
 		return(<div>
 			<div className="col-sm-12">
 				<h3>Your Details</h3>
@@ -86,6 +88,10 @@ export default class BookingForm extends React.Component {
 				<p>Please fill out for every person attending (including yourself if applicable)</p>
 			</div>
 			<ParticipantForm participants={this.state.participants} update={this.updateParticipantDetails} add={this.addParticipant}/>
+			<div className="col-sm-12">
+				<h3>Money</h3>
+			</div>
+			<FeeForm event={this.props.event} participants={this.state.participants}/>
 			<div className="col-sm-12">
 				<h3>Permission</h3>
 			</div>

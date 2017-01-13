@@ -25,12 +25,14 @@ class CreatePage extends React.Component{
 
 		let event = {
 			id:null,
-			Name:'',
-			Description:'',
-			StartDate:Moment().format("YYYY-MM-DD"),
-			EndDate:Moment().format("YYYY-MM-DD"),
-			BookingDeadline:Moment().format("YYYY-MM-DD"),
-			AllowGuestBookings:false
+			name:'',
+			description:'',
+			startDate:Moment().format("YYYY-MM-DD"),
+			endDate:Moment().format("YYYY-MM-DD"),
+			bookingDeadline:Moment().format("YYYY-MM-DD"),
+			allowGuestBookings:false,
+			feeModel:"free",
+			feeData:{}
 		}
 
 		return(

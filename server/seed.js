@@ -70,7 +70,9 @@ if(process.argv && process.argv[2] === "sync") {
 				endDate: new Date("2017-8-10"),
 				bookingDeadline: new Date("2017-8-4"),
 				allowGuestBookings:false,
-				userId: user.id}),
+				userId: user.id,
+				feeModel:"free",
+				feeData:{}}),
 			Event.create({
     			name: 'This is a large event with many people',
    				description: 'Gonna be good fun',
@@ -78,7 +80,9 @@ if(process.argv && process.argv[2] === "sync") {
 				endDate: new Date("2017-10-10"),
 				bookingDeadline: new Date("2017-10-4"),
 				allowGuestBookings:true,
-				userId: user.id}),
+				userId: user.id,
+				feeModel:"flat",
+				feeData:{amount:55}}),
 			Event.create({
     			name: 'Past deadline',
    				description: 'Gonna be good fun',
@@ -86,7 +90,9 @@ if(process.argv && process.argv[2] === "sync") {
 				endDate: new Date("2016-4-10"),
 				bookingDeadline: new Date("2016-11-4"),
 				allowGuestBookings:false,
-				userId: user.id})
+				userId: user.id,
+				feeModel: "ealing",
+				feeData:{amount:35}})
 	])).then(events => {
 		let bookings = [];
 		for(let i = 0; i < 20; i++) {

@@ -1,6 +1,8 @@
 import React from 'react'
 import Moment from 'moment'
 import Switch from 'react-toggle'
+import _ from 'lodash'
+import fee from '../../fee'
 
 export default class EditForm extends React.Component {
 
@@ -10,11 +12,8 @@ export default class EditForm extends React.Component {
       this.state = this.props.event;
 	  this.state.delete = false;
 
-	  this.updateName = this.updateName.bind(this);
-	  this.updateDescription = this.updateDescription.bind(this);
-	  this.updateStartDate = this.updateStartDate.bind(this);
-	  this.updateEndDate = this.updateEndDate.bind(this);
-	  this.updateBookingDeadline = this.updateBookingDeadline.bind(this);
+	  this.update = this.update.bind(this);
+	  this.updateFeeData = this.updateFeeData.bind(this);
 
 	  this.clickRevert = this.clickRevert.bind(this);
 	  this.clickDeleteLock = this.clickDeleteLock.bind(this);
@@ -22,24 +21,16 @@ export default class EditForm extends React.Component {
 	  this.clickSave = this.clickSave.bind(this);
     }
 
-	updateName(e) {
-		this.setState({name:e.target.value})
+	update(item) {
+		return e => {
+			let newState = {};
+			newState[item] = e.target.value;
+			this.setState(newState);
+		}
 	}
 
-	updateDescription(e) {
-		this.setState({description:e.target.value})
-	}
-
-	updateStartDate(e) {
-		this.setState({startDate:e.target.value})
-	}
-
-	updateEndDate(e) {
-		this.setState({endDate:e.target.value})
-	}
-
-	updateBookingDeadline(e) {
-		this.setState({bookingDeadline:e.target.value})
+	updateFeeData(data) {
+		this.setState({feeData:data}) 
 	}
 
 	clickRevert(e) {
@@ -65,7 +56,9 @@ export default class EditForm extends React.Component {
 			startDate:this.state.startDate,
 			endDate:this.state.endDate,
 			bookingDeadline:this.state.bookingDeadline,
-			allowGuestBookings:this.state.allowGuestBookings
+			allowGuestBookings:this.state.allowGuestBookings,
+			feeModel:this.state.feeModel,
+			feeData:this.state.feeData
 		}
 
 		this.props.saveEvent(event);
@@ -73,6 +66,10 @@ export default class EditForm extends React.Component {
 	}
 
 	render() {	
+
+		const feeOptions = _.map(fee, f => <option value={f.name} key={f.name+"key"}>{f.selection}</option>);
+
+		const FeeConfig = fee[this.state.feeModel].Config;
 
 		let deleteButtons = this.props.new ? null : [<button key="deletelock" type="submit" disabled={!this.state.delete} onClick={this.clickDelete} className="btn btn-danger pull-right">Delete</button>,
 								 <button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
@@ -82,37 +79,51 @@ export default class EditForm extends React.Component {
   					<div className="form-group">
 						<label className="col-sm-2 control-label">Name:</label>
 						 <div className="col-sm-10">
-      						<input type="text" className="form-control" placeholder="Name" value={this.state.name} onChange={this.updateName}/>
+      						<input type="text" className="form-control" placeholder="Name" value={this.state.name} onChange={this.update("name")}/>
     					</div>
   					</div>
   					<div className="form-group">
     					<label className="col-sm-2 control-label">Description:</label>
     					<div className="col-sm-10">
-     						<textarea className="form-control" rows="5" value={this.state.description} onChange={this.updateDescription}></textarea>
+     						<textarea className="form-control" rows="5" value={this.state.description} onChange={this.update("description")}></textarea>
     					</div>
   					</div>
   					<div className="form-group">
 						<label className="col-sm-2 control-label">Start date:</label>
 						 <div className="col-sm-10">
-      						<input type="date" className="form-control" value={Moment(this.state.startDate).format("YYYY-MM-DD")} onChange={this.updateStartDate}/>
+      						<input type="date" className="form-control" value={Moment(this.state.startDate).format("YYYY-MM-DD")} onChange={this.update("startDate")}/>
     					</div>
   					</div>
 					<div className="form-group">
 						<label className="col-sm-2 control-label">End date:</label>
 						 <div className="col-sm-10">
-      						<input type="date" className="form-control" value={Moment(this.state.endDate).format("YYYY-MM-DD")} onChange={this.updateEndDate}/>
+      						<input type="date" className="form-control" value={Moment(this.state.endDate).format("YYYY-MM-DD")} onChange={this.update("endDate")}/>
     					</div>
   					</div>
 					<div className="form-group">
 						<label className="col-sm-2 control-label">Booking Deadline:</label>
 						 <div className="col-sm-10">
-      						<input type="date" className="form-control" value={Moment(this.state.bookingDeadline).format("YYYY-MM-DD")} onChange={this.updateBookingDeadline}/>
+      						<input type="date" className="form-control" value={Moment(this.state.bookingDeadline).format("YYYY-MM-DD")} onChange={this.update("bookingDeadline")}/>
     					</div>
   					</div>
 					<div className="form-group">
 						<label className="col-sm-2 control-label">Allow Guest Bookings:</label>
 						 <div className="col-sm-10">
       						<Switch checked={this.state.allowGuestBookings} onChange={() => this.setState({allowGuestBookings:!this.state.allowGuestBookings})}  value='yes'/>
+    					</div>
+  					</div>
+					<div className="form-group">
+						<label className="col-sm-2 control-label">Fee Structure:</label>
+						 <div className="col-sm-10">
+      						<select value={this.state.feeModel} onChange={this.update('feeModel')} className="form-control">
+								{feeOptions}
+							</select>
+    					</div>
+  					</div>
+					<div className="form-group">
+						<label className="col-sm-2 control-label">Fee Options:</label>
+						 <div className="col-sm-10">
+							  <FeeConfig fee={this.state.feeData} onChange={this.updateFeeData}/>
     					</div>
   					</div>
   					<div className="form-group">

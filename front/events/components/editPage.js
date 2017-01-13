@@ -17,7 +17,7 @@ class EditPage extends React.Component {
 			<div>
 				<div className="row">
 					<div className="col-sm-12">
-						<h3>Edit Event - {event.Name}</h3>
+						<h3>Edit Event - {event.name}</h3>
 					</div>
 				</div>
 				<div className="row">

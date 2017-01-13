@@ -142,11 +142,13 @@
 .participantrow:nth-of-type(odd){
   
   padding-top:15px;
+  margin-left:15px;
 }
 
 .participantrow:nth-of-type(even){
   background-color: #efefef;
   padding-top:15px;
+  margin-left:15px;
 }
 
 .top5 { margin-top:5px; }

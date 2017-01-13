@@ -9,7 +9,8 @@ Currently perfecting it for district events before adding features for larger on
 Next to add: 
  * Fees/payment tracker
  * Validation on user facing forms
- * sort SSL/spin up demo instance 
+ * Make booking deadline do something
+ * Sort SSL/spin up demo instance 
  * Unit tests.. 
 
 Will contain bugs. Also possibly weird issues due to being developed on windows.

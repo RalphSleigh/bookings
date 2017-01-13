@@ -20,7 +20,7 @@ webpackJsonp([0],[
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
-	var _store = __webpack_require__(457);
+	var _store = __webpack_require__(462);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -480,15 +480,15 @@ webpackJsonp([0],[
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _bookings = __webpack_require__(434);
+	var _bookings = __webpack_require__(439);
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
-	var _manage = __webpack_require__(451);
+	var _manage = __webpack_require__(456);
 	
 	var _manage2 = _interopRequireDefault(_manage);
 	
-	var _store = __webpack_require__(457);
+	var _store = __webpack_require__(462);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -5775,7 +5775,7 @@ webpackJsonp([0],[
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _bookings = __webpack_require__(434);
+	var _bookings = __webpack_require__(439);
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
@@ -6535,7 +6535,7 @@ webpackJsonp([0],[
 	
 	var _createPage2 = _interopRequireDefault(_createPage);
 	
-	var _editPage = __webpack_require__(433);
+	var _editPage = __webpack_require__(438);
 	
 	var _editPage2 = _interopRequireDefault(_editPage);
 	
@@ -7223,12 +7223,14 @@ webpackJsonp([0],[
 	
 				var event = {
 					id: null,
-					Name: '',
-					Description: '',
-					StartDate: (0, _moment2.default)().format("YYYY-MM-DD"),
-					EndDate: (0, _moment2.default)().format("YYYY-MM-DD"),
-					BookingDeadline: (0, _moment2.default)().format("YYYY-MM-DD"),
-					AllowGuestBookings: false
+					name: '',
+					description: '',
+					startDate: (0, _moment2.default)().format("YYYY-MM-DD"),
+					endDate: (0, _moment2.default)().format("YYYY-MM-DD"),
+					bookingDeadline: (0, _moment2.default)().format("YYYY-MM-DD"),
+					allowGuestBookings: false,
+					feeModel: "free",
+					feeData: {}
 				};
 	
 				return _react2.default.createElement(
@@ -7405,6 +7407,14 @@ webpackJsonp([0],[
 	
 	var _reactToggle2 = _interopRequireDefault(_reactToggle);
 	
+	var _lodash = __webpack_require__(433);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _fee = __webpack_require__(434);
+	
+	var _fee2 = _interopRequireDefault(_fee);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7424,11 +7434,8 @@ webpackJsonp([0],[
 			_this.state = _this.props.event;
 			_this.state.delete = false;
 	
-			_this.updateName = _this.updateName.bind(_this);
-			_this.updateDescription = _this.updateDescription.bind(_this);
-			_this.updateStartDate = _this.updateStartDate.bind(_this);
-			_this.updateEndDate = _this.updateEndDate.bind(_this);
-			_this.updateBookingDeadline = _this.updateBookingDeadline.bind(_this);
+			_this.update = _this.update.bind(_this);
+			_this.updateFeeData = _this.updateFeeData.bind(_this);
 	
 			_this.clickRevert = _this.clickRevert.bind(_this);
 			_this.clickDeleteLock = _this.clickDeleteLock.bind(_this);
@@ -7438,29 +7445,20 @@ webpackJsonp([0],[
 		}
 	
 		_createClass(EditForm, [{
-			key: 'updateName',
-			value: function updateName(e) {
-				this.setState({ name: e.target.value });
+			key: 'update',
+			value: function update(item) {
+				var _this2 = this;
+	
+				return function (e) {
+					var newState = {};
+					newState[item] = e.target.value;
+					_this2.setState(newState);
+				};
 			}
 		}, {
-			key: 'updateDescription',
-			value: function updateDescription(e) {
-				this.setState({ description: e.target.value });
-			}
-		}, {
-			key: 'updateStartDate',
-			value: function updateStartDate(e) {
-				this.setState({ startDate: e.target.value });
-			}
-		}, {
-			key: 'updateEndDate',
-			value: function updateEndDate(e) {
-				this.setState({ endDate: e.target.value });
-			}
-		}, {
-			key: 'updateBookingDeadline',
-			value: function updateBookingDeadline(e) {
-				this.setState({ bookingDeadline: e.target.value });
+			key: 'updateFeeData',
+			value: function updateFeeData(data) {
+				this.setState({ feeData: data });
 			}
 		}, {
 			key: 'clickRevert',
@@ -7490,7 +7488,9 @@ webpackJsonp([0],[
 					startDate: this.state.startDate,
 					endDate: this.state.endDate,
 					bookingDeadline: this.state.bookingDeadline,
-					allowGuestBookings: this.state.allowGuestBookings
+					allowGuestBookings: this.state.allowGuestBookings,
+					feeModel: this.state.feeModel,
+					feeData: this.state.feeData
 				};
 	
 				this.props.saveEvent(event);
@@ -7499,7 +7499,17 @@ webpackJsonp([0],[
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this2 = this;
+				var _this3 = this;
+	
+				var feeOptions = _lodash2.default.map(_fee2.default, function (f) {
+					return _react2.default.createElement(
+						'option',
+						{ value: f.name, key: f.name + "key" },
+						f.selection
+					);
+				});
+	
+				var FeeConfig = _fee2.default[this.state.feeModel].Config;
 	
 				var deleteButtons = this.props.new ? null : [_react2.default.createElement(
 					'button',
@@ -7528,7 +7538,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Name', value: this.state.name, onChange: this.updateName })
+								_react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Name', value: this.state.name, onChange: this.update("name") })
 							)
 						),
 						_react2.default.createElement(
@@ -7542,7 +7552,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('textarea', { className: 'form-control', rows: '5', value: this.state.description, onChange: this.updateDescription })
+								_react2.default.createElement('textarea', { className: 'form-control', rows: '5', value: this.state.description, onChange: this.update("description") })
 							)
 						),
 						_react2.default.createElement(
@@ -7556,7 +7566,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.startDate).format("YYYY-MM-DD"), onChange: this.updateStartDate })
+								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.startDate).format("YYYY-MM-DD"), onChange: this.update("startDate") })
 							)
 						),
 						_react2.default.createElement(
@@ -7570,7 +7580,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.endDate).format("YYYY-MM-DD"), onChange: this.updateEndDate })
+								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.endDate).format("YYYY-MM-DD"), onChange: this.update("endDate") })
 							)
 						),
 						_react2.default.createElement(
@@ -7584,7 +7594,7 @@ webpackJsonp([0],[
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.bookingDeadline).format("YYYY-MM-DD"), onChange: this.updateBookingDeadline })
+								_react2.default.createElement('input', { type: 'date', className: 'form-control', value: (0, _moment2.default)(this.state.bookingDeadline).format("YYYY-MM-DD"), onChange: this.update("bookingDeadline") })
 							)
 						),
 						_react2.default.createElement(
@@ -7599,8 +7609,40 @@ webpackJsonp([0],[
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement(_reactToggle2.default, { checked: this.state.allowGuestBookings, onChange: function onChange() {
-										return _this2.setState({ allowGuestBookings: !_this2.state.allowGuestBookings });
+										return _this3.setState({ allowGuestBookings: !_this3.state.allowGuestBookings });
 									}, value: 'yes' })
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'form-group' },
+							_react2.default.createElement(
+								'label',
+								{ className: 'col-sm-2 control-label' },
+								'Fee Structure:'
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'col-sm-10' },
+								_react2.default.createElement(
+									'select',
+									{ value: this.state.feeModel, onChange: this.update('feeModel'), className: 'form-control' },
+									feeOptions
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'form-group' },
+							_react2.default.createElement(
+								'label',
+								{ className: 'col-sm-2 control-label' },
+								'Fee Options:'
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'col-sm-10' },
+								_react2.default.createElement(FeeConfig, { fee: this.state.feeData, onChange: this.updateFeeData })
 							)
 						),
 						_react2.default.createElement(
@@ -7949,14 +7991,7 @@ webpackJsonp([0],[
 	})();
 
 /***/ },
-/* 426 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ },
+/* 426 */,
 /* 427 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8143,7 +8178,503 @@ webpackJsonp([0],[
 	module.exports = shallowEqual;
 
 /***/ },
-/* 433 */
+/* 433 */,
+/* 434 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _free = __webpack_require__(435);
+	
+	var free = _interopRequireWildcard(_free);
+	
+	var _flat = __webpack_require__(436);
+	
+	var flat = _interopRequireWildcard(_flat);
+	
+	var _ealing = __webpack_require__(437);
+	
+	var ealing = _interopRequireWildcard(_ealing);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	exports.default = { free: free, flat: flat, ealing: ealing }; //holds components for sorting out the fees, various models are allowed
+
+/***/ },
+/* 435 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.BookingForm = exports.Config = exports.selection = exports.name = undefined;
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	//this represents a free event whereby no fees are expected/managed by the system.
+	
+	var name = exports.name = "free";
+	var selection = exports.selection = "Free Event (don't manage fees)";
+	
+	var Config = exports.Config = function Config() {
+	  return _react2.default.createElement(
+	    "p",
+	    null,
+	    "Nothing to decide3"
+	  );
+	};
+	
+	var BookingForm = exports.BookingForm = function BookingForm(props) {
+	  return _react2.default.createElement(
+	    "p",
+	    null,
+	    "This is free event, no money involved"
+	  );
+	};
+
+/***/ },
+/* 436 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.BookingForm = exports.Config = exports.selection = exports.name = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//This event has a flat per participant cost.
+	
+	var name = exports.name = "flat";
+	var selection = exports.selection = "Flat fee per participant";
+	
+	var Config = exports.Config = function (_React$Component) {
+		_inherits(Config, _React$Component);
+	
+		function Config(props) {
+			_classCallCheck(this, Config);
+	
+			var _this = _possibleConstructorReturn(this, (Config.__proto__ || Object.getPrototypeOf(Config)).call(this, props));
+	
+			_this.update = _this.update.bind(_this);
+			return _this;
+		}
+	
+		_createClass(Config, [{
+			key: "update",
+			value: function update(e) {
+				var fee = { amount: e.target.value };
+				this.props.onChange(fee);
+			}
+		}, {
+			key: "render",
+			value: function render() {
+	
+				var amount = this.props.fee.amount || "";
+	
+				return _react2.default.createElement(
+					"div",
+					{ className: "row" },
+					_react2.default.createElement(
+						"div",
+						{ className: "form-group" },
+						_react2.default.createElement(
+							"label",
+							{ className: "col-sm-2 control-label" },
+							"Fee per participant:"
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "col-sm-10" },
+							_react2.default.createElement(
+								"div",
+								{ className: "input-group" },
+								_react2.default.createElement(
+									"span",
+									{ className: "input-group-addon" },
+									"\xA3"
+								),
+								_react2.default.createElement("input", { type: "number", className: "form-control", placeholder: "35", value: amount, onChange: this.update })
+							)
+						)
+					)
+				);
+			}
+		}]);
+	
+		return Config;
+	}(_react2.default.Component);
+	
+	var BookingForm = exports.BookingForm = function (_React$Component2) {
+		_inherits(BookingForm, _React$Component2);
+	
+		function BookingForm() {
+			_classCallCheck(this, BookingForm);
+	
+			return _possibleConstructorReturn(this, (BookingForm.__proto__ || Object.getPrototypeOf(BookingForm)).apply(this, arguments));
+		}
+	
+		_createClass(BookingForm, [{
+			key: "render",
+			value: function render() {
+	
+				var total = this.props.feeData.amount * this.props.participants.length;
+	
+				return _react2.default.createElement(
+					"div",
+					{ className: "col-sm-12" },
+					_react2.default.createElement(
+						"p",
+						null,
+						"This event costs \xA3",
+						this.props.feeData.amount,
+						" per person."
+					),
+					_react2.default.createElement(
+						"p",
+						null,
+						"You have booked ",
+						_react2.default.createElement(
+							"b",
+							null,
+							this.props.participants.length
+						),
+						" people for a total of ",
+						_react2.default.createElement(
+							"b",
+							null,
+							"\xA3",
+							total
+						)
+					)
+				);
+			}
+		}]);
+	
+		return BookingForm;
+	}(_react2.default.Component);
+
+/***/ },
+/* 437 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.BookingForm = exports.Config = exports.selection = exports.name = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//this implements Ealing's camp pricing policy.
+	
+	var name = exports.name = "ealing";
+	var selection = exports.selection = "Ealing Pricing Policy";
+	
+	var Config = exports.Config = function (_React$Component) {
+		_inherits(Config, _React$Component);
+	
+		function Config(props) {
+			_classCallCheck(this, Config);
+	
+			var _this = _possibleConstructorReturn(this, (Config.__proto__ || Object.getPrototypeOf(Config)).call(this, props));
+	
+			_this.update = _this.update.bind(_this);
+			return _this;
+		}
+	
+		_createClass(Config, [{
+			key: "update",
+			value: function update(e) {
+				var fee = { amount: parseFloat(e.target.value) };
+				this.props.onChange(fee);
+			}
+		}, {
+			key: "render",
+			value: function render() {
+				//Thou shalt not ever use JS numbers for currency...
+				var amount = this.props.fee.amount || 35;
+	
+				return _react2.default.createElement(
+					"div",
+					{ className: "row" },
+					_react2.default.createElement(
+						"div",
+						{ className: "col-sm-12" },
+						_react2.default.createElement(
+							"table",
+							{ className: "table" },
+							_react2.default.createElement(
+								"thead",
+								null,
+								_react2.default.createElement(
+									"tr",
+									null,
+									_react2.default.createElement("th", null),
+									_react2.default.createElement(
+										"th",
+										null,
+										"Standard Rates"
+									),
+									_react2.default.createElement(
+										"th",
+										null,
+										"Discounted Rates"
+									)
+								)
+							),
+							_react2.default.createElement(
+								"tbody",
+								null,
+								_react2.default.createElement(
+									"tr",
+									null,
+									_react2.default.createElement(
+										"td",
+										null,
+										"Unaccompanied Elfins, Pioneers & Venturers"
+									),
+									_react2.default.createElement(
+										"td",
+										null,
+										"\xA3",
+										Math.round(amount * 1.5)
+									),
+									_react2.default.createElement(
+										"td",
+										null,
+										"\xA3",
+										Math.round(amount * 0.75)
+									)
+								),
+								_react2.default.createElement(
+									"tr",
+									null,
+									_react2.default.createElement(
+										"td",
+										null,
+										"Elfins, Pioneers & Venturers accompanied by a responsible adult, DFs and Adults"
+									),
+									_react2.default.createElement(
+										"td",
+										null,
+										_react2.default.createElement(
+											"div",
+											{ className: "input-group" },
+											_react2.default.createElement(
+												"span",
+												{ className: "input-group-addon" },
+												"\xA3"
+											),
+											_react2.default.createElement("input", { type: "number", className: "form-control", placeholder: "35", value: amount, onChange: this.update })
+										)
+									),
+									_react2.default.createElement(
+										"td",
+										null,
+										"\xA3",
+										Math.round(amount * 0.5)
+									)
+								)
+							)
+						)
+					)
+				);
+			}
+		}]);
+	
+		return Config;
+	}(_react2.default.Component);
+	
+	var BookingForm = exports.BookingForm = function (_React$Component2) {
+		_inherits(BookingForm, _React$Component2);
+	
+		function BookingForm() {
+			_classCallCheck(this, BookingForm);
+	
+			return _possibleConstructorReturn(this, (BookingForm.__proto__ || Object.getPrototypeOf(BookingForm)).apply(this, arguments));
+		}
+	
+		_createClass(BookingForm, [{
+			key: "render",
+			value: function render() {
+	
+				var accompanied = this.props.participants.find(function (p) {
+					return parseInt(p.age) > 15;
+				}) === undefined ? false : true;
+	
+				var amount = this.props.feeData.amount;
+	
+				var total = this.props.participants.length * Math.round(this.props.feeData.amount * (accompanied ? 1 : 1.5));
+				var totalDiscounted = this.props.participants.length * Math.round(this.props.feeData.amount * (accompanied ? 0.5 : 0.75));
+	
+				return _react2.default.createElement(
+					"div",
+					{ className: "col-sm-12" },
+					_react2.default.createElement(
+						"table",
+						{ className: "table" },
+						_react2.default.createElement(
+							"thead",
+							null,
+							_react2.default.createElement(
+								"tr",
+								null,
+								_react2.default.createElement("th", null),
+								_react2.default.createElement(
+									"th",
+									null,
+									"Suggested Donation"
+								),
+								_react2.default.createElement(
+									"th",
+									null,
+									"Discounted Donation"
+								)
+							)
+						),
+						_react2.default.createElement(
+							"tbody",
+							null,
+							_react2.default.createElement(
+								"tr",
+								null,
+								_react2.default.createElement(
+									"td",
+									null,
+									"Unaccompanied Elfins, Pioneers & Venturers"
+								),
+								_react2.default.createElement(
+									"td",
+									null,
+									"\xA3",
+									Math.round(amount * 1.5)
+								),
+								_react2.default.createElement(
+									"td",
+									null,
+									"\xA3",
+									Math.round(amount * 0.75)
+								)
+							),
+							_react2.default.createElement(
+								"tr",
+								null,
+								_react2.default.createElement(
+									"td",
+									null,
+									"Elfins, Pioneers & Venturers accompanied by a responsible adult, DFs and Adults"
+								),
+								_react2.default.createElement(
+									"td",
+									null,
+									"\xA3",
+									Math.round(amount)
+								),
+								_react2.default.createElement(
+									"td",
+									null,
+									"\xA3",
+									Math.round(amount * 0.5)
+								)
+							),
+							_react2.default.createElement(
+								"tr",
+								null,
+								_react2.default.createElement(
+									"td",
+									null,
+									_react2.default.createElement(
+										"b",
+										null,
+										"My Booking"
+									),
+									" (",
+									this.props.participants.length,
+									" people, ",
+									accompanied ? "Accompanined" : "Unaccompanied",
+									")"
+								),
+								_react2.default.createElement(
+									"td",
+									null,
+									_react2.default.createElement(
+										"b",
+										null,
+										"\xA3",
+										total
+									)
+								),
+								_react2.default.createElement(
+									"td",
+									null,
+									_react2.default.createElement(
+										"b",
+										null,
+										"\xA3",
+										totalDiscounted
+									)
+								)
+							)
+						)
+					),
+					_react2.default.createElement(
+						"p",
+						null,
+						"In order for us to utilise Gift Aid the camp price has been changed to a suggested donation. If you have the means to donate more than the donations listed above then please do so as this will allow us to further subsidise poorer individuals and families. The ",
+						_react2.default.createElement(
+							"b",
+							null,
+							"discounted donation"
+						),
+						" is offered to all families/individuals where there is no wage earner and/or the family/individual is on a low wage. This would include DFs and students as well as adults and families. Cost should never be a reason for people being unable to attend camp so please contact us if you need further discount. Please make cheques payable to Ealing District Woodcraft Folk."
+					)
+				);
+			}
+		}]);
+	
+		return BookingForm;
+	}(_react2.default.Component);
+
+/***/ },
+/* 438 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8207,7 +8738,7 @@ webpackJsonp([0],[
 								'h3',
 								null,
 								'Edit Event - ',
-								event.Name
+								event.name
 							)
 						)
 					),
@@ -8235,7 +8766,7 @@ webpackJsonp([0],[
 	exports.default = VisibleEditPage;
 
 /***/ },
-/* 434 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8248,19 +8779,19 @@ webpackJsonp([0],[
 	
 	var actions = _interopRequireWildcard(_actions);
 	
-	var _reducer = __webpack_require__(435);
+	var _reducer = __webpack_require__(440);
 	
 	var _reducer2 = _interopRequireDefault(_reducer);
 	
-	var _myBookingPage = __webpack_require__(436);
+	var _myBookingPage = __webpack_require__(441);
 	
 	var _myBookingPage2 = _interopRequireDefault(_myBookingPage);
 	
-	var _editPage = __webpack_require__(447);
+	var _editPage = __webpack_require__(452);
 	
 	var _editPage2 = _interopRequireDefault(_editPage);
 	
-	var _thanksPage = __webpack_require__(448);
+	var _thanksPage = __webpack_require__(453);
 	
 	var _thanksPage2 = _interopRequireDefault(_thanksPage);
 	
@@ -8272,7 +8803,7 @@ webpackJsonp([0],[
 	exports.default = { actions: actions, reducer: _reducer2.default, myBookingPage: _myBookingPage2.default, editPage: _editPage2.default, thanksPage: _thanksPage2.default };
 
 /***/ },
-/* 435 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8321,7 +8852,7 @@ webpackJsonp([0],[
 	}
 
 /***/ },
-/* 436 */
+/* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8344,11 +8875,11 @@ webpackJsonp([0],[
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _bookingForm = __webpack_require__(437);
+	var _bookingForm = __webpack_require__(442);
 	
 	var _bookingForm2 = _interopRequireDefault(_bookingForm);
 	
-	var _participantQuickList = __webpack_require__(441);
+	var _participantQuickList = __webpack_require__(446);
 	
 	var _participantQuickList2 = _interopRequireDefault(_participantQuickList);
 	
@@ -8431,7 +8962,7 @@ webpackJsonp([0],[
 	exports.default = VisibleMyBookingPage;
 
 /***/ },
-/* 437 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8446,17 +8977,21 @@ webpackJsonp([0],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _BookingUserDetails = __webpack_require__(438);
+	var _BookingUserDetails = __webpack_require__(443);
 	
 	var _BookingUserDetails2 = _interopRequireDefault(_BookingUserDetails);
 	
-	var _participantsForm = __webpack_require__(439);
+	var _participantsForm = __webpack_require__(444);
 	
 	var _participantsForm2 = _interopRequireDefault(_participantsForm);
 	
-	var _permissionForm = __webpack_require__(440);
+	var _permissionForm = __webpack_require__(445);
 	
 	var _permissionForm2 = _interopRequireDefault(_permissionForm);
+	
+	var _feeForm = __webpack_require__(470);
+	
+	var _feeForm2 = _interopRequireDefault(_feeForm);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -8552,6 +9087,7 @@ webpackJsonp([0],[
 		}, {
 			key: 'render',
 			value: function render() {
+	
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -8585,6 +9121,16 @@ webpackJsonp([0],[
 						)
 					),
 					_react2.default.createElement(_participantsForm2.default, { participants: this.state.participants, update: this.updateParticipantDetails, add: this.addParticipant }),
+					_react2.default.createElement(
+						'div',
+						{ className: 'col-sm-12' },
+						_react2.default.createElement(
+							'h3',
+							null,
+							'Money'
+						)
+					),
+					_react2.default.createElement(_feeForm2.default, { event: this.props.event, participants: this.state.participants }),
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-sm-12' },
@@ -8636,7 +9182,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 438 */
+/* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8743,7 +9289,7 @@ webpackJsonp([0],[
 	exports.default = BookingUserDetails;
 
 /***/ },
-/* 439 */
+/* 444 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8890,17 +9436,17 @@ webpackJsonp([0],[
 							),
 							_react2.default.createElement(
 								"option",
-								{ name: "omnivore" },
+								{ value: "omnivore" },
 								"Omnivore"
 							),
 							_react2.default.createElement(
 								"option",
-								{ name: "vegetarian" },
+								{ value: "vegetarian" },
 								"Vegetarian"
 							),
 							_react2.default.createElement(
 								"option",
-								{ name: "vegan" },
+								{ value: "vegan" },
 								"Vegan"
 							)
 						)
@@ -8943,7 +9489,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 440 */
+/* 445 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9018,7 +9564,7 @@ webpackJsonp([0],[
 	exports.default = PermissionForm;
 
 /***/ },
-/* 441 */
+/* 446 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9033,9 +9579,9 @@ webpackJsonp([0],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactSticky = __webpack_require__(442);
+	var _reactSticky = __webpack_require__(447);
 	
-	var _woodcraft = __webpack_require__(446);
+	var _woodcraft = __webpack_require__(451);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -9117,7 +9663,7 @@ webpackJsonp([0],[
 	exports.default = CreatePage;
 
 /***/ },
-/* 442 */
+/* 447 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9127,15 +9673,15 @@ webpackJsonp([0],[
 	});
 	exports.Channel = exports.StickyContainer = exports.Sticky = undefined;
 	
-	var _sticky = __webpack_require__(443);
+	var _sticky = __webpack_require__(448);
 	
 	var _sticky2 = _interopRequireDefault(_sticky);
 	
-	var _container = __webpack_require__(444);
+	var _container = __webpack_require__(449);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
-	var _channel = __webpack_require__(445);
+	var _channel = __webpack_require__(450);
 	
 	var _channel2 = _interopRequireDefault(_channel);
 	
@@ -9149,7 +9695,7 @@ webpackJsonp([0],[
 	exports.default = _sticky2.default;
 
 /***/ },
-/* 443 */
+/* 448 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9446,7 +9992,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 444 */
+/* 449 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9475,7 +10021,7 @@ webpackJsonp([0],[
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _channel = __webpack_require__(445);
+	var _channel = __webpack_require__(450);
 	
 	var _channel2 = _interopRequireDefault(_channel);
 	
@@ -9571,7 +10117,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 445 */
+/* 450 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -9613,7 +10159,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 446 */
+/* 451 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -9640,7 +10186,7 @@ webpackJsonp([0],[
 	module.exports = woodcraft;
 
 /***/ },
-/* 447 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9663,11 +10209,11 @@ webpackJsonp([0],[
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _bookingForm = __webpack_require__(437);
+	var _bookingForm = __webpack_require__(442);
 	
 	var _bookingForm2 = _interopRequireDefault(_bookingForm);
 	
-	var _participantQuickList = __webpack_require__(441);
+	var _participantQuickList = __webpack_require__(446);
 	
 	var _participantQuickList2 = _interopRequireDefault(_participantQuickList);
 	
@@ -9753,7 +10299,7 @@ webpackJsonp([0],[
 	exports.default = VisibleEditPage;
 
 /***/ },
-/* 448 */
+/* 453 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate) {'use strict';
@@ -9929,10 +10475,10 @@ webpackJsonp([0],[
 	var VisibleThanksPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ThanksPage);
 	
 	exports.default = VisibleThanksPage;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(449).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(454).setImmediate))
 
 /***/ },
-/* 449 */
+/* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -9985,12 +10531,12 @@ webpackJsonp([0],[
 	};
 	
 	// setimmediate attaches itself to the global object
-	__webpack_require__(450);
+	__webpack_require__(455);
 	exports.setImmediate = setImmediate;
 	exports.clearImmediate = clearImmediate;
 
 /***/ },
-/* 450 */
+/* 455 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {"use strict";
@@ -10180,7 +10726,7 @@ webpackJsonp([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(3)))
 
 /***/ },
-/* 451 */
+/* 456 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10189,19 +10735,19 @@ webpackJsonp([0],[
 	  value: true
 	});
 	
-	var _containerPage = __webpack_require__(452);
+	var _containerPage = __webpack_require__(457);
 	
 	var _containerPage2 = _interopRequireDefault(_containerPage);
 	
-	var _participants = __webpack_require__(454);
+	var _participants = __webpack_require__(459);
 	
 	var _participants2 = _interopRequireDefault(_participants);
 	
-	var _bookings = __webpack_require__(455);
+	var _bookings = __webpack_require__(460);
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
-	var _kp = __webpack_require__(456);
+	var _kp = __webpack_require__(461);
 	
 	var _kp2 = _interopRequireDefault(_kp);
 	
@@ -10210,7 +10756,7 @@ webpackJsonp([0],[
 	exports.default = { containerPage: _containerPage2.default, participants: _participants2.default, bookings: _bookings2.default, kp: _kp2.default };
 
 /***/ },
-/* 452 */
+/* 457 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10235,11 +10781,11 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _bookings = __webpack_require__(434);
+	var _bookings = __webpack_require__(439);
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
-	var _permission = __webpack_require__(453);
+	var _permission = __webpack_require__(458);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -10379,7 +10925,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 453 */
+/* 458 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10411,7 +10957,7 @@ webpackJsonp([0],[
 	});
 
 /***/ },
-/* 454 */
+/* 459 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10432,7 +10978,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _woodcraft = __webpack_require__(446);
+	var _woodcraft = __webpack_require__(451);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -10566,7 +11112,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 455 */
+/* 460 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10587,7 +11133,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _woodcraft = __webpack_require__(446);
+	var _woodcraft = __webpack_require__(451);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -10724,7 +11270,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 456 */
+/* 461 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10745,7 +11291,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _woodcraft = __webpack_require__(446);
+	var _woodcraft = __webpack_require__(451);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -10978,7 +11524,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 457 */
+/* 462 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10989,7 +11535,7 @@ webpackJsonp([0],[
 	
 	var _redux = __webpack_require__(194);
 	
-	var _reduxThunk = __webpack_require__(458);
+	var _reduxThunk = __webpack_require__(463);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
@@ -10997,7 +11543,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _reduxImmutable = __webpack_require__(459);
+	var _reduxImmutable = __webpack_require__(464);
 	
 	var _user = __webpack_require__(296);
 	
@@ -11011,7 +11557,7 @@ webpackJsonp([0],[
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _bookings = __webpack_require__(434);
+	var _bookings = __webpack_require__(439);
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
@@ -11040,7 +11586,7 @@ webpackJsonp([0],[
 	exports.default = (0, _redux.createStore)(rootReducer, _immutable2.default.Map(), (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 /***/ },
-/* 458 */
+/* 463 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -11068,7 +11614,7 @@ webpackJsonp([0],[
 	exports['default'] = thunk;
 
 /***/ },
-/* 459 */
+/* 464 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11078,7 +11624,7 @@ webpackJsonp([0],[
 	});
 	exports.combineReducers = undefined;
 	
-	var _combineReducers2 = __webpack_require__(460);
+	var _combineReducers2 = __webpack_require__(465);
 	
 	var _combineReducers3 = _interopRequireDefault(_combineReducers2);
 	
@@ -11089,7 +11635,7 @@ webpackJsonp([0],[
 	exports.combineReducers = _combineReducers3.default;
 
 /***/ },
-/* 460 */
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -11102,7 +11648,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _utilities = __webpack_require__(461);
+	var _utilities = __webpack_require__(466);
 	
 	function _interopRequireDefault(obj) {
 	  return obj && obj.__esModule ? obj : { default: obj };
@@ -11144,7 +11690,7 @@ webpackJsonp([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 461 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11155,15 +11701,15 @@ webpackJsonp([0],[
 	});
 	exports.validateNextState = exports.getUnexpectedInvocationParameterMessage = exports.getStateName = undefined;
 	
-	var _getStateName2 = __webpack_require__(462);
+	var _getStateName2 = __webpack_require__(467);
 	
 	var _getStateName3 = _interopRequireDefault(_getStateName2);
 	
-	var _getUnexpectedInvocationParameterMessage2 = __webpack_require__(463);
+	var _getUnexpectedInvocationParameterMessage2 = __webpack_require__(468);
 	
 	var _getUnexpectedInvocationParameterMessage3 = _interopRequireDefault(_getUnexpectedInvocationParameterMessage2);
 	
-	var _validateNextState2 = __webpack_require__(464);
+	var _validateNextState2 = __webpack_require__(469);
 	
 	var _validateNextState3 = _interopRequireDefault(_validateNextState2);
 	
@@ -11176,7 +11722,7 @@ webpackJsonp([0],[
 	exports.validateNextState = _validateNextState3.default;
 
 /***/ },
-/* 462 */
+/* 467 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -11192,7 +11738,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 463 */
+/* 468 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11205,7 +11751,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _getStateName = __webpack_require__(462);
+	var _getStateName = __webpack_require__(467);
 	
 	var _getStateName2 = _interopRequireDefault(_getStateName);
 	
@@ -11242,7 +11788,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 464 */
+/* 469 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -11261,6 +11807,74 @@ webpackJsonp([0],[
 	};
 	
 	module.exports = exports['default'];
+
+/***/ },
+/* 470 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lodash = __webpack_require__(433);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _fee = __webpack_require__(434);
+	
+	var _fee2 = _interopRequireDefault(_fee);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var FeeForm = function (_React$Component) {
+		_inherits(FeeForm, _React$Component);
+	
+		function FeeForm(props) {
+			_classCallCheck(this, FeeForm);
+	
+			var _this = _possibleConstructorReturn(this, (FeeForm.__proto__ || Object.getPrototypeOf(FeeForm)).call(this, props));
+	
+			_this.updatePermission = _this.updatePermission.bind(_this);
+			return _this;
+		}
+	
+		_createClass(FeeForm, [{
+			key: 'updatePermission',
+			value: function updatePermission(e) {
+				this.props.update();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+	
+				var BookingFeeForm = _fee2.default[this.props.event.feeModel].BookingForm;
+	
+				return _react2.default.createElement(
+					'div',
+					{ className: 'col-sm-12' },
+					_react2.default.createElement(BookingFeeForm, { feeData: this.props.event.feeData, participants: this.props.participants })
+				);
+			}
+		}]);
+	
+		return FeeForm;
+	}(_react2.default.Component);
+	
+	exports.default = FeeForm;
 
 /***/ }
 ]);

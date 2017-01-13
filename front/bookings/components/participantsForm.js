@@ -56,9 +56,9 @@ const ParticipantRow = (props) => {
 				<div className="col-sm-2">
 					<select value={props.diet} onChange={props.update("diet")} className="form-control">
  						<option>Please Select</option>
-  						<option name="omnivore">Omnivore</option>
-						<option name="vegetarian">Vegetarian</option>
-  						<option name="vegan">Vegan</option>
+  						<option value="omnivore">Omnivore</option>
+						<option value="vegetarian">Vegetarian</option>
+  						<option value="vegan">Vegan</option>
 					</select>
     			</div>
   			</div>
