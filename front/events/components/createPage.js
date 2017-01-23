@@ -32,7 +32,9 @@ class CreatePage extends React.Component{
 			bookingDeadline:Moment().format("YYYY-MM-DD"),
 			allowGuestBookings:false,
 			feeModel:"free",
-			feeData:{}
+			feeData:{},
+			paymentTypes:["Cash","Cheque","Bank Transfer"],
+			paymentInfo:""
 		}
 
 		return(

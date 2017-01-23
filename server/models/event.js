@@ -29,6 +29,10 @@ var Event = o.define('event', {
 	  values: ['free','flat','ealing']
   },
   feeData: JsonField(o, "Event", "feeData"),
+  paymentTypes: JsonField(o, "Event", "paymentTypes"),
+  paymentInfo: {
+	  type: Sequelize.TEXT
+  }
 });
 
 Event.belongsTo(User)

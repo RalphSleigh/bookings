@@ -49,6 +49,7 @@ bookings.createBooking = (req, res) => {
 	newBooking.userName = req.body.user.name;
 	newBooking.userEmail = req.body.user.email;
 	newBooking.userContact = req.body.user.phone;
+	newBooking.paymentType = req.body.paymentType;
 	newBooking.eventId =  req.body.eventId;
 	newBooking.userId = req.session.user.id
 	newBooking.participants = req.body.participants; 
@@ -74,6 +75,7 @@ bookings.editBooking = (req, res) => {
 		booking.userName = req.body.user.name;
 		booking.userEmail = req.body.user.email;
 		booking.userContact = req.body.user.phone;
+		booking.paymentType = req.body.paymentType;
 		
 		Participant.destroy({where:{bookingId:req.body.id}})//delete previous partiticpants
 		.then(() => Promise.all(

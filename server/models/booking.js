@@ -16,6 +16,9 @@ var Booking = o.define('booking', {
   userContact: {
     type: Sequelize.TEXT
   },
+  paymentType: {
+	  type: Sequelize.STRING
+  },
   guestUUID: {
 	  type:Sequelize.UUID
   }

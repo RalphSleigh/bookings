@@ -72,7 +72,9 @@ if(process.argv && process.argv[2] === "sync") {
 				allowGuestBookings:false,
 				userId: user.id,
 				feeModel:"free",
-				feeData:{}}),
+				feeData:{},
+				paymentTypes:["Cash","Cheque","Bank Transfer"], 
+				paymentInfo:"Ho Ho Ho"}),
 			Event.create({
     			name: 'This is a large event with many people',
    				description: 'Gonna be good fun',
@@ -82,7 +84,10 @@ if(process.argv && process.argv[2] === "sync") {
 				allowGuestBookings:true,
 				userId: user.id,
 				feeModel:"flat",
-				feeData:{amount:55}}),
+				feeData:{amount:55},
+				paymentTypes:["Cash","Bank Transfer"],
+				paymentInfo:`# Title
+text *text* text`}),
 			Event.create({
     			name: 'Past deadline',
    				description: 'Gonna be good fun',
@@ -92,7 +97,10 @@ if(process.argv && process.argv[2] === "sync") {
 				allowGuestBookings:false,
 				userId: user.id,
 				feeModel: "ealing",
-				feeData:{amount:35}})
+				feeData:{amount:35},
+				paymentTypes:["Cheque","Bank Transfer"],
+				paymentInfo:`# Title
+text *text* text`})
 	])).then(events => {
 		let bookings = [];
 		for(let i = 0; i < 20; i++) {
@@ -100,6 +108,7 @@ if(process.argv && process.argv[2] === "sync") {
 				userName:faker.name.findName(),
 				userEmail:faker.internet.email(),
 				userContact:faker.phone.phoneNumber(),
+				paymentType:getRandomPaymentType(),
 				guestUUID:faker.random.uuid(),
 				eventId:events[1].id
 			}))
@@ -173,4 +182,9 @@ function getRandomMedical() {
 
 	];
 	return Math.random() > 0.95 ? medical[getRandomInt(0,medical.length)] : null;
+}
+
+function getRandomPaymentType() {
+	const types = ["Cheque","Cheque","Bank Transfer","Bank Transfer","Bank Transfer","Cash"]
+	return types[getRandomInt(0, 6)]
 }

@@ -3,7 +3,7 @@ webpack = require('webpack');
 module.exports = {
     entry: {
           app: './front/index.js',
-          vendor: ['react','redux','react-redux','react-dom','immutable','moment','redux-auth-wrapper','lodash']},
+          vendor: ['react','redux','react-redux','react-dom','immutable','moment','redux-auth-wrapper','lodash','react-markdown']},
     output: {
         path:     'public',
         filename: 'bundle.js',
@@ -17,7 +17,11 @@ module.exports = {
           			presets: ['es2015', 'react'],
                     plugins: ["transform-object-rest-spread"]
       			}
-            }
+            },
+			{
+            	test: /\.json$/,
+            	loader: 'json'
+        	}
         ],
     },
 	

@@ -23,6 +23,7 @@ export default class Bookings extends React.Component {
 										<td>{b.userEmail}</td>
 										<td>{b.userContact}</td>
 										<td>{b.participants.length}</td>
+										<td>{b.paymentType}</td>
 										<td>{b.updatedAt}</td>
 									</tr>)
 
@@ -35,6 +36,7 @@ export default class Bookings extends React.Component {
 										<th>e-mail</th>
 										<th>Contact</th>
 										<th>Participants booked</th>
+										<th>Payment Method</th>
 										<th>Updated</th>
 									</tr>
 								</thead>

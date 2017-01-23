@@ -3,6 +3,7 @@ import BookingUserDetails from './BookingUserDetails.js'
 import ParticipantForm from './participantsForm.js'
 import PermissionForm from './permissionForm.js'
 import FeeForm from './feeForm.js' 
+import PaymentForm from './paymentForm.js' 
 
 //this is a massive component that handles the state of the booking form.
 export default class BookingForm extends React.Component {
@@ -20,6 +21,7 @@ export default class BookingForm extends React.Component {
 		  							email: this.guest? '' : props.user.email,
 					 				phone:''},
 							participants: [blankParticipant(),blankParticipant()],
+							paymentType:"",
 							permission:false,
 							eventId: this.props.event.id
 						 };
@@ -31,6 +33,7 @@ export default class BookingForm extends React.Component {
 					 				phone:	this.props.booking.userContact},
 							participants: this.props.booking.participants,
 							permission:true,
+							paymentType:this.props.booking.paymentType,
 							eventId: this.props.booking.eventId,
 							id: this.props.booking.id
 						 };
@@ -41,6 +44,7 @@ export default class BookingForm extends React.Component {
 		this.updateUserDetails = this.updateUserDetails.bind(this);
 		this.updateParticipantDetails = this.updateParticipantDetails.bind(this);
 		this.addParticipant = this.addParticipant.bind(this);
+		this.updatePaymentType = this.updatePaymentType.bind(this);
 		this.updatePermission = this.updatePermission.bind(this);
 		this.submit = this.submit.bind(this);
 	}
@@ -63,6 +67,10 @@ export default class BookingForm extends React.Component {
 		let participants = this.state.participants;
 		participants.push(blankParticipant());
 		this.setState({participants:participants});
+	}
+
+	updatePaymentType(type) {
+		this.setState({paymentType:type});
 	}
 
 	updatePermission() {
@@ -92,6 +100,7 @@ export default class BookingForm extends React.Component {
 				<h3>Money</h3>
 			</div>
 			<FeeForm event={this.props.event} participants={this.state.participants}/>
+			<PaymentForm update={this.updatePaymentType} event={this.props.event} chosen={this.state.paymentType}/>
 			<div className="col-sm-12">
 				<h3>Permission</h3>
 			</div>

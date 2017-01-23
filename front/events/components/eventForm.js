@@ -13,7 +13,9 @@ export default class EditForm extends React.Component {
 	  this.state.delete = false;
 
 	  this.update = this.update.bind(this);
+	  this.updatePaymentOptions = this.updatePaymentOptions.bind(this);
 	  this.updateFeeData = this.updateFeeData.bind(this);
+
 
 	  this.clickRevert = this.clickRevert.bind(this);
 	  this.clickDeleteLock = this.clickDeleteLock.bind(this);
@@ -31,6 +33,10 @@ export default class EditForm extends React.Component {
 
 	updateFeeData(data) {
 		this.setState({feeData:data}) 
+	}
+
+	updatePaymentOptions(e) {
+		this.setState({paymentTypes:e.target.value.split("\n")}) 
 	}
 
 	clickRevert(e) {
@@ -58,7 +64,9 @@ export default class EditForm extends React.Component {
 			bookingDeadline:this.state.bookingDeadline,
 			allowGuestBookings:this.state.allowGuestBookings,
 			feeModel:this.state.feeModel,
-			feeData:this.state.feeData
+			feeData:this.state.feeData,
+			paymentTypes:this.state.paymentTypes.filter(v => v !== ""),
+			paymentInfo:this.state.paymentInfo
 		}
 
 		this.props.saveEvent(event);
@@ -70,6 +78,35 @@ export default class EditForm extends React.Component {
 		const feeOptions = _.map(fee, f => <option value={f.name} key={f.name+"key"}>{f.selection}</option>);
 
 		const FeeConfig = fee[this.state.feeModel].Config;
+
+		let paymentFields = null;
+		let feeOptionFields = null;
+
+		if(this.state.feeModel !== "free") {
+
+			feeOptionFields = (<div className="form-group">
+								<label className="col-sm-2 control-label">Fee Options:</label>
+						 		<div className="col-sm-10">
+							 		 <FeeConfig fee={this.state.feeData} onChange={this.updateFeeData}/>
+    							</div>
+  								</div>)
+
+			const options = this.state.paymentTypes.join("\n")
+			paymentFields = (<div>
+							<div className="form-group">
+    							<label className="col-sm-2 control-label">Payment Options:</label>
+    							<div className="col-sm-10">
+     								<textarea className="form-control" rows="5" value={options} onChange={this.updatePaymentOptions}></textarea>
+    							</div>
+  							</div>
+							<div className="form-group">
+    							<label className="col-sm-2 control-label">Payment Instructions:</label>
+    							<div className="col-sm-10">
+     								<textarea className="form-control" rows="5" value={this.state.paymentInfo} onChange={this.update("paymentInfo")}></textarea>
+    							</div>
+  							</div>
+							</div>)
+		}
 
 		let deleteButtons = this.props.new ? null : [<button key="deletelock" type="submit" disabled={!this.state.delete} onClick={this.clickDelete} className="btn btn-danger pull-right">Delete</button>,
 								 <button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
@@ -120,12 +157,8 @@ export default class EditForm extends React.Component {
 							</select>
     					</div>
   					</div>
-					<div className="form-group">
-						<label className="col-sm-2 control-label">Fee Options:</label>
-						 <div className="col-sm-10">
-							  <FeeConfig fee={this.state.feeData} onChange={this.updateFeeData}/>
-    					</div>
-  					</div>
+					{feeOptionFields}
+					{paymentFields}
   					<div className="form-group">
   						<div className="col-sm-offset-2 col-sm-10">
 						  	 <div className="btn-toolbar">

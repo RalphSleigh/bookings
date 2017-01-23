@@ -7,7 +7,8 @@ Written in javascipt using Express/React/Redux. Currently stores data in a sqlit
 Currently perfecting it for district events before adding features for larger ones.
 
 Next to add: 
- * Fees/payment tracker
+ * Track payments
+ * Fix up front page, markdown in description
  * Validation on user facing forms
  * Make booking deadline do something
  * Sort SSL/spin up demo instance 

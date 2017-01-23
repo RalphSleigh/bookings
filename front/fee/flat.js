@@ -42,7 +42,7 @@ export class BookingForm extends React.Component {
 
 		const total = this.props.feeData.amount * this.props.participants.length
 
-		return(<div className="col-sm-12">
+		return(<div>
 			<p>This event costs £{this.props.feeData.amount} per person.</p>
 			<p>You have booked <b>{this.props.participants.length}</b> people for a total of <b>£{total}</b></p>
 		</div>)

@@ -41,7 +41,7 @@ export const createBooking = booking => {
 
 export const saveBooking = booking => {
 	return dispatch => {
-		fetch('/api/booking/save',"POST",booking)
+		fetch('/api/booking/edit',"POST",booking)
 		.then(j => {
 			dispatch(updateBooking(j));
 			browserHistory.push('/event/'+booking.eventId+'/book/thanks');

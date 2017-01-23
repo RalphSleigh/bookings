@@ -41,23 +41,23 @@ server.use(bodyParser.json());
 server.use(ensureUser);
 server.use(logErrors);
 
-server.post('/api/user/login', auth.doLogin);
-server.get('/api/user', auth.getUser);
-server.post('/api/user/logout', auth.doLogout);
+server.post('/api/user/login', auth.doLogin); 	//login
+server.get('/api/user', auth.getUser);   		//get current user info
+server.post('/api/user/logout', auth.doLogout); //logout
 
-server.get('/api/events', events.getEvents);
-server.get('/api/event/:eventId', events.getEvent);
-server.post('/api/event/edit', P.editEvent, events.editEvent);
-server.post('/api/event/create', P.createEvent, events.createEvent);
-server.post('/api/event/delete', P.createEvent, events.deleteEvent);
+server.get('/api/events', events.getEvents);						//get list of events
+server.get('/api/event/:eventId', events.getEvent);					//get single eventId
+server.post('/api/event/edit', P.editEvent, events.editEvent);		//edit an event
+server.post('/api/event/create', P.createEvent, events.createEvent);//create event
+server.post('/api/event/delete', P.createEvent, events.deleteEvent);//delete event
 
 
-server.get('/api/booking/user', bookings.getUserBookings);
-server.get('/api/booking/event/:eventId', P.getEventBookings, bookings.getEventBookings);
-server.get('/api/booking/:bookingId', P.getBooking, bookings.getBooking);
+server.get('/api/booking/user', bookings.getUserBookings);									//get users  own bookings
+server.get('/api/booking/event/:eventId', P.getEventBookings, bookings.getEventBookings);	//get all bookings for an event
+server.get('/api/booking/:bookingId', P.getBooking, bookings.getBooking);	//get a single booking
 
-server.post('/api/booking/:eventId/create', P.bookEvent, bookings.createBooking);
-server.post('/api/booking/save', P.bookEvent, bookings.editBooking);
+server.post('/api/booking/:eventId/create', P.bookEvent, bookings.createBooking);//create a booking
+server.post('/api/booking/edit', P.bookEvent, bookings.editBooking);			//edit a booking
 
 server.get('/api/*', function(req, res) {
 	res.status(404).end();
