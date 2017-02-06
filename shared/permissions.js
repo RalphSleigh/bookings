@@ -15,7 +15,7 @@ permissions.createEvent = user => {
 permissions.bookEvent = (user, event) => {
 		if(user.roles.find(role => role.name === "admin"))return true; //admin can always
 		if(user.id !== 1)return true; //non guest can
-		if(event.AllowGuestBookings === true)return true; //anyone can book 
+		if(event.allowGuestBookings === true)return true; //anyone can book 
 		return false;
 } 
 

@@ -16,6 +16,9 @@ export default class PaymentForm extends React.Component {
 
 	render() {
 
+		const valid = "form-group";
+		const invalid = "form-group has-error";
+
 		const radios = this.props.event.paymentTypes.map(p => <label key={p} className="radio-inline">
 			  <input type="radio" value={p} onChange={this.selectPaymentType} checked={this.props.chosen === p}/> {p}
 		</label>)
@@ -23,7 +26,7 @@ export default class PaymentForm extends React.Component {
 		return(<div>
 				<div className="col-sm-12">
 					<form className="form-horizontal">
-  						<div className="form-group">
+  						<div className={this.props.validating ? this.props.chosen !== "" ? valid : invalid : valid }>
 							<label className="col-sm-2 control-label">Payment Method:</label>
 						 	<div className="col-sm-10">
       							{radios}

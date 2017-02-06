@@ -6705,6 +6705,14 @@ webpackJsonp([0],[
 	
 	var _reactRouter = __webpack_require__(234);
 	
+	var _reactMarkdown = __webpack_require__(448);
+	
+	var _reactMarkdown2 = _interopRequireDefault(_reactMarkdown);
+	
+	var _moment = __webpack_require__(313);
+	
+	var _moment2 = _interopRequireDefault(_moment);
+	
 	var _actions = __webpack_require__(303);
 	
 	var _permission = __webpack_require__(306);
@@ -6786,11 +6794,11 @@ webpackJsonp([0],[
 		var bookLink = function bookLink(props) {
 			return props.booking !== undefined ? _react2.default.createElement(
 				_reactRouter.Link,
-				{ to: "/event/" + props.id + "/book" },
+				{ to: "/event/" + props.id + "/book", className: 'btn btn-primary pull-right' },
 				'Edit My Booking'
 			) : _react2.default.createElement(
 				_reactRouter.Link,
-				{ to: "/event/" + props.id + "/book" },
+				{ to: "/event/" + props.id + "/book", className: 'btn btn-primary pull-right' },
 				'Book'
 			);
 		};
@@ -6799,35 +6807,44 @@ webpackJsonp([0],[
 	
 		return _react2.default.createElement(
 			'div',
-			null,
+			{ className: 'panel panel-default' },
 			_react2.default.createElement(
-				EditLink,
-				{ event: props, className: 'pull-right', to: "/event/" + props.id + "/edit" },
-				'Edit'
+				'div',
+				{ className: 'panel-heading' },
+				_react2.default.createElement(
+					'h3',
+					{ className: 'panel-title' },
+					props.name
+				)
 			),
 			_react2.default.createElement(
-				ManageLink,
-				{ event: props, className: 'pull-right', to: "/event/" + props.id + "/manage" },
-				'Manage'
-			),
-			_react2.default.createElement(
-				'h1',
-				null,
-				props.name
-			),
-			_react2.default.createElement(
-				'h3',
-				null,
-				props.startDate,
-				' - ',
-				props.endDate
-			),
-			_react2.default.createElement(
-				'p',
-				null,
-				props.description
-			),
-			_react2.default.createElement(PermBookLink, _extends({ event: props }, props))
+				'div',
+				{ className: 'panel-body' },
+				_react2.default.createElement(PermBookLink, _extends({ event: props }, props)),
+				_react2.default.createElement(
+					'h4',
+					null,
+					(0, _moment2.default)(props.startDate).format('Do'),
+					' - ',
+					(0, _moment2.default)(props.endDate).format('Do MMMM YYYY')
+				),
+				_react2.default.createElement(_reactMarkdown2.default, { escapeHtml: true, source: props.description }),
+				_react2.default.createElement(
+					'div',
+					{ className: 'pull-right' },
+					_react2.default.createElement(
+						EditLink,
+						{ event: props, to: "/event/" + props.id + "/edit" },
+						'Edit'
+					),
+					" ",
+					_react2.default.createElement(
+						ManageLink,
+						{ event: props, to: "/event/" + props.id + "/manage" },
+						'Manage'
+					)
+				)
+			)
 		);
 	};
 	
@@ -7027,7 +7044,7 @@ webpackJsonp([0],[
 					return role.name === "admin";
 			})) return true; //admin can always
 			if (user.id !== 1) return true; //non guest can
-			if (event.AllowGuestBookings === true) return true; //anyone can book 
+			if (event.allowGuestBookings === true) return true; //anyone can book 
 			return false;
 	};
 	
@@ -9052,6 +9069,10 @@ webpackJsonp([0],[
 	
 	var _paymentForm2 = _interopRequireDefault(_paymentForm);
 	
+	var _lodash = __webpack_require__(433);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -9081,7 +9102,12 @@ webpackJsonp([0],[
 					participants: [blankParticipant(), blankParticipant()],
 					paymentType: "",
 					permission: false,
-					eventId: _this.props.event.id
+					eventId: _this.props.event.id,
+					delete: false,
+					validation: { user: false,
+						participant: false,
+						payment: false,
+						permission: false }
 				};
 			} else {
 				//set state from the booking infomation passed.
@@ -9093,7 +9119,12 @@ webpackJsonp([0],[
 					permission: true,
 					paymentType: _this.props.booking.paymentType,
 					eventId: _this.props.booking.eventId,
-					id: _this.props.booking.id
+					id: _this.props.booking.id,
+					delete: false,
+					validation: { user: true,
+						participant: true,
+						payment: true,
+						permission: true }
 				};
 			}
 	
@@ -9104,8 +9135,10 @@ webpackJsonp([0],[
 			_this.updateUserDetails = _this.updateUserDetails.bind(_this);
 			_this.updateParticipantDetails = _this.updateParticipantDetails.bind(_this);
 			_this.addParticipant = _this.addParticipant.bind(_this);
+			_this.deleteParticipant = _this.deleteParticipant.bind(_this);
 			_this.updatePaymentType = _this.updatePaymentType.bind(_this);
 			_this.updatePermission = _this.updatePermission.bind(_this);
+			_this.clickDeleteLock = _this.clickDeleteLock.bind(_this);
 			_this.submit = _this.submit.bind(_this);
 			return _this;
 		}
@@ -9119,10 +9152,16 @@ webpackJsonp([0],[
 			}
 		}, {
 			key: 'updateParticipantDetails',
-			value: function updateParticipantDetails(key, item, value) {
+			value: function updateParticipantDetails(id, item, value) {
 				var participants = this.state.participants;
-				participants[key][item] = value;
-				this.setState({ participants: participants });
+				var validation = this.state.validation;
+				validation.user = true; //start validating user section
+	
+				var participant = participants.find(function (p) {
+					return p.id === id;
+				});
+				participant[item] = value;
+				this.setState({ participants: participants, validation: validation });
 				this.props.updateQuickList(participants.map(function (p) {
 					return { name: p.name, age: p.age };
 				}));
@@ -9130,30 +9169,81 @@ webpackJsonp([0],[
 		}, {
 			key: 'addParticipant',
 			value: function addParticipant() {
+	
 				var participants = this.state.participants;
 				participants.push(blankParticipant());
 				this.setState({ participants: participants });
 			}
 		}, {
+			key: 'deleteParticipant',
+			value: function deleteParticipant(id) {
+				var participants = this.state.participants;
+				participants = participants.filter(function (p) {
+					return p.id != id;
+				});
+				this.setState({ participants: participants });
+				this.props.updateQuickList(participants.map(function (p) {
+					return { name: p.name, age: p.age };
+				}));
+			}
+		}, {
 			key: 'updatePaymentType',
 			value: function updatePaymentType(type) {
-				this.setState({ paymentType: type });
+	
+				var validation = this.state.validation;
+				validation.user = true;
+				validation.participants = true; //start validating user and participants section
+				this.setState({ paymentType: type, validation: validation });
 			}
 		}, {
 			key: 'updatePermission',
 			value: function updatePermission() {
-				this.setState({ permission: !this.state.permission });
+	
+				var validation = this.state.validation;
+				validation.user = true;
+				validation.participants = true;
+				validation.payment = true;
+				validation.permission = true; //start validating everything section
+	
+				this.setState({ permission: !this.state.permission, validation: validation });
 			}
 		}, {
 			key: 'submit',
 			value: function submit(e) {
+				var state = _lodash2.default.cloneDeep(this.state);
+				state.participants = state.participants.map(function (p) {
+					if (typeof p.id === "string") delete p.id;
+					return p;
+				});
 	
-				this.props.submit(this.state);
+				this.props.submit(state);
+				e.preventDefault();
+			}
+		}, {
+			key: 'clickDeleteLock',
+			value: function clickDeleteLock(e) {
+				this.setState({ delete: !this.state.delete });
+				e.preventDefault();
+			}
+		}, {
+			key: 'clickDelete',
+			value: function clickDelete(e) {
+				this.props.deleteEvent();
 				e.preventDefault();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
+	
+				var deleteButtons = this.props.new ? null : [_react2.default.createElement(
+					'button',
+					{ key: 'deletelock', type: 'submit', disabled: !this.state.delete, onClick: this.clickDelete, className: 'btn btn-danger pull-right' },
+					'Cancel Booking'
+				), _react2.default.createElement(
+					'button',
+					{ key: 'delete', type: 'submit', className: 'btn btn-danger pull-right', onClick: this.clickDeleteLock },
+					_react2.default.createElement('span', { className: 'glyphicon glyphicon-lock', 'aria-hidden': 'true' })
+				)];
 	
 				return _react2.default.createElement(
 					'div',
@@ -9172,7 +9262,7 @@ webpackJsonp([0],[
 							'Please include a contact number we can use during the event'
 						)
 					),
-					_react2.default.createElement(_BookingUserDetails2.default, { user: this.state.user, update: this.updateUserDetails, guest: this.guest }),
+					_react2.default.createElement(_BookingUserDetails2.default, { user: this.state.user, update: this.updateUserDetails, guest: this.guest, validating: this.state.validation.user }),
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-sm-12' },
@@ -9187,7 +9277,7 @@ webpackJsonp([0],[
 							'Please fill out for every person attending (including yourself if applicable)'
 						)
 					),
-					_react2.default.createElement(_participantsForm2.default, { participants: this.state.participants, update: this.updateParticipantDetails, add: this.addParticipant }),
+					_react2.default.createElement(_participantsForm2.default, { participants: this.state.participants, update: this.updateParticipantDetails, add: this.addParticipant, 'delete': this.deleteParticipant, validating: this.state.validation.participants }),
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-sm-12' },
@@ -9198,7 +9288,7 @@ webpackJsonp([0],[
 						)
 					),
 					_react2.default.createElement(_feeForm2.default, { event: this.props.event, participants: this.state.participants }),
-					_react2.default.createElement(_paymentForm2.default, { update: this.updatePaymentType, event: this.props.event, chosen: this.state.paymentType }),
+					_react2.default.createElement(_paymentForm2.default, { update: this.updatePaymentType, event: this.props.event, chosen: this.state.paymentType, validating: this.state.validation.user }),
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-sm-12' },
@@ -9223,9 +9313,14 @@ webpackJsonp([0],[
 							'When you have finished click here to sumbit your booking. You can always come back and edit it before the deadline'
 						),
 						_react2.default.createElement(
-							'button',
-							{ className: 'btn btn-success', onClick: this.submit },
-							'Submit Booking'
+							'div',
+							{ className: 'btn-toolbar' },
+							_react2.default.createElement(
+								'button',
+								{ className: 'btn btn-success', onClick: this.submit },
+								'Submit Booking'
+							),
+							deleteButtons
 						)
 					)
 				);
@@ -9237,10 +9332,12 @@ webpackJsonp([0],[
 	
 	//bad bad bad should be based on model.
 	
-	
 	exports.default = BookingForm;
+	var tempkey = 0;
+	
 	var blankParticipant = function blankParticipant() {
 		return {
+			id: 'Temp' + tempkey++, //need a key for react to render the participant array
 			name: '',
 			age: '',
 			diet: '',
@@ -9298,6 +9395,10 @@ webpackJsonp([0],[
 		}, {
 			key: "render",
 			value: function render() {
+	
+				var valid = "form-group";
+				var invalid = "form-group has-error";
+	
 				return _react2.default.createElement(
 					"div",
 					{ className: "col-sm-12" },
@@ -9306,7 +9407,7 @@ webpackJsonp([0],[
 						{ className: "form-horizontal" },
 						_react2.default.createElement(
 							"div",
-							{ className: "form-group" },
+							{ className: this.props.validating ? this.props.user.name === "" ? invalid : valid : valid },
 							_react2.default.createElement(
 								"label",
 								{ className: "col-sm-2 control-label" },
@@ -9320,7 +9421,7 @@ webpackJsonp([0],[
 						),
 						_react2.default.createElement(
 							"div",
-							{ className: "form-group" },
+							{ className: this.props.validating ? this.props.user.email === "" ? invalid : valid : valid },
 							_react2.default.createElement(
 								"label",
 								{ className: "col-sm-2 control-label" },
@@ -9334,7 +9435,7 @@ webpackJsonp([0],[
 						),
 						_react2.default.createElement(
 							"div",
-							{ className: "form-group" },
+							{ className: this.props.validating ? this.props.user.phone === "" ? invalid : valid : valid },
 							_react2.default.createElement(
 								"label",
 								{ className: "col-sm-2 control-label" },
@@ -9416,12 +9517,22 @@ webpackJsonp([0],[
 				};
 			}
 		}, {
-			key: "render",
-			value: function render() {
+			key: "delete",
+			value: function _delete(k) {
 				var _this3 = this;
 	
+				return function (e) {
+					_this3.props.delete(k);
+					e.preventDefault();
+				};
+			}
+		}, {
+			key: "render",
+			value: function render() {
+				var _this4 = this;
+	
 				var rows = this.props.participants.map(function (p, k) {
-					return _react2.default.createElement(ParticipantRow, _extends({ key: k }, p, { update: _this3.update(k) }));
+					return _react2.default.createElement(ParticipantRow, _extends({ key: p.id }, p, { update: _this4.update(p.id), "delete": _this4.delete(p.id), validating: _this4.props.validating }));
 				});
 	
 				return _react2.default.createElement(
@@ -9457,6 +9568,11 @@ webpackJsonp([0],[
 	
 	var ParticipantRow = function ParticipantRow(props) {
 	
+		var valid = "";
+		var invalid = "has-error";
+	
+		//{props.validating ? props.name === "" || props.age === "" || props.diet === "" ? invalid : valid : valid}
+	
 		return _react2.default.createElement(
 			"div",
 			{ className: "col-sm-12 participantrow" },
@@ -9467,56 +9583,77 @@ webpackJsonp([0],[
 					"div",
 					{ className: "form-group" },
 					_react2.default.createElement(
-						"label",
-						{ className: "col-sm-3 control-label" },
-						"Name:"
-					),
-					_react2.default.createElement(
 						"div",
-						{ className: "col-sm-3" },
-						_react2.default.createElement("input", { type: "text", value: props.name, onChange: props.update("name"), className: "form-control", placeholder: "Name" })
-					),
-					_react2.default.createElement(
-						"label",
-						{ className: "col-sm-1 control-label" },
-						"Age:"
-					),
-					_react2.default.createElement(
-						"div",
-						{ className: "col-sm-2" },
-						_react2.default.createElement("input", { type: "text", value: props.age, onChange: props.update("age"), className: "form-control", placeholder: "Age" })
-					),
-					_react2.default.createElement(
-						"label",
-						{ className: "col-sm-1 control-label" },
-						"Diet:"
-					),
-					_react2.default.createElement(
-						"div",
-						{ className: "col-sm-2" },
+						{ className: props.validating ? props.name === "" ? invalid : valid : valid },
 						_react2.default.createElement(
-							"select",
-							{ value: props.diet, onChange: props.update("diet"), className: "form-control" },
+							"label",
+							{ className: "col-sm-3 control-label" },
+							"Name:"
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "col-sm-3" },
+							_react2.default.createElement("input", { type: "text", value: props.name, onChange: props.update("name"), className: "form-control", placeholder: "Name" })
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: props.validating ? props.age === "" ? invalid : valid : valid },
+						_react2.default.createElement(
+							"label",
+							{ className: "col-sm-1 control-label" },
+							"Age:"
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "col-sm-1" },
+							_react2.default.createElement("input", { type: "text", value: props.age, onChange: props.update("age"), className: "form-control", placeholder: "Age" })
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: props.validating ? props.diet === "" ? invalid : valid : valid },
+						_react2.default.createElement(
+							"label",
+							{ className: "col-sm-1 control-label" },
+							"Diet:"
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "col-sm-2" },
 							_react2.default.createElement(
-								"option",
-								null,
-								"Please Select"
-							),
-							_react2.default.createElement(
-								"option",
-								{ value: "omnivore" },
-								"Omnivore"
-							),
-							_react2.default.createElement(
-								"option",
-								{ value: "vegetarian" },
-								"Vegetarian"
-							),
-							_react2.default.createElement(
-								"option",
-								{ value: "vegan" },
-								"Vegan"
+								"select",
+								{ value: props.diet, onChange: props.update("diet"), className: "form-control" },
+								_react2.default.createElement(
+									"option",
+									null,
+									"Please Select"
+								),
+								_react2.default.createElement(
+									"option",
+									{ value: "omnivore" },
+									"Omnivore"
+								),
+								_react2.default.createElement(
+									"option",
+									{ value: "vegetarian" },
+									"Vegetarian"
+								),
+								_react2.default.createElement(
+									"option",
+									{ value: "vegan" },
+									"Vegan"
+								)
 							)
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: "col-sm-1" },
+						_react2.default.createElement(
+							"button",
+							{ type: "submit", onClick: props.delete, className: "btn btn-warning" },
+							_react2.default.createElement("span", { className: "glyphicon glyphicon-remove", "aria-hidden": "true" })
 						)
 					)
 				)
@@ -9750,6 +9887,9 @@ webpackJsonp([0],[
 			value: function render() {
 				var _this2 = this;
 	
+				var valid = "form-group";
+				var invalid = "form-group has-error";
+	
 				var radios = this.props.event.paymentTypes.map(function (p) {
 					return _react2.default.createElement(
 						'label',
@@ -9771,7 +9911,7 @@ webpackJsonp([0],[
 							{ className: 'form-horizontal' },
 							_react2.default.createElement(
 								'div',
-								{ className: 'form-group' },
+								{ className: this.props.validating ? this.props.chosen !== "" ? valid : invalid : valid },
 								_react2.default.createElement(
 									'label',
 									{ className: 'col-sm-2 control-label' },
@@ -9888,7 +10028,9 @@ webpackJsonp([0],[
 						_react2.default.createElement(
 							'h4',
 							null,
-							w.name
+							w.name,
+							': ',
+							people.length
 						),
 						people
 					);
@@ -9909,7 +10051,8 @@ webpackJsonp([0],[
 								_react2.default.createElement(
 									'h3',
 									null,
-									'Participants Added'
+									'Participants Added: ',
+									list.length
 								),
 								groups
 							)

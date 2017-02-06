@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link  } from 'react-router'
 import { browserHistory } from 'react-router'
+import ReactMarkdown from 'react-markdown'
+import Moment from 'moment'
 
 import { getEvents } from '../actions.js'
 import { showEditLink, showCreateLink, showBookLink, showManageLink } from'../permission.js'
@@ -43,17 +45,22 @@ const ManageLink = showManageLink(Link)
 
 const Event = (props) => {
 
-	const bookLink = props => props.booking !== undefined ? <Link to={"/event/"+props.id+"/book"}>Edit My Booking</Link> : <Link to={"/event/"+props.id+"/book"}>Book</Link>
+	const bookLink = props => props.booking !== undefined ? <Link to={"/event/"+props.id+"/book"} className="btn btn-primary pull-right">Edit My Booking</Link> : <Link to={"/event/"+props.id+"/book"} className="btn btn-primary pull-right">Book</Link>
 
 	const PermBookLink =  showBookLink(bookLink);
 
-	return(<div>
-		<EditLink event={props} className="pull-right" to={"/event/"+props.id+"/edit"}>Edit</EditLink>
-		<ManageLink event={props} className="pull-right" to={"/event/"+props.id+"/manage"}>Manage</ManageLink>
-		<h1>{props.name}</h1>
-		<h3>{props.startDate} - {props.endDate}</h3>
-		<p>{props.description}</p>
-		<PermBookLink event={props} {...props}/>
+	return(<div className="panel panel-default">
+		<div className="panel-heading"><h3 className="panel-title">{props.name}</h3></div>
+		<div className="panel-body">
+			<PermBookLink event={props} {...props}/>
+			<h4>{Moment(props.startDate).format('Do')} - {Moment(props.endDate).format('Do MMMM YYYY')}</h4>
+			<ReactMarkdown escapeHtml={true} source={props.description} />
+				<div className="pull-right">
+					<EditLink event={props} to={"/event/"+props.id+"/edit"}>Edit</EditLink>
+					{" "} 
+					<ManageLink event={props} to={"/event/"+props.id+"/manage"}>Manage</ManageLink>
+				</div>
+		</div>
 	</div>)}
 
 

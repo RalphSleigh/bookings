@@ -65,7 +65,11 @@ if(process.argv && process.argv[2] === "sync") {
 		return results[1];
 	}).then(user => Promise.all([Event.create({
     			name: 'Ralphs Event',
-   				description: 'Empty Event',
+   				description:
+`This a cool event for cool people
+
+Its free!	
+`,
 				startDate: new Date("2017-8-8"),
 				endDate: new Date("2017-8-10"),
 				bookingDeadline: new Date("2017-8-4"),
@@ -77,7 +81,11 @@ if(process.argv && process.argv[2] === "sync") {
 				paymentInfo:"Ho Ho Ho"}),
 			Event.create({
     			name: 'This is a large event with many people',
-   				description: 'Gonna be good fun',
+   				description:
+`This event has several hundred people booked already
+
+It costs £55
+`,
 				startDate: new Date("2017-10-8"),
 				endDate: new Date("2017-10-10"),
 				bookingDeadline: new Date("2017-10-4"),
@@ -86,11 +94,13 @@ if(process.argv && process.argv[2] === "sync") {
 				feeModel:"flat",
 				feeData:{amount:55},
 				paymentTypes:["Cash","Bank Transfer"],
-				paymentInfo:`# Title
-text *text* text`}),
+				paymentInfo:`plz give us *all* teh monies`}),
 			Event.create({
     			name: 'Past deadline',
-   				description: 'Gonna be good fun',
+   				description:
+`This event is past its booking deadline, but nohing happens yet
+
+It also demonstrates the Ealing donation structure`,
 				startDate: new Date("2016-4-8"),
 				endDate: new Date("2016-4-10"),
 				bookingDeadline: new Date("2016-11-4"),
@@ -99,8 +109,7 @@ text *text* text`}),
 				feeModel: "ealing",
 				feeData:{amount:35},
 				paymentTypes:["Cheque","Bank Transfer"],
-				paymentInfo:`# Title
-text *text* text`})
+				paymentInfo:`plz give us *all* teh monies`})
 	])).then(events => {
 		let bookings = [];
 		for(let i = 0; i < 20; i++) {
