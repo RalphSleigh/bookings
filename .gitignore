@@ -2,3 +2,4 @@
 database.sqlite
 npm-debug.log
 sqlite3.exe
+npm-debug*

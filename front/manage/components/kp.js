@@ -28,16 +28,16 @@ export default class KP extends React.Component {
 						<td>{people.filter(p => p.diet==="omnivore").length}</td>
 						<td>{people.filter(p => p.diet==="vegetarian").length}</td>
 						<td>{people.filter(p => p.diet==="vegan").length}</td>
-						<td>{people.length}</td>
+						<td><b>{people.length}</b></td>
 					</tr>);
 		});
 	
 	groups.push(<tr key="total">	
-						<td>Total:</td>
-						<td>{participants.filter(p => p.diet==="omnivore").length}</td>
-						<td>{participants.filter(p => p.diet==="vegetarian").length}</td>
-						<td>{participants.filter(p => p.diet==="vegan").length}</td>
-						<td>{participants.length}</td>
+						<td><b>Total:</b></td>
+						<td><b>{participants.filter(p => p.diet==="omnivore").length}</b></td>
+						<td><b>{participants.filter(p => p.diet==="vegetarian").length}</b></td>
+						<td><b>{participants.filter(p => p.diet==="vegan").length}</b></td>
+						<td><b>{participants.length}</b></td>
 				</tr>)
 
 	const requirments = participants.filter(p => p.dietExtra !== null && p.dietExtra !== '').map(p => <tr key={p.id}><td>{p.name}</td><td>{p.dietExtra}</td></tr>);
@@ -51,7 +51,7 @@ export default class KP extends React.Component {
 								<th>Omnivore</th>
 								<th>Vegetarian</th>
 								<th>Vegan</th>
-								<th>Total</th>
+								<th><b>Total</b></th>
 							</tr>
 						</thead>
 					<tbody>
