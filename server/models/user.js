@@ -1,4 +1,4 @@
-var Sequelize = require('Sequelize');
+var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
 var o = require('../orm.js');
 
