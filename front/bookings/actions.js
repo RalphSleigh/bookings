@@ -49,6 +49,15 @@ export const saveBooking = booking => {
 	}
 }
 
+export const cancelBooking = id => {
+	return dispatch => {
+			fetch('/api/booking/delete', "POST", {id:id})
+			.then(j => {
+				dispatch(deleteBooking(id.toString()));
+				browserHistory.push('/cancel');
+			});
+	}
+}
 //export const UPDATE_BOOKING = 'BOOKING_UPDATE_BOOKING';
 
 export const getBooking = (id) => {
@@ -95,6 +104,13 @@ export const UPDATE_BOOKING = 'BOOKING_UPDATE_BOOKING';
 const updateBooking = booking => {
 	return {type:UPDATE_BOOKING,
 			booking:booking}
+}
+
+export const DELETE_BOOKING = "BOOKING_DELETE_BOOKING"
+
+const deleteBooking = id => {
+	return {type:DELETE_BOOKING,
+			id:id}
 }
 
 export const redirectFromThanks = eventId => dispatch => {

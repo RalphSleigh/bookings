@@ -13,6 +13,7 @@ export default function Bookings(state = initalBookingsState, action) {
 			if(state.get("bookings") === null)return state.set("bookings",Immutable.Map()).mergeIn(["bookings"],Immutable.fromJS(action.bookings)); 
 		 	return state.mergeIn(["bookings"],Immutable.fromJS(action.bookings)); 
 		case a.UPDATE_BOOKING: return state.mergeIn(["bookings"],Immutable.fromJS(action.booking));
+		case a.DELETE_BOOKING: return state.deleteIn(["bookings",action.id]);
 		case user.actions.UPDATE_USER: return state.set("bookings", null) //invalidates app render if the user changes until we can fetch more user bookings.
   	}
  	return state;

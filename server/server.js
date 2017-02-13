@@ -58,6 +58,7 @@ server.get('/api/booking/:bookingId', P.getBooking, bookings.getBooking);	//get 
 
 server.post('/api/booking/:eventId/create', P.bookEvent, bookings.createBooking);//create a booking
 server.post('/api/booking/edit', P.bookEvent, bookings.editBooking);			//edit a booking
+server.post('/api/booking/delete', P.bookEvent, bookings.deleteBooking);			//delete a booking
 
 server.get('/api/*', function(req, res) {
 	res.status(404).end();

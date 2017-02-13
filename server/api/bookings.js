@@ -93,6 +93,25 @@ bookings.editBooking = (req, res) => {
 	});
 }
 
+bookings.deleteBooking = (req, res) => {
+	Booking.findOne({where:{id:req.body.id}})
+	.then(booking => booking.destroy())
+	.then(() => Booking.findAll({
+		where:
+			{$or:
+				[{guestUUID:req.cookies.guestUUID},
+				{$and:
+					[{userId:req.session.user.id},
+					{userId:{$not:1}}
+					]
+				}]
+	},include:[{model:Participant}]}))
+	.then(bookings => {
+		let data = {};
+			bookings.map(b => data[b.id] = b);
+			res.json(data);	
+	});
+}
 
 /*
 

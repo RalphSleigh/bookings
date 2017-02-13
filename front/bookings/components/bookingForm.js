@@ -16,7 +16,7 @@ export default class BookingForm extends React.Component {
 	
 		this.guest = props.user.id === 1;
 
-		if(this.props.booking === undefined) {
+		if(this.props.booking === null) {
 			//new booking, create blank data
 		
 			this.state = {
@@ -67,6 +67,7 @@ export default class BookingForm extends React.Component {
 		this.updatePaymentType = this.updatePaymentType.bind(this);
 		this.updatePermission = this.updatePermission.bind(this);
 		this.clickDeleteLock = this.clickDeleteLock.bind(this);
+		this.clickDelete = this.clickDelete.bind(this);
 		this.submit = this.submit.bind(this);
 	}
 
@@ -142,7 +143,7 @@ export default class BookingForm extends React.Component {
 	}
 
 	clickDelete(e) {
-		this.props.deleteEvent();
+		this.props.cancel(this.props.booking.id);
 		e.preventDefault();
 	}
 

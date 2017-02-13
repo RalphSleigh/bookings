@@ -6,7 +6,7 @@ import { Link  } from 'react-router'
 import event from '../../events'
 import BookingForm from './bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
-import { updateQuickList, createBooking, getUserBookings, saveBooking } from '../actions.js'
+import { updateQuickList, createBooking, getUserBookings, saveBooking, cancelBooking } from '../actions.js'
 
 
 //this is the special case where we are doing the sessions own booking for the event. If we have previously booked then edit that instead of letting them create a new one.  
@@ -24,10 +24,9 @@ class MyBookingPage extends React.Component{
 		const user = this.props.User.toJS();
 		const quickList = this.props.QuickList.toJS();
 
-		const form = this.props.Booking === undefined ? 
-			<BookingForm user={user} event={event} submit={this.props.createBooking} updateQuickList={this.props.updateQuickList}/> :
+		const form =
 			<BookingForm user={user} event={event} booking=
-			{this.props.Booking.toJS()} submit={this.props.saveBooking} updateQuickList={this.props.updateQuickList}/>;
+			{this.props.Booking ? this.props.Booking.toJS() : null} submit={this.props.Booking ? this.props.saveBooking : this.props.createBooking} updateQuickList={this.props.updateQuickList} cancel={this.props.cancelBooking}/>;
 
 		return(<div> 
 					<div className="row" style={{display:"flex"}}>
@@ -53,7 +52,7 @@ const mapStateToProps = (state, props) => {
 }
 
 const getEvent = event.actions.getEvent
-const mapDispatchToProps = {getEvent, updateQuickList, createBooking, getUserBookings, saveBooking};
+const mapDispatchToProps = {getEvent, updateQuickList, createBooking, getUserBookings, saveBooking, cancelBooking};
 
 const VisibleMyBookingPage = connect(
   mapStateToProps,

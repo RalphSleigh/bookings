@@ -24,6 +24,9 @@ module.exports = {
         	}
         ],
     },
+	externals:{
+		fs:'{}'
+	},
 	
     plugins: [
     new webpack.optimize.CommonsChunkPlugin({name:"vendor",filename:"vendor.bundle.js"}),

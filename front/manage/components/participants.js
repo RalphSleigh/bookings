@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
+import csv from 'csv-file-creator' 
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
@@ -11,6 +12,19 @@ export default class Participants extends React.Component {
 	
   constructor(props) {
     super(props);
+
+	this.exportCSV = this.exportCSV.bind(this);
+  }
+
+  exportCSV() {
+	  const data = this.props.Participants.toJS();
+	  const exportedData = data.map(p => [p.id,
+		  								p.name,
+										p.age,
+										p.diet,
+										p.dietExtra,
+	  									p.medical]);
+	csv("test.csv", exportedData);
   }
 
   render() {
@@ -28,7 +42,9 @@ export default class Participants extends React.Component {
 
 	const prows = participants.sort(nameSort).map(p => <tr key={p.id}><td>{p.name}</td><td>{p.age}</td><td>{bookings.find(b => b.id === p.bookingId).userName}</td></tr>)
 
-	return (<div><h4>Total Participants: {participants.length}</h4>
+	return (<div>
+				<button className="button pull-right" onClick={this.exportCSV}>Export CSV</button>
+				<h4>Total Participants: {participants.length}</h4>
 							{groups}
 							<table className="table">
 								<thead>

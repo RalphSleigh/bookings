@@ -20,7 +20,7 @@ webpackJsonp([0],[
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
-	var _store = __webpack_require__(490);
+	var _store = __webpack_require__(494);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -484,11 +484,11 @@ webpackJsonp([0],[
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
-	var _manage = __webpack_require__(484);
+	var _manage = __webpack_require__(486);
 	
 	var _manage2 = _interopRequireDefault(_manage);
 	
-	var _store = __webpack_require__(490);
+	var _store = __webpack_require__(494);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -522,7 +522,8 @@ webpackJsonp([0],[
 				_reactRouter.Route,
 				{ path: 'booking/:bookingId/' },
 				_react2.default.createElement(_reactRouter.Route, { path: 'edit', component: _bookings2.default.editPage })
-			)
+			),
+			_react2.default.createElement(_reactRouter.Route, { path: 'cancel', component: _bookings2.default.cancelPage })
 		)
 	);
 
@@ -7202,7 +7203,7 @@ webpackJsonp([0],[
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.redirectFromThanks = exports.UPDATE_BOOKING = exports.getEventBookings = exports.getUserBookings = exports.UPDATE_BOOKINGS = exports.getBooking = exports.saveBooking = exports.createBooking = exports.CREATE_BOOKING = exports.updateQuickList = exports.UPDATE_QUICK_LIST = undefined;
+	exports.redirectFromThanks = exports.DELETE_BOOKING = exports.UPDATE_BOOKING = exports.getEventBookings = exports.getUserBookings = exports.UPDATE_BOOKINGS = exports.getBooking = exports.cancelBooking = exports.saveBooking = exports.createBooking = exports.CREATE_BOOKING = exports.updateQuickList = exports.UPDATE_QUICK_LIST = undefined;
 	
 	var _immutable = __webpack_require__(294);
 	
@@ -7265,6 +7266,14 @@ webpackJsonp([0],[
 		};
 	};
 	
+	var cancelBooking = exports.cancelBooking = function cancelBooking(id) {
+		return function (dispatch) {
+			(0, _fetch2.default)('/api/booking/delete', "POST", { id: id }).then(function (j) {
+				dispatch(deleteBooking(id.toString()));
+				_reactRouter.browserHistory.push('/cancel');
+			});
+		};
+	};
 	//export const UPDATE_BOOKING = 'BOOKING_UPDATE_BOOKING';
 	
 	var getBooking = exports.getBooking = function getBooking(id) {
@@ -7304,6 +7313,13 @@ webpackJsonp([0],[
 	var updateBooking = function updateBooking(booking) {
 		return { type: UPDATE_BOOKING,
 			booking: booking };
+	};
+	
+	var DELETE_BOOKING = exports.DELETE_BOOKING = "BOOKING_DELETE_BOOKING";
+	
+	var deleteBooking = function deleteBooking(id) {
+		return { type: DELETE_BOOKING,
+			id: id };
 	};
 	
 	var redirectFromThanks = exports.redirectFromThanks = function redirectFromThanks(eventId) {
@@ -8885,20 +8901,24 @@ webpackJsonp([0],[
 	
 	var _myBookingPage2 = _interopRequireDefault(_myBookingPage);
 	
-	var _editPage = __webpack_require__(480);
+	var _editPage = __webpack_require__(482);
 	
 	var _editPage2 = _interopRequireDefault(_editPage);
 	
-	var _thanksPage = __webpack_require__(481);
+	var _thanksPage = __webpack_require__(483);
 	
 	var _thanksPage2 = _interopRequireDefault(_thanksPage);
+	
+	var _cancelPage = __webpack_require__(502);
+	
+	var _cancelPage2 = _interopRequireDefault(_cancelPage);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
+	exports.default = { actions: actions, reducer: _reducer2.default, myBookingPage: _myBookingPage2.default, editPage: _editPage2.default, thanksPage: _thanksPage2.default, cancelPage: _cancelPage2.default };
 	//import createPage from './components/createPage.js'
-	exports.default = { actions: actions, reducer: _reducer2.default, myBookingPage: _myBookingPage2.default, editPage: _editPage2.default, thanksPage: _thanksPage2.default };
 
 /***/ },
 /* 466 */
@@ -8943,6 +8963,8 @@ webpackJsonp([0],[
 				return state.mergeIn(["bookings"], _immutable2.default.fromJS(action.bookings));
 			case a.UPDATE_BOOKING:
 				return state.mergeIn(["bookings"], _immutable2.default.fromJS(action.booking));
+			case a.DELETE_BOOKING:
+				return state.deleteIn(["bookings", action.id]);
 			case _user2.default.actions.UPDATE_USER:
 				return state.set("bookings", null); //invalidates app render if the user changes until we can fetch more user bookings.
 		}
@@ -8977,7 +8999,7 @@ webpackJsonp([0],[
 	
 	var _bookingForm2 = _interopRequireDefault(_bookingForm);
 	
-	var _participantQuickList = __webpack_require__(474);
+	var _participantQuickList = __webpack_require__(476);
 	
 	var _participantQuickList2 = _interopRequireDefault(_participantQuickList);
 	
@@ -9010,7 +9032,7 @@ webpackJsonp([0],[
 				var user = this.props.User.toJS();
 				var quickList = this.props.QuickList.toJS();
 	
-				var form = this.props.Booking === undefined ? _react2.default.createElement(_bookingForm2.default, { user: user, event: event, submit: this.props.createBooking, updateQuickList: this.props.updateQuickList }) : _react2.default.createElement(_bookingForm2.default, { user: user, event: event, booking: this.props.Booking.toJS(), submit: this.props.saveBooking, updateQuickList: this.props.updateQuickList });
+				var form = _react2.default.createElement(_bookingForm2.default, { user: user, event: event, booking: this.props.Booking ? this.props.Booking.toJS() : null, submit: this.props.Booking ? this.props.saveBooking : this.props.createBooking, updateQuickList: this.props.updateQuickList, cancel: this.props.cancelBooking });
 	
 				return _react2.default.createElement(
 					'div',
@@ -9053,7 +9075,7 @@ webpackJsonp([0],[
 	};
 	
 	var getEvent = _events2.default.actions.getEvent;
-	var mapDispatchToProps = { getEvent: getEvent, updateQuickList: _actions.updateQuickList, createBooking: _actions.createBooking, getUserBookings: _actions.getUserBookings, saveBooking: _actions.saveBooking };
+	var mapDispatchToProps = { getEvent: getEvent, updateQuickList: _actions.updateQuickList, createBooking: _actions.createBooking, getUserBookings: _actions.getUserBookings, saveBooking: _actions.saveBooking, cancelBooking: _actions.cancelBooking };
 	
 	var VisibleMyBookingPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MyBookingPage);
 	
@@ -9099,7 +9121,7 @@ webpackJsonp([0],[
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _immutabilityHelper = __webpack_require__(498);
+	var _immutabilityHelper = __webpack_require__(474);
 	
 	var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
 	
@@ -9125,7 +9147,7 @@ webpackJsonp([0],[
 	
 			_this.guest = props.user.id === 1;
 	
-			if (_this.props.booking === undefined) {
+			if (_this.props.booking === null) {
 				//new booking, create blank data
 	
 				_this.state = {
@@ -9180,6 +9202,7 @@ webpackJsonp([0],[
 			_this.updatePaymentType = _this.updatePaymentType.bind(_this);
 			_this.updatePermission = _this.updatePermission.bind(_this);
 			_this.clickDeleteLock = _this.clickDeleteLock.bind(_this);
+			_this.clickDelete = _this.clickDelete.bind(_this);
 			_this.submit = _this.submit.bind(_this);
 			return _this;
 		}
@@ -9276,7 +9299,7 @@ webpackJsonp([0],[
 		}, {
 			key: 'clickDelete',
 			value: function clickDelete(e) {
-				this.props.deleteEvent();
+				this.props.cancel(this.props.booking.id);
 				e.preventDefault();
 			}
 	
@@ -10052,6 +10075,203 @@ webpackJsonp([0],[
 
 	'use strict';
 	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
+	var invariant = __webpack_require__(475);
+	
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var splice = Array.prototype.splice;
+	
+	var assign = Object.assign || function assign(target, source) {
+	  var keys = getAllKeys(source);
+	  for (var i = 0; i < keys.length; i++) {
+	    var key = keys[i];
+	    if (hasOwnProperty.call(source, key)) {
+	      target[key] = source[key];
+	    }
+	  }
+	  return target;
+	};
+	
+	var getAllKeys = typeof Object.getOwnPropertySymbols === 'function' ? function (obj) {
+	  return Object.keys(obj).concat(Object.getOwnPropertySymbols(obj));
+	} : function (obj) {
+	  return Object.keys(obj);
+	};
+	
+	function copy(object) {
+	  if (object instanceof Array) {
+	    return object.slice();
+	  } else if (object && (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object') {
+	    return assign(new object.constructor(), object);
+	  } else {
+	    return object;
+	  }
+	}
+	
+	function newContext() {
+	  var commands = assign({}, defaultCommands);
+	  update.extend = function (directive, fn) {
+	    commands[directive] = fn;
+	  };
+	
+	  return update;
+	
+	  function update(object, spec) {
+	    invariant(!Array.isArray(spec), 'update(): You provided an invalid spec to update(). The spec may ' + 'not contain an array except as the value of $set, $push, $unshift, ' + '$splice or any custom command allowing an array value.');
+	
+	    invariant((typeof spec === 'undefined' ? 'undefined' : _typeof(spec)) === 'object' && spec !== null, 'update(): You provided an invalid spec to update(). The spec and ' + 'every included key path must be plain objects containing one of the ' + 'following commands: %s.', Object.keys(commands).join(', '));
+	
+	    var nextObject = object;
+	    var specKeys = getAllKeys(spec);
+	    var index, key;
+	    for (index = 0; index < specKeys.length; index++) {
+	      var key = specKeys[index];
+	      if (hasOwnProperty.call(commands, key)) {
+	        nextObject = commands[key](spec[key], nextObject, spec, object);
+	      } else {
+	        var nextValueForKey = update(object[key], spec[key]);
+	        if (nextValueForKey !== nextObject[key]) {
+	          if (nextObject === object) {
+	            nextObject = copy(object);
+	          }
+	          nextObject[key] = nextValueForKey;
+	        }
+	      }
+	    }
+	    return nextObject;
+	  }
+	}
+	
+	var defaultCommands = {
+	  $push: function $push(value, original, spec) {
+	    invariantPushAndUnshift(original, spec, '$push');
+	    return original.concat(value);
+	  },
+	  $unshift: function $unshift(value, original, spec) {
+	    invariantPushAndUnshift(original, spec, '$unshift');
+	    return value.concat(original);
+	  },
+	  $splice: function $splice(value, nextObject, spec, object) {
+	    var originalValue = nextObject === object ? copy(object) : nextObject;
+	    invariantSplices(originalValue, spec);
+	    value.forEach(function (args) {
+	      invariantSplice(args);
+	      splice.apply(originalValue, args);
+	    });
+	    return originalValue;
+	  },
+	  $set: function $set(value, original, spec) {
+	    invariantSet(spec);
+	    return value;
+	  },
+	  $merge: function $merge(value, nextObject, spec, object) {
+	    var originalValue = nextObject === object ? copy(object) : nextObject;
+	    invariantMerge(originalValue, value);
+	    getAllKeys(value).forEach(function (key) {
+	      originalValue[key] = value[key];
+	    });
+	    return originalValue;
+	  },
+	  $apply: function $apply(value, original) {
+	    invariantApply(value);
+	    return value(original);
+	  }
+	};
+	
+	module.exports = newContext();
+	module.exports.newContext = newContext;
+	
+	// invariants
+	
+	function invariantPushAndUnshift(value, spec, command) {
+	  invariant(Array.isArray(value), 'update(): expected target of %s to be an array; got %s.', command, value);
+	  var specValue = spec[command];
+	  invariant(Array.isArray(specValue), 'update(): expected spec of %s to be an array; got %s. ' + 'Did you forget to wrap your parameter in an array?', command, specValue);
+	}
+	
+	function invariantSplices(value, spec) {
+	  invariant(Array.isArray(value), 'Expected $splice target to be an array; got %s', value);
+	  invariantSplice(spec['$splice']);
+	}
+	
+	function invariantSplice(value) {
+	  invariant(Array.isArray(value), 'update(): expected spec of $splice to be an array of arrays; got %s. ' + 'Did you forget to wrap your parameters in an array?', value);
+	}
+	
+	function invariantApply(fn) {
+	  invariant(typeof fn === 'function', 'update(): expected spec of $apply to be a function; got %s.', fn);
+	}
+	
+	function invariantSet(spec) {
+	  invariant(Object.keys(spec).length === 1, 'Cannot have more than one key in an object with $set');
+	}
+	
+	function invariantMerge(target, specValue) {
+	  invariant(specValue && (typeof specValue === 'undefined' ? 'undefined' : _typeof(specValue)) === 'object', 'update(): $merge expects a spec of type \'object\'; got %s', specValue);
+	  invariant(target && (typeof target === 'undefined' ? 'undefined' : _typeof(target)) === 'object', 'update(): $merge expects a target of type \'object\'; got %s', target);
+	}
+
+/***/ },
+/* 475 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	'use strict';
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var invariant = function invariant(condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	      error.name = 'Invariant Violation';
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 476 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
@@ -10062,9 +10282,9 @@ webpackJsonp([0],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactSticky = __webpack_require__(475);
+	var _reactSticky = __webpack_require__(477);
 	
-	var _woodcraft = __webpack_require__(479);
+	var _woodcraft = __webpack_require__(481);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -10149,7 +10369,7 @@ webpackJsonp([0],[
 	exports.default = CreatePage;
 
 /***/ },
-/* 475 */
+/* 477 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10159,15 +10379,15 @@ webpackJsonp([0],[
 	});
 	exports.Channel = exports.StickyContainer = exports.Sticky = undefined;
 	
-	var _sticky = __webpack_require__(476);
+	var _sticky = __webpack_require__(478);
 	
 	var _sticky2 = _interopRequireDefault(_sticky);
 	
-	var _container = __webpack_require__(477);
+	var _container = __webpack_require__(479);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
-	var _channel = __webpack_require__(478);
+	var _channel = __webpack_require__(480);
 	
 	var _channel2 = _interopRequireDefault(_channel);
 	
@@ -10181,7 +10401,7 @@ webpackJsonp([0],[
 	exports.default = _sticky2.default;
 
 /***/ },
-/* 476 */
+/* 478 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10478,7 +10698,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 477 */
+/* 479 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10507,7 +10727,7 @@ webpackJsonp([0],[
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _channel = __webpack_require__(478);
+	var _channel = __webpack_require__(480);
 	
 	var _channel2 = _interopRequireDefault(_channel);
 	
@@ -10603,7 +10823,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 478 */
+/* 480 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -10645,7 +10865,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 479 */
+/* 481 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -10672,7 +10892,7 @@ webpackJsonp([0],[
 	module.exports = woodcraft;
 
 /***/ },
-/* 480 */
+/* 482 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10699,7 +10919,7 @@ webpackJsonp([0],[
 	
 	var _bookingForm2 = _interopRequireDefault(_bookingForm);
 	
-	var _participantQuickList = __webpack_require__(474);
+	var _participantQuickList = __webpack_require__(476);
 	
 	var _participantQuickList2 = _interopRequireDefault(_participantQuickList);
 	
@@ -10785,7 +11005,7 @@ webpackJsonp([0],[
 	exports.default = VisibleEditPage;
 
 /***/ },
-/* 481 */
+/* 483 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate) {'use strict';
@@ -10961,10 +11181,10 @@ webpackJsonp([0],[
 	var VisibleThanksPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ThanksPage);
 	
 	exports.default = VisibleThanksPage;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(482).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(484).setImmediate))
 
 /***/ },
-/* 482 */
+/* 484 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -11017,12 +11237,12 @@ webpackJsonp([0],[
 	};
 	
 	// setimmediate attaches itself to the global object
-	__webpack_require__(483);
+	__webpack_require__(485);
 	exports.setImmediate = setImmediate;
 	exports.clearImmediate = clearImmediate;
 
 /***/ },
-/* 483 */
+/* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {"use strict";
@@ -11212,7 +11432,7 @@ webpackJsonp([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(3)))
 
 /***/ },
-/* 484 */
+/* 486 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11221,19 +11441,19 @@ webpackJsonp([0],[
 	  value: true
 	});
 	
-	var _containerPage = __webpack_require__(485);
+	var _containerPage = __webpack_require__(487);
 	
 	var _containerPage2 = _interopRequireDefault(_containerPage);
 	
-	var _participants = __webpack_require__(487);
+	var _participants = __webpack_require__(489);
 	
 	var _participants2 = _interopRequireDefault(_participants);
 	
-	var _bookings = __webpack_require__(488);
+	var _bookings = __webpack_require__(492);
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
-	var _kp = __webpack_require__(489);
+	var _kp = __webpack_require__(493);
 	
 	var _kp2 = _interopRequireDefault(_kp);
 	
@@ -11242,7 +11462,7 @@ webpackJsonp([0],[
 	exports.default = { containerPage: _containerPage2.default, participants: _participants2.default, bookings: _bookings2.default, kp: _kp2.default };
 
 /***/ },
-/* 485 */
+/* 487 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11271,7 +11491,7 @@ webpackJsonp([0],[
 	
 	var _bookings2 = _interopRequireDefault(_bookings);
 	
-	var _permission = __webpack_require__(486);
+	var _permission = __webpack_require__(488);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -11411,7 +11631,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 486 */
+/* 488 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11443,7 +11663,7 @@ webpackJsonp([0],[
 	});
 
 /***/ },
-/* 487 */
+/* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11464,7 +11684,11 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _woodcraft = __webpack_require__(479);
+	var _csvFileCreator = __webpack_require__(490);
+	
+	var _csvFileCreator2 = _interopRequireDefault(_csvFileCreator);
+	
+	var _woodcraft = __webpack_require__(481);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -11485,10 +11709,22 @@ webpackJsonp([0],[
 		function Participants(props) {
 			_classCallCheck(this, Participants);
 	
-			return _possibleConstructorReturn(this, (Participants.__proto__ || Object.getPrototypeOf(Participants)).call(this, props));
+			var _this = _possibleConstructorReturn(this, (Participants.__proto__ || Object.getPrototypeOf(Participants)).call(this, props));
+	
+			_this.exportCSV = _this.exportCSV.bind(_this);
+			return _this;
 		}
 	
 		_createClass(Participants, [{
+			key: 'exportCSV',
+			value: function exportCSV() {
+				var data = this.props.Participants.toJS();
+				var exportedData = data.map(function (p) {
+					return [p.id, p.name, p.age, p.diet, p.dietExtra, p.medical];
+				});
+				(0, _csvFileCreator2.default)("test.csv", exportedData);
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 	
@@ -11537,6 +11773,11 @@ webpackJsonp([0],[
 				return _react2.default.createElement(
 					'div',
 					null,
+					_react2.default.createElement(
+						'button',
+						{ className: 'button pull-right', onClick: this.exportCSV },
+						'Export CSV'
+					),
 					_react2.default.createElement(
 						'h4',
 						null,
@@ -11598,7 +11839,131 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 488 */
+/* 490 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	/* jshint node:true,esnext:true,eqeqeq:true,undef:true,lastsemic:true,unused:false */
+	/* globals fs:true, window:true, document:true, navigator:true, Blob:false */
+	
+	/* detect if window and document exist, if they do not, set them false */
+	
+	(function () {
+		var win, doc;
+		// set window and document to false if they do not exist
+		// and defines fs
+		try {
+			/* next assignment fails on nodejs, are OK on browser */
+			win = window;
+		} catch (e) {
+			window = false;
+			document = false;
+			fs = __webpack_require__(491);
+		}
+	})();
+	
+	/* jshint strict:true, unused:true */
+	module.exports = function (fname, rows, onError) {
+		"use strict";
+		/* writes Array-of-Array data in rows in csvfile format to fname */
+		/* isomorphic javascript for recent IE/Chrome/FF/nodeJS(server-side) */
+		/* this code adapted and separated from code origially appearing in 
+	  * "html5csv" at http://github.com/drpaulbrewer/html5csv
+	  * Copyright 2016 
+	  * Dr Paul Brewer Economic & Financial Technology Consulting LLC 
+	  * and Stack Overflow Contributors adaneo, Manu Sharma
+	  * License: MIT
+	  *
+	  * isomorphic CSV file creator.  Does not require nodejs server.
+	  *
+	  * Forces the browser to "download" a browser generated .csv file
+	  * consisting of comma-separated data from an Array of Arrays.  
+	  *
+	  * This is done via blob(IE) or dataURL and self-clicking link (Chrome/FF)
+	  *
+	  * I would like to thank adeneo, http://stackoverflow.com/users/965051/adeneo
+	  * for inspiration and showing me how to use a data URL this way
+	  * in http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+	  * Adaneo's solution works on Firefox and Chrome
+	  * Later Manu Sharma proposed an IE solution
+	  * in http://stackoverflow.com/a/27699027/103081
+	  *
+	  *
+	  * I have added a method that detects nodeJS environments and 
+	  * attempts to write a csvString asynchronously to the file named fname
+	  * in an overwriting, one time operation. This makes a heroic assumption
+	  * that the file system can handle an instruction to write csvString
+	  * without needing some kind of chunking to the block size of the device.
+	  */
+	
+		var i,
+		    l,
+		    csvString = '',
+		    errormsg = '';
+		/* by creating a csvString representing csv file content
+	  * this code has the limitation that 2x the csv data must fit in memory
+	  */
+		for (i = 0, l = rows.length; i < l; ++i) {
+			csvString += '"' + rows[i].join('","') + '"' + "\n";
+		} // try IE solution first from Manu Sharma
+		if (window && window.navigator && window.navigator.msSaveOrOpenBlob) {
+			try {
+				var blob = new Blob([decodeURIComponent(encodeURI(csvString))], {
+					type: "text/csv;charset=utf-8;"
+				});
+				navigator.msSaveBlob(blob, fname);
+			} catch (e) {
+				errormsg = "error on html5-csv-download, file: " + fname + ", IE blob branch:" + e;
+				if (typeof onError === 'function') {
+					return onError(errormsg, fname);
+				} else {
+					return console.log(errormsg);
+				}
+			}
+		} else if (document && document.createElement) {
+			// try adeneo's Firefox/Chrome solution here
+			try {
+				var a = document.createElement('a');
+				if (!('download' in a)) throw "a does not support download";
+				a.href = 'data:attachment/csv,' + encodeURIComponent(csvString);
+				a.target = '_blank';
+				// use class instead of id here -- PJB 2015.01.10
+				a.class = 'dataURLdownloader';
+				a.download = fname;
+				document.body.appendChild(a);
+				a.click();
+			} catch (e) {
+				errormsg = "error on html5-csv-download, file: " + fname + ", Chrome/Firefox branch:" + e;
+				if (typeof onError === 'function') {
+					return onError(errormsg, fname);
+				} else {
+					return console.log(errormsg);
+				}
+			}
+		} else if (fs && fs.writeFile) {
+			// nodeJS Hail Mary pass
+			fs.writeFile(fname, csvString, function (e) {
+				if (e) {
+					errormsg = "error on html5-csv-download, file: " + fname + ", nodeJS branch:" + e;
+					if (typeof onError === 'function') {
+						return onError(e, fname);
+					} else {
+						return console.log(errormsg);
+					}
+				}
+			});
+		}
+	};
+
+/***/ },
+/* 491 */
+/***/ function(module, exports) {
+
+	module.exports = {};
+
+/***/ },
+/* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11619,7 +11984,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _woodcraft = __webpack_require__(479);
+	var _woodcraft = __webpack_require__(481);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -11766,7 +12131,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 489 */
+/* 493 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11787,7 +12152,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _woodcraft = __webpack_require__(479);
+	var _woodcraft = __webpack_require__(481);
 	
 	var _woodcraft2 = _interopRequireDefault(_woodcraft);
 	
@@ -12048,7 +12413,7 @@ webpackJsonp([0],[
 	};
 
 /***/ },
-/* 490 */
+/* 494 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12059,7 +12424,7 @@ webpackJsonp([0],[
 	
 	var _redux = __webpack_require__(194);
 	
-	var _reduxThunk = __webpack_require__(491);
+	var _reduxThunk = __webpack_require__(495);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
@@ -12067,7 +12432,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _reduxImmutable = __webpack_require__(492);
+	var _reduxImmutable = __webpack_require__(496);
 	
 	var _user = __webpack_require__(296);
 	
@@ -12110,7 +12475,7 @@ webpackJsonp([0],[
 	exports.default = (0, _redux.createStore)(rootReducer, _immutable2.default.Map(), (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 /***/ },
-/* 491 */
+/* 495 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12138,7 +12503,7 @@ webpackJsonp([0],[
 	exports['default'] = thunk;
 
 /***/ },
-/* 492 */
+/* 496 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12148,7 +12513,7 @@ webpackJsonp([0],[
 	});
 	exports.combineReducers = undefined;
 	
-	var _combineReducers2 = __webpack_require__(493);
+	var _combineReducers2 = __webpack_require__(497);
 	
 	var _combineReducers3 = _interopRequireDefault(_combineReducers2);
 	
@@ -12159,7 +12524,7 @@ webpackJsonp([0],[
 	exports.combineReducers = _combineReducers3.default;
 
 /***/ },
-/* 493 */
+/* 497 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -12172,7 +12537,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _utilities = __webpack_require__(494);
+	var _utilities = __webpack_require__(498);
 	
 	function _interopRequireDefault(obj) {
 	  return obj && obj.__esModule ? obj : { default: obj };
@@ -12214,7 +12579,7 @@ webpackJsonp([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 494 */
+/* 498 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12225,15 +12590,15 @@ webpackJsonp([0],[
 	});
 	exports.validateNextState = exports.getUnexpectedInvocationParameterMessage = exports.getStateName = undefined;
 	
-	var _getStateName2 = __webpack_require__(495);
+	var _getStateName2 = __webpack_require__(499);
 	
 	var _getStateName3 = _interopRequireDefault(_getStateName2);
 	
-	var _getUnexpectedInvocationParameterMessage2 = __webpack_require__(496);
+	var _getUnexpectedInvocationParameterMessage2 = __webpack_require__(500);
 	
 	var _getUnexpectedInvocationParameterMessage3 = _interopRequireDefault(_getUnexpectedInvocationParameterMessage2);
 	
-	var _validateNextState2 = __webpack_require__(497);
+	var _validateNextState2 = __webpack_require__(501);
 	
 	var _validateNextState3 = _interopRequireDefault(_validateNextState2);
 	
@@ -12246,7 +12611,7 @@ webpackJsonp([0],[
 	exports.validateNextState = _validateNextState3.default;
 
 /***/ },
-/* 495 */
+/* 499 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12262,7 +12627,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 496 */
+/* 500 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12275,7 +12640,7 @@ webpackJsonp([0],[
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
-	var _getStateName = __webpack_require__(495);
+	var _getStateName = __webpack_require__(499);
 	
 	var _getStateName2 = _interopRequireDefault(_getStateName);
 	
@@ -12312,7 +12677,7 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 497 */
+/* 501 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12333,201 +12698,117 @@ webpackJsonp([0],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 498 */
+/* 502 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 	
-	var invariant = __webpack_require__(499);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	var splice = Array.prototype.splice;
+	var _react = __webpack_require__(1);
 	
-	var assign = Object.assign || function assign(target, source) {
-	  var keys = getAllKeys(source);
-	  for (var i = 0; i < keys.length; i++) {
-	    var key = keys[i];
-	    if (hasOwnProperty.call(source, key)) {
-	      target[key] = source[key];
-	    }
-	  }
-	  return target;
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(183);
+	
+	var _reactRouter = __webpack_require__(234);
+	
+	var _events = __webpack_require__(302);
+	
+	var _events2 = _interopRequireDefault(_events);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//confirmation page for booking cancallation
+	
+	
+	var CancelPage = function (_React$Component) {
+		_inherits(CancelPage, _React$Component);
+	
+		function CancelPage(props) {
+			_classCallCheck(this, CancelPage);
+	
+			return _possibleConstructorReturn(this, (CancelPage.__proto__ || Object.getPrototypeOf(CancelPage)).call(this, props));
+		}
+	
+		_createClass(CancelPage, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ className: 'row' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-sm-12' },
+							_react2.default.createElement(
+								'h3',
+								null,
+								'Your booking has been cancelled'
+							),
+							_react2.default.createElement(
+								'p',
+								null,
+								'You may book again if you reconsider'
+							)
+						)
+					)
+				);
+			}
+		}]);
+	
+		return CancelPage;
+	}(_react2.default.Component);
+	
+	var ParticipantRow = function ParticipantRow(props) {
+		return _react2.default.createElement(
+			'tr',
+			null,
+			_react2.default.createElement(
+				'td',
+				null,
+				props.name
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				props.age
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				props.diet
+			)
+		);
 	};
 	
-	var getAllKeys = typeof Object.getOwnPropertySymbols === 'function' ? function (obj) {
-	  return Object.keys(obj).concat(Object.getOwnPropertySymbols(obj));
-	} : function (obj) {
-	  return Object.keys(obj);
-	};
-	
-	function copy(object) {
-	  if (object instanceof Array) {
-	    return object.slice();
-	  } else if (object && (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object') {
-	    return assign(new object.constructor(), object);
-	  } else {
-	    return object;
-	  }
-	}
-	
-	function newContext() {
-	  var commands = assign({}, defaultCommands);
-	  update.extend = function (directive, fn) {
-	    commands[directive] = fn;
-	  };
-	
-	  return update;
-	
-	  function update(object, spec) {
-	    invariant(!Array.isArray(spec), 'update(): You provided an invalid spec to update(). The spec may ' + 'not contain an array except as the value of $set, $push, $unshift, ' + '$splice or any custom command allowing an array value.');
-	
-	    invariant((typeof spec === 'undefined' ? 'undefined' : _typeof(spec)) === 'object' && spec !== null, 'update(): You provided an invalid spec to update(). The spec and ' + 'every included key path must be plain objects containing one of the ' + 'following commands: %s.', Object.keys(commands).join(', '));
-	
-	    var nextObject = object;
-	    var specKeys = getAllKeys(spec);
-	    var index, key;
-	    for (index = 0; index < specKeys.length; index++) {
-	      var key = specKeys[index];
-	      if (hasOwnProperty.call(commands, key)) {
-	        nextObject = commands[key](spec[key], nextObject, spec, object);
-	      } else {
-	        var nextValueForKey = update(object[key], spec[key]);
-	        if (nextValueForKey !== nextObject[key]) {
-	          if (nextObject === object) {
-	            nextObject = copy(object);
-	          }
-	          nextObject[key] = nextValueForKey;
-	        }
-	      }
-	    }
-	    return nextObject;
-	  }
-	}
-	
-	var defaultCommands = {
-	  $push: function $push(value, original, spec) {
-	    invariantPushAndUnshift(original, spec, '$push');
-	    return original.concat(value);
-	  },
-	  $unshift: function $unshift(value, original, spec) {
-	    invariantPushAndUnshift(original, spec, '$unshift');
-	    return value.concat(original);
-	  },
-	  $splice: function $splice(value, nextObject, spec, object) {
-	    var originalValue = nextObject === object ? copy(object) : nextObject;
-	    invariantSplices(originalValue, spec);
-	    value.forEach(function (args) {
-	      invariantSplice(args);
-	      splice.apply(originalValue, args);
-	    });
-	    return originalValue;
-	  },
-	  $set: function $set(value, original, spec) {
-	    invariantSet(spec);
-	    return value;
-	  },
-	  $merge: function $merge(value, nextObject, spec, object) {
-	    var originalValue = nextObject === object ? copy(object) : nextObject;
-	    invariantMerge(originalValue, value);
-	    getAllKeys(value).forEach(function (key) {
-	      originalValue[key] = value[key];
-	    });
-	    return originalValue;
-	  },
-	  $apply: function $apply(value, original) {
-	    invariantApply(value);
-	    return value(original);
-	  }
-	};
-	
-	module.exports = newContext();
-	module.exports.newContext = newContext;
-	
-	// invariants
-	
-	function invariantPushAndUnshift(value, spec, command) {
-	  invariant(Array.isArray(value), 'update(): expected target of %s to be an array; got %s.', command, value);
-	  var specValue = spec[command];
-	  invariant(Array.isArray(specValue), 'update(): expected spec of %s to be an array; got %s. ' + 'Did you forget to wrap your parameter in an array?', command, specValue);
-	}
-	
-	function invariantSplices(value, spec) {
-	  invariant(Array.isArray(value), 'Expected $splice target to be an array; got %s', value);
-	  invariantSplice(spec['$splice']);
-	}
-	
-	function invariantSplice(value) {
-	  invariant(Array.isArray(value), 'update(): expected spec of $splice to be an array of arrays; got %s. ' + 'Did you forget to wrap your parameters in an array?', value);
-	}
-	
-	function invariantApply(fn) {
-	  invariant(typeof fn === 'function', 'update(): expected spec of $apply to be a function; got %s.', fn);
-	}
-	
-	function invariantSet(spec) {
-	  invariant(Object.keys(spec).length === 1, 'Cannot have more than one key in an object with $set');
-	}
-	
-	function invariantMerge(target, specValue) {
-	  invariant(specValue && (typeof specValue === 'undefined' ? 'undefined' : _typeof(specValue)) === 'object', 'update(): $merge expects a spec of type \'object\'; got %s', specValue);
-	  invariant(target && (typeof target === 'undefined' ? 'undefined' : _typeof(target)) === 'object', 'update(): $merge expects a target of type \'object\'; got %s', target);
-	}
-
-/***/ },
-/* 499 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
+	var mapStateToProps = function mapStateToProps(state, props) {
+		/*
+	 let User = state.get("User");
+	 let Event = state.getIn(["Events", props.params.eventId.toString()]);
+	 let Booking = state.getIn(["Bookings","bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"));
+	 return {User, Event, Booking}
 	 */
-	
-	'use strict';
-	
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-	
-	var invariant = function invariant(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-	
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	      error.name = 'Invariant Violation';
-	    }
-	
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
+		return {};
 	};
 	
-	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+	var mapDispatchToProps = {};
+	
+	var VisibleCancelPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(CancelPage);
+	
+	exports.default = VisibleCancelPage;
 
 /***/ }
 ]);
