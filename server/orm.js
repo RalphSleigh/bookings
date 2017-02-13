@@ -1,4 +1,4 @@
-var Sequelize = require('Sequelize');
+var Sequelize = require('sequelize');
 
 var sequelize = new Sequelize('bookings', null, null, {dialect:'sqlite', storage: 'database.sqlite'});
 
