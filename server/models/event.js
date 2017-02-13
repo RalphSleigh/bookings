@@ -1,4 +1,4 @@
-var Sequelize = require('Sequelize');
+var Sequelize = require('sequelize');
 var JsonField = require('sequelize-json');
 
 var o = require('../orm.js');
