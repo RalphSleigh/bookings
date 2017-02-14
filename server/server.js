@@ -12,6 +12,7 @@ var P = require('./permission.js')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
+var SQLiteStore = require('connect-sqlite3')(expressSession);
 
 
 
@@ -36,7 +37,7 @@ function ensureUser (req, res, next) {
 
 server.use(require('morgan')('common'));
 server.use(cookieParser());
-server.use(expressSession({secret: 'woodcraft'}));
+server.use(expressSession({secret: 'woodcraft', resave:false, saveUninitialized: true, store: new SQLiteStore}));
 server.use(bodyParser.json());
 server.use(ensureUser);
 server.use(logErrors);
