@@ -1,5 +1,7 @@
 webpack = require('webpack');
 
+var PROD = (process.env.NODE_ENV === 'production')
+
 module.exports = {
     entry: {
           app: './front/index.js',
@@ -36,3 +38,5 @@ module.exports = {
         })
   ]
 };
+
+if(PROD) module.exports.plugins.push(new webpack.optimize.UglifyJsPlugin());
