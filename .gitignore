@@ -4,3 +4,7 @@ npm-debug.log
 sqlite3.exe
 npm-debug*
 sessions.db
+public/bundle.js
+public/bundle.js.map
+public/vendor.bundle.js
+public/vendor.bundle.js.map
