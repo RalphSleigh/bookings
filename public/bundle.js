@@ -8876,9 +8876,13 @@ webpackJsonp([0],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+<<<<<<< HEAD
 	var _BookingUserDetails = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./BookingUserDetails.js\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+=======
+	var _bookingUserDetails = __webpack_require__(519);
+>>>>>>> c0a24aab5a89664214124f32f9fde7c3afbe5077
 	
-	var _BookingUserDetails2 = _interopRequireDefault(_BookingUserDetails);
+	var _bookingUserDetails2 = _interopRequireDefault(_bookingUserDetails);
 	
 	var _participantsForm = __webpack_require__(447);
 	
@@ -9141,7 +9145,7 @@ webpackJsonp([0],[
 							'Please include a contact number we can use during the event'
 						)
 					),
-					_react2.default.createElement(_BookingUserDetails2.default, { user: this.state.booking.user, update: this.updateUserDetails, guest: this.guest, validating: this.state.validation.user }),
+					_react2.default.createElement(_bookingUserDetails2.default, { user: this.state.booking.user, update: this.updateUserDetails, guest: this.guest, validating: this.state.validation.user }),
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-sm-12' },
@@ -9256,7 +9260,12 @@ webpackJsonp([0],[
 	};
 
 /***/ },
+<<<<<<< HEAD
 /* 447 */
+=======
+/* 469 */,
+/* 470 */
+>>>>>>> c0a24aab5a89664214124f32f9fde7c3afbe5077
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12397,6 +12406,117 @@ webpackJsonp([0],[
 	
 	module.exports = exports['default'];
 	//# sourceMappingURL=validateNextState.js.map
+
+/***/ },
+/* 519 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var BookingUserDetails = function (_React$Component) {
+		_inherits(BookingUserDetails, _React$Component);
+	
+		function BookingUserDetails(props) {
+			_classCallCheck(this, BookingUserDetails);
+	
+			var _this = _possibleConstructorReturn(this, (BookingUserDetails.__proto__ || Object.getPrototypeOf(BookingUserDetails)).call(this, props));
+	
+			_this.update = _this.update.bind(_this);
+			return _this;
+		}
+	
+		_createClass(BookingUserDetails, [{
+			key: "update",
+			value: function update(item) {
+				var _this2 = this;
+	
+				return function (e) {
+					_this2.props.update(item, e.target.value);
+					e.preventDefault();
+				};
+			}
+		}, {
+			key: "render",
+			value: function render() {
+	
+				var valid = "form-group";
+				var invalid = "form-group has-error";
+	
+				return _react2.default.createElement(
+					"div",
+					{ className: "col-sm-12" },
+					_react2.default.createElement(
+						"form",
+						{ className: "form-horizontal" },
+						_react2.default.createElement(
+							"div",
+							{ className: this.props.validating ? this.props.user.name === "" ? invalid : valid : valid },
+							_react2.default.createElement(
+								"label",
+								{ className: "col-sm-2 control-label" },
+								"Your Name:"
+							),
+							_react2.default.createElement(
+								"div",
+								{ className: "col-sm-10" },
+								_react2.default.createElement("input", { type: "text", className: "form-control", placeholder: "Name", disabled: !this.props.guest, value: this.props.user.name, onChange: this.update("name") })
+							)
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: this.props.validating ? this.props.user.email === "" ? invalid : valid : valid },
+							_react2.default.createElement(
+								"label",
+								{ className: "col-sm-2 control-label" },
+								"Your e-mail:"
+							),
+							_react2.default.createElement(
+								"div",
+								{ className: "col-sm-10" },
+								_react2.default.createElement("input", { type: "e-mail", className: "form-control", placeholder: "e-mail", disabled: !this.props.guest, value: this.props.user.email, onChange: this.update("email") })
+							)
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: this.props.validating ? this.props.user.phone === "" ? invalid : valid : valid },
+							_react2.default.createElement(
+								"label",
+								{ className: "col-sm-2 control-label" },
+								"Contact Phone Number:"
+							),
+							_react2.default.createElement(
+								"div",
+								{ className: "col-sm-10" },
+								_react2.default.createElement("input", { type: "tel", className: "form-control", placeholder: "Phone", value: this.props.user.phone, onChange: this.update("phone") })
+							)
+						)
+					)
+				);
+			}
+		}]);
+	
+		return BookingUserDetails;
+	}(_react2.default.Component);
+	
+	exports.default = BookingUserDetails;
 
 /***/ }
 ]);
