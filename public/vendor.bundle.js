@@ -106,7 +106,8 @@
 	__webpack_require__(332);
 	__webpack_require__(443);
 	__webpack_require__(459);
-	module.exports = __webpack_require__(306);
+	__webpack_require__(306);
+	module.exports = __webpack_require__(494);
 
 
 /***/ },
@@ -62452,6 +62453,1972 @@
 	freeExports._=_;}else{// Export to the global object.
 	root._=_;}}).call(undefined);
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(208)(module)))
+
+/***/ },
+/* 460 */,
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */,
+/* 477 */,
+/* 478 */,
+/* 479 */,
+/* 480 */,
+/* 481 */,
+/* 482 */,
+/* 483 */,
+/* 484 */,
+/* 485 */,
+/* 486 */,
+/* 487 */,
+/* 488 */,
+/* 489 */,
+/* 490 */,
+/* 491 */,
+/* 492 */,
+/* 493 */,
+/* 494 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactableTable = __webpack_require__(495);
+
+	var _reactableTr = __webpack_require__(503);
+
+	var _reactableTd = __webpack_require__(504);
+
+	var _reactableTh = __webpack_require__(501);
+
+	var _reactableTfoot = __webpack_require__(507);
+
+	var _reactableThead = __webpack_require__(500);
+
+	var _reactableSort = __webpack_require__(509);
+
+	var _reactableUnsafe = __webpack_require__(499);
+
+	_react2['default'].Children.children = function (children) {
+	    return _react2['default'].Children.map(children, function (x) {
+	        return x;
+	    }) || [];
+	};
+
+	// Array.prototype.find polyfill - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+	if (!Array.prototype.find) {
+	    Object.defineProperty(Array.prototype, 'find', {
+	        enumerable: false,
+	        configurable: true,
+	        writable: true,
+	        value: function value(predicate) {
+	            if (this === null) {
+	                throw new TypeError('Array.prototype.find called on null or undefined');
+	            }
+	            if (typeof predicate !== 'function') {
+	                throw new TypeError('predicate must be a function');
+	            }
+	            var list = Object(this);
+	            var length = list.length >>> 0;
+	            var thisArg = arguments[1];
+	            var value;
+	            for (var i = 0; i < length; i++) {
+	                if (i in list) {
+	                    value = list[i];
+	                    if (predicate.call(thisArg, value, i, list)) {
+	                        return value;
+	                    }
+	                }
+	            }
+	            return undefined;
+	        }
+	    });
+	}
+
+	var Reactable = { Table: _reactableTable.Table, Tr: _reactableTr.Tr, Td: _reactableTd.Td, Th: _reactableTh.Th, Tfoot: _reactableTfoot.Tfoot, Thead: _reactableThead.Thead, Sort: _reactableSort.Sort, unsafe: _reactableUnsafe.unsafe };
+
+	exports['default'] = Reactable;
+
+	if (typeof window !== 'undefined') {
+	    window.Reactable = Reactable;
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 495 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) {
+	    for (var i = 1; i < arguments.length; i++) {
+	        var source = arguments[i];for (var key in source) {
+	            if (Object.prototype.hasOwnProperty.call(source, key)) {
+	                target[key] = source[key];
+	            }
+	        }
+	    }return target;
+	};
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _libFilter_props_from = __webpack_require__(496);
+
+	var _libExtract_data_from = __webpack_require__(497);
+
+	var _unsafe = __webpack_require__(499);
+
+	var _thead = __webpack_require__(500);
+
+	var _th = __webpack_require__(501);
+
+	var _tr = __webpack_require__(503);
+
+	var _tfoot = __webpack_require__(507);
+
+	var _paginator = __webpack_require__(508);
+
+	var Table = function (_React$Component) {
+	    _inherits(Table, _React$Component);
+
+	    function Table(props) {
+	        _classCallCheck(this, Table);
+
+	        _get(Object.getPrototypeOf(Table.prototype), 'constructor', this).call(this, props);
+
+	        this.state = {
+	            currentPage: this.props.currentPage ? this.props.currentPage : 0,
+	            currentSort: {
+	                column: null,
+	                direction: this.props.defaultSortDescending ? -1 : 1
+	            },
+	            filter: ''
+	        };
+
+	        // Set the state of the current sort to the default sort
+	        if (props.sortBy !== false || props.defaultSort !== false) {
+	            var sortingColumn = props.sortBy || props.defaultSort;
+	            this.state.currentSort = this.getCurrentSort(sortingColumn);
+	        }
+	    }
+
+	    _createClass(Table, [{
+	        key: 'filterBy',
+	        value: function filterBy(filter) {
+	            this.setState({ filter: filter });
+	        }
+
+	        // Translate a user defined column array to hold column objects if strings are specified
+	        // (e.g. ['column1'] => [{key: 'column1', label: 'column1'}])
+	    }, {
+	        key: 'translateColumnsArray',
+	        value: function translateColumnsArray(columns) {
+	            return columns.map(function (column, i) {
+	                if (typeof column === 'string') {
+	                    return {
+	                        key: column,
+	                        label: column
+	                    };
+	                } else {
+	                    if (typeof column.sortable !== 'undefined') {
+	                        var sortFunction = column.sortable === true ? 'default' : column.sortable;
+	                        this._sortable[column.key] = sortFunction;
+	                    }
+
+	                    return column;
+	                }
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'parseChildData',
+	        value: function parseChildData(props) {
+	            var data = [],
+	                tfoot = undefined;
+
+	            // Transform any children back to a data array
+	            if (typeof props.children !== 'undefined') {
+	                _react2['default'].Children.forEach(props.children, function (child) {
+	                    if (typeof child === 'undefined' || child === null) {
+	                        return;
+	                    }
+
+	                    switch (child.type) {
+	                        case _thead.Thead:
+	                            break;
+	                        case _tfoot.Tfoot:
+	                            if (typeof tfoot !== 'undefined') {
+	                                console.warn('You can only have one <Tfoot>, but more than one was specified.' + 'Ignoring all but the last one');
+	                            }
+	                            tfoot = child;
+	                            break;
+	                        case _tr.Tr:
+	                            var childData = child.props.data || {};
+
+	                            _react2['default'].Children.forEach(child.props.children, function (descendant) {
+	                                // TODO
+	                                /* if (descendant.type.ConvenienceConstructor === Td) { */
+	                                if ((typeof descendant === 'undefined' ? 'undefined' : _typeof(descendant)) !== 'object' || descendant == null) {
+	                                    return;
+	                                } else if (typeof descendant.props.column !== 'undefined') {
+	                                    var value = undefined;
+
+	                                    if (typeof descendant.props.data !== 'undefined') {
+	                                        value = descendant.props.data;
+	                                    } else if (typeof descendant.props.children !== 'undefined') {
+	                                        value = descendant.props.children;
+	                                    } else {
+	                                        console.warn('exports.Td specified without ' + 'a `data` property or children, ' + 'ignoring');
+	                                        return;
+	                                    }
+
+	                                    childData[descendant.props.column] = {
+	                                        value: value,
+	                                        props: (0, _libFilter_props_from.filterPropsFrom)(descendant.props),
+	                                        __reactableMeta: true
+	                                    };
+	                                } else {
+	                                    console.warn('exports.Td specified without a ' + '`column` property, ignoring');
+	                                }
+	                            });
+
+	                            data.push({
+	                                data: childData,
+	                                props: (0, _libFilter_props_from.filterPropsFrom)(child.props),
+	                                __reactableMeta: true
+	                            });
+	                            break;
+
+	                        default:
+	                            console.warn('The only possible children of <Table> are <Thead>, <Tr>, ' + 'or one <Tfoot>.');
+	                    }
+	                }.bind(this));
+	            }
+
+	            return { data: data, tfoot: tfoot };
+	        }
+	    }, {
+	        key: 'initialize',
+	        value: function initialize(props) {
+	            this.data = props.data || [];
+
+	            var _parseChildData = this.parseChildData(props);
+
+	            var data = _parseChildData.data;
+	            var tfoot = _parseChildData.tfoot;
+
+	            this.data = this.data.concat(data);
+	            this.tfoot = tfoot;
+
+	            this.initializeSorts(props);
+	            this.initializeFilters(props);
+	        }
+	    }, {
+	        key: 'initializeFilters',
+	        value: function initializeFilters(props) {
+	            this._filterable = {};
+	            // Transform filterable properties into a more friendly list
+	            for (var i in props.filterable) {
+	                var column = props.filterable[i];
+	                var columnName = undefined,
+	                    filterFunction = undefined;
+
+	                if (column instanceof Object) {
+	                    if (typeof column.column !== 'undefined') {
+	                        columnName = column.column;
+	                    } else {
+	                        console.warn('Filterable column specified without column name');
+	                        continue;
+	                    }
+
+	                    if (typeof column.filterFunction === 'function') {
+	                        filterFunction = column.filterFunction;
+	                    } else {
+	                        filterFunction = 'default';
+	                    }
+	                } else {
+	                    columnName = column;
+	                    filterFunction = 'default';
+	                }
+
+	                this._filterable[columnName] = filterFunction;
+	            }
+	        }
+	    }, {
+	        key: 'initializeSorts',
+	        value: function initializeSorts(props) {
+	            this._sortable = {};
+	            // Transform sortable properties into a more friendly list
+	            for (var i in props.sortable) {
+	                var column = props.sortable[i];
+	                var columnName = undefined,
+	                    sortFunction = undefined;
+
+	                if (column instanceof Object) {
+	                    if (typeof column.column !== 'undefined') {
+	                        columnName = column.column;
+	                    } else {
+	                        console.warn('Sortable column specified without column name');
+	                        return;
+	                    }
+
+	                    if (typeof column.sortFunction === 'function') {
+	                        sortFunction = column.sortFunction;
+	                    } else {
+	                        sortFunction = 'default';
+	                    }
+	                } else {
+	                    columnName = column;
+	                    sortFunction = 'default';
+	                }
+
+	                this._sortable[columnName] = sortFunction;
+	            }
+	        }
+	    }, {
+	        key: 'getCurrentSort',
+	        value: function getCurrentSort(column) {
+	            var columnName = undefined,
+	                sortDirection = undefined;
+
+	            if (column instanceof Object) {
+	                if (typeof column.column !== 'undefined') {
+	                    columnName = column.column;
+	                } else {
+	                    console.warn('Default column specified without column name');
+	                    return;
+	                }
+
+	                if (typeof column.direction !== 'undefined') {
+	                    if (column.direction === 1 || column.direction === 'asc') {
+	                        sortDirection = 1;
+	                    } else if (column.direction === -1 || column.direction === 'desc') {
+	                        sortDirection = -1;
+	                    } else {
+	                        var defaultDirection = this.props.defaultSortDescending ? 'descending' : 'ascending';
+
+	                        console.warn('Invalid default sort specified. Defaulting to ' + defaultDirection);
+	                        sortDirection = this.props.defaultSortDescending ? -1 : 1;
+	                    }
+	                } else {
+	                    sortDirection = this.props.defaultSortDescending ? -1 : 1;
+	                }
+	            } else {
+	                columnName = column;
+	                sortDirection = this.props.defaultSortDescending ? -1 : 1;
+	            }
+
+	            return {
+	                column: columnName,
+	                direction: sortDirection
+	            };
+	        }
+	    }, {
+	        key: 'updateCurrentSort',
+	        value: function updateCurrentSort(sortBy) {
+	            if (sortBy !== false && sortBy.column !== this.state.currentSort.column && sortBy.direction !== this.state.currentSort.direction) {
+
+	                this.setState({ currentSort: this.getCurrentSort(sortBy) });
+	            }
+	        }
+	    }, {
+	        key: 'updateCurrentPage',
+	        value: function updateCurrentPage(nextPage) {
+	            if (typeof nextPage !== 'undefined' && nextPage !== this.state.currentPage) {
+	                this.setState({ currentPage: nextPage });
+	            }
+	        }
+	    }, {
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.initialize(this.props);
+	            this.sortByCurrentSort();
+	            this.filterBy(this.props.filterBy);
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            this.initialize(nextProps);
+	            this.updateCurrentPage(nextProps.currentPage);
+	            this.updateCurrentSort(nextProps.sortBy);
+	            this.sortByCurrentSort();
+	            this.filterBy(nextProps.filterBy);
+	        }
+	    }, {
+	        key: 'applyFilter',
+	        value: function applyFilter(filter, children) {
+	            // Helper function to apply filter text to a list of table rows
+	            filter = filter.toLowerCase();
+	            var matchedChildren = [];
+
+	            for (var i = 0; i < children.length; i++) {
+	                var data = children[i].props.data;
+
+	                for (var filterColumn in this._filterable) {
+	                    if (typeof data[filterColumn] !== 'undefined') {
+	                        // Default filter
+	                        if (typeof this._filterable[filterColumn] === 'undefined' || this._filterable[filterColumn] === 'default') {
+	                            if ((0, _libExtract_data_from.extractDataFrom)(data, filterColumn).toString().toLowerCase().indexOf(filter) > -1) {
+	                                matchedChildren.push(children[i]);
+	                                break;
+	                            }
+	                        } else {
+	                            // Apply custom filter
+	                            if (this._filterable[filterColumn]((0, _libExtract_data_from.extractDataFrom)(data, filterColumn).toString(), filter)) {
+	                                matchedChildren.push(children[i]);
+	                                break;
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+
+	            return matchedChildren;
+	        }
+	    }, {
+	        key: 'sortByCurrentSort',
+	        value: function sortByCurrentSort() {
+	            // Apply a sort function according to the current sort in the state.
+	            // This allows us to perform a default sort even on a non sortable column.
+	            var currentSort = this.state.currentSort;
+
+	            if (currentSort.column === null) {
+	                return;
+	            }
+
+	            this.data.sort(function (a, b) {
+	                var keyA = (0, _libExtract_data_from.extractDataFrom)(a, currentSort.column);
+	                keyA = (0, _unsafe.isUnsafe)(keyA) ? keyA.toString() : keyA || '';
+	                var keyB = (0, _libExtract_data_from.extractDataFrom)(b, currentSort.column);
+	                keyB = (0, _unsafe.isUnsafe)(keyB) ? keyB.toString() : keyB || '';
+
+	                // Default sort
+	                if (typeof this._sortable[currentSort.column] === 'undefined' || this._sortable[currentSort.column] === 'default') {
+
+	                    // Reverse direction if we're doing a reverse sort
+	                    if (keyA < keyB) {
+	                        return -1 * currentSort.direction;
+	                    }
+
+	                    if (keyA > keyB) {
+	                        return 1 * currentSort.direction;
+	                    }
+
+	                    return 0;
+	                } else {
+	                    // Reverse columns if we're doing a reverse sort
+	                    if (currentSort.direction === 1) {
+	                        return this._sortable[currentSort.column](keyA, keyB);
+	                    } else {
+	                        return this._sortable[currentSort.column](keyB, keyA);
+	                    }
+	                }
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'onSort',
+	        value: function onSort(column) {
+	            // Don't perform sort on unsortable columns
+	            if (typeof this._sortable[column] === 'undefined') {
+	                return;
+	            }
+
+	            var currentSort = this.state.currentSort;
+
+	            if (currentSort.column === column) {
+	                currentSort.direction *= -1;
+	            } else {
+	                currentSort.column = column;
+	                currentSort.direction = this.props.defaultSortDescending ? -1 : 1;
+	            }
+
+	            // Set the current sort and pass it to the sort function
+	            this.setState({ currentSort: currentSort });
+	            this.sortByCurrentSort();
+
+	            if (typeof this.props.onSort === 'function') {
+	                this.props.onSort(currentSort);
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this = this;
+
+	            var children = [];
+	            var columns = undefined;
+	            var userColumnsSpecified = false;
+	            var showHeaders = typeof this.props.hideTableHeader === 'undefined';
+
+	            var firstChild = null;
+
+	            if (this.props.children) {
+	                if (this.props.children.length > 0 && this.props.children[0] && this.props.children[0].type === _thead.Thead) {
+	                    firstChild = this.props.children[0];
+	                } else if (this.props.children.type === _thead.Thead) {
+	                    firstChild = this.props.children;
+	                }
+	            }
+
+	            if (firstChild !== null) {
+	                columns = _thead.Thead.getColumns(firstChild);
+	            } else {
+	                columns = this.props.columns || [];
+	            }
+
+	            if (columns.length > 0) {
+	                userColumnsSpecified = true;
+	                columns = this.translateColumnsArray(columns);
+	            }
+
+	            // Build up table rows
+	            if (this.data && typeof this.data.map === 'function') {
+	                // Build up the columns array
+	                children = children.concat(this.data.map(function (rawData, i) {
+	                    var data = rawData;
+	                    var props = {};
+	                    if (rawData.__reactableMeta === true) {
+	                        data = rawData.data;
+	                        props = rawData.props;
+	                    }
+
+	                    // Loop through the keys in each data row and build a td for it
+	                    for (var k in data) {
+	                        if (data.hasOwnProperty(k)) {
+	                            // Update the columns array with the data's keys if columns were not
+	                            // already specified
+	                            if (userColumnsSpecified === false) {
+	                                (function () {
+	                                    var column = {
+	                                        key: k,
+	                                        label: k
+	                                    };
+
+	                                    // Only add a new column if it doesn't already exist in the columns array
+	                                    if (columns.find(function (element) {
+	                                        return element.key === column.key;
+	                                    }) === undefined) {
+	                                        columns.push(column);
+	                                    }
+	                                })();
+	                            }
+	                        }
+	                    }
+
+	                    return _react2['default'].createElement(_tr.Tr, _extends({ columns: columns, key: i, data: data }, props));
+	                }.bind(this)));
+	            }
+
+	            if (this.props.sortable === true) {
+	                for (var i = 0; i < columns.length; i++) {
+	                    this._sortable[columns[i].key] = 'default';
+	                }
+	            }
+
+	            // Determine if we render the filter box
+	            var filtering = false;
+	            if (this.props.filterable && Array.isArray(this.props.filterable) && this.props.filterable.length > 0 && !this.props.hideFilterInput) {
+	                filtering = true;
+	            }
+
+	            // Apply filters
+	            var filteredChildren = children;
+	            if (this.state.filter !== '') {
+	                filteredChildren = this.applyFilter(this.state.filter, filteredChildren);
+	            }
+
+	            // Determine pagination properties and which columns to display
+	            var itemsPerPage = 0;
+	            var pagination = false;
+	            var numPages = undefined;
+	            var currentPage = this.state.currentPage;
+	            var pageButtonLimit = this.props.pageButtonLimit || 10;
+
+	            var currentChildren = filteredChildren;
+	            if (this.props.itemsPerPage > 0) {
+	                itemsPerPage = this.props.itemsPerPage;
+	                numPages = Math.ceil(filteredChildren.length / itemsPerPage);
+
+	                if (currentPage > numPages - 1) {
+	                    currentPage = numPages - 1;
+	                }
+
+	                pagination = true;
+	                currentChildren = filteredChildren.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+	            }
+
+	            // Manually transfer props
+	            var props = (0, _libFilter_props_from.filterPropsFrom)(this.props);
+
+	            var noDataText = this.props.noDataText ? _react2['default'].createElement('tr', { className: 'reactable-no-data' }, _react2['default'].createElement('td', { colSpan: columns.length }, this.props.noDataText)) : null;
+
+	            var tableHeader = null;
+	            if (columns && columns.length > 0 && showHeaders) {
+	                tableHeader = _react2['default'].createElement(_thead.Thead, { columns: columns,
+	                    filtering: filtering,
+	                    onFilter: function onFilter(filter) {
+	                        _this.setState({ filter: filter });
+	                        if (_this.props.onFilter) {
+	                            _this.props.onFilter(filter);
+	                        }
+	                    },
+	                    filterPlaceholder: this.props.filterPlaceholder,
+	                    filterClassName: this.props.filterClassName,
+	                    currentFilter: this.state.filter,
+	                    sort: this.state.currentSort,
+	                    sortableColumns: this._sortable,
+	                    onSort: this.onSort.bind(this),
+	                    key: 'thead' });
+	            }
+	            return _react2['default'].createElement('table', props, tableHeader, _react2['default'].createElement('tbody', { className: 'reactable-data', key: 'tbody' }, currentChildren.length > 0 ? currentChildren : noDataText), pagination === true ? _react2['default'].createElement(_paginator.Paginator, { colSpan: columns.length,
+	                pageButtonLimit: pageButtonLimit,
+	                numPages: numPages,
+	                currentPage: currentPage,
+	                onPageChange: function onPageChange(page) {
+	                    _this.setState({ currentPage: page });
+	                    if (_this.props.onPageChange) {
+	                        _this.props.onPageChange(page);
+	                    }
+	                },
+	                previousPageLabel: this.props.previousPageLabel,
+	                nextPageLabel: this.props.nextPageLabel,
+	                key: 'paginator' }) : null, this.tfoot);
+	        }
+	    }]);
+
+	    return Table;
+	}(_react2['default'].Component);
+
+	exports.Table = Table;
+
+	Table.defaultProps = {
+	    sortBy: false,
+	    defaultSort: false,
+	    defaultSortDescending: false,
+	    itemsPerPage: 0,
+	    filterBy: '',
+	    hideFilterInput: false
+	};
+
+/***/ },
+/* 496 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.filterPropsFrom = filterPropsFrom;
+	var internalProps = {
+	    hideTableHeader: true,
+	    column: true,
+	    columns: true,
+	    sortable: true,
+	    filterable: true,
+	    filtering: true,
+	    onFilter: true,
+	    filterPlaceholder: true,
+	    filterClassName: true,
+	    currentFilter: true,
+	    sort: true,
+	    sortBy: true,
+	    sortableColumns: true,
+	    onSort: true,
+	    defaultSort: true,
+	    defaultSortDescending: true,
+	    itemsPerPage: true,
+	    filterBy: true,
+	    hideFilterInput: true,
+	    noDataText: true,
+	    currentPage: true,
+	    onPageChange: true,
+	    previousPageLabel: true,
+	    nextPageLabel: true,
+	    pageButtonLimit: true,
+	    childNode: true,
+	    data: true,
+	    children: true
+	};
+
+	function filterPropsFrom(baseProps) {
+	    baseProps = baseProps || {};
+	    var props = {};
+	    for (var key in baseProps) {
+	        if (!(key in internalProps)) {
+	            props[key] = baseProps[key];
+	        }
+	    }
+
+	    return props;
+	}
+
+/***/ },
+/* 497 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	exports.extractDataFrom = extractDataFrom;
+
+	var _stringable = __webpack_require__(498);
+
+	function extractDataFrom(key, column) {
+	    var value;
+	    if (typeof key !== 'undefined' && key !== null && key.__reactableMeta === true) {
+	        value = key.data[column];
+	    } else {
+	        value = key[column];
+	    }
+
+	    if (typeof value !== 'undefined' && value !== null && value.__reactableMeta === true) {
+	        value = typeof value.props.value !== 'undefined' && value.props.value !== null ? value.props.value : value.value;
+	    }
+
+	    return (0, _stringable.stringable)(value) ? value : '';
+	}
+
+/***/ },
+/* 498 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	exports.stringable = stringable;
+
+	function stringable(thing) {
+	    return thing !== null && typeof thing !== 'undefined' && _typeof(thing.toString === 'function');
+	}
+
+/***/ },
+/* 499 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	exports.unsafe = unsafe;
+	exports.isUnsafe = isUnsafe;
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError("Cannot call a class as a function");
+	    }
+	}
+
+	var Unsafe = function () {
+	    function Unsafe(content) {
+	        _classCallCheck(this, Unsafe);
+
+	        this.content = content;
+	    }
+
+	    _createClass(Unsafe, [{
+	        key: "toString",
+	        value: function toString() {
+	            return this.content;
+	        }
+	    }]);
+
+	    return Unsafe;
+	}();
+
+	function unsafe(str) {
+	    return new Unsafe(str);
+	}
+
+	;
+
+	function isUnsafe(obj) {
+	    return obj instanceof Unsafe;
+	}
+
+	;
+
+/***/ },
+/* 500 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) {
+	    for (var i = 1; i < arguments.length; i++) {
+	        var source = arguments[i];for (var key in source) {
+	            if (Object.prototype.hasOwnProperty.call(source, key)) {
+	                target[key] = source[key];
+	            }
+	        }
+	    }return target;
+	};
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _th = __webpack_require__(501);
+
+	var _filterer = __webpack_require__(502);
+
+	var _libFilter_props_from = __webpack_require__(496);
+
+	var Thead = function (_React$Component) {
+	    _inherits(Thead, _React$Component);
+
+	    function Thead() {
+	        _classCallCheck(this, Thead);
+
+	        _get(Object.getPrototypeOf(Thead.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(Thead, [{
+	        key: 'handleClickTh',
+	        value: function handleClickTh(column) {
+	            this.props.onSort(column.key);
+	        }
+	    }, {
+	        key: 'handleKeyDownTh',
+	        value: function handleKeyDownTh(column, event) {
+	            if (event.keyCode === 13) {
+	                this.props.onSort(column.key);
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            // Declare the list of Ths
+	            var Ths = [];
+	            for (var index = 0; index < this.props.columns.length; index++) {
+	                var column = this.props.columns[index];
+	                var thClass = 'reactable-th-' + column.key.replace(/\s+/g, '-').toLowerCase();
+	                var sortClass = '';
+	                var thRole = null;
+
+	                if (this.props.sortableColumns[column.key]) {
+	                    sortClass += 'reactable-header-sortable ';
+	                    thRole = 'button';
+	                }
+
+	                if (this.props.sort.column === column.key) {
+	                    sortClass += 'reactable-header-sort';
+	                    if (this.props.sort.direction === 1) {
+	                        sortClass += '-asc';
+	                    } else {
+	                        sortClass += '-desc';
+	                    }
+	                }
+
+	                if (sortClass.length > 0) {
+	                    thClass += ' ' + sortClass;
+	                }
+
+	                if (_typeof(column.props) === 'object' && typeof column.props.className === 'string') {
+	                    thClass += ' ' + column.props.className;
+	                }
+
+	                Ths.push(_react2['default'].createElement(_th.Th, _extends({}, column.props, {
+	                    className: thClass,
+	                    key: index,
+	                    onClick: this.handleClickTh.bind(this, column),
+	                    onKeyDown: this.handleKeyDownTh.bind(this, column),
+	                    role: thRole,
+	                    tabIndex: '0' }), column.label));
+	            }
+
+	            // Manually transfer props
+	            var props = (0, _libFilter_props_from.filterPropsFrom)(this.props);
+
+	            return _react2['default'].createElement('thead', props, this.props.filtering === true ? _react2['default'].createElement(_filterer.Filterer, {
+	                colSpan: this.props.columns.length,
+	                onFilter: this.props.onFilter,
+	                placeholder: this.props.filterPlaceholder,
+	                value: this.props.currentFilter,
+	                className: this.props.filterClassName
+	            }) : null, _react2['default'].createElement('tr', { className: 'reactable-column-header' }, Ths));
+	        }
+	    }], [{
+	        key: 'getColumns',
+	        value: function getColumns(component) {
+	            // Can't use React.Children.map since that doesn't return a proper array
+	            var columns = [];
+	            _react2['default'].Children.forEach(component.props.children, function (th) {
+	                var column = {};
+	                if (typeof th.props !== 'undefined') {
+	                    column.props = (0, _libFilter_props_from.filterPropsFrom)(th.props);
+
+	                    // use the content as the label & key
+	                    if (typeof th.props.children !== 'undefined') {
+	                        column.label = th.props.children;
+	                        column.key = column.label;
+	                    }
+
+	                    // the key in the column attribute supersedes the one defined previously
+	                    if (typeof th.props.column === 'string') {
+	                        column.key = th.props.column;
+
+	                        // in case we don't have a label yet
+	                        if (typeof column.label === 'undefined') {
+	                            column.label = column.key;
+	                        }
+	                    }
+	                }
+
+	                if (typeof column.key === 'undefined') {
+	                    throw new TypeError('<th> must have either a "column" property or a string ' + 'child');
+	                } else {
+	                    columns.push(column);
+	                }
+	            });
+
+	            return columns;
+	        }
+	    }]);
+
+	    return Thead;
+	}(_react2['default'].Component);
+
+	exports.Thead = Thead;
+	;
+
+/***/ },
+/* 501 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) {
+	    for (var i = 1; i < arguments.length; i++) {
+	        var source = arguments[i];for (var key in source) {
+	            if (Object.prototype.hasOwnProperty.call(source, key)) {
+	                target[key] = source[key];
+	            }
+	        }
+	    }return target;
+	};
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _unsafe = __webpack_require__(499);
+
+	var _libFilter_props_from = __webpack_require__(496);
+
+	var Th = function (_React$Component) {
+	    _inherits(Th, _React$Component);
+
+	    function Th() {
+	        _classCallCheck(this, Th);
+
+	        _get(Object.getPrototypeOf(Th.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(Th, [{
+	        key: 'render',
+	        value: function render() {
+	            var childProps = undefined;
+
+	            if ((0, _unsafe.isUnsafe)(this.props.children)) {
+	                return _react2['default'].createElement('th', _extends({}, (0, _libFilter_props_from.filterPropsFrom)(this.props), {
+	                    dangerouslySetInnerHTML: { __html: this.props.children.toString() } }));
+	            } else {
+	                return _react2['default'].createElement('th', (0, _libFilter_props_from.filterPropsFrom)(this.props), this.props.children);
+	            }
+	        }
+	    }]);
+
+	    return Th;
+	}(_react2['default'].Component);
+
+	exports.Th = Th;
+	;
+
+/***/ },
+/* 502 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(32);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var FiltererInput = function (_React$Component) {
+	    _inherits(FiltererInput, _React$Component);
+
+	    function FiltererInput() {
+	        _classCallCheck(this, FiltererInput);
+
+	        _get(Object.getPrototypeOf(FiltererInput.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(FiltererInput, [{
+	        key: 'onChange',
+	        value: function onChange() {
+	            this.props.onFilter(_reactDom2['default'].findDOMNode(this).value);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2['default'].createElement('input', { type: 'text',
+	                className: this.props.className,
+	                placeholder: this.props.placeholder,
+	                value: this.props.value,
+	                onKeyUp: this.onChange.bind(this),
+	                onChange: this.onChange.bind(this) });
+	        }
+	    }]);
+
+	    return FiltererInput;
+	}(_react2['default'].Component);
+
+	exports.FiltererInput = FiltererInput;
+	;
+
+	var Filterer = function (_React$Component2) {
+	    _inherits(Filterer, _React$Component2);
+
+	    function Filterer() {
+	        _classCallCheck(this, Filterer);
+
+	        _get(Object.getPrototypeOf(Filterer.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(Filterer, [{
+	        key: 'render',
+	        value: function render() {
+	            if (typeof this.props.colSpan === 'undefined') {
+	                throw new TypeError('Must pass a colSpan argument to Filterer');
+	            }
+
+	            return _react2['default'].createElement('tr', { className: 'reactable-filterer' }, _react2['default'].createElement('td', { colSpan: this.props.colSpan }, _react2['default'].createElement(FiltererInput, { onFilter: this.props.onFilter,
+	                value: this.props.value,
+	                placeholder: this.props.placeholder,
+	                className: this.props.className ? 'reactable-filter-input ' + this.props.className : 'reactable-filter-input' })));
+	        }
+	    }]);
+
+	    return Filterer;
+	}(_react2['default'].Component);
+
+	exports.Filterer = Filterer;
+	;
+
+/***/ },
+/* 503 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) {
+	    for (var i = 1; i < arguments.length; i++) {
+	        var source = arguments[i];for (var key in source) {
+	            if (Object.prototype.hasOwnProperty.call(source, key)) {
+	                target[key] = source[key];
+	            }
+	        }
+	    }return target;
+	};
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _objectWithoutProperties(obj, keys) {
+	    var target = {};for (var i in obj) {
+	        if (keys.indexOf(i) >= 0) continue;if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;target[i] = obj[i];
+	    }return target;
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _td = __webpack_require__(504);
+
+	var _libTo_array = __webpack_require__(506);
+
+	var _libFilter_props_from = __webpack_require__(496);
+
+	var Tr = function (_React$Component) {
+	    _inherits(Tr, _React$Component);
+
+	    function Tr() {
+	        _classCallCheck(this, Tr);
+
+	        _get(Object.getPrototypeOf(Tr.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(Tr, [{
+	        key: 'render',
+	        value: function render() {
+	            var children = (0, _libTo_array.toArray)(_react2['default'].Children.children(this.props.children));
+
+	            if (this.props.data && this.props.columns && typeof this.props.columns.map === 'function') {
+	                if (typeof children.concat === 'undefined') {
+	                    console.log(children);
+	                }
+
+	                children = children.concat(this.props.columns.map(function (_ref, i) {
+	                    var _ref$props = _ref.props;
+	                    var props = _ref$props === undefined ? {} : _ref$props;
+
+	                    var column = _objectWithoutProperties(_ref, ['props']);
+
+	                    if (this.props.data.hasOwnProperty(column.key)) {
+	                        var value = this.props.data[column.key];
+
+	                        if (typeof value !== 'undefined' && value !== null && value.__reactableMeta === true) {
+	                            props = value.props;
+	                            value = value.value;
+	                        }
+
+	                        return _react2['default'].createElement(_td.Td, _extends({ column: column, key: column.key }, props), value);
+	                    } else {
+	                        return _react2['default'].createElement(_td.Td, { column: column, key: column.key });
+	                    }
+	                }.bind(this)));
+	            }
+
+	            // Manually transfer props
+	            var props = (0, _libFilter_props_from.filterPropsFrom)(this.props);
+
+	            return _react2['default'].DOM.tr(props, children);
+	        }
+	    }]);
+
+	    return Tr;
+	}(_react2['default'].Component);
+
+	exports.Tr = Tr;
+	;
+
+	Tr.childNode = _td.Td;
+	Tr.dataType = 'object';
+
+/***/ },
+/* 504 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) {
+	    for (var i = 1; i < arguments.length; i++) {
+	        var source = arguments[i];for (var key in source) {
+	            if (Object.prototype.hasOwnProperty.call(source, key)) {
+	                target[key] = source[key];
+	            }
+	        }
+	    }return target;
+	};
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _libIs_react_component = __webpack_require__(505);
+
+	var _libStringable = __webpack_require__(498);
+
+	var _unsafe = __webpack_require__(499);
+
+	var _libFilter_props_from = __webpack_require__(496);
+
+	var Td = function (_React$Component) {
+	    _inherits(Td, _React$Component);
+
+	    function Td() {
+	        _classCallCheck(this, Td);
+
+	        _get(Object.getPrototypeOf(Td.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(Td, [{
+	        key: 'stringifyIfNotReactComponent',
+	        value: function stringifyIfNotReactComponent(object) {
+	            if (!(0, _libIs_react_component.isReactComponent)(object) && (0, _libStringable.stringable)(object) && typeof object !== 'undefined') {
+	                return object.toString();
+	            }
+	            return null;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            // Attach any properties on the column to this Td object to allow things like custom event handlers
+	            var mergedProps = (0, _libFilter_props_from.filterPropsFrom)(this.props);
+	            if (_typeof(this.props.column) === 'object') {
+	                for (var key in this.props.column) {
+	                    if (key !== 'key' && key !== 'name') {
+	                        mergedProps[key] = this.props.column[key];
+	                    }
+	                }
+	            }
+	            // handleClick aliases onClick event
+	            mergedProps.onClick = this.props.handleClick;
+
+	            var stringifiedChildProps;
+
+	            if (typeof this.props.data === 'undefined') {
+	                stringifiedChildProps = this.stringifyIfNotReactComponent(this.props.children);
+	            }
+
+	            if ((0, _unsafe.isUnsafe)(this.props.children)) {
+	                return _react2['default'].createElement('td', _extends({}, mergedProps, {
+	                    dangerouslySetInnerHTML: { __html: this.props.children.toString() } }));
+	            } else {
+	                return _react2['default'].createElement('td', mergedProps, stringifiedChildProps || this.props.children);
+	            }
+	        }
+	    }]);
+
+	    return Td;
+	}(_react2['default'].Component);
+
+	exports.Td = Td;
+	;
+
+/***/ },
+/* 505 */
+/***/ function(module, exports) {
+
+	// this is a bit hacky - it'd be nice if React exposed an API for this
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	exports.isReactComponent = isReactComponent;
+
+	function isReactComponent(thing) {
+	    return thing !== null && (typeof thing === 'undefined' ? 'undefined' : _typeof(thing)) === 'object' && typeof thing.props !== 'undefined';
+	}
+
+/***/ },
+/* 506 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.toArray = toArray;
+
+	function toArray(obj) {
+	    var ret = [];
+	    for (var attr in obj) {
+	        ret[attr] = obj;
+	    }
+
+	    return ret;
+	}
+
+/***/ },
+/* 507 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var Tfoot = function (_React$Component) {
+	    _inherits(Tfoot, _React$Component);
+
+	    function Tfoot() {
+	        _classCallCheck(this, Tfoot);
+
+	        _get(Object.getPrototypeOf(Tfoot.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(Tfoot, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2['default'].createElement('tfoot', this.props);
+	        }
+	    }]);
+
+	    return Tfoot;
+	}(_react2['default'].Component);
+
+	exports.Tfoot = Tfoot;
+
+/***/ },
+/* 508 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function pageHref(num) {
+	    return '#page-' + (num + 1);
+	}
+
+	var Paginator = function (_React$Component) {
+	    _inherits(Paginator, _React$Component);
+
+	    function Paginator() {
+	        _classCallCheck(this, Paginator);
+
+	        _get(Object.getPrototypeOf(Paginator.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(Paginator, [{
+	        key: 'handlePrevious',
+	        value: function handlePrevious(e) {
+	            e.preventDefault();
+	            this.props.onPageChange(this.props.currentPage - 1);
+	        }
+	    }, {
+	        key: 'handleNext',
+	        value: function handleNext(e) {
+	            e.preventDefault();
+	            this.props.onPageChange(this.props.currentPage + 1);
+	        }
+	    }, {
+	        key: 'handlePageButton',
+	        value: function handlePageButton(page, e) {
+	            e.preventDefault();
+	            this.props.onPageChange(page);
+	        }
+	    }, {
+	        key: 'renderPrevious',
+	        value: function renderPrevious() {
+	            if (this.props.currentPage > 0) {
+	                return _react2['default'].createElement('a', { className: 'reactable-previous-page',
+	                    href: pageHref(this.props.currentPage - 1),
+	                    onClick: this.handlePrevious.bind(this) }, this.props.previousPageLabel || 'Previous');
+	            }
+	        }
+	    }, {
+	        key: 'renderNext',
+	        value: function renderNext() {
+	            if (this.props.currentPage < this.props.numPages - 1) {
+	                return _react2['default'].createElement('a', { className: 'reactable-next-page',
+	                    href: pageHref(this.props.currentPage + 1),
+	                    onClick: this.handleNext.bind(this) }, this.props.nextPageLabel || 'Next');
+	            }
+	        }
+	    }, {
+	        key: 'renderPageButton',
+	        value: function renderPageButton(className, pageNum) {
+
+	            return _react2['default'].createElement('a', { className: className,
+	                key: pageNum,
+	                href: pageHref(pageNum),
+	                onClick: this.handlePageButton.bind(this, pageNum) }, pageNum + 1);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            if (typeof this.props.colSpan === 'undefined') {
+	                throw new TypeError('Must pass a colSpan argument to Paginator');
+	            }
+
+	            if (typeof this.props.numPages === 'undefined') {
+	                throw new TypeError('Must pass a non-zero numPages argument to Paginator');
+	            }
+
+	            if (typeof this.props.currentPage === 'undefined') {
+	                throw new TypeError('Must pass a currentPage argument to Paginator');
+	            }
+
+	            var pageButtons = [];
+	            var pageButtonLimit = this.props.pageButtonLimit;
+	            var currentPage = this.props.currentPage;
+	            var numPages = this.props.numPages;
+	            var lowerHalf = Math.round(pageButtonLimit / 2);
+	            var upperHalf = pageButtonLimit - lowerHalf;
+
+	            for (var i = 0; i < this.props.numPages; i++) {
+	                var showPageButton = false;
+	                var pageNum = i;
+	                var className = "reactable-page-button";
+	                if (currentPage === i) {
+	                    className += " reactable-current-page";
+	                }
+	                pageButtons.push(this.renderPageButton(className, pageNum));
+	            }
+
+	            if (currentPage - pageButtonLimit + lowerHalf > 0) {
+	                if (currentPage > numPages - lowerHalf) {
+	                    pageButtons.splice(0, numPages - pageButtonLimit);
+	                } else {
+	                    pageButtons.splice(0, currentPage - pageButtonLimit + lowerHalf);
+	                }
+	            }
+
+	            if (numPages - currentPage > upperHalf) {
+	                pageButtons.splice(pageButtonLimit, pageButtons.length - pageButtonLimit);
+	            }
+
+	            return _react2['default'].createElement('tbody', { className: 'reactable-pagination' }, _react2['default'].createElement('tr', null, _react2['default'].createElement('td', { colSpan: this.props.colSpan }, this.renderPrevious(), pageButtons, this.renderNext())));
+	        }
+	    }]);
+
+	    return Paginator;
+	}(_react2['default'].Component);
+
+	exports.Paginator = Paginator;
+	;
+
+/***/ },
+/* 509 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	var Sort = {
+	    Numeric: function Numeric(a, b) {
+	        var valA = parseFloat(a.toString().replace(/,/g, ''));
+	        var valB = parseFloat(b.toString().replace(/,/g, ''));
+
+	        // Sort non-numeric values alphabetically at the bottom of the list
+	        if (isNaN(valA) && isNaN(valB)) {
+	            valA = a;
+	            valB = b;
+	        } else {
+	            if (isNaN(valA)) {
+	                return 1;
+	            }
+	            if (isNaN(valB)) {
+	                return -1;
+	            }
+	        }
+
+	        if (valA < valB) {
+	            return -1;
+	        }
+	        if (valA > valB) {
+	            return 1;
+	        }
+
+	        return 0;
+	    },
+
+	    NumericInteger: function NumericInteger(a, b) {
+	        if (isNaN(a) || isNaN(b)) {
+	            return a > b ? 1 : -1;
+	        }
+
+	        return a - b;
+	    },
+
+	    Currency: function Currency(a, b) {
+	        // Parse out dollar signs, then do a regular numeric sort
+	        a = a.replace(/[^0-9\.\-\,]+/g, '');
+	        b = b.replace(/[^0-9\.\-\,]+/g, '');
+
+	        return exports.Sort.Numeric(a, b);
+	    },
+
+	    Date: function (_Date) {
+	        function Date(_x, _x2) {
+	            return _Date.apply(this, arguments);
+	        }
+
+	        Date.toString = function () {
+	            return _Date.toString();
+	        };
+
+	        return Date;
+	    }(function (a, b) {
+	        // Note: this function tries to do a standard javascript string -> date conversion
+	        // If you need more control over the date string format, consider using a different
+	        // date library and writing your own function
+	        var valA = Date.parse(a);
+	        var valB = Date.parse(b);
+
+	        // Handle non-date values with numeric sort
+	        // Sort non-numeric values alphabetically at the bottom of the list
+	        if (isNaN(valA) || isNaN(valB)) {
+	            return exports.Sort.Numeric(a, b);
+	        }
+
+	        if (valA > valB) {
+	            return 1;
+	        }
+	        if (valB > valA) {
+	            return -1;
+	        }
+
+	        return 0;
+	    }),
+
+	    CaseInsensitive: function CaseInsensitive(a, b) {
+	        return a.toLowerCase().localeCompare(b.toLowerCase());
+	    }
+	};
+	exports.Sort = Sort;
 
 /***/ }
 /******/ ]);

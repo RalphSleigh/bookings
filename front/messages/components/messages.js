@@ -10,8 +10,8 @@ class Messages extends React.Component{
 	render() {
 		const data = this.props.Messages.toObject();
 
-		if(data.success)var success = <div className="alert alert-success">{data.success}</div>
-		if(data.warning)var warning = <div className="alert alert-warning">{data.warning}</div>
+		if(data.success && new Date().getTime() - data.success.time.getTime() < 10000)var success = <div className="alert alert-success">{data.success.message}</div>
+		if(data.warning && new Date().getTime() - data.warning.time.getTime() < 10000)var warning = <div className="alert alert-warning">{data.warning.message}</div>
 		
 		if(!success && !warning)return null;
 

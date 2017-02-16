@@ -40,7 +40,7 @@ export default class Participants extends React.Component {
 			return (<h5 key ={w.name}>{w.name}: {people.length}</h5>);
 		});
 
-	const prows = participants.sort(nameSort).map(p => <tr key={p.id}><td>{p.name}</td><td>{p.age}</td><td>{bookings.find(b => b.id === p.bookingId).userName}</td></tr>)
+	const prows = participants.sort(nameSort).map(p => <tr key={p.id}><td>{p.name}</td><td>{p.age}</td><td>{p.diet}</td><td>{bookings.find(b => b.id === p.bookingId).userName}</td></tr>)
 
 	return (<div>
 				<button className="button pull-right" onClick={this.exportCSV}>Export CSV</button>
@@ -51,6 +51,7 @@ export default class Participants extends React.Component {
 									<tr>
 										<th>Name</th>
 										<th>Age</th>
+										<th>Diet</th>
 										<th>Booked By:</th>
 									</tr>
 								</thead>

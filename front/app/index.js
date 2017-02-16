@@ -28,14 +28,15 @@ class App extends React.Component {
 	//prevent render until we have the basic data available, this makes child components much simpler.
 	if(this.props.User === null || this.props.Events === null || this.props.Bookings === null) return <div>Loading Data</div>;
 
+
     return (
       <div className="container">
           <div className="row">
             <div className="col-md-9"><Link to="/" >Home</Link></div>
             <user.loginStatus />
           </div>
-          <messages.messages/>
-          {this.props.children}
+          <messages.messages routes={this.props.routes/*quick hack to rerender messages every time we change route*/}/>
+          {this.props.children} 
       </div>
     );
   }

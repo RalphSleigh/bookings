@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
+import Reactable from 'reactable'
+import Moment from 'moment'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
@@ -19,17 +21,39 @@ export default class Bookings extends React.Component {
 	const bookings = this.props.Bookings.toJS();
 	const participants = this.props.Participants.toJS();
 
-	const brows = bookings.map(b => <tr key={b.id}><td>{b.userName}</td>
+	/*const brows = bookings.map(b => <tr key={b.id}><td>{b.userName}</td>
 										<td>{b.userEmail}</td>
 										<td>{b.userContact}</td>
 										<td>{b.participants.length}</td>
 										<td>{b.paymentType}</td>
 										<td>{b.updatedAt}</td>
 									</tr>)
+*/
+	const data = bookings.map(b => {
+		let result = {userName:b.userName,
+			userEmail:b.userEmail,
+			userContact:b.userContact,
+			paymentType:b.paymentType};
+
+		result.participants = b.participants.length;
+		result.updatedAt = Moment(b.updatedAt).format('L');
+
+
+		return result
+	});
+	const columns = [{key:"userName", label:"Name"},
+					{key:"userEmail", label:"e-mail"},
+					{key:"userContact", label:"Contact"},
+					{key:"participants", label:"Booked"},
+					{key:"paymentType", label:"Payment Method"},
+					{key:"updatedAt", label:"Updated"}
+	]
+	const sortables=[{column:"userName", sortFunction:nameSort},"userEmail","userContact","participants","paymentType","updatedAt"];
 
 	return (<div><h4>Total Bookings: {bookings.length}</h4>
-
-							<table className="table">
+		 
+		 		<Reactable.Table className="table sortArrows" data={data} sortable={sortables} columns={columns}/>
+							{/*<table className="table">
 								<thead>
 									<tr>
 										<th>Name</th>
@@ -43,16 +67,18 @@ export default class Bookings extends React.Component {
 								<tbody>
 								{brows}
 								</tbody>
-							</table>
+							</table>}*/}
 	</div>)
   }
 }
 
 
 
+
+
 const nameSort = (a, b) => {
-    var splitA = a.name.split(" ");
-    var splitB = b.name.split(" ");
+    var splitA = a.split(" ");
+    var splitB = b.split(" ");
     var lastA = splitA[splitA.length - 1];
     var lastB = splitB[splitB.length - 1];
 
