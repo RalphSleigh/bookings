@@ -1,5 +1,5 @@
 import React from 'react'
-import BookingUserDetails from './BookingUserDetails.js'
+import BookingUserDetails from './bookingUserDetails.js'
 import ParticipantForm from './participantsForm.js'
 import PermissionForm from './permissionForm.js'
 import FeeForm from './feeForm.js' 
