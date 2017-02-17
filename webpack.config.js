@@ -39,4 +39,8 @@ module.exports = {
   ]
 };
 
-if(PROD) module.exports.plugins.push(new webpack.optimize.UglifyJsPlugin());
+if(PROD) module.exports.plugins.push(new webpack.DefinePlugin({
+  'process.env': {
+    NODE_ENV: JSON.stringify('production')
+  }
+}),new webpack.optimize.UglifyJsPlugin());
