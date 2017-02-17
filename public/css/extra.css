@@ -142,13 +142,13 @@
 .participantrow:nth-of-type(odd){
   
   padding-top:15px;
-  margin-left:15px;
+  /*margin-left:15px;*/
 }
 
 .participantrow:nth-of-type(even){
   background-color: #efefef;
   padding-top:15px;
-  margin-left:15px;
+  /*margin-left:15px;*/
 }
 
 .top5 { margin-top:5px; }
@@ -171,10 +171,15 @@
     display:none;
 }}
 
-.sortArrows th {
-  cursor: pointer;
+/*
+.ReactTable input, .ReactTable select {
+	appearance:normal;
+	-webkit-appearance:normal;
+	-moz-appearance
 }
+*/
 
+/*
 .sortArrows th.reactable-header-sort-desc:after {
   content: '\25B2';
   font-size: 10px;
@@ -187,6 +192,10 @@
   font-size: 10px;
   padding-left: 6px;
   padding-bottom: 6px;
+}
+*/
+body {
+    width: calc(100vw - 34px);
 }
 
 /*

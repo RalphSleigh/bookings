@@ -1,11 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
-import Reactable from 'reactable'
+import ReactTable from 'react-table'
 import Moment from 'moment'
+import Switch from 'react-toggle'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
+
 
 import W from '../../../shared/woodcraft.js'
 
@@ -13,6 +15,14 @@ export default class Bookings extends React.Component {
 	
   constructor(props) {
     super(props);
+
+	this.markPaid = this.markPaid.bind(this);
+  }
+
+  markPaid(id) {
+  return (e) => {
+	this.props.togglePaid(id);
+  	}
   }
 
   render() {
@@ -30,29 +40,42 @@ export default class Bookings extends React.Component {
 									</tr>)
 */
 	const data = bookings.map(b => {
-		let result = {userName:b.userName,
+		let result = {
+			userName:b.userName,
 			userEmail:b.userEmail,
 			userContact:b.userContact,
-			paymentType:b.paymentType};
+			paymentType:b.paymentType,
+			paid:b.paid,
+			id:b.id};
 
-		result.participants = b.participants.length;
-		result.updatedAt = Moment(b.updatedAt).format('L');
+			result.participants = b.participants.length;
+			result.updatedAt = Moment(b.updatedAt).format('L');
 
 
 		return result
 	});
-	const columns = [{key:"userName", label:"Name"},
-					{key:"userEmail", label:"e-mail"},
-					{key:"userContact", label:"Contact"},
-					{key:"participants", label:"Booked"},
-					{key:"paymentType", label:"Payment Method"},
-					{key:"updatedAt", label:"Updated"}
+
+	const columns = [{accessor:"userName", header:"Name", sortable:true},
+					{accessor:"userEmail", header:"e-mail", sortable:true},
+					{accessor:"userContact", header:"Contact", sortable:true},
+					{accessor:"participants", header:"Booked", sortable:true},
+					{accessor:"paymentType", header:"Payment Method", sortable:true},
+					{id:"paidToggle",
+					 accessor:b => {return {id:b.id, paid:b.paid}},
+					 header:"Mark Paid",
+					 render: props =>{
+						 return(<input type="checkbox" checked={props.value.paid} onChange={this.markPaid(props.value.id)}/>)}
+					},
+					{accessor:"updatedAt", header:"Updated", sortable:true}
 	]
-	const sortables=[{column:"userName", sortFunction:nameSort},"userEmail","userContact","participants","paymentType","updatedAt"];
+	//const sortables=[{column:"userName", sortFunction:nameSort},"userEmail","userContact","participants","paymentType","updatedAt"];
 
 	return (<div><h4>Total Bookings: {bookings.length}</h4>
-		 
-		 		<Reactable.Table className="table sortArrows" data={data} sortable={sortables} columns={columns}/>
+
+		 		<ReactTable 
+				 data={data}
+				 columns={columns}
+				 showPagination={false}/>
 							{/*<table className="table">
 								<thead>
 									<tr>

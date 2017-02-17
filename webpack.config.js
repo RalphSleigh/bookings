@@ -5,7 +5,7 @@ var PROD = (process.env.NODE_ENV === 'production')
 module.exports = {
     entry: {
           app: './front/index.js',
-          vendor: ['react','redux','react-redux','react-dom','immutable','moment','redux-auth-wrapper','lodash','react-markdown','reactable']},
+          vendor: ['react','redux','react-redux','react-dom','immutable','moment','redux-auth-wrapper','lodash','react-markdown','react-table']},
     output: {
         path:     'public',
         filename: 'bundle.js',

@@ -7,5 +7,4 @@ import editPage from './components/editPage.js'
 import thanksPage from './components/thanksPage.js'
 import cancelPage from './components/cancelPage.js'
 
-
 export default { actions, reducer, myBookingPage, editPage, thanksPage, cancelPage };

@@ -8,10 +8,11 @@ Currently perfecting it for district events before adding features for larger on
 
 Next to add: 
  * e-mail confirmation
- * Fix up front page, markdown in description
- * Validation on user facing forms
- * Make booking deadline do something
- * Sort SSL/spin up demo instance 
+ * Payment tracker
+ * Management search tool
+ * Management edit bookings
+ * Make booking deadline do something#
+ * General theme/look/feel
  * Unit tests.. 
 
 Will contain bugs. Also possibly weird issues due to being developed on windows.

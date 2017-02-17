@@ -93,6 +93,19 @@ bookings.editBooking = (req, res) => {
 	});
 }
 
+bookings.togglePaid = (req, res) => {
+	Booking.findOne({where:{id:req.body.id},include:[{model:Participant}]})
+	.then(booking => {
+		booking.paid = !booking.paid;
+		return booking.save()
+		})
+	.then((booking) => {
+			let data = {};
+			data[booking.id] = booking;
+			res.json(data);	
+		});
+}
+
 bookings.deleteBooking = (req, res) => {
 	Booking.findOne({where:{id:req.body.id}})
 	.then(booking => booking.destroy())

@@ -5,6 +5,7 @@ import Immutable from 'immutable'
 
 import bookings from '../../bookings'
 import { manageEventCheck } from '../permission.js'
+import {togglePaid} from '../actions.js'
 
 
 
@@ -42,7 +43,8 @@ class ManageContainerPage extends React.Component {
 							{React.cloneElement(this.props.children, {
 								Event: this.props.Event,
 								Bookings: this.props.Bookings,
-								Participants: this.props.Participants})}
+								Participants: this.props.Participants,
+								togglePaid:this.props.togglePaid})}
 						</div>		
 			</div>)
   }
@@ -59,7 +61,8 @@ const mapStateToProps = (state, props) => {
 }
 
 const mapDispatchToProps = {
-		getEventBookings:bookings.actions.getEventBookings
+		getEventBookings:bookings.actions.getEventBookings,
+		togglePaid:togglePaid
 };
 
 var VisibleManageContainerPage = connect(
