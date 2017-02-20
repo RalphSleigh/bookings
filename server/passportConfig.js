@@ -12,7 +12,7 @@ var Role = require('./models/role.js');
 passport.use(new GoogleStrategy({
     clientID: config.GoogleClientID,
     clientSecret: config.GoogleClientSecret,
-    callbackURL: "http://localhost:8080/auth/google/callback"
+    callbackURL: config.GoogleCallback
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ where:{email:profile.emails[0].value},include:[{model:Role}]})
