@@ -6,7 +6,7 @@ var Role = require('./models/role.js');
 
 var auth = {};
 
-
+/*
 auth.doLogin = function(req, res) {
 		User.findOne({where:{email:req.body.email}, include:[{model:Role}]})
 		.then((user) => {
@@ -23,19 +23,20 @@ auth.doLogin = function(req, res) {
 			}
 		});
 }
+*/
 
 auth.getUser = function(req, res) {
-	var resUser = extend({}, req.session.user);
+	var resUser = extend({}, req.user);
 	delete resUser.Password
-	res.send(resUser).end();
+	res.json(resUser);
 }
 
 auth.doLogout = function(req, res) {
-	delete req.session.user;
+	req.logout();
 	User.findOne({where:{userName:'Guest'},include:[{model:Role}]})
 		.then((user) => {
-			req.session.user = user;
-			var resUser = extend({}, user.dataValues);
+			req.user = user.get({plain:true});
+			var resUser = extend({}, req.user);
 			delete resUser.password
 			res.send(resUser).end();
 		});

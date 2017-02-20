@@ -62,22 +62,40 @@ class LoginForm extends React.Component{
 	}
 	
 	render() {
-		return(
-		<div className="col-sm-12">
-		<h3>Log in</h3>
-		<form>
-			<div className="form-group">
- 			   <label htmlFor="LoginFormEmail">Email address</label>
-  				<input type="email" value={this.state.email} className="form-control" id="LoginFormEmail" placeholder="Email" onChange={this.updateEmail}/>
-  			</div>
-  			<div className="form-group">
-    			<label htmlFor="LoginFormPassword">Password</label>
-    			<input type="password" value={this.state.password} className="form-control" id="LoginFormPassword" placeholder="Password" onChange={this.updatePassword} />
- 			 </div>
-			  <button type="submit" onClick={this.submit} className="btn btn-default">Submit</button>
-		</form>
-		</div>
-		)
+		return(<div>
+			<div className="col-sm-6">
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<h4>Google Login</h4>
+					</div>
+					<div className="panel-body">
+						<p>Click here to log in with your existing google account.</p>
+						<a href="/auth/google"><img src="/btn_google_signin_dark_normal_web.png" /></a>
+					</div>
+				</div>
+			</div>
+			<div className="col-sm-6">
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<h4>Local Login</h4>
+					</div>
+					<div className="panel-body">
+				<p>Sign in with a provided e-mail address/password</p>
+				<form>
+					<div className="form-group">
+ 			  			<label htmlFor="LoginFormEmail">Email address</label>
+  						<input type="email" value={this.state.email} className="form-control" id="LoginFormEmail" placeholder="Email" onChange={this.updateEmail}/>
+  					</div>
+  					<div className="form-group">
+    					<label htmlFor="LoginFormPassword">Password</label>
+    					<input type="password" value={this.state.password} className="form-control" id="LoginFormPassword" placeholder="Password" onChange={this.updatePassword} />
+ 			 		</div>
+			  		<button type="submit" onClick={this.submit} className="btn btn-default">Submit</button>
+				</form>
+				</div>
+				</div>
+			</div>
+		</div>)
 	}
 }
 
