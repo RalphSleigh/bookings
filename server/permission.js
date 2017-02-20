@@ -6,13 +6,13 @@ var permission = {};
 
 permission.editEvent = (req, res, next) => {
 
-	if(P.editEvent(req.session.user, req.body))next();
+	if(P.editEvent(req.user, req.body))next();
 	else res.status(401).end();
 
 }
 
 permission.createEvent = (req, res, next) => {
-	if(P.createEvent(req.session.user))next();
+	if(P.createEvent(req.user))next();
 	else res.status(401).end();
 
 }
@@ -24,7 +24,7 @@ permission.bookEvent = (req, res, next) => {
 }
 
 permission.getEventBookings = (req, res, next) => {
-	if(P.manageEvent(req.session.user))next();
+	if(P.manageEvent(req.user))next();
 	else res.status(401).end();
 }
 
