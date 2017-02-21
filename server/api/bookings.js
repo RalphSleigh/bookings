@@ -114,7 +114,7 @@ bookings.deleteBooking = (req, res) => {
 			{$or:
 				[{guestUUID:req.cookies.guestUUID},
 				{$and:
-					[{userId:req.session.user.id},
+					[{userId:req.user.id},
 					{userId:{$not:1}}
 					]
 				}]
