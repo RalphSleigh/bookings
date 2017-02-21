@@ -51,7 +51,7 @@ bookings.createBooking = (req, res) => {
 	newBooking.userContact = req.body.user.phone;
 	newBooking.paymentType = req.body.paymentType;
 	newBooking.eventId =  req.body.eventId;
-	newBooking.userId = req.session.user.id
+	newBooking.userId = req.user.id
 	newBooking.participants = req.body.participants; 
 	newBooking.guestUUID = req.cookies.guestUUID;
 
