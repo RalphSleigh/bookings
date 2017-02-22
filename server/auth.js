@@ -1,4 +1,3 @@
-var bcrypt = require('bcrypt');
 var extend = require('util')._extend;
 
 var User = require('./models/user.js');

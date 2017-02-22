@@ -4,7 +4,6 @@ var config = require("./config.js");
 var express = require('express');
 var path = require('path');
 
-var o = require('./orm.js');
 var auth = require('./auth.js');
 var events = require('./api/events.js');
 var bookings = require('./api/bookings.js');
@@ -50,9 +49,9 @@ server.get('/auth/google',
   passport.authenticate('google', { scope: ['email','profile'] })); //google OAuth redirect
 
 server.get('/auth/google/callback', 
-  passport.authenticate('google', {successRedirect:"/", failureRedirect: '/user' })); // google OAuth redirect
+  passport.authenticate('google', {successRedirect:"/", failureRedirect: '/user' })); // google OAuth callback
 
-server.post('/api/user/login', passport.authenticate('local'), auth.getUser);
+server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
 server.get('/api/user', auth.getUser);   		//get current user info
 server.post('/api/user/logout', auth.doLogout); //logout
 
@@ -89,7 +88,7 @@ server.get('/api/*', function(req, res) { //404 unknown api calls
 
 server.use('/', express.static(path.join(__dirname, '../public'), {fallthrough:true, index: "index.html"}));
 
-server.get('*', function(req, res, next) {  //serve index.html on deep paths
+server.get('*', function(req, res) {  //serve index.html on deep paths
     return res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 

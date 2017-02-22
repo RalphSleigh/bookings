@@ -16,7 +16,7 @@ permission.createEvent = (req, res, next) => {
 	else res.status(401).end();
 
 }
-
+ 
 //todo: make these actually check something
 
 permission.bookEvent = (req, res, next) => {

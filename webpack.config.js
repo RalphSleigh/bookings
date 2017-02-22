@@ -1,11 +1,11 @@
-webpack = require('webpack');
+var webpack = require('webpack');
 
 var PROD = (process.env.NODE_ENV === 'production')
 
 module.exports = {
     entry: {
           app: './front/index.js',
-          vendor: ['react','redux','react-redux','react-dom','immutable','moment','redux-auth-wrapper','lodash','react-markdown','react-table']},
+          vendor: ['babel-polyfill', 'whatwg-fetch', 'react','redux','react-redux','react-dom','immutable','moment','redux-auth-wrapper','lodash','react-markdown','react-table']},
     output: {
         path:     'public',
         filename: 'bundle.js',
@@ -16,14 +16,14 @@ module.exports = {
                 test:   /\.js/,
                 loader: 'babel-loader',
 				query: {
-          			presets: ['es2015', 'react'],
+					presets: ['es2015', 'react'],
                     plugins: ["transform-object-rest-spread"]
-      			}
+				}
             },
 			{
-            	test: /\.json$/,
-            	loader: 'json'
-        	}
+				test: /\.json$/,
+				loader: 'json'
+			}
         ],
     },
 	externals:{

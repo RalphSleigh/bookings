@@ -8,4 +8,5 @@ import store from './store.js'
 
 const provider = <Provider store={store}>{Routes}</Provider>
 
+console.log( document.getElementById('root'));
 render(provider, document.getElementById('root'));

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "acl": "^0.4.9",
+    "babel-polyfill": "^6.23.0",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.15.2",
     "connect-sqlite3": "^0.9.9",
@@ -57,6 +58,7 @@
     "redux-thunk": "^2.1.0",
     "sequelize": "^3.27.0",
     "sequelize-json": "^2.1.2",
-    "sqlite3": "^3.1.8"
+    "sqlite3": "^3.1.8",
+    "whatwg-fetch": "^2.0.2"
   }
 }

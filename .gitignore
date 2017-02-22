@@ -2,6 +2,7 @@
 database.sqlite
 config.js
 npm-debug.log
+.eslintrc.json
 sqlite3.exe
 npm-debug*
 sessions.db
