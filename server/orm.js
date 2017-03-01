@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('bookings', null, null, {dialect:'sqlite', storage: 'database.sqlite'});
+var sequelize = new Sequelize('bookings', null, null, {dialect:'sqlite', storage: 'database.sqlite', logging:false});
 
 sequelize
   .authenticate()

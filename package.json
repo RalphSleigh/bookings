@@ -59,6 +59,7 @@
     "sequelize": "^3.27.0",
     "sequelize-json": "^2.1.2",
     "sqlite3": "^3.1.8",
-    "whatwg-fetch": "^2.0.2"
+    "whatwg-fetch": "^2.0.2",
+    "winston": "^2.3.1"
   }
 }

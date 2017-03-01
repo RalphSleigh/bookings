@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var config = require("./config.js");
+var log = require("./logging.js");
 
 var express = require('express');
 var path = require('path');
@@ -31,15 +32,16 @@ var server = express();
 *************************************/
 
 
-server.use(require('morgan')('common')); //logging 
+//server.use(require('morgan')('common')); //logging
+server.set("trust proxy",true); 
+
 server.use(cookieParser());
 server.use(expressSession({secret: 'woodcraft', resave:false, saveUninitialized: true, store: new SQLiteStore}));
 server.use(bodyParser.json());
 server.use(passport.initialize()); 
 server.use(passport.session());
 server.use(ensureUser);  //if passport does not log us in, set req.user to the guest user object, this makes handlers simpler.
-
-server.use(logErrors);
+server.use('/api/*', apiLogger);
 
 /************************************
 ***** ROUTES ************************
@@ -93,6 +95,7 @@ server.get('*', function(req, res) {  //serve index.html on deep paths
 });
 
 //GO GO GO
+log.info("Listening");
 server.listen(config.port, config.host);
 
 
@@ -100,12 +103,10 @@ server.listen(config.port, config.host);
 ***** UTILITY FUNCTIONS *************
 *************************************/
 
-
-function logErrors (err, req, res, next) {
-  console.error(err.stack)
-  next(err)
+function apiLogger (req, res, next) {
+	log.log("info", "%s called %s", req.user.email || "Guest", req.baseUrl);
+	next();
 }
-
 
 let guestUser = false;//store the guest user objecct to avoid a query on every request.
 function ensureUser (req, res, next) {

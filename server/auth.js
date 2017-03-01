@@ -1,4 +1,5 @@
 var extend = require('util')._extend;
+var log = require('./logging.js');
 
 var User = require('./models/user.js');
 var Role = require('./models/role.js');
@@ -25,6 +26,7 @@ auth.doLogin = function(req, res) {
 */
 
 auth.getUser = function(req, res) {
+	log.log("debug","New Session: %s %s", req.ip, req.headers["user-agent"]);
 	var resUser = extend({}, req.user);
 	delete resUser.Password
 	res.json(resUser);
