@@ -39,12 +39,12 @@ export const createBooking = booking => {
 	}
 }
 
-export const saveBooking = booking => {
+export const saveBooking = (booking, own) => {
 	return dispatch => {
-		fetch('/api/booking/edit',"POST",booking)
+		fetch('/api/booking/edit',"POST", booking, dispatch)
 		.then(j => {
 			dispatch(updateBooking(j));
-			browserHistory.push('/event/'+booking.eventId+'/book/thanks');
+			own ? browserHistory.push('/event/'+booking.eventId+'/book/thanks') : browserHistory.push('/event/'+booking.eventId+'/manage/bookings');
 		});
 	}
 }
@@ -66,7 +66,7 @@ export const getBooking = (id) => {
 		.then(j => {
 			dispatch(events.actions.updateEvent(j[id].event));
 			dispatch(updateBookings(j));
-		})
+		}).catch(fetch.fail);
 	}
 }
 

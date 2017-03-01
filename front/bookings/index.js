@@ -6,5 +6,6 @@ import myBookingPage from './components/myBookingPage.js'
 import editPage from './components/editPage.js'
 import thanksPage from './components/thanksPage.js'
 import cancelPage from './components/cancelPage.js'
+import loader from './components/loader.js'
 
-export default { actions, reducer, myBookingPage, editPage, thanksPage, cancelPage };
+export default { actions, reducer, myBookingPage, editPage, thanksPage, cancelPage, loader };

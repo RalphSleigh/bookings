@@ -93,7 +93,7 @@ It costs £55
 				userId: user.id,
 				feeModel:"flat",
 				feeData:{amount:55},
-				paymentTypes:["Cash","Bank Transfer"],
+				paymentTypes:["Cash","Cheque","Bank Transfer"],
 				paymentInfo:`plz give us *all* teh monies`}),
 			Event.create({
     			name: 'Past deadline',
@@ -171,7 +171,7 @@ function getRandomDietExtra() {
 		"No rabbit food please",
 		"NO NUTS! THEY WILL DIE"
 	];
-	return Math.random() > 0.95 ? extras[getRandomInt(0,extras.length)] : null;
+	return Math.random() > 0.95 ? extras[getRandomInt(0,extras.length)] : "";
 }
 
 function getRandomMedical() {
@@ -190,7 +190,7 @@ function getRandomMedical() {
 		"Moody"
 
 	];
-	return Math.random() > 0.95 ? medical[getRandomInt(0,medical.length)] : null;
+	return Math.random() > 0.95 ? medical[getRandomInt(0,medical.length)] : "";
 }
 
 function getRandomPaymentType() {

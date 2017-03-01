@@ -1,6 +1,6 @@
 /node_modules
 database.sqlite
-config.js
+server/config.js
 npm-debug.log
 .eslintrc.json
 sqlite3.exe

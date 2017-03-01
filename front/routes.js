@@ -7,10 +7,10 @@ import events from './events'
 import bookings from './bookings'
 import manage from './manage'
 
-import store from './store.js'
+//import store from './store.js'
 
 export default (<Router history={browserHistory}>
-    				<Route path="/" component={App /*Loads User, Events and User's own Bookings*/}>
+					<Route path="/" component={App /*Loads User, Events and User's own Bookings*/}>
 						<IndexRoute component={events.listPage} />
 						<Route path="user" component={user.userPage} />
 						<Route path="event/create" component={events.createPage}/>
@@ -25,7 +25,7 @@ export default (<Router history={browserHistory}>
 								<Route path="kp" component={manage.kp} />
 							</Route>
 						</Route>
-						<Route path="booking/:bookingId/">
+						<Route path="booking/:bookingId/" component={bookings.loader}>
 							<Route path="edit" component={bookings.editPage} />
 						</Route>
 						<Route path="cancel" component={bookings.cancelPage} />

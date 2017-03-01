@@ -3,7 +3,6 @@ var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 
 var bcrypt = require('bcrypt');
-var extend = require('util')._extend;
 
 var config = require("./config.js");
 var User = require('./models/user.js');

@@ -1,4 +1,5 @@
 var P = require('../shared/permissions.js');
+var Booking = require('./models/booking.js');
 
 //This file exports permission checks as express middlewares, in theory the client shouldnt allow bad requests.
 
@@ -29,7 +30,11 @@ permission.getEventBookings = (req, res, next) => {
 }
 
 permission.getBooking = (req, res, next) => {
-	next();
+	Booking.findOne({where:{id:req.params.bookingId}})
+	.then(b => {
+		if(P.viewBooking(req.user, b))next();
+		else res.status(401).end();
+	})	
 }
 
 module.exports = permission;

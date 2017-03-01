@@ -27,8 +27,8 @@ function bookingsApp(state, action) {
 //const initalState = Immutable.fromJS({User:initalUserState, UI:initalUIState});
 
 const rootReducer = combineReducers({
-	User:user.reducer, 
-	Messages:messages.reducer, 
+	User:user.reducer,
+	Messages:messages.reducer,
 	Events:events.reducer,
 	Bookings:bookings.reducer});
 

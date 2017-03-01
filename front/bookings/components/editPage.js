@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link  } from 'react-router'
+//import { Link  } from 'react-router'
 
 
-import event from '../../events'
-import BookingForm from './bookingForm.js'
+//import event from '../../events'
+import BookingForm from './form/bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
-import { updateQuickList, getBooking } from '../actions.js'
+import { updateQuickList, saveBooking, cancelBooking } from '../actions.js'
 
 
 class EditPage extends React.Component{
@@ -18,11 +18,9 @@ class EditPage extends React.Component{
 
 	render() {
 		
-		if(this.props.Event === undefined)return null;
-
 		const event = this.props.Event.toJS();
 		const booking = this.props.Booking.toJS();
-		const user = this.props.User.toJS();
+		//const user = this.props.User.toJS();
 		const quickList = this.props.QuickList.toJS();
 		//const data = this.props.user.toObject();
 		return(<div> 
@@ -30,7 +28,7 @@ class EditPage extends React.Component{
 						<div className="col-sm-12 col-md-10">
 							<h3>Booking for {event.Name}</h3>
 							<div className="row">
-								<BookingForm user={user} booking={booking} event={event} submit={this.props.createBooking} updateQuickList={this.props.updateQuickList}/>
+								<BookingForm booking={booking} event={event} submit={this.props.saveBooking} updateQuickList={this.props.updateQuickList} cancel={this.props.cancelBooking}/>
 							</div>
 						</div>
 						<ParticipantQuickList quickList={quickList}/>		
@@ -38,23 +36,17 @@ class EditPage extends React.Component{
 				</div>
 		)
 	}
-
-	
-	componentWillMount() { //messy, really need a proper data preload component
-		if(this.props.Booking === undefined)this.props.getBooking(this.props.params.bookingId);
-  	}
 }
 
 const mapStateToProps = (state, props) => {
-	let User = state.get("User");
-	let Booking = state.getIn(["Bookings","bookings", props.params.bookingId]);
-  	let Event = Booking !== undefined ? state.getIn(["Events", Booking.get("eventId").toString()]) : undefined;
-	let QuickList = state.getIn(["Bookings","quickList"]);
-	return {User, Booking, Event, QuickList}
+	//let User = state.get("User");
+	const QuickList = state.getIn(["Bookings","quickList"]);
+	const Event =  props.Event;
+	const Booking = props.Booking
+	return {QuickList, Booking, Event}
 }
 
-const getEvent = event.actions.getEvent
-const mapDispatchToProps = {getEvent, updateQuickList, getBooking};
+const mapDispatchToProps = {updateQuickList, saveBooking, cancelBooking };
 
 var VisibleEditPage = connect(
   mapStateToProps,

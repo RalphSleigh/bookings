@@ -1,15 +1,16 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import Immutable from 'immutable'
+//import { connect } from 'react-redux'
+//import Immutable from 'immutable'
+import { Link  } from 'react-router'
 import ReactTable from 'react-table'
 import Moment from 'moment'
-import Switch from 'react-toggle'
+//import Switch from 'react-toggle'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
 
 
-import W from '../../../shared/woodcraft.js'
+//import W from '../../../shared/woodcraft.js'
 
 export default class Bookings extends React.Component {
 	
@@ -20,16 +21,16 @@ export default class Bookings extends React.Component {
   }
 
   markPaid(id) {
-  return (e) => {
+  return () => {
 	this.props.togglePaid(id);
-  	}
+	}
   }
 
   render() {
 
-	const event = this.props.Event.toJS();
+	//const event = this.props.Event.toJS();
 	const bookings = this.props.Bookings.toJS();
-	const participants = this.props.Participants.toJS();
+	//const participants = this.props.Participants.toJS();
 
 	/*const brows = bookings.map(b => <tr key={b.id}><td>{b.userName}</td>
 										<td>{b.userEmail}</td>
@@ -57,41 +58,35 @@ export default class Bookings extends React.Component {
 
 	const columns = [{accessor:"userName", header:"Name", sortable:true},
 					{accessor:"userEmail", header:"e-mail", sortable:true},
-					{accessor:"userContact", header:"Contact", sortable:true},
-					{accessor:"participants", header:"Booked", sortable:true},
-					{accessor:"paymentType", header:"Payment Method", sortable:true},
+					{accessor:"userContact", header:"Contact", sortable:true, minWidth: 70},
+					{accessor:"participants", header:"Booked", sortable:true, minWidth: 50},
+					{accessor:"paymentType", header:"Payment Method", sortable:true, minWidth: 50},
 					{id:"paidToggle",
-					 accessor:b => {return {id:b.id, paid:b.paid}},
-					 header:"Mark Paid",
-					 render: props =>{
-						 return(<input type="checkbox" checked={props.value.paid} onChange={this.markPaid(props.value.id)}/>)}
+					minWidth: 50,
+					accessor:b => {return {id:b.id, paid:b.paid}},
+					header:"Mark Paid",
+					render: props =>{
+						return(<input type="checkbox" checked={props.value.paid} onChange={this.markPaid(props.value.id)}/>)}
 					},
-					{accessor:"updatedAt", header:"Updated", sortable:true}
+					{accessor:"updatedAt", header:"Updated", sortable:true, minWidth: 40},
+					{id:"edit",
+					accessor:"id",
+					header:"Edit",
+					render: props => <Link to={"/booking/"+props.value+"/edit"} >Edit</Link>,
+					minWidth: 18
+					}
 	]
 	//const sortables=[{column:"userName", sortFunction:nameSort},"userEmail","userContact","participants","paymentType","updatedAt"];
 
 	return (<div><h4>Total Bookings: {bookings.length}</h4>
 
-		 		<ReactTable 
-				 data={data}
-				 columns={columns}
-				 showPagination={false}/>
-							{/*<table className="table">
-								<thead>
-									<tr>
-										<th>Name</th>
-										<th>e-mail</th>
-										<th>Contact</th>
-										<th>Participants booked</th>
-										<th>Payment Method</th>
-										<th>Updated</th>
-									</tr>
-								</thead>
-								<tbody>
-								{brows}
-								</tbody>
-							</table>}*/}
-	</div>)
+				<ReactTable
+					data={data}
+					columns={columns}
+					showPagination={false}
+					defaultPageSize={-1}
+					showPageSizeOption={false}/>
+			</div>)
   }
 }
 

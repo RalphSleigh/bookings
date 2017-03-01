@@ -8,5 +8,13 @@ import store from './store.js'
 
 const provider = <Provider store={store}>{Routes}</Provider>
 
-console.log( document.getElementById('root'));
+//console.log( document.getElementById('root'));
+
+/*****************************
+ * This following line is very very bad but we want to be able to dispatch from fetch...
+ *****************************/
+
+window.dispatch = store.dispatch
+
+
 render(provider, document.getElementById('root'));

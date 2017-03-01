@@ -1,9 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { Link  } from 'react-router'
-import { browserHistory } from 'react-router'
+//import { connect } from 'react-redux'
+//import { Link  } from 'react-router'
+//import { browserHistory } from 'react-router'
 
-import event from '../../events'
+//import event from '../../events'
 
 //confirmation page for booking cancallation
 
@@ -11,8 +11,7 @@ import event from '../../events'
 class CancelPage extends React.Component{
 	
 	constructor(props) {
-      super(props);
-	  
+      super(props); 
 	}
 
 	
@@ -30,23 +29,16 @@ class CancelPage extends React.Component{
 	}
 }
 
-const ParticipantRow = props => <tr><td>{props.name}</td><td>{props.age}</td><td>{props.diet}</td></tr>
+//const ParticipantRow = props => <tr><td>{props.name}</td><td>{props.age}</td><td>{props.diet}</td></tr>
 
-const mapStateToProps = (state, props) => {
+//const mapStateToProps = (state, props) => {
 	/*
 	let User = state.get("User");
 	let Event = state.getIn(["Events", props.params.eventId.toString()]);
 	let Booking = state.getIn(["Bookings","bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"));
 	return {User, Event, Booking}
 	*/
-	return {}
-}
+//	return {}
+//}
 
-const mapDispatchToProps = {};
-
-const VisibleCancelPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CancelPage);
-
-export default VisibleCancelPage;
+export default CancelPage;

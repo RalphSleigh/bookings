@@ -1,0 +1,14 @@
+/*
+Config options, fill them in and rename the file
+*/
+
+const config = {}
+
+config.host = "localhost"
+config.port = 8080
+
+config.GoogleClientID = "";
+config.GoogleClientSecret =	"";
+config.GoogleCallback = "http://localhost:8080/auth/google/callback"
+
+module.exports = config;

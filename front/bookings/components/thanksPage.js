@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link  } from 'react-router'
 import { browserHistory } from 'react-router'
 
-import event from '../../events'
+//import event from '../../events'
 import { redirectFromThanks } from '../actions.js'
 
 //confirmation page for bookings
@@ -13,7 +13,7 @@ class ThanksPage extends React.Component{
 	
 	constructor(props) {
       super(props);
-	  
+ 
 	}
 
 	
@@ -68,7 +68,7 @@ const mapStateToProps = (state, props) => {
 	return {User, Event, Booking}
 }
 
-const getEvent = event.actions.getEvent
+//const getEvent = event.actions.getEvent
 const mapDispatchToProps = {redirectFromThanks};
 
 const VisibleThanksPage = connect(

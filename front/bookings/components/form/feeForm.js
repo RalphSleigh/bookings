@@ -1,7 +1,7 @@
 import React from 'react'
 
 import _ from 'lodash'
-import fee from '../../fee'
+import fee from '../../../fee'
 
 
 export default class FeeForm extends React.Component {

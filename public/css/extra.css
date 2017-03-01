@@ -171,6 +171,10 @@
     display:none;
 }}
 
+.participantQuickList p {
+	margin: 5px 0px;
+}
+
 /*
 .ReactTable input, .ReactTable select {
 	appearance:normal;

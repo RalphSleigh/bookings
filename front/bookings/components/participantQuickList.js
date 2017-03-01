@@ -12,7 +12,7 @@ export default class CreatePage extends React.Component{
 		const groups = W.map(w => {
 			const people = list.filter((p) => p.age === ''? false : w.filter(p.age)).map((p,k) => <p key={k}>{p.name}</p>);
 			if(people.length === 0)return null;
-			return (<div key={w.name}>
+			return (<div className="participantQuickList" key={w.name}>
 						<h4>{w.name}: {people.length}</h4>
 						{people}
 					</div>);

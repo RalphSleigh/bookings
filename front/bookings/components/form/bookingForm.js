@@ -12,9 +12,9 @@ import update from 'immutability-helper';
 export default class BookingForm extends React.Component {
 
 	constructor(props) {
-    	super(props);
+	super(props);
 	
-		this.guest = props.user.id === 1;
+		this.guest = props.user && props.user.id === 1;
 
 		if(this.props.booking === null) {
 			//new booking, create blank data
@@ -23,8 +23,8 @@ export default class BookingForm extends React.Component {
 							booking: {
 								user: {	
 									name: this.guest? '' : props.user.userName,
-		  							email: this.guest? '' : props.user.email,
-					 				phone:''},
+									email: this.guest? '' : props.user.email,
+									phone:''},
 								participants: [blankParticipant(),blankParticipant()],
 								paymentType:"",
 								eventId: this.props.event.id},
@@ -35,15 +35,15 @@ export default class BookingForm extends React.Component {
 										participant:false,
 										payment:false,
 										permission:false}
-						 };
+						};
 		} else {
-			//set state from the booking infomation passed in the  booking prop.
+			//set state from the booking infomation passed in the booking prop.
 			this.state = {
 							booking: {
 								user: {	
 									name: 	this.props.booking.userName,
-		  							email: 	this.props.booking.userEmail,
-					 				phone:	this.props.booking.userContact},
+									email: 	this.props.booking.userEmail,
+									phone:	this.props.booking.userContact},
 								participants: this.props.booking.participants,
 								paymentType:this.props.booking.paymentType,
 								eventId: this.props.booking.eventId,
@@ -55,10 +55,8 @@ export default class BookingForm extends React.Component {
 										participant:true,
 										payment:true,
 										permission:true}
-						 };
+									};
 		}
-
-		this.props.updateQuickList(this.state.booking.participants.filter(p => p.name !== "" && p.age !== "").map(p => {return {name:p.name, age: p.age}}));
 
 		this.updateUserDetails = this.updateUserDetails.bind(this);
 		this.updateParticipantDetails = this.updateParticipantDetails.bind(this);
@@ -71,6 +69,9 @@ export default class BookingForm extends React.Component {
 		this.submit = this.submit.bind(this);
 	}
 
+	componentWillMount() {
+		this.props.updateQuickList(this.state.booking.participants.filter(p => p.name !== "" && p.age !== "").map(p => {return {name:p.name, age: p.age}}));
+	}
 
 	updateUserDetails(item, value) {
 		this.setState(update(this.state, {booking:{user:{[item]:{$set:value}}}})) //magic?
@@ -133,7 +134,7 @@ export default class BookingForm extends React.Component {
 			return p;
 		}) //remove temp ids from new participants 
 
-		this.props.submit(state);
+		this.props.submit(state, this.props.user ? true : false);
 		e.preventDefault();
 	}
 
@@ -176,7 +177,7 @@ export default class BookingForm extends React.Component {
 		const validationMessages = this.validateBooking();
 
 		const deleteButtons = this.props.new ? null : [<button key="deletelock" type="submit" disabled={this.state.deleteLock} onClick={this.clickDelete} className="btn btn-danger pull-right">Cancel Booking</button>,
-								 <button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
+		<button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
 
 
 		return(<div>
@@ -204,7 +205,7 @@ export default class BookingForm extends React.Component {
 				<p>When you have finished click here to sumbit your booking. You can always come back and edit it before the deadline</p>
 				<ValidationList errors={validationMessages} />
 				<div className="btn-toolbar">
-     				<button disabled={validationMessages.length !== 0} className="btn btn-success" onClick={this.submit}>Submit Booking</button>	
+					<button disabled={validationMessages.length !== 0} className="btn btn-success" onClick={this.submit}>Submit Booking</button>	
 					{this.state.new ? null : deleteButtons}
 				</div>
 			</div>

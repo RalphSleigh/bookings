@@ -19,7 +19,11 @@ permissions.bookEvent = (user, event) => {
 		return false;
 } 
 
-
+permissions.viewBooking = (user, booking) => {
+	if(user.roles.find(role => role.name === "admin"))return true; //admin can
+	if(booking.userId === user.id)return true; //owner can
+	return false;
+}
 
 permissions.manageEvent = user => {
 		if(user.roles.find(role => role.name === "admin"))return true; //admin can always

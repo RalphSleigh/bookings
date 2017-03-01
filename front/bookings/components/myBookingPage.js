@@ -4,7 +4,7 @@ import { Link  } from 'react-router'
 
 
 import event from '../../events'
-import BookingForm from './bookingForm.js'
+import BookingForm from './form/bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
 import { updateQuickList, createBooking, getUserBookings, saveBooking, cancelBooking } from '../actions.js'
 

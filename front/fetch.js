@@ -1,12 +1,12 @@
-//Long Story, could use some fixing,,  we should actually do XSFR sometimes
+//Long Story, could use some fixing,  we should actually do XSFR sometimes
 
 import Cookies from 'js-cookie'
 
-
 export default function rfetch(url, method, data) {
+
 	var options = {	method:method,
-					headers: {  
-                  		"Content-type": "application/json; charset=UTF-8"},
+					headers: {
+						"Content-type": "application/json; charset=UTF-8"},
 					credentials: "same-origin",
 					};
 
@@ -15,12 +15,17 @@ export default function rfetch(url, method, data) {
 	}
 	if(typeof(data) !== "undefined") options.body = JSON.stringify(data);
 
-	return fetch(url, options).then(handleErrors).then(r => r.json());
+	return fetch(url, options).then(handleErrors)
 }
 
+rfetch.fail = (error) => console.log('fail', error)
+
 function handleErrors(response) {
-    if (!response.ok) {
-        return Promise.reject(response);
-    }
-    return response
+    if(response.status == 401) {
+		dispatch({type:"MESSAGE_SET_WARNING_MESSAGE",message:"401 Unauthorised on "+response.url});
+		throw Error("401 Unauthorised on "+response.url);
+	} else if(!response.ok) {
+		dispatch({type:"MESSAGE_SET_WARNING_MESSAGE",message:"Error "+response.status+""+response.url});
+		throw Error("Error "+response.status+""+response.url);
+	} else return response.json()
 }
