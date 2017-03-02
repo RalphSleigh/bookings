@@ -1,7 +1,8 @@
 var webpack = require('webpack');
-if (!PROD)var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 var PROD = (process.env.NODE_ENV === 'production')
+if (!PROD)var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
 	entry: {
