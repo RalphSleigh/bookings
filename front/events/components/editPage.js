@@ -1,19 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link  } from 'react-router'
+import { Link } from 'react-router'
 import EventForm from './eventForm.js'
 
 import { getEvent, saveEvent, deleteEvent } from '../actions.js'
 import { editEventCheck } from '../permission.js'
 
 class EditPage extends React.Component {
-	
+
 	render() {
-		if(this.props.Event === undefined)return null;
+		if (this.props.Event === undefined) return null;
 
 		let event = this.props.Event.toJS();
 		//const data = this.props.user.toObject();
-		return(
+		return (
 			<div>
 				<div className="row">
 					<div className="col-sm-12">
@@ -29,15 +29,15 @@ class EditPage extends React.Component {
 }
 
 const mapStateToProps = (state, props) => {
-  	var Event = state.getIn(["Events",props.params.eventId]);
- 	return {Event}
+	var Event = state.getIn(["Events", props.params.eventId]);
+	return { Event }
 }
 
-const mapDispatchToProps = {getEvent, saveEvent, deleteEvent};
+const mapDispatchToProps = { getEvent, saveEvent, deleteEvent };
 
 var VisibleEditPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(editEventCheck(EditPage));
 
 export default VisibleEditPage;

@@ -19,7 +19,8 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-2": "^6.22.0",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "webpack-bundle-analyzer": "^2.3.0"
   },
   "dependencies": {
     "acl": "^0.4.9",

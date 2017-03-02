@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware  } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk';
 import Immutable from 'immutable'
 import { combineReducers } from 'redux-immutable';
@@ -27,9 +27,10 @@ function bookingsApp(state, action) {
 //const initalState = Immutable.fromJS({User:initalUserState, UI:initalUIState});
 
 const rootReducer = combineReducers({
-	User:user.reducer,
-	Messages:messages.reducer,
-	Events:events.reducer,
-	Bookings:bookings.reducer});
+	User: user.reducer,
+	Messages: messages.reducer,
+	Events: events.reducer,
+	Bookings: bookings.reducer
+});
 
 export default createStore(rootReducer, Immutable.Map(), applyMiddleware(thunk));

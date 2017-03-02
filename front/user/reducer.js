@@ -5,11 +5,11 @@ import * as a from './actions.js'
 const initalUserState = null;
 
 export default function User(state = initalUserState, action) {
-	
-	switch(action.type){
-    	case a.UPDATE_USER: return Immutable.fromJS(action.user);    
-  	}
 
- 	return state;
-  
+	switch (action.type) {
+		case a.UPDATE_USER: return Immutable.fromJS(action.user);
+	}
+
+	return state;
+
 }

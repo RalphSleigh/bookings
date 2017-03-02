@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link  } from 'react-router'
+import { Link } from 'react-router'
 import Moment from 'moment'
 
 
@@ -8,13 +8,13 @@ import EventForm from './eventForm.js'
 import { createEventCheck } from '../permission.js'
 import { createEvent } from '../actions.js'
 
-class CreatePage extends React.Component{
-	
-	constructor(props) {
-      super(props);
+class CreatePage extends React.Component {
 
-	  this.saveEvent = this.saveEvent.bind(this);
-    }
+	constructor(props) {
+		super(props);
+
+		this.saveEvent = this.saveEvent.bind(this);
+	}
 
 	saveEvent(e) {
 		this.props.createEvent(e);
@@ -24,20 +24,20 @@ class CreatePage extends React.Component{
 		//const data = this.props.user.toObject();
 
 		let event = {
-			id:null,
-			name:'',
-			description:'',
-			startDate:Moment().format("YYYY-MM-DD"),
-			endDate:Moment().format("YYYY-MM-DD"),
-			bookingDeadline:Moment().format("YYYY-MM-DD"),
-			allowGuestBookings:false,
-			feeModel:"free",
-			feeData:{},
-			paymentTypes:["Cash","Cheque","Bank Transfer"],
-			paymentInfo:""
+			id: null,
+			name: '',
+			description: '',
+			startDate: Moment().format("YYYY-MM-DD"),
+			endDate: Moment().format("YYYY-MM-DD"),
+			bookingDeadline: Moment().format("YYYY-MM-DD"),
+			allowGuestBookings: false,
+			feeModel: "free",
+			feeData: {},
+			paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
+			paymentInfo: ""
 		}
 
-		return(
+		return (
 			<div>
 				<div className="row">
 					<div className="col-sm-12">
@@ -45,7 +45,7 @@ class CreatePage extends React.Component{
 					</div>
 				</div>
 				<div className="row">
-					<EventForm event={event} new={true} saveEvent={this.saveEvent}/>
+					<EventForm event={event} new={true} saveEvent={this.saveEvent} />
 				</div>
 			</div>
 		)
@@ -53,16 +53,16 @@ class CreatePage extends React.Component{
 }
 
 const mapStateToProps = (state) => {
-  //var Events = state.getIn(["Data","Events"]);
- // return {Events};
- return {}
+	//var Events = state.getIn(["Data","Events"]);
+	// return {Events};
+	return {}
 }
 
-const mapDispatchToProps = {createEvent};
+const mapDispatchToProps = { createEvent };
 
 var VisibleCreatePage = connect(
-  mapStateToProps,
-  mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(createEventCheck(CreatePage));
 
 export default VisibleCreatePage;
