@@ -1,6 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import Immutable from 'immutable'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
@@ -15,8 +13,8 @@ export default class KP extends React.Component {
 
 	render() {
 
-		const event = this.props.Event.toJS();
-		const bookings = this.props.Bookings.toJS();
+		//const event = this.props.Event.toJS();
+		//const bookings = this.props.Bookings.toJS();
 		const participants = this.props.Participants.toJS();
 
 

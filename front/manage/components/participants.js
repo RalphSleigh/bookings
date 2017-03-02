@@ -1,8 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import Immutable from 'immutable'
 import csv from 'csv-file-creator'
 import ReactTable from 'react-table'
+import Moment from 'moment'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
@@ -25,7 +24,8 @@ export default class Participants extends React.Component {
 		p.diet,
 		p.dietExtra,
 		p.medical]);
-		csv("test.csv", exportedData);
+		const fileName = this.props.Event.get('name')+"-Participants-"+Moment().format('YYYY-MM-DD')+".csv";
+		csv(fileName, [['id','Name','Age','Diet','Requirements &  Allergies','Medical'], ...exportedData]);
 	}
 
 	render() {
@@ -65,9 +65,8 @@ export default class Participants extends React.Component {
 			<ReactTable
 				data={data}
 				columns={columns}
-				defaultPageSize={-1}
 				showPageSizeOption={false}
-				showPagination={false} />
+				showPagination={true} />
 		</div>)
 	}
 }

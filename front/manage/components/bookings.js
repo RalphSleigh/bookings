@@ -4,6 +4,7 @@ import React from 'react'
 import { Link } from 'react-router'
 import ReactTable from 'react-table'
 import Moment from 'moment'
+import csv from 'csv-file-creator'
 //import Switch from 'react-toggle'
 
 //import bookings from '../bookings'
@@ -18,6 +19,22 @@ export default class Bookings extends React.Component {
 		super(props);
 
 		this.markPaid = this.markPaid.bind(this);
+		this.exportCSV = this.exportCSV.bind(this);
+	}
+
+	exportCSV() {
+		const data = this.props.Bookings.toJS();
+		const exportedData = data.map(b => [b.id,
+		b.userName,
+		b.userEmail,
+		b.userContact,
+		b.participants.length,
+		b.paymentType,
+		b.paid,
+		b.createdAt,
+		b.updatedAt]);
+		const fileName = this.props.Event.get('name') + "-Bookings-" + Moment().format('YYYY-MM-DD') + ".csv";
+		csv(fileName, [['id', 'Name', 'e-mail', 'Phone', 'Participants', 'Payment type','Paid','Created','Updated'], ...exportedData]);
 	}
 
 	markPaid(id) {
@@ -82,13 +99,14 @@ export default class Bookings extends React.Component {
 		]
 		//const sortables=[{column:"userName", sortFunction:nameSort},"userEmail","userContact","participants","paymentType","updatedAt"];
 
-		return (<div><h4>Total Bookings: {bookings.length}</h4>
+		return (<div>
+			<button className="button pull-right" onClick={this.exportCSV}>Export CSV</button>
+			<h4>Total Bookings: {bookings.length}</h4>
 
 			<ReactTable
 				data={data}
 				columns={columns}
-				showPagination={false}
-				defaultPageSize={-1}
+				showPagination={true}
 				showPageSizeOption={false} />
 		</div>)
 	}
