@@ -1,6 +1,7 @@
 /node_modules
 database.sqlite
 server/config.js
+server/googlejwt.json
 npm-debug.log
 .eslintrc.json
 sqlite3.exe

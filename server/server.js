@@ -11,6 +11,7 @@ var bookings = require('./api/bookings.js');
 var User = require('./models/user.js');
 var Role = require('./models/role.js');
 var passport = require('./passportConfig.js');
+var email = require('./email.js');
 
 var P = require('./permission.js')
 
