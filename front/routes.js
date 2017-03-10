@@ -27,8 +27,9 @@ export default (<Router history={browserHistory}>
 		</Route>
 		<Route path="booking/:bookingId/" component={bookings.loader}>
 			<Route path="edit" component={bookings.editPage} />
-		</Route>
+			</Route>
 		<Route path="cancel" component={bookings.cancelPage} />
+		<Route path="guestUUID/:eventId/:guestUUID" component={bookings.myBookingPage} />
 	</Route>
 </Router>);
 

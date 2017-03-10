@@ -4,11 +4,28 @@ Config options, fill them in and rename the file
 
 const config = {}
 
+/**
+ * Server config
+ */
 config.host = "localhost"
 config.port = 8080
+config.basePath = "http://localhost:8080/";
+
+/**
+ *  Log on with google OAuth
+ */
 
 config.GoogleClientID = "";
 config.GoogleClientSecret =	"";
 config.GoogleCallback = "http://localhost:8080/auth/google/callback"
+
+/**
+ * Google API Service Account to send e-mail
+ */
+
+config.email = true;
+config.emailFrom = "";
+config.emailClientEmail = "";
+config.emailPrivateKey = "-----BEGIN PRIVATE KEY-----";
 
 module.exports = config;

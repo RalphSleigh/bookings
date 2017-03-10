@@ -30,7 +30,6 @@ if (config.email) {
 	//const message = new mimebuilder("text/plain").setHeader("To", "ralph.sleigh@woodcraft.org.uk").setContent("Hello world!").build();
 
 	module.exports = (to, templateName, values) => {
-		//console.log(values);
 		log.log("info", "Emailing %s template %s", to, templateName);
 		var templateDir = path.join(__dirname, 'templates', templateName);
 		var template = new emailTemplate(templateDir);

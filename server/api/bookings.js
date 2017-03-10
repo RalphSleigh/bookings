@@ -3,6 +3,7 @@ var Participant = require('../models/participant.js');
 var Event = require('../models/event.js')
 var email = require('../email.js');
 var log = require('../logging.js');
+const config = require('../config.js');
 
 var bookings = {}
 
@@ -72,7 +73,9 @@ bookings.createBooking = (req, res) => {
 		let data = {};
 		data[booking.id] = booking;
 		res.json(data);
-		email(booking.userEmail, 'confirmation', booking.get({ plain: true }));
+		let emailData = booking.get({ plain: true });
+		emailData.editURL = config.basePath + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/"+ emailData.eventId + "/book");
+		email(booking.userEmail, 'confirmation', emailData);
 	}).catch(e => {
 		console.log(e);
 		res.status(500).end();
