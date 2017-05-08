@@ -26,7 +26,12 @@ export default class BookingForm extends React.Component {
 						email: this.guest ? '' : props.user.email,
 						phone: ''
 					},
-					participants: [blankParticipant(), blankParticipant()],
+					participants: [blankParticipant()],
+					emergency: {
+						name: '',
+						phone: '',
+					},
+					note:'',
 					paymentType: "",
 					eventId: this.props.event.id
 				},
@@ -50,6 +55,11 @@ export default class BookingForm extends React.Component {
 						phone: this.props.booking.userContact
 					},
 					participants: this.props.booking.participants,
+					emergency: {
+						name: this.props.booking.emergencyName,
+						phone: this.props.booking.emergencyPhone
+					},
+					note:this.props.booking.note,
 					paymentType: this.props.booking.paymentType,
 					eventId: this.props.booking.eventId,
 					id: this.props.booking.id
@@ -68,6 +78,8 @@ export default class BookingForm extends React.Component {
 
 		this.updateUserDetails = this.updateUserDetails.bind(this);
 		this.updateParticipantDetails = this.updateParticipantDetails.bind(this);
+		this.updateEmergency = this.updateEmergency.bind(this);
+		this.updateNote = this.updateNote.bind(this);
 		this.addParticipant = this.addParticipant.bind(this);
 		this.deleteParticipant = this.deleteParticipant.bind(this);
 		this.updatePaymentType = this.updatePaymentType.bind(this);
@@ -86,6 +98,17 @@ export default class BookingForm extends React.Component {
 		//let user = this.state.booking.user;
 		//user[item] = value;
 		//this.setState({user:user});
+	}
+
+	updateEmergency(item, value) {
+		this.setState(update(this.state, { booking: { emergency: { [item]: { $set: value } } } })) //magic?
+		//let user = this.state.booking.user;
+		//user[item] = value;
+		//this.setState({user:user});
+	}
+
+	updateNote(value) {
+		this.setState(update(this.state, { booking: { note: { $set: value } } } ))
 	}
 
 	updateParticipantDetails(id, item, value) {
@@ -162,7 +185,7 @@ export default class BookingForm extends React.Component {
 
 		if (this.state.booking.user.name === "") results.push("Please fill in your name");
 		if (this.state.booking.user.email === "") results.push("Please fill in your e-mail address");
-		if (this.state.booking.user.phone === "") results.push("Please provide a contact phone number");
+		if (this.state.booking.user.phone === "") results.push("Please fill in your contact phone number");
 
 		this.state.booking.participants.forEach((p, k) => {
 			if (p.name === "") {
@@ -174,6 +197,9 @@ export default class BookingForm extends React.Component {
 		});
 
 		if (this.props.event.feeModel !== "free" && this.state.booking.paymentType === "") results.push("Please choose a payment option");
+
+		if (this.state.booking.emergency.name === "") results.push("Please provide an emergency contact name");
+		if (this.state.booking.emergency.phone === "") results.push("Please provide an emergency contact phone number");
 
 		if (this.state.permission === false) results.push("Please tick the permission checkbox");
 
@@ -191,7 +217,7 @@ export default class BookingForm extends React.Component {
 		return (<div>
 			<div className="col-sm-12">
 				<h3>Your Details</h3>
-				<p>Please include a contact number we can use during the event</p>
+				<p>We will use these if we need to get in touch</p>
 			</div>
 			<BookingUserDetails user={this.state.booking.user} update={this.updateUserDetails} guest={this.guest} validating={this.state.validation.user} />
 			<div className="col-sm-12">
@@ -205,9 +231,9 @@ export default class BookingForm extends React.Component {
 			<FeeForm event={this.props.event} participants={this.state.booking.participants} />
 			{this.props.event.feeModel === "free" ? null : <PaymentForm update={this.updatePaymentType} event={this.props.event} chosen={this.state.booking.paymentType} validating={this.state.validation.payment} />}
 			<div className="col-sm-12">
-				<h3>Permission</h3>
+				<h3>Responsibility</h3>
 			</div>
-			<PermissionForm event={this.props.event} check={this.state.permission} update={this.updatePermission} validating={this.state.validation.permission} />
+			<PermissionForm event={this.props.event} check={this.state.permission} update={this.updatePermission} note={this.state.booking.note} updateNote={this.updateNote} emergency={this.state.booking.emergency} updateEmergency={this.updateEmergency} validating={this.state.validation.permission} />
 			<div className="col-sm-12">
 				<h3>Submit</h3>
 				<p>When you have finished click here to sumbit your booking. You can always come back and edit it before the deadline</p>

@@ -23,6 +23,15 @@ var Booking = o.define('booking', {
 		type: Sequelize.BOOLEAN,
 		default: false
 	},
+	note: {
+		type: Sequelize.TEXT
+	},
+	emergencyName: {
+		type: Sequelize.TEXT
+	},
+	emergencyPhone: {
+		type: Sequelize.TEXT
+	},
 	guestUUID: {
 		type: Sequelize.UUID
 	}
