@@ -35,7 +35,7 @@ export default class PermissionForm extends React.Component {
 			<form className="form-horizontal">
 				<div className="col-sm-12">
 					<h4>Emergency Contact</h4>
-					<p>Please provide details of someome we can contact in case of an emergency during the event (a second person is better even if you are not attending yourself)</p>
+					<p>Please provide details of someone we can contact in case of an emergency during the event (a second person is better even if you are not attending yourself)</p>
 				</div>
 				<div className={this.props.validating ? this.props.emergency.name === "" ? invalid : valid : valid}>
 					<label className="col-sm-2 control-label">Name:</label>
@@ -44,7 +44,7 @@ export default class PermissionForm extends React.Component {
 					</div>
 				</div>
 				<div className={this.props.validating ? this.props.emergency.phone === "" ? invalid : valid : valid}>
-					<label className="col-sm-2 control-label">Phone:</label>
+					<label className="col-sm-2 control-label">Phone Number:</label>
 					<div className="col-sm-10">
 						<input type="text" className="form-control" placeholder="Name" value={this.props.emergency.phone} onChange={this.updateEmergency("phone")} />
 					</div>
@@ -53,7 +53,7 @@ export default class PermissionForm extends React.Component {
 					<h4>Additional infomation</h4>
 				</div>
 				<div className="form-group">
-					<label className="col-sm-2 control-label">Anything else we need to know?:</label>
+					<label className="col-sm-2 control-label">Anything else we need to know:<br /></label>
 					<div className="col-sm-10">
 						<textarea value={this.props.note} onChange={this.updateNote} className="form-control" rows="2" ></textarea>
 					</div>

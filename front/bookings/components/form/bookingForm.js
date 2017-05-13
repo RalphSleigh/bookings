@@ -253,7 +253,7 @@ const ValidationList = (props) => {
 	const items = props.errors.map(e => <li key={e}>{e}</li>);
 
 	return (<div className="panel panel-warning">
-		<div className="panel-heading">Errors</div>
+		<div className="panel-heading">Still to do:</div>
 		<ul>{items}</ul>
 	</div>);
 }

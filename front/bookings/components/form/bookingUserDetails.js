@@ -35,7 +35,7 @@ export default class BookingUserDetails extends React.Component {
 					</div>
 				</div>
 				<div className={this.props.validating ? this.props.user.phone === "" ? invalid : valid : valid}>
-					<label className="col-sm-2 control-label">Contact Phone Number:</label>
+					<label className="col-sm-2 control-label">Phone Number:</label>
 					<div className="col-sm-10">
 						<input type="tel" className="form-control" placeholder="Phone" value={this.props.user.phone} onChange={this.update("phone")} />
 					</div>
