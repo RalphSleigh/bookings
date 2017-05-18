@@ -88,7 +88,7 @@ export class BookingForm extends React.Component {
 						<td>£{Math.round(amount * 0.5)}</td>
 					</tr>
 					<tr>
-						<td><b>My Booking</b> ({this.props.participants.length} {this.props.participants.length < 2 ? "person" : "people"}, {accompanied ? "Accompanined" : "Unaccompanied"})</td>
+						<td><b>My Booking</b> ({this.props.participants.length} {this.props.participants.length < 2 ? "person" : "people"}, {accompanied ? "Accompanied" : "Unaccompanied"})</td>
 						<td><b>£{total}</b></td>
 						<td><b>£{totalDiscounted}</b></td>
 					</tr>
