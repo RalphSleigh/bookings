@@ -31,8 +31,8 @@ export default class Bookings extends React.Component {
 		b.participants.length,
 		b.paymentType,
 		b.paid,
-		b.emergency.name,
-		b.emergency.phone,
+		b.emergencyName,
+		b.emergencyPhone,
 		b.note,
 		b.createdAt,
 		b.updatedAt]);
