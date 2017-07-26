@@ -37,7 +37,7 @@ export default class Bookings extends React.Component {
 		b.createdAt,
 		b.updatedAt]);
 		const fileName = this.props.Event.get('name') + "-Bookings-" + Moment().format('YYYY-MM-DD') + ".csv";
-		csv(fileName, [['id', 'Name', 'e-mail', 'Phone', 'Participants', 'Payment type','Paid','Emergency name','Emergency Contact','Note,'Created','Updated'], ...exportedData]);
+		csv(fileName, [['id', 'Name', 'e-mail', 'Phone', 'Participants', 'Payment type','Paid','Emergency name','Emergency Contact','Note','Created','Updated'], ...exportedData]);
 	}
 
 	markPaid(id) {
