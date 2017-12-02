@@ -4,11 +4,11 @@ import W from '../../../shared/woodcraft.js'
 
 W.reverse();
 
-export default class CreatePage extends React.Component {
+export default class ParticipantsList extends React.Component {
 
 	render() {
 
-		const list = this.props.quickList;
+		const list = this.props.booking.participants
 		const groups = W.map(w => {
 			const people = list.filter((p) => p.age === '' ? false : w.filter(p.age)).map((p, k) => <p key={k}>{p.name}</p>);
 			if (people.length === 0) return null;

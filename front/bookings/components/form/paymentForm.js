@@ -11,7 +11,7 @@ export default class PaymentForm extends React.Component {
 
 	selectPaymentType(e) {
 
-		this.props.update(e.target.value);
+		this.props.update("paymentType", e.target.value);
 	}
 
 	render() {

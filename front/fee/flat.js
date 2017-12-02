@@ -40,11 +40,12 @@ export class BookingForm extends React.Component {
 
 	render() {
 
-		const total = this.props.feeData.amount * this.props.participants.length
+		const participants = this.props.participants ? this.props.participants.length : 0
+		const total = this.props.feeData.amount *  participants
 
 		return (<div>
 			<p>This event costs £{this.props.feeData.amount} per person.</p>
-			<p>You have booked <b>{this.props.participants.length}</b> people for a total of <b>£{total}</b></p>
+			<p>You have booked <b>{participants}</b> people for a total of <b>£{total}</b></p>
 		</div>)
 	}
 }

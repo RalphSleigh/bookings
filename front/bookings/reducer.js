@@ -3,7 +3,7 @@ import * as a from './actions.js'
 import user from '../user'
 import * as manageActions from '../manage/actions.js'
 
-const initalBookingsState = Immutable.fromJS({ quickList: [], bookings: null });
+const initalBookingsState = Immutable.fromJS({currentBooking:null, bookings: null });
 
 export default function Bookings(state = initalBookingsState, action) {
 
@@ -17,6 +17,7 @@ export default function Bookings(state = initalBookingsState, action) {
 		case manageActions.TOGGLE_PAID: return state.mergeIn(["bookings"], Immutable.fromJS(action.booking));
 		case a.DELETE_BOOKING: return state.deleteIn(["bookings", action.id]);
 		case user.actions.UPDATE_USER: return state.set("bookings", null) //invalidates app render if the user changes until we can fetch more user bookings.
+		case a.UPDATE_CURRENT_BOOKING: return state.set("currentBooking", Immutable.fromJS(action.booking)) 
 	}
 	return state;
 }

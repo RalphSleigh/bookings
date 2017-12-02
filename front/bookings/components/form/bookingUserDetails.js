@@ -22,22 +22,22 @@ export default class BookingUserDetails extends React.Component {
 
 		return (<div className="col-sm-12">
 			<form className="form-horizontal">
-				<div className={this.props.validating ? this.props.user.name === "" ? invalid : valid : valid}>
+				<div className={this.props.validating ? this.props.userName === "" ? invalid : valid : valid}>
 					<label className="col-sm-2 control-label">Your Name:</label>
 					<div className="col-sm-10">
-						<input type="text" className="form-control" placeholder="Name" disabled={!this.props.guest} value={this.props.user.name} onChange={this.update("name")} />
+						<input type="text" className="form-control" placeholder="Name" disabled={!this.props.guest} value={this.props.userName || ''} onChange={this.update("userName")} />
 					</div>
 				</div>
-				<div className={this.props.validating ? this.props.user.email === "" ? invalid : valid : valid}>
+				<div className={this.props.validating ? this.props.userEmail === "" ? invalid : valid : valid}>
 					<label className="col-sm-2 control-label">Your e-mail:</label>
 					<div className="col-sm-10">
-						<input type="e-mail" className="form-control" placeholder="e-mail" disabled={!this.props.guest} value={this.props.user.email} onChange={this.update("email")} />
+						<input type="e-mail" className="form-control" placeholder="e-mail" disabled={!this.props.guest} value={this.props.userEmail} onChange={this.update("userEmail")} />
 					</div>
 				</div>
-				<div className={this.props.validating ? this.props.user.phone === "" ? invalid : valid : valid}>
+				<div className={this.props.validating ? this.props.userContact === "" ? invalid : valid : valid}>
 					<label className="col-sm-2 control-label">Phone Number:</label>
 					<div className="col-sm-10">
-						<input type="tel" className="form-control" placeholder="Phone" value={this.props.user.phone} onChange={this.update("phone")} />
+						<input type="tel" className="form-control" placeholder="Phone" value={this.props.userContact || ''} onChange={this.update("userContact")} />
 					</div>
 				</div>
 			</form>

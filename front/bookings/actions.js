@@ -36,6 +36,7 @@ export const createBooking = booking => {
 		fetch('/api/booking/' + booking.eventId + '/create', "POST", booking)
 			.then(j => {
 				dispatch(updateBooking(j));
+				dispatch(updateCurrentBooking(null))
 				browserHistory.push('/event/' + booking.eventId + '/book/thanks');
 			})
 	}
@@ -46,6 +47,7 @@ export const saveBooking = (booking, own) => {
 		fetch('/api/booking/edit', "POST", booking, dispatch)
 			.then(j => {
 				dispatch(updateBooking(j));
+				dispatch(updateCurrentBooking(null))
 				own ? browserHistory.push('/event/' + booking.eventId + '/book/thanks') : browserHistory.push('/event/' + booking.eventId + '/manage/bookings');
 			});
 	}
@@ -124,3 +126,13 @@ const deleteBooking = id => {
 export const redirectFromThanks = eventId => dispatch => {
 	browserHistory.push('/event/' + eventId + '/book');
 } 
+
+export const UPDATE_CURRENT_BOOKING = "BOOKING_UPDATE_CURRENT_BOOKING"
+
+export const updateCurrentBooking = booking => {
+	if(booking && !booking.id)localStorage.currentBooking = JSON.stringify(booking);
+	return {
+		type: UPDATE_CURRENT_BOOKING,
+		booking: booking
+	}
+}

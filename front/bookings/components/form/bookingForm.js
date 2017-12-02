@@ -8,7 +8,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import update from 'immutability-helper';
 
 //this is a massive component that handles the state of the booking form.
-//involves alot of magic, we should probably give up and hoist its internal state into the redux store.
+
 export default class BookingForm extends React.Component {
 
 	constructor(props) {
@@ -16,85 +16,43 @@ export default class BookingForm extends React.Component {
 
 		this.guest = props.user && props.user.id === 1;
 
-		if (this.props.booking === null) {
-			//new booking, create blank data
+		this.state = {
+			permission: false,
+			new: this.props.booking.id ? false : true,
+			deleteLock: true,
+			validation: {
+				user: false,
+				participant: false,
+				payment: false,
+				permission: false
+			}
+		};
 
-			this.state = {
-				booking: {
-					user: {
-						name: this.guest ? '' : props.user.userName,
-						email: this.guest ? '' : props.user.email,
-						phone: ''
-					},
-					participants: [blankParticipant()],
-					emergency: {
-						name: '',
-						phone: '',
-					},
-					note:'',
-					paymentType: "",
-					eventId: this.props.event.id
-				},
-				permission: false,
-				new: true,
-				deleteLock: true,
-				validation: {
-					user: false,
-					participant: false,
-					payment: false,
-					permission: false
-				}
-			};
-		} else {
-			//set state from the booking infomation passed in the booking prop.
-			this.state = {
-				booking: {
-					user: {
-						name: this.props.booking.userName,
-						email: this.props.booking.userEmail,
-						phone: this.props.booking.userContact
-					},
-					participants: this.props.booking.participants,
-					emergency: {
-						name: this.props.booking.emergencyName,
-						phone: this.props.booking.emergencyPhone
-					},
-					note:this.props.booking.note,
-					paymentType: this.props.booking.paymentType,
-					eventId: this.props.booking.eventId,
-					id: this.props.booking.id
-				},
-				permission: true,
-				new: false,
-				deleteLock: true,
-				validation: {
-					user: true,
-					participant: true,
-					payment: true,
-					permission: true
-				}
-			};
-		}
-
-		this.updateUserDetails = this.updateUserDetails.bind(this);
+		this.updateItem = this.updateItem.bind(this)
+		//this.updateUserDetails = this.updateUserDetails.bind(this);
 		this.updateParticipantDetails = this.updateParticipantDetails.bind(this);
-		this.updateEmergency = this.updateEmergency.bind(this);
-		this.updateNote = this.updateNote.bind(this);
+		//this.updateEmergency = this.updateEmergency.bind(this);
+		//this.updateNote = this.updateNote.bind(this);
 		this.addParticipant = this.addParticipant.bind(this);
 		this.deleteParticipant = this.deleteParticipant.bind(this);
-		this.updatePaymentType = this.updatePaymentType.bind(this);
-		this.updatePermission = this.updatePermission.bind(this);
+		//this.updatePaymentType = this.updatePaymentType.bind(this);
+		//this.updatePermission = this.updatePermission.bind(this);
 		this.clickDeleteLock = this.clickDeleteLock.bind(this);
 		this.clickDelete = this.clickDelete.bind(this);
 		this.submit = this.submit.bind(this);
 	}
 
 	componentWillMount() {
-		this.props.updateQuickList(this.state.booking.participants.filter(p => p.name !== "" && p.age !== "").map(p => { return { name: p.name, age: p.age } }));
 	}
 
+	updateItem(item, value) {
+		//magic
+		this.props.updateCurrentBooking(update(this.props.booking, { [item]: { $set: value } }))
+	}
+
+	/*
 	updateUserDetails(item, value) {
-		this.setState(update(this.state, { booking: { user: { [item]: { $set: value } } } })) //magic?
+		this.props.update(update(this.props.booking, { booking: { user: { [item]: { $set: value } } } })) //magic?
 		//let user = this.state.booking.user;
 		//user[item] = value;
 		//this.setState({user:user});
@@ -110,16 +68,16 @@ export default class BookingForm extends React.Component {
 	updateNote(value) {
 		this.setState(update(this.state, { booking: { note: { $set: value } } } ))
 	}
+	*/
 
 	updateParticipantDetails(id, item, value) {
-		let participants = this.state.booking.participants;
+		let participants = this.props.booking.participants;
 		//const validation = this.state.validation;
 		//validation.user = true; //start validating user section
 
 		const participant = participants.find(p => p.id === id);
 		participant[item] = value;
-		this.setState(update(this.state, { booking: { participants: { $set: participants } }, validation: { user: { $set: true } } }));
-		this.props.updateQuickList(participants.filter(p => p.name !== "" && p.age !== "").map(p => { return { name: p.name, age: p.age } }));
+		this.props.updateCurrentBooking(update(this.props.booking, { participants: { $set: participants } }));
 	}
 
 	addParticipant() {
@@ -127,17 +85,17 @@ export default class BookingForm extends React.Component {
 		//let participants = this.state.participants;
 		//participants.push(blankParticipant());
 		//this.setState({participants:participants});
-		this.setState(update(this.state, { booking: { participants: { $push: [blankParticipant()] } } }));
+		this.props.updateCurrentBooking(update(this.props.booking,  { participants: { $push: [blankParticipant()] } } ));
 
 	}
 
 	deleteParticipant(id) {
-		let participants = this.state.booking.participants;
+		let participants = this.props.booking.participants;
 		participants = participants.filter(p => p.id != id);
-		this.setState(update(this.state, { booking: { participants: { $set: participants } }, validation: { user: { $set: true } } }));
-		this.props.updateQuickList(participants.filter(p => p.name !== "" && p.age !== "").map(p => { return { name: p.name, age: p.age } }));
+		this.props.updateCurrentBooking(update(this.props.booking, { participants: { $set: participants } } ));
 	}
 
+    /*
 	updatePaymentType(type) {
 
 		//const validation = this.state.validation;
@@ -146,6 +104,7 @@ export default class BookingForm extends React.Component {
 		//this.setState({paymentType:type,validation:validation});
 		this.setState(update(this.state, { booking: { paymentType: { $set: type } }, validation: { user: { $set: true }, participants: { $set: true } } }));
 	}
+	
 
 	updatePermission() {
 
@@ -157,15 +116,16 @@ export default class BookingForm extends React.Component {
 
 		this.setState({ permission: !this.state.permission, validation: validation });
 	}
+	*/
 
 	submit(e) {
-		const state = cloneDeep(this.state.booking);
+		const state = cloneDeep(this.props.booking);
 		state.participants = state.participants.map(p => {
 			if (typeof p.id === "string") delete p.id;
 			return p;
 		}) //remove temp ids from new participants 
 
-		this.props.submit(state, this.props.user ? true : false);
+		this.props.submit(state, this.state.new);
 		e.preventDefault();
 	}
 
@@ -183,11 +143,11 @@ export default class BookingForm extends React.Component {
 	validateBooking() {
 		const results = [];
 
-		if (this.state.booking.user.name === "") results.push("Please fill in your name");
-		if (this.state.booking.user.email === "") results.push("Please fill in your e-mail address");
-		if (this.state.booking.user.phone === "") results.push("Please fill in your contact phone number");
+		if (!this.props.booking.userName || this.props.booking.userName === "") results.push("Please fill in your name");
+		if (!this.props.booking.userEmail ||this.props.booking.userEmail === "") results.push("Please fill in your e-mail address");
+		if (!this.props.booking.userContact || this.props.booking.userContact === "") results.push("Please fill in your contact phone number");
 
-		this.state.booking.participants.forEach((p, k) => {
+		if (this.props.booking.participants) this.props.booking.participants.forEach((p, k) => {
 			if (p.name === "") {
 				results.push("Participant #" + (k + 1) + " does not have a name");
 				return;
@@ -196,12 +156,12 @@ export default class BookingForm extends React.Component {
 			if (p.diet === "") results.push("Please choose a diet for " + p.name);
 		});
 
-		if (this.props.event.feeModel !== "free" && this.state.booking.paymentType === "") results.push("Please choose a payment option");
+		if (this.props.event.feeModel !== "free" && (!this.props.booking.paymentType || this.props.booking.paymentType === "")) results.push("Please choose a payment option");
 
-		if (this.state.booking.emergency.name === "") results.push("Please provide an emergency contact name");
-		if (this.state.booking.emergency.phone === "") results.push("Please provide an emergency contact phone number");
+		if (!this.props.booking.emergencyName || this.props.booking.emergencyName === "") results.push("Please provide an emergency contact name");
+		if (!this.props.booking.emergencyPhone || this.props.booking.emergencyPhone === "") results.push("Please provide an emergency contact phone number");
 
-		if (this.state.permission === false) results.push("Please tick the permission checkbox");
+		if (!this.props.booking.permission) results.push("Please tick the permission checkbox");
 
 		return results;
 	}
@@ -210,30 +170,38 @@ export default class BookingForm extends React.Component {
 
 		const validationMessages = this.validateBooking();
 
-		const deleteButtons = this.props.new ? null : [<button key="deletelock" type="submit" disabled={this.state.deleteLock} onClick={this.clickDelete} className="btn btn-danger pull-right">Cancel Booking</button>,
+		const deleteButtons = this.state.new ? null : [<button key="deletelock" type="submit" disabled={this.state.deleteLock} onClick={this.clickDelete} className="btn btn-danger pull-right">Cancel Booking</button>,
 		<button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
 
+		const userDetails = { userName: this.props.booking.userName, userEmail: this.props.booking.userEmail, userContact: this.props.booking.userContact }
+		const permissionDetails = { emergencyName: this.props.booking.emergencyName, 
+									emergencyPhone: this.props.booking.emergencyPhone, 
+									note: this.props.booking.note, 
+									permission: this.props.booking.permission }
 
 		return (<div>
 			<div className="col-sm-12">
 				<h3>Your Details</h3>
 				<p>We will use these if we need to get in touch</p>
 			</div>
-			<BookingUserDetails user={this.state.booking.user} update={this.updateUserDetails} guest={this.guest} validating={this.state.validation.user} />
+			<BookingUserDetails 
+				update={this.updateItem}
+				guest={this.guest}
+				validating={this.state.validation.user} {...userDetails}/>
 			<div className="col-sm-12">
 				<h3>Participants</h3>
 				<p>Please fill out for every person attending (including yourself if applicable)</p>
 			</div>
-			<ParticipantForm participants={this.state.booking.participants} update={this.updateParticipantDetails} add={this.addParticipant} delete={this.deleteParticipant} validating={this.state.validation.participants} />
+			<ParticipantForm participants={this.props.booking.participants} update={this.updateParticipantDetails} add={this.addParticipant} delete={this.deleteParticipant} validating={this.state.validation.participants} />
 			<div className="col-sm-12">
 				<h3>Money</h3>
 			</div>
-			<FeeForm event={this.props.event} participants={this.state.booking.participants} />
-			{this.props.event.feeModel === "free" ? null : <PaymentForm update={this.updatePaymentType} event={this.props.event} chosen={this.state.booking.paymentType} validating={this.state.validation.payment} />}
+			<FeeForm event={this.props.event} participants={this.props.booking.participants} />
+			{this.props.event.feeModel === "free" ? null : <PaymentForm update={this.updateItem} event={this.props.event} chosen={this.props.booking.paymentType} validating={this.state.validation.payment} />}
 			<div className="col-sm-12">
 				<h3>Responsibility</h3>
 			</div>
-			<PermissionForm event={this.props.event} check={this.state.permission} update={this.updatePermission} note={this.state.booking.note} updateNote={this.updateNote} emergency={this.state.booking.emergency} updateEmergency={this.updateEmergency} validating={this.state.validation.permission} />
+			<PermissionForm event={this.props.event} update={this.updateItem} validating={this.state.validation.permission} {...permissionDetails}/>
 			<div className="col-sm-12">
 				<h3>Submit</h3>
 				<p>When you have finished click here to sumbit your booking. You can always come back and edit it before the deadline</p>
@@ -259,14 +227,18 @@ const ValidationList = (props) => {
 }
 
 //bad bad bad should be based on model.
-
 let tempkey = 0;
 
-const blankParticipant = () => ({
+function blankParticipant() {
+	return {
 	id: 'Temp' + tempkey++, //need a key for react to render the participant array
 	name: '',
 	age: '',
 	diet: '',
 	dietExtra: '',
 	medical: ''
-});
+	}
+}
+
+
+

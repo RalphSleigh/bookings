@@ -52,18 +52,10 @@ bookings.getBooking = (req, res) => {
 
 
 bookings.createBooking = (req, res) => {
-	let newBooking = {}
-	newBooking.userName = req.body.user.name;
-	newBooking.userEmail = req.body.user.email;
-	newBooking.userContact = req.body.user.phone;
-	newBooking.paymentType = req.body.paymentType;
-	newBooking.eventId = req.body.eventId;
-	newBooking.userId = req.user.id
-	newBooking.participants = req.body.participants;
-	newBooking.note = req.body.note;
-	newBooking.emergencyName = req.body.emergency.name;
-	newBooking.emergencyPhone = req.body.emergency.phone;
+
+	let newBooking = req.body
 	newBooking.guestUUID = req.cookies.guestUUID;
+	newBooking.userId = newBooking.userId || req.user.id
 
 	Booking.create(newBooking, {
 		include: [{
@@ -85,6 +77,7 @@ bookings.createBooking = (req, res) => {
 	});
 }
 
+/*
 bookings.editBooking = (req, res) => {
 	Booking.findOne({ where: { id: req.body.id } })
 		.then(booking => {
@@ -108,6 +101,36 @@ bookings.editBooking = (req, res) => {
 					data[booking.id] = booking;
 					res.json(data);
 				});
+		});
+}
+*/
+
+bookings.editBooking = (req, res) => {
+	Booking.findOne({ where: { id: req.body.id } })
+		.then(booking => 
+			booking.update(req.body)//this ignores partitipants!
+		)
+		.then(booking => Booking.findOne({ where: { id: booking.id }, include: [{ model: Participant }] }))
+		.then(booking => {
+			let ops = []
+
+			//delete participants no longer present
+			ops = [...ops, ...booking.participants.filter(p => !req.body.participants.find(q => q.id === p.id)).map(p => p.destroy())];
+			//update existing
+			ops = [...ops, ...req.body.participants.map(p => Participant.findOne({where: {id: p.id}}).then(q => q ? q.update(p) : null))];
+			//add new ones
+			ops = [...ops, ...req.body.participants.filter(p => !p.id).map(p => {
+				p.bookingId = booking.id;	
+				return  Participant.create(p)
+			})];
+			return Promise.all(ops);
+		})
+		.then(() => Booking.findOne({ where: { id: req.body.id }, include: [{ model: Participant }] }))
+		.then(booking => {
+			log.log("debug", "Booking id %s for %s", booking.id, req.user.userName);
+			let data = {};
+			data[booking.id] = booking;
+			res.json(data);
 		});
 }
 

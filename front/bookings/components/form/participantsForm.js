@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 export default class ParticipantsForm extends React.Component {
 
 	constructor(props) {
@@ -30,7 +31,9 @@ export default class ParticipantsForm extends React.Component {
 
 	render() {
 
-		let rows = this.props.participants.map((p, k) => <ParticipantRow key={p.id} {...p} update={this.update(p.id)} delete={this.delete(p.id)} validating={this.props.validating} />)
+		const participants = this.props.participants
+
+		let rows = participants.map((p, k) => <ParticipantRow key={p.id} {...p} update={this.update(p.id)} delete={this.delete(p.id)} validating={this.props.validating} />)
 
 		return (<div>
 			<div className="col-sm-12">
@@ -59,19 +62,19 @@ const ParticipantRow = (props) => {
 				<div className={props.validating ? props.name === "" ? invalid : valid : valid}>
 					<label className="col-sm-3 control-label">Name:</label>
 					<div className="col-sm-3">
-						<input type="text" value={props.name} onChange={props.update("name")} className="form-control" placeholder="Name" />
+						<input type="text" value={props.name || ''} onChange={props.update("name")} className="form-control" placeholder="Name" />
 					</div>
 				</div>
 				<div className={props.validating ? props.age === "" ? invalid : valid : valid}>
 					<label className="col-sm-1 control-label">Age:</label>
 					<div className="col-sm-1">
-						<input type="text" value={props.age} onChange={props.update("age")} className="form-control" placeholder="Age" />
+						<input type="text" value={props.age || ''} onChange={props.update("age")} className="form-control" placeholder="Age" />
 					</div>
 				</div>
 				<div className={props.validating ? props.diet === "" ? invalid : valid : valid}>
 					<label className="col-sm-1 control-label">Diet:</label>
 					<div className="col-sm-2">
-						<select value={props.diet} onChange={props.update("diet")} className="form-control">
+						<select value={props.diet || ''} onChange={props.update("diet")} className="form-control">
 							<option>Please Select</option>
 							<option value="omnivore">Omnivore</option>
 							<option value="vegetarian">Vegetarian</option>
@@ -88,13 +91,13 @@ const ParticipantRow = (props) => {
 			<div className="form-group">
 				<label className="col-sm-3 control-label">Additional dietry infomation or allergies:</label>
 				<div className="col-sm-9">
-					<textarea value={props.dietExtra} onChange={props.update("dietExtra")} className="form-control" rows="2" ></textarea>
+					<textarea value={props.dietExtra || ''} onChange={props.update("dietExtra")} className="form-control" rows="2" ></textarea>
 				</div>
 			</div>
 			<div className="form-group">
 				<label className="col-sm-3 control-label">Additional medical infomation &amp; medication taken:</label>
 				<div className="col-sm-9">
-					<textarea className="form-control" value={props.medical} onChange={props.update("medical")} rows="2" ></textarea>
+					<textarea className="form-control" value={props.medical || ''} onChange={props.update("medical")} rows="2" ></textarea>
 				</div>
 			</div>
 		</form>
