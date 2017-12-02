@@ -4,6 +4,8 @@ var o = require('../orm.js');
 var User = require('./user.js');
 var Event = require('./event.js');
 var Participant = require('./participant.js');
+var Organisation = require('./organisation.js');
+var Village = require('./village.js');
 
 var Booking = o.define('booking', {
 	userName: {
