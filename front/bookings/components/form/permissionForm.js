@@ -53,7 +53,7 @@ export default class PermissionForm extends React.Component {
 					<h4>Additional infomation</h4>
 				</div>
 				<div className="form-group">
-					<label className="col-sm-2 control-label">Anything else we need to know:<br /></label>
+					<label className="col-sm-2 control-label">Anything else we need to know? And would you like to come on the train?:<br /></label>
 					<div className="col-sm-10">
 						<textarea value={this.props.note || ''} onChange={this.updateNote} className="form-control" rows="2" ></textarea>
 					</div>
