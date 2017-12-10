@@ -1,8 +1,7 @@
 var extend = require('util')._extend;
 var log = require('./logging.js');
 
-var User = require('./models/user.js');
-var Role = require('./models/role.js');
+var db = require('./orm.js')
 
 var auth = {};
 
@@ -34,7 +33,7 @@ auth.getUser = function(req, res) {
 
 auth.doLogout = function(req, res) {
 	req.logout();
-	User.findOne({where:{userName:'Guest'},include:[{model:Role}]})
+	db.user.findOne({where:{userName:'Guest'},include:[{model:db.role}]})
 		.then((user) => {
 			req.user = user.get({plain:true});
 			var resUser = extend({}, req.user);

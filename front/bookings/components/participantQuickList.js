@@ -1,5 +1,5 @@
 import React from 'react'
-import { StickyContainer, Sticky } from 'react-sticky';
+//import { StickyContainer, Sticky } from 'react-sticky';
 import W from '../../../shared/woodcraft.js'
 
 W.reverse();
@@ -18,16 +18,12 @@ export default class ParticipantsList extends React.Component {
 			</div>);
 		});
 
-		return (<StickyContainer className="hidden-sm-down col-md-2" style={{ alignItems: "stretch" }}>
-			<Sticky>
-				<div>
-					<div style={{ height: "100px" }}>
-						<h3>Participants Added: {list.length}</h3>
-						{groups}
-					</div>
-				</div>
-			</Sticky>
-		</StickyContainer>)
+		return (<div className="hidden-sm-down col-md-2" style={{ alignItems: "stretch" }}>
+				<div style={{ position:'sticky', top: '20px'}}>
+					<h3>Participants Added: {list.length}</h3>
+					{groups}
+			</div>
+		</div>)
 	}
 
 }	

@@ -14,7 +14,7 @@ export class Config extends React.Component {
 
 	update(e) {
 		const fee = { amount: e.target.value }
-		this.props.onChange(fee);
+		this.props.update(fee);
 	}
 
 	render() {

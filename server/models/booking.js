@@ -1,61 +1,55 @@
-var Sequelize = require('sequelize');
-var o = require('../orm.js');
 
-var User = require('./user.js');
-var Event = require('./event.js');
-var Participant = require('./participant.js');
-var Organisation = require('./organisation.js');
-var Village = require('./village.js');
+module.exports = (sequelize, DataTypes) => {
+	var booking = sequelize.define('booking', {
 
-var Booking = o.define('booking', {
-	userName: {
-		type: Sequelize.STRING
-	},
-	userEmail: {
-		type: Sequelize.TEXT,
-		unique: 'userEvent' //each booking must have a unique event/email combo
-	},
-	userContact: {
-		type: Sequelize.TEXT
-	},
-	paymentType: {
-		type: Sequelize.STRING
-	},
-	paid: {
-		type: Sequelize.BOOLEAN,
-		default: false
-	},
-	note: {
-		type: Sequelize.TEXT
-	},
-	emergencyName: {
-		type: Sequelize.TEXT
-	},
-	emergencyPhone: {
-		type: Sequelize.TEXT
-	},
-	guestUUID: {
-		type: Sequelize.UUID
+		userName: {
+			type: DataTypes.STRING
+		},
+		userEmail: {
+			type: DataTypes.TEXT,
+			unique: 'userEvent' //each booking must have a unique event/email combo
+		},
+		userContact: {
+			type: DataTypes.TEXT
+		},
+		paymentType: {
+			type: DataTypes.STRING
+		},
+		paid: {
+			type: DataTypes.BOOLEAN,
+			default: false
+		},
+		note: {
+			type: DataTypes.TEXT
+		},
+		emergencyName: {
+			type: DataTypes.TEXT
+		},
+		emergencyPhone: {
+			type: DataTypes.TEXT
+		},
+		guestUUID: {
+			type: DataTypes.UUID
+		}
+	});
+
+	booking.associate = models => {
+		models.booking.belongsTo(models.organisation);
+		models.booking.belongsTo(models.user);
+		models.booking.belongsTo(models.village)
+		models.booking.belongsTo(models.event, {
+			foreignKey: {
+				field: 'eventId',
+				allowNull: false,
+				unique: 'userEvent',
+			},
+			onDelete: 'cascade'
+		});
+		models.booking.hasMany(models.participant, {
+			foreignKey: {
+				allowNull: false,
+			}
+		});
 	}
-});
-
-Booking.Participant = Booking.hasMany(Participant, {
-	foreignKey: {
-		allowNull: false,
-	}
-});
-
-Booking.belongsTo(User);//this one can be null in case of guest booking
-
-Booking.belongsTo(Event, {
-	foreignKey: {
-		field: 'eventId',
-		allowNull: false,
-		unique: 'userEvent',
-	},
-
-	onDelete: 'cascade'
-});
-
-
-module.exports = Booking;
+	return booking
+}

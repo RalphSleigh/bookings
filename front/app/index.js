@@ -1,11 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import messages from '../messages'
 import user from '../user'
 import events from '../events'
 import bookings from '../bookings'
+
+import { withRouter } from 'react-router-dom';
 
 class App extends React.Component {
 
@@ -62,6 +64,6 @@ var VisibleApp = connect(
 	mapDispatchToProps
 )(App);
 
-export default VisibleApp;
+export default withRouter(VisibleApp);
 
 

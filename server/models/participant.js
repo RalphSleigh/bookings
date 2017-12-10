@@ -1,25 +1,31 @@
-var Sequelize = require('sequelize');
-var o = require('../orm.js');
 
-//var User = require('./user.js');
-//var Event = require('./event.js');
 
-var Participant = o.define('participant', {
+module.exports = (sequelize, DataTypes) => {
+	var participant = sequelize.define('participant', {
   name: {
-    type: Sequelize.STRING
+    type:  DataTypes.STRING
   },
   age: {
-    type: Sequelize.STRING
+    type:  DataTypes.STRING
   },
   diet: {
-    type: Sequelize.STRING
+    type:  DataTypes.STRING
   },
   dietExtra: {
-    type: Sequelize.TEXT
+    type:  DataTypes.TEXT
   },
   medical: {
-    type: Sequelize.TEXT
+    type:  DataTypes.TEXT
+  },
+  days: {
+	type:  DataTypes.INTEGER
   }
 });
 
-module.exports = Participant;
+participant.associate = models => {
+	models.participant.belongsTo(models.booking)
+}
+
+return participant
+
+}

@@ -1,16 +1,13 @@
-import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { connectedReduxRedirect } from 'redux-auth-wrapper/history3/redirect'
+import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 
 import * as P from '../../shared/permissions.js'
 
-export const viewBookingCheck = UserAuthWrapper({
+export const viewBookingCheck = connectedReduxRedirect({
 	authSelector: (state, props) => {
-
-		return { user: state.get("User"), booking: state.getIn(["Bookings", "bookings", props.params.bookingId]) }
+		if (props.booking === undefined) return true;
+		return P.viewBooking(state.get("User").toJS(), state.getIn(["Bookings", "bookings", props.match.params.bookingId]).toJS());
 	},
-	predicate: (data) => {
-		if (data.booking === undefined) return true;
-		return P.viewBooking(data.user.toJS(), data.booking.toJS());
-	},
-	failureRedirectPath: "/user",
+	redirectPath: "/user",
 	wrapperDisplayName: "View Booking check"
 });

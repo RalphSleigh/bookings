@@ -1,80 +1,50 @@
-import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { connectedReduxRedirect } from 'redux-auth-wrapper/history3/redirect'
+import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 
 import * as P from '../../shared/permissions.js'
 
-export const editEventCheck = UserAuthWrapper({
-	authSelector: (state, props) => {
-
-		return { user: state.get("User"), event: state.getIn(["Events", props.params.eventId]) }
+export const editEventCheck = connectedReduxRedirect({
+	authenticatedSelector: (state, props) => {
+		if (props.event === undefined) return true;
+		return P.editEvent(state.get("User").toJS(),state.getIn(["Events", props.match.params.eventId]).toJS());
 	},
-	predicate: (data) => {
-		if (data.event === undefined) return true;
-		return P.editEvent(data.user.toJS(), data.event.toJS());
-	},
-	failureRedirectPath: "/user",
+	redirectPath: "/user",
 	wrapperDisplayName: "Edit Event Check"
 });
 
-export const createEventCheck = UserAuthWrapper({
-	authSelector: (state, props) => {
-
-		return state.get("User")
+export const createEventCheck = connectedReduxRedirect({
+	authenticatedSelector: (state, props) => {
+		return P.createEvent(state.get("User").toJS());
 	},
-	predicate: (data) => {
-
-		return P.createEvent(data.toJS());
-	},
-	failureRedirectPath: "/user",
+	redirectPath: "/user",
 	wrapperDisplayName: "Create Event Check"
 });
 
-export const showEditLink = UserAuthWrapper({
-	authSelector: (state, props) => {
-
-		return { user: state.get("User"), event: props.event }
+export const showEditLink = connectedAuthWrapper({
+	authenticatedSelector: (state, props) => {
+		return P.editEvent(state.get("User").toJS(), props.event);
 	},
-	predicate: (data) => {
-		return P.editEvent(data.user.toJS(), data.event);
-	},
-	FailureComponent: null,
-	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
 	wrapperDisplayName: "showEventEditLink"
 });
 
-export const showCreateLink = UserAuthWrapper({
-	authSelector: (state) => {
-		return state.get("User")
+export const showCreateLink = connectedAuthWrapper({
+	authenticatedSelector: (state) => {
+		return P.createEvent(state.get("User").toJS());
 	},
-	predicate: (data) => {
-		return P.createEvent(data.toJS());
-	},
-	FailureComponent: null,
-	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
 	wrapperDisplayName: "showEventCreateLink"
 });
 
-export const showBookLink = UserAuthWrapper({
-	authSelector: (state, props) => {
-		return { user: state.get("User"), event: props.event };
+export const showBookLink = connectedAuthWrapper({
+	authenticatedSelector: (state, props) => {
+		return P.bookEvent(state.get("User").toJS(), props.event);
 	},
-	predicate: (data) => {
-		return P.bookEvent(data.user.toJS(), data.event);
-	},
-	FailureComponent: null,
-	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
 	wrapperDisplayName: "showBookLink"
 });
 
-export const showManageLink = UserAuthWrapper({
-	authSelector: (state, props) => {
-
-		return { user: state.get("User"), event: props.event }
+export const showManageLink = connectedAuthWrapper({
+	authenticatedSelector: (state, props) => {
+		if (props.event === undefined) return true;
+		return P.manageEvent(state.get("User").toJS(), props.event);
 	},
-	predicate: (data) => {
-		if (data.event === undefined) return true;
-		return P.manageEvent(data.user.toJS(), data.event);
-	},
-	FailureComponent: null,
-	propMapper: ({ redirect, authData, isAuthenticating, failureRedirectPath, event, ...otherProps }) => ({ ...otherProps }),
 	wrapperDisplayName: "showManageLink"
 });

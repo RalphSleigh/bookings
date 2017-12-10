@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 
 import event from '../../events'
@@ -44,7 +44,7 @@ class MyBookingPage extends React.Component {
 
 const mapStateToProps = (state, props) => {
 				let User = state.get("User");
-	let Event = state.getIn(["Events", props.params.eventId.toString()]);
+	let Event = state.getIn(["Events", props.match.params.eventId.toString()]);
 
 	//find the booking, sources:
 	//1) currentBooking if set,

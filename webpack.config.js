@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path')
 
 
 var PROD = (process.env.NODE_ENV === 'production')
@@ -10,7 +11,7 @@ module.exports = {
 		vendor: ['babel-polyfill', 'whatwg-fetch', 'react', 'redux', 'react-redux', 'react-dom', 'immutable', 'moment', 'redux-auth-wrapper', 'lodash/cloneDeep', 'lodash/map', 'react-markdown', 'react-table','react-router']
 	},
 	output: {
-		path: 'public',
+		path: path.resolve(__dirname, 'public'),
 		filename: 'bundle.js',
 	},
 	module: {
@@ -25,7 +26,7 @@ module.exports = {
 			},
 			{
 				test: /\.json$/,
-				loader: 'json'
+				loader: 'json-loader'
 			}
 		],
 	},

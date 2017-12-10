@@ -1,16 +1,13 @@
-import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { connectedReduxRedirect } from 'redux-auth-wrapper/history3/redirect'
+import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 
 import * as P from '../../shared/permissions.js'
 
-export const manageEventCheck = UserAuthWrapper({
-	authSelector: (state, props) => {
-
-		return { user: state.get("User"), event: state.getIn(["Events", props.params.eventId]) }
+export const manageEventCheck = connectedReduxRedirect({
+	authenticatedSelector: (state, props) => {
+		if (props.event === undefined) return true;
+		return P.manageEvent(state.get("User").toJS(), state.getIn(["Events", props.match.params.eventId]));
 	},
-	predicate: (data) => {
-		if (data.event === undefined) return true;
-		return P.manageEvent(data.user.toJS(), data.event.toJS());
-	},
-	failureRedirectPath: "/user",
+	redirectPath: "/user",
 	wrapperDisplayName: "Manage Event Check"
 });

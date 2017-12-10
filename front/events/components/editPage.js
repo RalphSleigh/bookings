@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import EventForm from './eventForm.js'
 
 import { getEvent, saveEvent, deleteEvent } from '../actions.js'
@@ -29,7 +29,7 @@ class EditPage extends React.Component {
 }
 
 const mapStateToProps = (state, props) => {
-	var Event = state.getIn(["Events", props.params.eventId]);
+	var Event = state.getIn(["Events", props.match.params.eventId]);
 	return { Event }
 }
 

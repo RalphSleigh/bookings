@@ -1,54 +1,77 @@
-var Sequelize = require('sequelize');
-var JsonField = require('sequelize-json');
-var Organisation = require('./organisation.js');
 
-var o = require('../orm.js');
 
-var User = require('./user.js');
+module.exports = (sequelize, DataTypes) => {
+	var event = sequelize.define('event', {
 
-var Event = o.define('event', {
-	name: {
-		type: Sequelize.STRING
-	},
-	description: {
-		type: Sequelize.TEXT
-	},
-	startDate: {
-		type: Sequelize.DATE
-	},
-	endDate: {
-		type: Sequelize.DATE
-	},
-	bookingDeadline: {
-		type: Sequelize.DATE
-	},
-	requireDistrict: {
-		type: Sequelize.BOOLEAN
-	},
-	bookingPolicy: {
-		type: Sequelize.ENUM,
-		values: ['guest', 'registered', 'approved']
-	},
-	feeModel: {
-		type: Sequelize.ENUM,
-		values: ['free', 'flat', 'ealing']
-	},
-	feeData: JsonField(o, "Event", "feeData"),
-	paymentTypes: JsonField(o, "Event", "paymentTypes"),
-	paymentInfo: {
-		type: Sequelize.TEXT
-	},
-	customQuestions: JsonField(o, "Event", "feeData"),
-});
+		name: {
+			type: DataTypes.STRING
+		},
+		description: {
+			type: DataTypes.TEXT
+		},
+		startDate: {
+			type: DataTypes.DATE
+		},
+		endDate: {
+			type: DataTypes.DATE
+		},
+		bookingDeadline: {
+			type: DataTypes.DATE
+		},
+		requireDistrict: {
+			type: DataTypes.BOOLEAN
+		},
+		organisationsEnabled: {
+			type: DataTypes.BOOLEAN
+		},
+		partialDates: {
+			type: DataTypes.ENUM,
+			values: ['whole', 'presets']
+		},
+		partialDatesData: {
+			type: DataTypes.JSON
+		},
+		bookingPolicy: {
+			type: DataTypes.ENUM,
+			values: ['guest', 'registered', 'approved']
+		},
+		feeModel: {
+			type: DataTypes.ENUM,
+			values: ['free', 'flat', 'ealing']
+		},
+		feeData: {
+			type: DataTypes.JSON
+		},
+		paymentTypes: {
+			type: DataTypes.JSON
+		},
+		paymentInfo: {
+			type: DataTypes.TEXT
+		},
+		customQuestions: {
+			type: DataTypes.JSON
+		}
+	});
 
-Event.belongsTo(User)
-
-Event.Organisation = Event.hasMany(Organisation, {
-	foreignKey: {
-		allowNull: false,
+	event.associate = models => {
+		models.event.hasMany(models.organisation)
+		models.event.hasMany(models.booking)
+		models.event.hasMany(models.village)
+		models.event.belongsTo(models.user)
 	}
-});
-//do the thingie
+
+return event
+}
 
 
-module.exports = Event;
+
+	/*
+	Event.Organisation = Event.hasMany(Organisation, {
+		foreignKey: {
+			allowNull: false,
+		}
+	});
+	*/
+	//do the thingie
+
+

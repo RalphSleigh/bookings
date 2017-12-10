@@ -1,11 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import Immutable from 'immutable'
+import { Route, Switch, NavLink } from 'react-router-dom';
 
 import bookings from '../../bookings'
 import { manageEventCheck } from '../permission.js'
 import { togglePaid } from '../actions.js'
+
+import BookingsTab from './bookings.js'
+import ParticipantsTab from './participants.js'
+import KpTab from './kp.js'
 
 
 
@@ -20,7 +25,7 @@ class ManageContainerPage extends React.Component {
 	}
 
 	componentWillMount() {
-		this.props.getEventBookings(this.props.params.eventId);
+		this.props.getEventBookings(this.props.match.params.eventId);
 	}
 
 	render() {
@@ -36,16 +41,24 @@ class ManageContainerPage extends React.Component {
 			<div className="col-sm-12">
 				<h3>Report for {event.name}</h3>
 				<ul className="nav nav-tabs">
-					<NavTab to={"/event/" + this.props.params.eventId + "/manage"}>Participants</NavTab>
-					<NavTab to={"/event/" + this.props.params.eventId + "/manage/bookings"}>Bookings</NavTab>
-					<NavTab to={"/event/" + this.props.params.eventId + "/manage/kp"}>KP</NavTab>
+					<CustomTab activeOnlyWhenExact to={"/event/" + this.props.match.params.eventId + "/manage"} label="Participants" />
+					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/bookings"} label="Bookings"/>
+					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/kp"} label="KP" />
 				</ul>
-				{React.cloneElement(this.props.children, {
-					Event: this.props.Event,
-					Bookings: this.props.Bookings,
-					Participants: this.props.Participants,
-					togglePaid: this.props.togglePaid
-				})}
+				<Switch>
+					<Route exact path="/event/:eventId/manage">
+						<ParticipantsTab {...this.props} />
+					</Route>
+					<Route path="/event/:eventId/manage/participants">
+						<ParticipantsTab {...this.props} />
+					</Route>
+					<Route path="/event/:eventId/manage/bookings">
+						<BookingsTab {...this.props} />
+					</Route>
+					<Route path="/event/:eventId/manage/kp">
+						<KpTab {...this.props} />
+					</Route>
+				</Switch>
 			</div>
 		</div>)
 	}
@@ -55,7 +68,7 @@ class ManageContainerPage extends React.Component {
 //we could still have no bookings..
 const mapStateToProps = (state, props) => {
 
-	const Event = state.getIn(["Events", props.params.eventId]);
+	const Event = state.getIn(["Events", props.match.params.eventId]);
 	const Bookings = state.getIn(["Bookings", "bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();
 	const Participants = Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
 	return { Event, Bookings, Participants };
@@ -73,23 +86,18 @@ var VisibleManageContainerPage = connect(
 
 export default VisibleManageContainerPage;
 
-class NavTab extends React.Component {
+const CustomTab = ({ label, to, activeOnlyWhenExact}) => (
+	<Route
+		path={to}
+		exact={activeOnlyWhenExact}
+		children={({ match }) => (
+			<li className={match ? "active" :  ""}>
+				<Link to={to}>
+					{label}
+				</Link>
+			</li>
+		)}
+	/>
+);
 
-	constructor(props) {
-		super(props);
-	}
 
-	render() {
-		var isActive = this.context.router.isActive(this.props.to, true);
-		var className = isActive ? 'active' : '';
-		var link = (
-			<Link onlyActiveOnIndex={true} {...this.props} />
-		);
-		return <li className={className}>{link}</li>;
-	}
-
-};
-
-NavTab.contextTypes = {
-	router: React.PropTypes.object
-};

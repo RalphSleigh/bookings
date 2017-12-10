@@ -1,17 +1,34 @@
 var Sequelize = require('sequelize');
+var fs = require('fs');
+var path = require('path');
 
-var sequelize = new Sequelize('bookings', null, null, {dialect:'sqlite', storage: 'database.sqlite', 
-logging:false
+
+var sequelize = new Sequelize('bookings', null, null, {
+	dialect: 'sqlite', storage: 'database.sqlite',
+	logging: console.log
 });
 
-sequelize
-  .authenticate()
-  .then(function(err) {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(function (err) {
-    console.log('Unable to connect to the database:', err);
-  });
+var db = {};
+var modelsDir = path.join(__dirname, 'models')
 
-module.exports = sequelize
 
+fs
+	.readdirSync(modelsDir)
+	.filter(file => {
+		return (file.indexOf('.') !== 0);
+	})
+	.forEach(file => {
+		var model = sequelize['import'](path.join(modelsDir, file));
+		db[model.name] = model;
+	});
+
+Object.keys(db).forEach(modelName => {
+	if (db[modelName].associate) {
+		db[modelName].associate(db);
+	}
+});
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;

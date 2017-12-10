@@ -2,160 +2,166 @@ const readline = require('readline');
 var bcrypt = require('bcrypt');
 var faker = require('faker/locale/en_GB');
 
-var User = require('./models/user.js');
-var Event = require('./models/event.js');
-var Role = require('./models/role.js');
-var Booking = require('./models/booking.js');
-var Participant = require('./models/participant.js');
-var o = require('./orm.js');
 
-if(process.argv && process.argv[2] === "sync") {
+var db = require('./orm.js');
+
+console.log(db.sequelize)
+
+if (process.argv && process.argv[2] === "sync") {
 	console.log("syncing");
 
 	const rl = readline.createInterface({
- 		input: process.stdin,
- 		output: process.stdout});
+		input: process.stdin,
+		output: process.stdout
+	});
 
 	const question = q => {
-  		return new Promise((resolve) => {
-    		rl.question(q, answer => resolve(answer))
-  		});
+		return new Promise((resolve) => {
+			rl.question(q, answer => resolve(answer))
+		});
 	}
 
 	data = {};
 
 	question("Admin account Username: ")
-	.then(a => {
-		data.username = a;
-		return question("Admin account e-mail: ")
-	}).then(a => {
-		data.email = a;
-		return question("Admin account password: ")
-	}).then(a => {
-		rl.close();
-		data.password = a;
-		return o.sync({force: true})
-	}).then(() => User.create({
-    	userName: 'Guest',
-    	password: '',
-	 	email: ''
-	})).then(() => Promise.all([Role.create({name:"admin"}),User.create({
-    	userName: data.username,
-		password: bcrypt.hashSync(data.password, bcrypt.genSaltSync()), 
-		email: data.email}
-	)])).then(results => {
-		results[1].addRole(results[0]);
-	});
+		.then(a => {
+			data.username = a;
+			return question("Admin account e-mail: ")
+		}).then(a => {
+			data.email = a;
+			return question("Admin account password: ")
+		}).then(a => {
+			rl.close();
+			data.password = a;
+			return db
+		}).then(() => user.create({
+			userName: 'Guest',
+			password: '',
+			email: ''
+		})).then(
+		() => Promise.all([db.role.create({ name: "admin" }), db.user.create({
+			userName: data.username,
+			password: bcrypt.hashSync(data.password, bcrypt.genSaltSync()),
+			email: data.email
+		}
+		)]))
 
-} else if(process.argv && process.argv[2] === "seed") {
-	
+		.then(results => {
+			results[1].addrole(results[0]);
+		});
+
+} else if (process.argv && process.argv[2] === "seed") {
+
 	console.log("seeding");
 
-	o.sync({force: true})
-	.then(() => User.create({
-  	  	userName: 'Guest',
-   	 	password: '',
-	  	email: ''
-	})).then(() => Promise.all([Role.create({name:"admin"}),User.create({
-    	userName: 'Ralph',
-    	password: '$2a$10$Eg7ZnRfw9s1H/rrYqzNZ5exaYkhKhQvTN3TNhsm5CluiEbhcv5EL6',
-		email: 'ralph.sleigh@woodcraft.org.uk',
-	})])).then(results => {
-		results[1].addRole(results[0]);
-		return results[1];
-	}).then(user => Promise.all([Event.create({
-    			name: 'Ralphs Event',
-   				description:
-`This a cool event for cool people
+	db.user.create({
+		userName: 'Guest',
+		password: '',
+		email: 'example@example.com'
+	}).then(
+		() => db.user.create({
+			userName: 'Ralph',
+			password: '$2a$10$Eg7ZnRfw9s1H/rrYqzNZ5exaYkhKhQvTN3TNhsm5CluiEbhcv5EL6',
+			email: 'ralph.sleigh@woodcraft.org.uk',
+		}))
+		.then(user => {
+			return db.role.create({ name: "admin", userId: user.id})})
+		.then(role => Promise.all([db.event.create({
+			name: 'Ralphs Event',
+			description:
+				`This a cool event for cool people
 
 Its free!	
 `,
-				startDate: new Date("2017-8-8"),
-				endDate: new Date("2017-8-10"),
-				bookingDeadline: new Date("2017-8-4"),
-				allowGuestBookings:false,
-				userId: user.id,
-				feeModel:"free",
-				feeData:{},
-				paymentTypes:["Cash","Cheque","Bank Transfer"], 
-				paymentInfo:"Ho Ho Ho"}),
-			Event.create({
-    			name: 'This is a large event with many people',
-   				description:
-`This event has several hundred people booked already
+			startDate: new Date("2017-8-8"),
+			endDate: new Date("2017-8-10"),
+			bookingDeadline: new Date("2017-8-4"),
+			allowGuestBookings: false,
+			userId: role.userId,
+			feeModel: "free",
+			feeData: {},
+			paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
+			paymentInfo: "Ho Ho Ho"
+		}),
+		db.event.create({
+			name: 'This is a large event with many people',
+			description:
+				`This event has several hundred people booked already
 
 It costs £55
 `,
-				startDate: new Date("2017-10-8"),
-				endDate: new Date("2017-10-10"),
-				bookingDeadline: new Date("2017-10-4"),
-				allowGuestBookings:true,
-				userId: user.id,
-				feeModel:"flat",
-				feeData:{amount:55},
-				paymentTypes:["Cash","Cheque","Bank Transfer"],
-				paymentInfo:`plz give us *all* teh monies`}),
-			Event.create({
-    			name: 'Past deadline',
-   				description:
-`This event is past its booking deadline, but nohing happens yet
+			startDate: new Date("2017-10-8"),
+			endDate: new Date("2017-10-10"),
+			bookingDeadline: new Date("2017-10-4"),
+			allowGuestBookings: true,
+			userId: role.userId,
+			feeModel: "flat",
+			feeData: { amount: 55 },
+			paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
+			paymentInfo: `plz give us *all* teh monies`
+		}),
+		db.event.create({
+			name: 'Past deadline',
+			description:
+				`This event is past its booking deadline, but nohing happens yet
 
 It also demonstrates the Ealing donation structure`,
-				startDate: new Date("2016-4-8"),
-				endDate: new Date("2016-4-10"),
-				bookingDeadline: new Date("2016-11-4"),
-				allowGuestBookings:false,
-				userId: user.id,
-				feeModel: "ealing",
-				feeData:{amount:35},
-				paymentTypes:["Cheque","Bank Transfer"],
-				paymentInfo:`plz give us *all* teh monies`})
-	])).then(events => {
-		let bookings = [];
-		for(let i = 0; i < 20; i++) {
-			bookings.push(Booking.create({
-				userName:faker.name.findName(),
-				userEmail:faker.internet.email(),
-				userContact:faker.phone.phoneNumber(),
-				paymentType:getRandomPaymentType(),
-				guestUUID:faker.random.uuid(),
-				eventId:events[1].id
-			}))
-		}
-		return Promise.all(bookings);
-	}).then(bookings => {
-		bookings.map(b => {
-			const num = getRandomInt(15, 30)
-			for(let i = 0; i < num; i++) {
-				Participant.create({
-					name:faker.name.firstName()+' '+faker.name.lastName(),
-					age:getRandomInt(5,20),
-					diet:getRandomDiet(),
-					dietExtra:getRandomDietExtra(),
-					medical:getRandomMedical(),
-					bookingId:b.id
-				});
+			startDate: new Date("2016-4-8"),
+			endDate: new Date("2016-4-10"),
+			bookingDeadline: new Date("2016-11-4"),
+			allowGuestBookings: false,
+			userId: role.userId,
+			feeModel: "ealing",
+			feeData: { amount: 35 },
+			paymentTypes: ["Cheque", "Bank Transfer"],
+			paymentInfo: `plz give us *all* teh monies`
+		})
+		])).then(events => {
+			let bookings = [];
+			for (let i = 0; i < 20; i++) {
+				bookings.push(db.booking.create({
+					userName: faker.name.findName(),
+					userEmail: faker.internet.email(),
+					userContact: faker.phone.phoneNumber(),
+					paymentType: getRandomPaymentType(),
+					guestUUID: faker.random.uuid(),
+					eventId: events[1].id
+				}))
 			}
+			return Promise.all(bookings);
+		}).then(bookings => {
+			bookings.map(b => {
+				const num = getRandomInt(15, 30)
+				for (let i = 0; i < num; i++) {
+					db.participant.create({
+						name: faker.name.firstName() + ' ' + faker.name.lastName(),
+						age: getRandomInt(5, 20),
+						diet: getRandomDiet(),
+						dietExtra: getRandomDietExtra(),
+						medical: getRandomMedical(),
+						bookingId: b.id
+					});
+				}
+			});
 		});
-	});
 
 } else {
 	console.log("please specify sync or seed");
 }
 
 function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function getRandomDiet() {
-	const diets = ["omnivore","omnivore","omnivore","vegetarian","vegetarian","vegan"]
+	const diets = ["omnivore", "omnivore", "omnivore", "vegetarian", "vegetarian", "vegan"]
 	return diets[getRandomInt(0, 6)]
 }
 
 function getRandomDietExtra() {
-	const extras =[
+	const extras = [
 		"Allergic to nuts",
 		"Eats plain food only",
 		"No tomatoes please",
@@ -171,11 +177,11 @@ function getRandomDietExtra() {
 		"No rabbit food please",
 		"NO NUTS! THEY WILL DIE"
 	];
-	return Math.random() > 0.95 ? extras[getRandomInt(0,extras.length)] : "";
+	return Math.random() > 0.95 ? extras[getRandomInt(0, extras.length)] : "";
 }
 
 function getRandomMedical() {
-	const medical =[
+	const medical = [
 		"Asthma",
 		"Occasional migranes, takes Aspirin when needed",
 		"server allergies, carries epipen",
@@ -190,10 +196,10 @@ function getRandomMedical() {
 		"Moody"
 
 	];
-	return Math.random() > 0.95 ? medical[getRandomInt(0,medical.length)] : "";
+	return Math.random() > 0.95 ? medical[getRandomInt(0, medical.length)] : "";
 }
 
 function getRandomPaymentType() {
-	const types = ["Cheque","Cheque","Bank Transfer","Bank Transfer","Bank Transfer","Cash"]
+	const types = ["Cheque", "Cheque", "Bank Transfer", "Bank Transfer", "Bank Transfer", "Cash"]
 	return types[getRandomInt(0, 6)]
 }

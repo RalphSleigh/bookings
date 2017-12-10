@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 import fetch from '../fetch.js'
-import { browserHistory } from 'react-router'
+import { push } from 'react-router-redux'
 import m from '../messages'
 
 //Actions
@@ -47,7 +47,7 @@ export const saveEvent = event => {
 			.then(j => {
 				dispatch(updateEvent(j));
 				dispatch(m.actions.setSuccess("Event Updated"));
-				browserHistory.push('/');
+				dispatch(push('/'));
 			}).catch(r => console.log(r));
 	}
 
@@ -62,7 +62,7 @@ export const createEvent = event => {
 					data: j
 				});
 				dispatch(m.actions.setSuccess("Event Created"));
-				browserHistory.push('/');
+				dispatch(push('/'));
 			}).catch(r => {
 				console.log(r);
 			});
@@ -74,7 +74,7 @@ export const deleteEvent = event => {
 		fetch('/api/event/delete', "POST", event)
 			.then(() => {
 				dispatch(m.actions.setSuccess("Event Deleted"));
-				browserHistory.push('/');
+				dispatch(push('/'));
 			})
 	}
 }

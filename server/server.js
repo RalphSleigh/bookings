@@ -8,10 +8,12 @@ var path = require('path');
 var auth = require('./auth.js');
 var events = require('./api/events.js');
 var bookings = require('./api/bookings.js');
-var User = require('./models/user.js');
-var Role = require('./models/role.js');
+
+var db = require('./orm.js')
+
 var passport = require('./passportConfig.js');
-var email = require('./email.js');
+
+
 
 var P = require('./permission.js')
 
@@ -116,7 +118,7 @@ function ensureUser (req, res, next) {
 		req.user = guestUser;
 		return next();
 	}
-	User.findOne({where:{userName:'Guest'},include:[{model:Role}]})
+	db.user.findOne({where:{userName:'Guest'},include:[{model:db.role}]})
 		.then((user) => {
 			guestUser = req.user = user.get({plain:true});
 		})

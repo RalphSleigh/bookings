@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { browserHistory } from 'react-router'
 
 //import event from '../../events'
@@ -63,7 +63,7 @@ const ParticipantRow = props => <tr><td>{props.name}</td><td>{props.age}</td><td
 
 const mapStateToProps = (state, props) => {
 	let User = state.get("User");
-	let Event = state.getIn(["Events", props.params.eventId.toString()]);
+	let Event = state.getIn(["Events", props.match.params.eventId.toString()]);
 	let Booking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"));
 	return { User, Event, Booking }
 }

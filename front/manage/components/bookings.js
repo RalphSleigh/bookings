@@ -1,7 +1,7 @@
 import React from 'react'
 //import { connect } from 'react-redux'
 //import Immutable from 'immutable'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import ReactTable from 'react-table'
 import Moment from 'moment'
 import csv from 'csv-file-creator'
@@ -87,7 +87,7 @@ export default class Bookings extends React.Component {
 			minWidth: 50,
 			accessor: b => { return { id: b.id, paid: b.paid } },
 			header: "Mark Paid",
-			render: props => {
+			Cell: props => {
 				return (<input type="checkbox" checked={props.value.paid} onChange={this.markPaid(props.value.id)} />)
 			}
 		},

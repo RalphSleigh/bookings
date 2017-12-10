@@ -1,5 +1,5 @@
 import fetch from '../fetch.js'
-import { browserHistory } from 'react-router'
+import { push } from 'react-router-redux'
 import m from '../messages'
 
 export const UPDATE_USER = 'USER_UPDATE_USER'
@@ -17,7 +17,7 @@ export const doLogin = (credentials) => {
 			.then(j => {
 				dispatch(updateUser(j));
 				dispatch(m.actions.setSuccess("Logged in"));
-				browserHistory.push('/');
+				dispatch(push('/'));
 			},
 			e => {
 				if (e.status === 401) dispatch(m.actions.setWarning("Invalid e-mail or password"));
@@ -31,7 +31,7 @@ export const doLogout = () => {
 			.then(j => {
 				dispatch(updateUser(j));
 				dispatch(m.actions.setSuccess("Logged out"));
-				browserHistory.push('/');
+				dispatch(push('/'));
 			});
 	};
 };

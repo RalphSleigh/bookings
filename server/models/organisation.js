@@ -1,13 +1,17 @@
-var Sequelize = require('sequelize');
-var o = require('../orm.js');
-var Event = require('./event.js')
 
-var Organisation = o.define('organisation', {
-  name: {
-    type: Sequelize.STRING
-  }
-});
+module.exports = (sequelize, DataTypes) => {
+	var organisation = sequelize.define('organisation', {
+		name: {
+			type: DataTypes.STRING
+		}
+	});
 
-Organisation.belongsTo(Event);
+	organisation.associate = models => {
+		models.organisation.belongsTo(models.event)
+		models.organisation.hasMany(models.booking)
+		models.organisation.hasMany(models.role)
+	}
 
-module.exports = Organisation;
+	return organisation
+}
+

@@ -1,17 +1,17 @@
-var Sequelize = require('sequelize');
-var o = require('../orm.js');
-var Event = require('./event.js')
-var Organisation = require('./organisation.js')
-var Village = require('./village.js')
 
-var Role = o.define('role', {
-  name: {
-    type: Sequelize.STRING
-  },
-});
+module.exports = (sequelize, DataTypes) => {
+	var role = sequelize.define('role', {
+		name: {
+			type: DataTypes.STRING
+		},
+	});
 
-Role.belongsTo(Event);
-Role.belongsTo(Organisation);
-Role.belongsTo(Village);
+	role.associate = models => {
+		models.role.belongsTo(models.user)
+		models.role.belongsTo(models.event)
+		models.role.belongsTo(models.organisation)
+		models.role.belongsTo(models.village)
+	}
 
-module.exports = Role;
+	return role
+}

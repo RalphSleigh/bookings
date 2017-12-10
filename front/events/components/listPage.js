@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { browserHistory } from 'react-router'
+import { Link, NavLink } from 'react-router-dom'
+import { push } from 'react-router-redux'
 import ReactMarkdown from 'react-markdown'
 import Moment from 'moment'
 
@@ -20,7 +20,7 @@ class EventList extends React.Component {
 
 	clickCreate(e) {
 		e.preventDefault();
-		browserHistory.push('/event/create');
+		dispatch(push('/event/create'));
 	}
 
 	render() {
@@ -40,10 +40,14 @@ class EventList extends React.Component {
 
 const CreateButton = showCreateLink((props) => <button className="btn btn-success" onClick={props.clickCreate}>New Event</button>)
 
-const EditLink = showEditLink(Link);
-const ManageLink = showManageLink(Link)
+
+
 
 const Event = (props) => {
+
+
+	const EditLink = showEditLink(() => <NavLink event={props} to={"/event/" + props.id + "/edit"}>Edit</NavLink>);
+	const ManageLink = showManageLink(() => <NavLink to={"/event/" + props.id + "/manage"}>Manage</NavLink>)
 
 	const bookLink = props => props.booking !== undefined ? <Link to={"/event/" + props.id + "/book"} className="btn btn-primary pull-right">Edit My Booking</Link> : <Link to={"/event/" + props.id + "/book"} className="btn btn-primary pull-right">Book</Link>
 
@@ -56,9 +60,9 @@ const Event = (props) => {
 			<h4>{Moment(props.startDate).format('Do')} - {Moment(props.endDate).format('Do MMMM YYYY')}</h4>
 			<ReactMarkdown escapeHtml={true} source={props.description} />
 			<div className="pull-right">
-				<EditLink event={props} to={"/event/" + props.id + "/edit"}>Edit</EditLink>
+				<EditLink event={props}/>
 				{" "}
-				<ManageLink event={props} to={"/event/" + props.id + "/manage"}>Manage</ManageLink>
+				<ManageLink event={props} />
 			</div>
 		</div>
 	</div>)

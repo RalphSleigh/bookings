@@ -1,18 +1,14 @@
-var Sequelize = require('sequelize');
-var o = require('../orm.js');
+module.exports = (sequelize, DataTypes) => {
+	var village = sequelize.define('village', {
+		name: {
+			type: DataTypes.STRING
+		}
+	});
 
-var Booking = require('./booking.js');
-
-var Village = o.define('village', {
-  name: {
-    type: Sequelize.STRING
-  }
-});
-
-Village.Booking = Village.hasMany(Booking, {
-	foreignKey: {
-		allowNull: false,
+	village.associate = models => {
+		models.village.belongsTo(models.event)
+		models.village.hasMany(models.role)
+		models.village.hasMany(models.booking)
 	}
-});
-
-module.exports = Village;
+	return village
+}

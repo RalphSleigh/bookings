@@ -15,7 +15,7 @@ class BookingLoader extends React.Component {
 	}
 
 	componentWillMount() {
-		this.props.getBooking(this.props.params.bookingId);
+		this.props.getBooking(this.props.match.params.bookingId);
 	}
 
 	render() {
@@ -37,7 +37,7 @@ class BookingLoader extends React.Component {
 
 const mapStateToProps = (state, props) => {
 
-	const Booking = state.getIn(["Bookings", "bookings", props.params.bookingId])
+	const Booking = state.getIn(["Bookings", "bookings", props.match.params.bookingId])
 
 	const Event = Booking ? state.getIn(["Events", Booking.get("eventId").toString()]) : undefined;
 	//const Bookings = state.getIn(["Bookings","bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();

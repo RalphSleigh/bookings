@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 
 import event from '../../events'
@@ -40,13 +40,13 @@ class CreatePage extends React.Component {
 
 
 	componentWillMount() {
-		if (this.props.Event === undefined) this.props.getEvent(this.props.params.eventId);
+		if (this.props.Event === undefined) this.props.getEvent(this.props.match.params.eventId);
 	}
 }
 
 const mapStateToProps = (state, props) => {
 	let User = state.get("User");
-	let Event = state.getIn(["Events", props.params.eventId]);
+	let Event = state.getIn(["Events", props.match.params.eventId]);
 	let QuickList = state.getIn(["Bookings", "quickList"]);
 	return { User, Event, QuickList }
 }

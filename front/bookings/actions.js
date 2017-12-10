@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 import fetch from '../fetch.js'
-import { browserHistory } from 'react-router'
+import { push } from 'react-router-redux'
 
 import events from '../events'
 import m from '../messages'
@@ -37,7 +37,7 @@ export const createBooking = booking => {
 			.then(j => {
 				dispatch(updateBooking(j));
 				dispatch(updateCurrentBooking(null))
-				browserHistory.push('/event/' + booking.eventId + '/book/thanks');
+				dispatch(push('/event/' + booking.eventId + '/book/thanks'));
 			})
 	}
 }
@@ -48,7 +48,7 @@ export const saveBooking = (booking, own) => {
 			.then(j => {
 				dispatch(updateBooking(j));
 				dispatch(updateCurrentBooking(null))
-				own ? browserHistory.push('/event/' + booking.eventId + '/book/thanks') : browserHistory.push('/event/' + booking.eventId + '/manage/bookings');
+				dispatch(own ? push('/event/' + booking.eventId + '/book/thanks') : push('/event/' + booking.eventId + '/manage/bookings'));
 			});
 	}
 }
@@ -58,7 +58,7 @@ export const cancelBooking = id => {
 		fetch('/api/booking/delete', "POST", { id: id })
 			.then(j => {
 				dispatch(deleteBooking(id.toString()));
-				browserHistory.push('/cancel');
+				dispatch(push('/cancel'));
 			});
 	}
 }
@@ -124,7 +124,7 @@ const deleteBooking = id => {
 }
 
 export const redirectFromThanks = eventId => dispatch => {
-	browserHistory.push('/event/' + eventId + '/book');
+	dispatch(push('/event/' + eventId + '/book'));
 } 
 
 export const UPDATE_CURRENT_BOOKING = "BOOKING_UPDATE_CURRENT_BOOKING"
