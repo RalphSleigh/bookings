@@ -19,10 +19,11 @@ export default (
 			<Route path="/event/create" component={events.createPage} />
 			<Route path="/event/:eventId">
 				<Switch>
-					<Route path="/event/:eventId/book" component={bookings.myBookingPage} />
-					<Route path="/event/:eventId/book/thanks" component={bookings.thanksPage} />
-					<Route path="/event/:eventId/edit" component={events.editPage} />
-					<Route path="/event/:eventId/manage" component={manage.containerPage /* Loads all Bookings for an event */} />
+                    <Route exact path="/event/:eventId/book" component={bookings.myBookingPage}/>
+                    <Route exact path="/event/:eventId/book/thanks" component={bookings.thanksPage}/>
+                    <Route exact path="/event/:eventId/edit" component={events.editPage}/>
+                    <Route exact path="/event/:eventId/manage"
+                           component={manage.containerPage /* Loads all Bookings for an event */}/>
 				</Switch>
 			</Route>
 			<Route path="/booking/:bookingId" component={bookings.loader}>

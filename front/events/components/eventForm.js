@@ -8,6 +8,7 @@ import attendance from '../../attendance'
 import OrgansationForm from './organisationForm.js'
 
 
+
 export default class EditForm extends React.Component {
 
 	constructor(props) {
@@ -71,6 +72,10 @@ export default class EditForm extends React.Component {
 
 	clickSave(e) {
 
+        this.state.event.organisations = this.state.event.organisations.map(o => {
+            if (typeof o.id === "string") delete o.id;
+            return o;
+        }); //remove temp ids
 		this.props.saveEvent(this.state.event);
 		e.preventDefault();
 	}
@@ -84,15 +89,14 @@ export default class EditForm extends React.Component {
 
 		const AttendanceConfig = attendance[this.state.event.partialDates].Config;
 
-		let attendanceFields = null
+        let attendanceFields = null;
 
-		if (this.state.event.partialDates != 'whole') attendanceFields = (<div className="form-group">
+        if (this.state.event.partialDates !== 'whole') attendanceFields = (<div className="form-group">
 			<label className="col-sm-2 control-label">Attendance Options:</label>
 			<div className="col-sm-10">
 				<AttendanceConfig data={this.state.event.partialDatesData} update={this.updateData('partialDatesData')} />
 			</div>
-		</div>)
-
+        </div>);
 		let paymentFields = null;
 		let feeOptionFields = null;
 
@@ -103,9 +107,9 @@ export default class EditForm extends React.Component {
 				<div className="col-sm-10">
 					<FeeConfig fee={this.state.event.feeData} update={this.updateData('feeData')} />
 				</div>
-			</div>)
+            </div>);
 
-			const options = this.state.event.paymentTypes.join("\n")
+            const options = this.state.event.paymentTypes.join("\n");
 			paymentFields = (<div>
 				<div className="form-group">
 					<label className="col-sm-2 control-label">Payment Options:</label>
@@ -122,7 +126,7 @@ export default class EditForm extends React.Component {
 			</div>)
 		}
 
-		let organisationForm = this.state.event.hasOrganisations ?
+        let organisationForm = this.state.event.organisationsEnabled ?
 			<div className="form-group">
 				<label className="col-sm-2 control-label">Organisations:</label>
 				<div className="col-sm-10">

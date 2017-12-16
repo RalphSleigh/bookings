@@ -27,7 +27,7 @@ export const updateQuickList = participants => {
 		type: UPDATE_QUICK_LIST,
 		participants: participants
 	}
-}
+};
 
 export const CREATE_BOOKING = 'BOOKING_CREATE_BOOKING';
 
@@ -36,11 +36,11 @@ export const createBooking = booking => {
 		fetch('/api/booking/' + booking.eventId + '/create', "POST", booking)
 			.then(j => {
 				dispatch(updateBooking(j));
-				dispatch(updateCurrentBooking(null))
+                dispatch(updateCurrentBooking(null));
 				dispatch(push('/event/' + booking.eventId + '/book/thanks'));
 			})
 	}
-}
+};
 
 export const saveBooking = (booking, own) => {
 	return dispatch => {
@@ -51,7 +51,7 @@ export const saveBooking = (booking, own) => {
 				dispatch(own ? push('/event/' + booking.eventId + '/book/thanks') : push('/event/' + booking.eventId + '/manage/bookings'));
 			});
 	}
-}
+};
 
 export const cancelBooking = id => {
 	return dispatch => {
@@ -61,7 +61,7 @@ export const cancelBooking = id => {
 				dispatch(push('/cancel'));
 			});
 	}
-}
+};
 //export const UPDATE_BOOKING = 'BOOKING_UPDATE_BOOKING';
 
 export const getBooking = (id) => {
@@ -72,7 +72,7 @@ export const getBooking = (id) => {
 				dispatch(updateBookings(j));
 			}).catch(fetch.fail);
 	}
-}
+};
 
 
 
@@ -86,7 +86,7 @@ export const getUserBookings = () => {
 			})
 	}
 
-}
+};
 
 export const getEventBookings = (eventId) => {
 	return dispatch => {
@@ -96,14 +96,14 @@ export const getEventBookings = (eventId) => {
 			})
 	}
 
-}
+};
 
 const updateBookings = bookings => {
 	return {
 		type: UPDATE_BOOKINGS,
 		bookings: bookings
 	}
-}
+};
 
 export const UPDATE_BOOKING = 'BOOKING_UPDATE_BOOKING';
 

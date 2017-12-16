@@ -49,13 +49,17 @@ export default class OrganisationForm extends React.Component {
 
 		return <div className="row">
 			{orgRows}
-			<div className="form-group">
-				<div className="col-sm-12">
-					<div className="btn-toolbar">
-						<button type="submit" className="btn btn-success" onClick={this.add}>Add</button>
-					</div>
-				</div>
-			</div>
+            <div className="col-sm-12">
+                <div className="form-horizontal">
+                    <div className="form-group">
+                        <div className="col-sm-12">
+                            <div className="btn-toolbar">
+                                <button type="submit" className="btn btn-success" onClick={this.add}>Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		</div>
 
 	}

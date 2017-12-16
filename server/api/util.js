@@ -15,7 +15,7 @@ module.exports.updateAssociation = (instance, key, Association, values) => {
 	ops = [...ops, ...values.map(p => Association.findOne({ where: { id: p.id } }).then(q => q ? q.update(p) : null))];
 	//add new ones
 	ops = [...ops, ...values.filter(p => !p.id).map(p => {
-		p[instance.Model.name+'Id'] = instance.id;
+        p[Association.associations[instance.constructor.name].foreignKey] = instance.id;
 		return Association.create(p);
 	})];
 	return Promise.all(ops);

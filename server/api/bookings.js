@@ -112,7 +112,7 @@ bookings.editBooking = (req, res) => {
 		)
 		.then(booking => db.booking.findOne({ where: { id: booking.id }, include: [{ model: db.participant }] }))
 		.then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
-		.then(() => db.booking.findOne({ where: { id: req.body.id }, include: [{ model: Participant }] }))
+        .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]}))
 		.then(booking => {
 			log.log("debug", "Booking id %s for %s", booking.id, req.user.userName);
 			let data = {};
