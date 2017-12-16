@@ -17,20 +17,20 @@ export default (
 			<Route exact path="/" component={events.listPage} />
 			<Route path="/user" component={user.userPage} />
 			<Route path="/event/create" component={events.createPage} />
-			<Route path="/event/:eventId">
+            <Route path="/event/:eventId(\d+)">
 				<Switch>
-                    <Route exact path="/event/:eventId/book" component={bookings.myBookingPage}/>
-                    <Route exact path="/event/:eventId/book/thanks" component={bookings.thanksPage}/>
-                    <Route exact path="/event/:eventId/edit" component={events.editPage}/>
-                    <Route exact path="/event/:eventId/manage"
+                    <Route exact path="/event/:eventId(\d+)/book" component={bookings.myBookingPage}/>
+                    <Route exact path="/event/:eventId(\d+)/book/thanks" component={bookings.thanksPage}/>
+                    <Route exact path="/event/:eventId(\d+)/edit" component={events.editPage}/>
+                    <Route exact path="/event/:eventId(\d+)/manage"
                            component={manage.containerPage /* Loads all Bookings for an event */}/>
 				</Switch>
 			</Route>
 			<Route path="/booking/:bookingId" component={bookings.loader}>
-				<Route path="/booking/:bookingId/edit" component={bookings.editPage} />
+                <Route path="/booking/:bookingId(\d+)/edit" component={bookings.editPage}/>
 			</Route>
 			<Route path="/cancel" component={bookings.cancelPage} />
-			<Route path="/guestUUID/:eventId/:guestUUID" component={bookings.myBookingPage} />
+            <Route path="/guestUUID/:eventId(\d+)/:guestUUID" component={bookings.myBookingPage}/>
 		</Switch>
 	</App>
 )

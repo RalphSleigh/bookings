@@ -6,7 +6,7 @@ import * as P from '../../shared/permissions.js'
 export const editEventCheck = connectedReduxRedirect({
 	authenticatedSelector: (state, props) => {
 		if (props.event === undefined) return true;
-		return P.editEvent(state.get("User").toJS(),state.getIn(["Events", props.match.params.eventId]).toJS());
+        return P.editEvent(state.get("User").toJS(), state.getIn(["Events", "event", parseInt(props.match.params.eventId)]).toJS());
 	},
 	redirectPath: "/user",
 	wrapperDisplayName: "Edit Event Check"

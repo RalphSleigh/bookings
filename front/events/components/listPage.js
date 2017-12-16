@@ -75,7 +75,7 @@ const mapStateToProps = (state) => {
 
 	const user = state.get("User")
 	const userId = user.get("id");
-	let Events = state.get("Events");
+    let Events = state.getIn(["Events", "events"]);
 	const Bookings = state.getIn(["Bookings", "bookings"]);
 	Events = Events.map(e => e.set("booking", Bookings.find(b => b.get("eventId") === e.get('id') && b.get("userId") === userId)));
 	return { Events };

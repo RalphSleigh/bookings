@@ -29,7 +29,7 @@ class EditPage extends React.Component {
 }
 
 const mapStateToProps = (state, props) => {
-	var Event = state.getIn(["Events", props.match.params.eventId]);
+    var Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
 	return { Event }
 }
 

@@ -6,6 +6,7 @@ import map from 'lodash/map'
 import fee from '../../fee'
 import attendance from '../../attendance'
 import OrgansationForm from './organisationForm.js'
+import cloneDeep from "lodash/cloneDeep";
 
 
 
@@ -71,12 +72,12 @@ export default class EditForm extends React.Component {
 	}
 
 	clickSave(e) {
-
-        this.state.event.organisations = this.state.event.organisations.map(o => {
+        const state = cloneDeep(this.state.event);
+        state.organisations = state.organisations.map(o => {
             if (typeof o.id === "string") delete o.id;
             return o;
         }); //remove temp ids
-		this.props.saveEvent(this.state.event);
+        this.props.saveEvent(state);
 		e.preventDefault();
 	}
 

@@ -63,7 +63,7 @@ const ParticipantRow = props => <tr><td>{props.name}</td><td>{props.age}</td><td
 
 const mapStateToProps = (state, props) => {
 	let User = state.get("User");
-	let Event = state.getIn(["Events", props.match.params.eventId.toString()]);
+    let Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
 	let Booking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"));
 	return { User, Event, Booking }
 }

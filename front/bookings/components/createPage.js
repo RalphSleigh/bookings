@@ -46,7 +46,7 @@ class CreatePage extends React.Component {
 
 const mapStateToProps = (state, props) => {
 	let User = state.get("User");
-	let Event = state.getIn(["Events", props.match.params.eventId]);
+    let Event = state.getIn(["Events", "event", parseInt(props.match.params.eventId)]);
 	let QuickList = state.getIn(["Bookings", "quickList"]);
 	return { User, Event, QuickList }
 }

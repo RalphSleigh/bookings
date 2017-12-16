@@ -13,9 +13,7 @@ import ParticipantsTab from './participants.js'
 import KpTab from './kp.js'
 
 
-
-
-//this component sits at the root of our management pages and ensures all the booking infomation for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
+//this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
 
 
 class ManageContainerPage extends React.Component {
@@ -46,16 +44,16 @@ class ManageContainerPage extends React.Component {
 					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/kp"} label="KP" />
 				</ul>
 				<Switch>
-					<Route exact path="/event/:eventId/manage">
+                    <Route exact path="/event/:eventId(\d+)/manage">
 						<ParticipantsTab {...this.props} />
 					</Route>
-					<Route path="/event/:eventId/manage/participants">
+                    <Route path="/event/:eventId(\d+)/manage/participants">
 						<ParticipantsTab {...this.props} />
 					</Route>
-					<Route path="/event/:eventId/manage/bookings">
+                    <Route path="/event/:eventId(\d+)/manage/bookings">
 						<BookingsTab {...this.props} />
 					</Route>
-					<Route path="/event/:eventId/manage/kp">
+                    <Route path="/event/:eventId(\d+)/manage/kp">
 						<KpTab {...this.props} />
 					</Route>
 				</Switch>
@@ -68,7 +66,7 @@ class ManageContainerPage extends React.Component {
 //we could still have no bookings..
 const mapStateToProps = (state, props) => {
 
-	const Event = state.getIn(["Events", props.match.params.eventId]);
+    const Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
 	const Bookings = state.getIn(["Bookings", "bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();
 	const Participants = Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
 	return { Event, Bookings, Participants };

@@ -48,7 +48,7 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
 	let User = state.get("User");
-	let Events = state.get("Events");
+    let Events = state.get("Events", "events");
 	let Bookings = state.getIn(["Bookings", "bookings"])
 	return { User, Events, Bookings };
 }

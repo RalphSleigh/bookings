@@ -6,8 +6,7 @@ const event = {};
 
 event.getEvents = (req, res) => {
     db.event.findAll({include: [{model: db.organisation}]}).then(events => {
-            let data = {};
-            events.map(e => data[e.id] = e);
+        let data = {events};
             res.json(data)
         }
     );
@@ -17,7 +16,7 @@ event.getEvent = (req, res) => {
     db.event.findOne({where: {id: req.params.eventId}, include: [{model: db.organisation}]})
         .then(event => {
             if (event === null) res.status(404).end();
-            else res.json(event);
+            else res.json({events: [event]});
         });
 };
 
@@ -32,14 +31,15 @@ event.editEvent = (req, res) => {
         .then(event => updateAssociation(event, 'organisations', db.organisation, req.body.organisations))
         .then(() => db.event.findOne({where: {id: req.body.id}, include: [{model: db.organisation}]}))
         .then(event => {
-            res.json(event);
+            res.json({events: [event]});
         });
 };
 
 event.createEvent = (req, res) => {
+    req.body.userId = req.user.id;
     db.event.create(req.body, {
         include: [{
-            association: db.event.organisation
+            association: 'organisations'
         }]
     })
         .then((e) => {
@@ -47,8 +47,7 @@ event.createEvent = (req, res) => {
             return db.event.findAll({include: {model: db.organisation}})
         })
         .then(events => {
-            let data = {};
-            events.map(e => data[e.id] = e);
+            let data = {events};
             res.json(data);
         });
 };
