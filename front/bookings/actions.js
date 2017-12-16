@@ -96,7 +96,7 @@ export const getEventBookings = (eventId) => {
 };
 
 export const UPDATE_BOOKINGS = 'BOOKING_UPDATE_BOOKINGS';
-const updateBookings = data => {
+export const updateBookings = data => {
     return {
         type: UPDATE_BOOKINGS,
         bookings: data.bookings

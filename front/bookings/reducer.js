@@ -13,8 +13,6 @@ export default function Bookings(state = initialBookingsState, action) {
             return state.set("bookings", action.bookings.reduce((a, c) => {
                 return a.set(c.id, Immutable.fromJS(c))
             }, state.get("bookings") || Immutable.Map()));
-        case manageActions.TOGGLE_PAID:
-            return state.mergeIn(["bookings"], Immutable.fromJS(action.booking));
         case a.DELETE_BOOKING:
             return state.deleteIn(["bookings", action.id]);
         case user.actions.UPDATE_USER:

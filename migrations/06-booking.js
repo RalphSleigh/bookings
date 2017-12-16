@@ -22,7 +22,7 @@ module.exports = {
 			},
 			paid: {
 				type: DataTypes.BOOLEAN,
-				default: false
+                defaultValue: false
 			},
 			note: {
 				type: DataTypes.TEXT

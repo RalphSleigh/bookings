@@ -22,7 +22,7 @@ export default (
                     <Route exact path="/event/:eventId(\d+)/book" component={bookings.myBookingPage}/>
                     <Route exact path="/event/:eventId(\d+)/book/thanks" component={bookings.thanksPage}/>
                     <Route exact path="/event/:eventId(\d+)/edit" component={events.editPage}/>
-                    <Route exact path="/event/:eventId(\d+)/manage"
+                    <Route path="/event/:eventId(\d+)/manage"
                            component={manage.containerPage /* Loads all Bookings for an event */}/>
 				</Switch>
 			</Route>
