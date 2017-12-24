@@ -20,6 +20,15 @@ event.getEvent = (req, res) => {
         });
 };
 
+event.getDetails = (req, res) => {
+    db.event.scope('details').findOne({where: {id: req.params.eventId}})
+        .then(event => {
+            if (event === null) res.status(404).end();
+            else res.json({events: [event]});
+        });
+};
+
+
 event.editEvent = (req, res) => {
     log.log("debug", "Edited event %s", req.body.id);
     db.event.findOne({where: {id: req.body.id}})

@@ -1,12 +1,13 @@
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
-var LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 
-var bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
-var config = require("./config.js");
+const config = require("./config.js");
 
-var db = require('./orm.js')
+const db = require('./orm.js')
+const Op = db.Sequelize.Op;
 
 passport.use(new GoogleStrategy({
 	clientID: config.GoogleClientID,
@@ -14,12 +15,12 @@ passport.use(new GoogleStrategy({
 	callbackURL: config.GoogleCallback
 },
 	function (accessToken, refreshToken, profile, cb) {
-		db.user.findOrCreate({ where: { email: profile.emails[0].value }, include: [{ model: db.role }] })
+        db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
 			.spread((user, created) => {
 				if (created) {
 					user.userName = profile.displayName;
 					//calling save will remove the assosiated Role data, lets get it again..
-					return user.save({ include: [{ model: db.role }] }).then(u => user.findOne({ where: { id: u.id }, include: [{ model: db.role }] }))
+                    return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
 				}
 				return user;
 			})
@@ -41,14 +42,16 @@ passport.use(new LocalStrategy({
 	password: "password"
 },
 	function (username, password, done) {
-		db.user.findOne({ where: { email: username }, include: [{ model: db.role }] })
+        db.user.scope('withPassword').findOne({where: {email: username}})
 			.then((user) => {
 				if (user !== null && bcrypt.compareSync(password, user.password)) {
-					return done(null, user.get({ plain: true }))
+                    return db.user.scope('withData').findOne({where: {id: {[Op.eq]: user.id}}});
 				} else {
-					return done(null, false, { message: 'Incorrect password.' });
+                    done(null, false, {message: 'Incorrect password.'});
+                    return Promise.reject();
 				}
-			});
+            })
+            .then(user => done(null, user.get({plain: true})));
 	}
 ));
 

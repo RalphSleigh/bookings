@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import BookingForm from './form/bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
 import { saveBooking, cancelBooking, updateCurrentBooking } from '../actions.js'
+import {bookEventCheck} from '../permission.js'
 
 
 class EditPage extends React.Component {
@@ -53,4 +54,4 @@ var VisibleEditPage = connect(
 	mapDispatchToProps
 )(EditPage);
 
-export default VisibleEditPage;
+export default bookEventCheck(VisibleEditPage);

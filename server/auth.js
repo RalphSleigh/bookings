@@ -26,20 +26,19 @@ auth.doLogin = function(req, res) {
 
 auth.getUser = function(req, res) {
 	log.log("debug","New Session: %s %s", req.ip, req.headers["user-agent"]);
-	var resUser = extend({}, req.user);
-	delete resUser.Password
+    const resUser = extend({}, req.user);
+    delete resUser.password;
 	res.json(resUser);
-}
+};
 
 auth.doLogout = function(req, res) {
 	req.logout();
-	db.user.findOne({where:{userName:'Guest'},include:[{model:db.role}]})
+    db.user.scope('withData').findOne({where: {userName: 'Guest'}})
 		.then((user) => {
-			req.user = user.get({plain:true});
-			var resUser = extend({}, req.user);
-			delete resUser.password
-			res.send(resUser).end();
+            req.logIn(user, (err => {
+                res.send(user).end();
+            }))
 		});
-}
+};
 
 module.exports = auth;

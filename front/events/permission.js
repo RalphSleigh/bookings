@@ -1,4 +1,4 @@
-import { connectedReduxRedirect } from 'redux-auth-wrapper/history3/redirect'
+import {connectedReduxRedirect, connectedRouterRedirect} from 'redux-auth-wrapper/history4/redirect'
 import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 
 import * as P from '../../shared/permissions.js'
@@ -39,6 +39,13 @@ export const showBookLink = connectedAuthWrapper({
 		return P.bookEvent(state.get("User").toJS(), props.event);
 	},
 	wrapperDisplayName: "showBookLink"
+});
+
+export const showApplyToBookLink = connectedAuthWrapper({
+    authenticatedSelector: (state, props) => {
+        return P.applyToBookEvent(state.get("User").toJS(), props.event);
+    },
+    wrapperDisplayName: "showApplyToBookLink"
 });
 
 export const showManageLink = connectedAuthWrapper({

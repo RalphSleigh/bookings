@@ -1,6 +1,7 @@
 //import Immutable from 'immutable'
 import fetch from '../fetch.js'
 import {push} from 'react-router-redux'
+import {updateUser} from '../user/actions'
 
 import events from '../events'
 //import m from '../messages'
@@ -122,5 +123,15 @@ export const updateCurrentBooking = booking => {
     return {
         type: UPDATE_CURRENT_BOOKING,
         booking: booking
+    }
+};
+
+export const applyToBook = application => {
+    return dispatch => {
+        fetch('/api/event/' + application.eventId + '/apply', "POST", application)
+            .then(j => {
+                dispatch(updateUser(j));
+                dispatch(push('/event/' + application.eventId + '/apply/thanks'));
+            })
     }
 };

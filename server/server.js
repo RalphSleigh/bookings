@@ -8,6 +8,7 @@ var path = require('path');
 var auth = require('./auth.js');
 var events = require('./api/events.js');
 var bookings = require('./api/bookings.js');
+const applications = require('./api/applications');
 
 var db = require('./orm.js')
 
@@ -65,7 +66,8 @@ server.get('/api/event/:eventId', events.getEvent);					//get single eventId
 server.post('/api/event/edit', P.editEvent, events.editEvent);		//edit an event
 server.post('/api/event/create', P.createEvent, events.createEvent);//create event
 server.post('/api/event/delete', P.createEvent, events.deleteEvent);//delete event
-
+server.post('/api/event/:eventId/apply', P.applyToBookEvent, applications.addApplication); //apply to book for event
+server.get('/api/event/:eventId/details', P.getEventBookings, events.getDetails);
 
 server.get('/api/booking/user', bookings.getUserBookings);									//get users  own bookings
 server.get('/api/booking/event/:eventId', P.getEventBookings, bookings.getEventBookings);	//get all bookings for an event
@@ -118,7 +120,7 @@ function ensureUser (req, res, next) {
 		req.user = guestUser;
 		return next();
 	}
-	db.user.findOne({where:{userName:'Guest'},include:[{model:db.role}]})
+    db.user.scope('withData').findOne({where: {userName: 'Guest'}})
 		.then((user) => {
 			guestUser = req.user = user.get({plain:true});
 		})

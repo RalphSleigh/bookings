@@ -1,7 +1,7 @@
 
 
 module.exports = (sequelize, DataTypes) => {
-	var event = sequelize.define('event', {
+    const event = sequelize.define('event', {
 
 		name: {
 			type: DataTypes.STRING
@@ -54,14 +54,25 @@ module.exports = (sequelize, DataTypes) => {
 	});
 
 	event.associate = models => {
-		models.event.hasMany(models.organisation)
-		models.event.hasMany(models.booking)
-		models.event.hasMany(models.village)
-		models.event.belongsTo(models.user)
-	}
+        models.event.hasMany(models.organisation);
+        models.event.hasMany(models.booking);
+        models.event.hasMany(models.village);
+        models.event.hasMany(models.application);
+        models.event.hasMany(models.role);
+        models.event.belongsTo(models.user);
+
+        models.event.addScope('details',
+            {
+                include: [{model: models.role}, {model: models.organisation}, {
+                    model: models.application,
+                    include: [models.user]
+                }]
+            },
+            {override: true});
+    };
 
 return event
-}
+};
 
 
 

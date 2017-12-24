@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
 
 
 import event from '../../events'
@@ -14,6 +13,8 @@ import {
     cancelBooking,
     updateCurrentBooking
 } from '../actions.js'
+
+import {bookEventCheck} from '../permission.js'
 
 //this is the special case where we are doing the sessions own booking for the event. If we have previously booked then edit that instead of letting them create a new one.  
 
@@ -104,4 +105,4 @@ const VisibleMyBookingPage = connect(
     mapDispatchToProps
 )(MyBookingPage);
 
-export default VisibleMyBookingPage;
+export default bookEventCheck(VisibleMyBookingPage);

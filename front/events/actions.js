@@ -43,6 +43,15 @@ export const getEvent = (id) => {
 	}
 };
 
+export const getEventDetails = (id) => {
+    return (dispatch) => {
+        fetch('/api/event/' + id + '/details', "GET")
+            .then(j => {
+                dispatch(updateEvents(j));
+            }).catch(r => console.log(r));
+    }
+};
+
 export const saveEvent = event => {
 	return (dispatch) => {
 		fetch('/api/event/edit', "POST", event)

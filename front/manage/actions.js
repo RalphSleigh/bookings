@@ -11,3 +11,12 @@ export const togglePaid = (id) => {
             })
     }
 };
+
+export const approve = (id) => {
+    return dispatch => {
+        fetch('/api/application/approve', "POST", {id: id})
+            .then(j => {
+                dispatch(updateBookings(j));
+            })
+    }
+};
