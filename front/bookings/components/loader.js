@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Immutable from 'immutable'
 
+import {Route} from 'react-router-dom';
 import { viewBookingCheck } from '../permission.js'
 import { getBooking } from '../actions.js'
+import bookings from "../index";
 
-
-//load an indvidual booking so we can edit it, this will check we have permission to VIEW this booking.
+//load an individual booking so we can edit it, this will check we have permission to VIEW this booking.
 
 class BookingLoader extends React.Component {
 
@@ -20,17 +20,8 @@ class BookingLoader extends React.Component {
 
 	render() {
 
-		//prevent render until we have the data available.
 		if (this.props.Booking === undefined) return <div>Loading Data</div>;
-
-
-		//const event = this.props.Event.toJS();
-		//React.cloneElement(this.props.children, {myprop: this.route.myprop})
-
-		return React.cloneElement(this.props.children, {
-			Booking: this.props.Booking,
-			Event: this.props.Event
-		})
+        return <Route path="/booking/:bookingId(\d+)/edit" component={bookings.editPage}/>
 	}
 }
 
@@ -38,11 +29,9 @@ class BookingLoader extends React.Component {
 const mapStateToProps = (state, props) => {
 
     const Booking = state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)])
-
-    const Event = Booking ? state.getIn(["Events", "event", Booking.get("eventId")]) : undefined;
 	//const Bookings = state.getIn(["Bookings","bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();
 	//const Participants = Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
-	return { Booking, Event };
+    return {Booking};
 };
 
 const mapDispatchToProps = {

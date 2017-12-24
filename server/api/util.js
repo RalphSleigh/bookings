@@ -1,15 +1,9 @@
-
-var log = require('../logging.js');
-
-module.exports = {}
+module.exports = {};
 
 module.exports.updateAssociation = (instance, key, Association, values) => {
 
-	console.log(values)
-
-	let ops = []
+    let ops = [];
 	//delete no longer present
-	
 	ops = [...ops, ...instance[key].filter(p => !values.find(q => q.id === p.id)).map(p => p.destroy())];
 	//update existing
 	ops = [...ops, ...values.map(p => Association.findOne({ where: { id: p.id } }).then(q => q ? q.update(p) : null))];
@@ -19,7 +13,4 @@ module.exports.updateAssociation = (instance, key, Association, values) => {
 		return Association.create(p);
 	})];
 	return Promise.all(ops);
-
-
-
-}
+};

@@ -17,6 +17,9 @@ module.exports = {
 			userContact: {
 				type: DataTypes.TEXT
 			},
+            district: {
+                type: DataTypes.TEXT
+            },
 			paymentType: {
 				type: DataTypes.STRING
 			},

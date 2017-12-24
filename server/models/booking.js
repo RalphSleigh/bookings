@@ -1,6 +1,6 @@
 
 module.exports = (sequelize, DataTypes) => {
-	var booking = sequelize.define('booking', {
+    const booking = sequelize.define('booking', {
 
 		userName: {
 			type: DataTypes.STRING
@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
 		userContact: {
 			type: DataTypes.TEXT
 		},
+        district: {
+            type: DataTypes.TEXT
+        },
 		paymentType: {
 			type: DataTypes.STRING
 		},
@@ -36,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 	booking.associate = models => {
 		models.booking.belongsTo(models.organisation);
 		models.booking.belongsTo(models.user);
-		models.booking.belongsTo(models.village)
+        models.booking.belongsTo(models.village);
 		models.booking.belongsTo(models.event, {
 			foreignKey: {
 				field: 'eventId',
@@ -50,6 +53,6 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 			}
 		});
-	}
+    };
 	return booking
-}
+};

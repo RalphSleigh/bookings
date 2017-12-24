@@ -58,22 +58,24 @@ const mapStateToProps = (state, props) => {
     let Event = state.getIn(["Events", "events", eventId]);
 
     //find the booking, sources:
-    //1) currentBooking if set,
+    //1) currentBooking if set and for this user/event,
     //2) Pre-existing booking in the bookings map
     //3) Booking in localstorage
     //4) empty booking
 
     const Bookings = state.get("Bookings");
 
-    const currentBooking = Bookings.get("currentBooking");
+    let currentBooking = Bookings.get("currentBooking");
+
+    if (currentBooking && (currentBooking.get("eventId") !== Event.get("id") || currentBooking.get("userId") !== User.get("id"))) currentBooking = null;
 
     const existingBooking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"))
 
     const localStorageData = localStorage.currentBooking ? JSON.parse(localStorage.currentBooking) : false;
 
     const localBooking = (localStorageData &&
-        (localStorageData.eventId == eventId) &&
-        (localStorageData.userId == User.get("id"))) ? localStorageData : false;
+        (localStorageData.eventId === Event.get("id")) &&
+        (localStorageData.userId === User.get("id"))) ? localStorageData : false;
 
     let Booking = currentBooking || existingBooking || localBooking || emptyBooking(User, Event);
 
@@ -82,6 +84,7 @@ const mapStateToProps = (state, props) => {
 
 const emptyBooking = (User, Event) => {
     return {
+        userId: User.get("id"),
         eventId: Event.get("id"),
         userName: User.get("id") === 1 ? '' : User.get("userName"),
         userEmail: User.get("id") === 1 ? '' : User.get("email"),

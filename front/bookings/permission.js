@@ -28,7 +28,11 @@ export const applyEventCheck = connectedRouterRedirect({
 
 export const bookEventCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
-        const event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]).toJS();
+        //we could be called from /booking/1/edit or /event/1/book, need to handle both
+        let event = null;
+        if (props.match.params.eventId) event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]).toJS();
+        else if (props.match.params.bookingId) event = state.getIn(["Events", "events", state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId), "eventId"])]).toJS();
+
         const user = state.get("User").toJS();
         return P.bookEvent(user, event);
     },

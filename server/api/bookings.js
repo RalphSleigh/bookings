@@ -39,7 +39,7 @@ bookings.getEventBookings = (req, res) => {
 };
 
 bookings.getBooking = (req, res) => {
-    db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.participant}, {model: Event}]})
+    db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.participant}, {model: db.event}]})
         .then(booking => {
             let data = {};
             data.bookings = [booking];
@@ -113,7 +113,7 @@ bookings.editBooking = (req, res) => {
         .then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
         .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]}))
         .then(booking => {
-            log.log("debug", "Booking id %s for %s", booking.id, req.user.userName);
+            log.log("debug", "User %s Editing Booking id %s", req.user.userName, booking.id);
             let data = {};
             data.bookings = [booking];
             res.json(data);

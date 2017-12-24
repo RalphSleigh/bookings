@@ -28,9 +28,7 @@ export default (
                            component={manage.containerPage /* Loads all Bookings for an event */}/>
                 </Switch>
             </Route>
-            <Route path="/booking/:bookingId" component={bookings.loader}>
-                <Route path="/booking/:bookingId(\d+)/edit" component={bookings.editPage}/>
-            </Route>
+            <Route path="/booking/:bookingId" component={bookings.loader}/>
             <Route path="/cancel" component={bookings.cancelPage}/>
             <Route path="/guestUUID/:eventId(\d+)/:guestUUID" component={bookings.myBookingPage}/>
         </Switch>

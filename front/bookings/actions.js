@@ -69,7 +69,6 @@ export const getBooking = (id) => {
     return dispatch => {
         fetch('/api/booking/' + id, "GET")
             .then(j => {
-                j.each(k => dispatch(events.actions.updateEvent(k.event)));
                 dispatch(updateBookings(j));
             }).catch(fetch.fail);
     }

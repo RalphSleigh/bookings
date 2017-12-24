@@ -185,9 +185,9 @@ export default class EditForm extends React.Component {
 				</div>
 
 				<div className="form-group">
-					<label className="col-sm-2 control-label">Ask for Group/District:</label>
+                    <label className="col-sm-2 control-label">Big Camp Mode:</label>
 					<div className="col-sm-10">
-						<Switch checked={!!this.state.event.requireDistrict} onChange={this.updateChecked('requireDistrict')} />
+                        <Switch checked={!!this.state.event.bigCampMode} onChange={this.updateChecked('bigCampMode')}/>
 					</div>
 				</div>
 

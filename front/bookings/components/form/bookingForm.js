@@ -18,7 +18,7 @@ export default class BookingForm extends React.Component {
 
 		this.state = {
 			permission: false,
-			new: this.props.booking.id ? false : true,
+            new: !this.props.booking.id,
 			deleteLock: true,
 			validation: {
 				user: false,

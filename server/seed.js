@@ -114,7 +114,8 @@ Its free!`,
         bookingPolicy: 'approved',
         paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
         paymentInfo: "Ho Ho Ho",
-        organisationsEnabled: false
+        organisationsEnabled: false,
+        bigCampMode: true
     }, {
         name: 'This is a large event with many people',
         description:
@@ -130,7 +131,8 @@ It costs £55`,
         bookingPolicy: 'approved',
         paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
         paymentInfo: `plz give us *all* teh monies`,
-        organisationsEnabled: true
+        organisationsEnabled: true,
+        bigCampMode: true
     }, {
         name: 'Past deadline',
         description:
@@ -146,7 +148,8 @@ It also demonstrates the Ealing donation structure`,
         feeData: {amount: 35},
         paymentTypes: ["Cheque", "Bank Transfer"],
         paymentInfo: `plz give us *all* teh monies`,
-        organisationsEnabled: false
+        organisationsEnabled: false,
+        bigCampMode: false
     }];
     const promises = events.map(e => {
         return db.event.create(e)
@@ -193,6 +196,7 @@ function createBookings() {
             userName: faker.name.findName(),
             userEmail: faker.internet.email(),
             userContact: faker.phone.phoneNumber(),
+            district: faker.address.city(),
             paymentType: getRandomPaymentType(),
             guestUUID: faker.random.uuid(),
             eventId: models.events[1].id,

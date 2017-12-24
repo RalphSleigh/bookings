@@ -101,7 +101,7 @@ export default class Bookings extends React.Component {
                 id: "edit",
                 accessor: "id",
                 header: "Edit",
-                render: props => <Link to={"/booking/" + props.value + "/edit"}>Edit</Link>,
+                Cell: props => <Link to={"/booking/" + props.value + "/edit"}>Edit</Link>,
                 minWidth: 18
             }
         ]

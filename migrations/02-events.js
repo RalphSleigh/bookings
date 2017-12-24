@@ -22,7 +22,7 @@ module.exports = {
 			bookingDeadline: {
 				type: DataTypes.DATE
 			},
-			requireDistrict: {
+            bigCampMode: {
 				type: DataTypes.BOOLEAN
 			},
 			organisationsEnabled: {

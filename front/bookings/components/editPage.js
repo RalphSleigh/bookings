@@ -39,17 +39,18 @@ class EditPage extends React.Component {
 
 const mapStateToProps = (state, props) => {
 	//let User = state.get("User");
-	const Event = props.Event;
-	const CurrentBooking = state.getIn(["Bookings","currentBooking"])
+    let Booking = state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]);
+    const Event = state.getIn(["Events", "events", Booking.get("eventId")]);
+    const CurrentBooking = state.getIn(["Bookings", "currentBooking"]);
 
-	const Booking = (CurrentBooking ? CurrentBooking.get("id") : null) == props.Booking.get("id") ? CurrentBooking : props.Booking
+    Booking = (CurrentBooking ? CurrentBooking.get("id") : null) === Booking.get("id") ? CurrentBooking : Booking;
 	
 	return { Booking, Event }
-}
+};
 
 const mapDispatchToProps = { saveBooking, cancelBooking, updateCurrentBooking };
 
-var VisibleEditPage = connect(
+const VisibleEditPage = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(EditPage);
