@@ -4,9 +4,9 @@ const log = require('./logging.js');
 const Op = db.Sequelize.Op;
 
 
-//This file exports permission checks as express middlewares, in theory the client shouldnt allow bad requests.
+//This file exports permission checks as express middlewares, in theory the client shouldn;t allow bad requests.
 
-var permission = {};
+const permission = {};
 
 permission.editEvent = (req, res, next) => {
 
@@ -64,5 +64,17 @@ permission.applyToBookEvent = (req, res, next) => {
             }
         })
 };
+
+permission.decideApplication = (req, res, next) => {
+    db.application.findOne({where: {id: {[Op.eq]: req.body.id}}})
+        .then(a => {
+            if (P.decideApplication(req.user, a.event)) next();
+            else {
+                res.status(401).end();
+                log.log("error", "Permission decideApplication failed for %s on %s", req.user.email || "Guest", req.ip);
+            }
+        })
+};
+
 
 module.exports = permission;

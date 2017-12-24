@@ -1,5 +1,7 @@
 //shared permission checks
-//These may get narly as need to work with both the plain JS user objects and sequalise instance?
+//these functions are then wrapped by the client and server ready for use
+
+
 let permissions = {};
 
 permissions.editEvent = (user, event) => {
@@ -38,6 +40,12 @@ permissions.viewBooking = (user, booking) => {
 };
 
 permissions.manageEvent = (user, event) => {
+    if (user.roles.find(role => role.name === "admin")) return true; //admin can always
+    if (event.userId === user.id) return true;  //event owner can manage
+    return false;
+};
+
+permissions.decideApplication = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage
     return false;

@@ -20,12 +20,17 @@ export default class Applications extends React.Component {
 
     approve(id) {
         return e => {
-
+            let org = this.state.organisations[id];
+            org = parseInt(org) ? parseInt(org) : null; //cast undefined/"any" to null, string from event to number
+            this.props.approve(id, org);
+            e.preventDefault()
         }
     }
 
     decline(id) {
         return e => {
+            this.props.decline(id);
+            e.preventDefault();
 
         }
     }
@@ -48,7 +53,7 @@ export default class Applications extends React.Component {
             organisation={this.state.organisations[a.id]}
             approve={this.approve(a.id)}
             decline={this.decline(a.id)}
-            setOrgainsation={this.setOrganisation(a.id)}
+            setOrganisation={this.setOrganisation(a.id)}
         />);
 
         return (<div>
@@ -68,8 +73,9 @@ const ApplicationRow = props => {
 
         approveText = <div className="form-group">
             <label htmlFor="orgSelect">Approve user to book into Organisation:</label>
-            <select className="form-control" id="orgSelect" onChange={props.setOrganisation}>
-                <option key={0} value={null}>Any</option>
+            <select className="form-control" id="orgSelect" value={props.organisation || 'any'}
+                    onChange={props.setOrganisation}>
+                <option key={0} value={'any'}>Any</option>
                 {options}
             </select>
         </div>;

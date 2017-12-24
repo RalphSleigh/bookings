@@ -19,5 +19,40 @@ application.addApplication = (req, res) => {
         });
 };
 
+//lets try async/await
+
+application.approveApplication = async function (req, res) {
+
+    const application = await db.application.findOne({where: {id: {[Op.eq]: req.body.id}}});
+
+    log.info("User %s Approving User %s to book for event %s", req.user.userName, application.user.userName, application.event.name);
+
+    await db.role.create({
+        name: "book",
+        userId: application.userId,
+        eventId: application.event.id,
+        organisationId: req.body.org
+    });
+    await application.destroy();
+    const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: application.eventId}}})
+    res.json({events: [event]});
+};
+
+application.declineApplication = (req, res) => {
+    let eventId = null;
+    db.application.findOne({where: {id: {[Op.eq]: req.body.id}}})
+        .then(a => {
+            log.info("User %s Declining Application to event %s", req.user.userName, eventId);
+            eventId = a.eventId;
+            return a.destroy();
+        })
+        .then(() => db.event.scope('details').findOne({where: {id: {[Op.eq]: eventId}}}))
+        .then(event => {
+            if (event === null) res.status(404).end();
+            else res.json({events: [event]});
+        });
+};
+
+
 module.exports = application;
 

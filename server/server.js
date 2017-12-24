@@ -69,6 +69,9 @@ server.post('/api/event/delete', P.createEvent, events.deleteEvent);//delete eve
 server.post('/api/event/:eventId/apply', P.applyToBookEvent, applications.addApplication); //apply to book for event
 server.get('/api/event/:eventId/details', P.getEventBookings, events.getDetails);
 
+server.post('/api/application/approve', P.decideApplication, applications.approveApplication);
+server.post('/api/application/decline', P.decideApplication, applications.declineApplication);
+
 server.get('/api/booking/user', bookings.getUserBookings);									//get users  own bookings
 server.get('/api/booking/event/:eventId', P.getEventBookings, bookings.getEventBookings);	//get all bookings for an event
 server.get('/api/booking/:bookingId', P.getBooking, bookings.getBooking);	//get a single booking

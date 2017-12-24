@@ -22,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
             },
             onDelete: 'cascade'
         });
+
+
+        models.application.addScope('defaultScope',
+            {
+                include: [{model: models.event}, {model: models.user}]
+
+            },
+            {override: true});
     };
     return application
 };
