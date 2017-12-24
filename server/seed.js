@@ -123,7 +123,7 @@ Its free!`,
 
 It costs £55`,
         startDate: new Date("2019-10-8"),
-        endDate: new Date("2019-10-10"),
+        endDate: new Date("2019-10-14"),
         bookingDeadline: new Date("2019-10-4"),
         userId: 2,
         feeModel: "flat",
@@ -132,7 +132,9 @@ It costs £55`,
         paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
         paymentInfo: `plz give us *all* teh monies`,
         organisationsEnabled: true,
-        bigCampMode: true
+        bigCampMode: true,
+        partialDates: 'presets',
+        partialDatesData: [{id: 1, name: 'First Half', mask: 15}, {id: 2, name: 'Second Half', mask: 120}]
     }, {
         name: 'Past deadline',
         description:
@@ -217,7 +219,8 @@ function createParticipants() {
             diet: getRandomDiet(),
             dietExtra: getRandomDietExtra(),
             medical: getRandomMedical(),
-            bookingId: models.bookings.random().id
+            bookingId: models.bookings.random().id,
+            days: getDays()
         }));
     return Promise.all(promises).then(p => {
         models.participants = p;
@@ -249,6 +252,12 @@ function getRandomInt(min, max) {
 function getRandomDiet() {
     const diets = ["omnivore", "omnivore", "omnivore", "vegetarian", "vegetarian", "vegan"];
     return diets[getRandomInt(0, 6)]
+}
+
+function getDays() {
+    if (Math.random() < 0.90) return 127;
+    if (Math.random() < 0.50) return 120
+    return 15
 }
 
 function getRandomDietExtra() {
