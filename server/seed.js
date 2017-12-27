@@ -207,7 +207,8 @@ function createBookings() {
             guestUUID: faker.random.uuid(),
             eventId: models.events[1].id,
             villageId: models.villages.random().id,
-            organisationId: models.organisations.random().id
+            organisationId: models.organisations.random().id,
+            campWith: getRandomCampWith()
         }));
     return Promise.all(promises).then(b => {
         models.bookings = b;
@@ -301,6 +302,13 @@ function getRandomMedical() {
 
     ];
     return Math.random() > 0.95 ? medical[getRandomInt(0, medical.length)] : "";
+}
+
+function getRandomCampWith() {
+    if (Math.random() < 0.75) return '';
+
+    return "We would like to camp with" + faker.address.city();
+
 }
 
 function getRandomPaymentType() {

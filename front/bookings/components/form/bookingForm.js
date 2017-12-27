@@ -145,7 +145,8 @@ export default class BookingForm extends React.Component {
             emergencyName: this.props.booking.emergencyName,
             emergencyPhone: this.props.booking.emergencyPhone,
             note: this.props.booking.note,
-            permission: this.props.booking.permission
+            permission: this.props.booking.permission,
+            campWith: this.props.booking.campWith
         };
 
         return (<div>

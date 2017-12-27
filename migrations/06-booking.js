@@ -36,6 +36,9 @@ module.exports = {
 			emergencyPhone: {
 				type: DataTypes.TEXT
 			},
+            campWith: {
+                type: DataTypes.TEXT
+            },
 			guestUUID: {
 				type: DataTypes.UUID
 			},

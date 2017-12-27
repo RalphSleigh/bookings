@@ -8,6 +8,7 @@ export default class PermissionForm extends React.Component {
         this.updatePermission = this.updatePermission.bind(this);
         this.updateEmergency = this.updateEmergency.bind(this);
         this.updateNote = this.updateNote.bind(this);
+        this.updateCampWith = this.updateCampWith.bind(this);
     }
 
     updatePermission() {
@@ -21,6 +22,12 @@ export default class PermissionForm extends React.Component {
             this.props.update(item, e.target.value)
             e.preventDefault();
         }
+    }
+
+    updateCampWith(e) {
+        this.props.updateValidation();
+        this.props.update('campWith', e.target.value);
+        e.preventDefault();
     }
 
     updateNote(e) {
@@ -56,11 +63,21 @@ export default class PermissionForm extends React.Component {
             </div>
         </div>;
 
+        const campWith = this.props.event.bigCampMode ? <div className="form-group">
+            <label className="col-sm-2 control-label">Are there any Groups/Districts you would like to camp
+                with?:</label>
+            <div className="col-sm-10">
+                            <textarea value={this.props.campWith || ''} onChange={this.updateCampWith}
+                                      className="form-control"
+                                      rows="2"></textarea>
+            </div>
+        </div> : null;
+
         return (<div className="col-sm-12">
                 <form className="form-horizontal">
                     {emergency}
                     <div className="col-sm-12">
-                        <h4>Additional infomation</h4>
+                        <h4>Additional Infromation</h4>
                     </div>
                     <div className="form-group">
                         <label className="col-sm-2 control-label">Anything else we need to know?:<br/></label>
@@ -69,6 +86,7 @@ export default class PermissionForm extends React.Component {
                                       rows="2"></textarea>
                         </div>
                     </div>
+                    {campWith}
                     <div className="col-sm-12">
                         <h4>Permission</h4>
                     </div>

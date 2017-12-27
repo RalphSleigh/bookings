@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Immutable from 'immutable'
-import { Route, Switch, NavLink } from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 
 import bookings from '../../bookings'
 import events from '../../events'
@@ -13,6 +13,8 @@ import BookingsTab from './bookings.js'
 import ParticipantsTab from './participants.js'
 import KpTab from './kp.js'
 import ApplicationTab from './applications.js'
+import VillageTab from './villages.js'
+
 
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
@@ -38,7 +40,7 @@ class ManageContainerPage extends React.Component {
 		const event = this.props.Event.toJS();
 		//React.cloneElement(this.props.children, {myprop: this.route.myprop})
 
-        const showApplications = event.bookingPolicy === 'approved' && event.applications
+        const showApplications = event.bookingPolicy === 'approved' && event.applications;
 
         const applicationsTab = showApplications ?
             <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/applications"}
@@ -51,6 +53,7 @@ class ManageContainerPage extends React.Component {
 					<CustomTab activeOnlyWhenExact to={"/event/" + this.props.match.params.eventId + "/manage"} label="Participants" />
 					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/bookings"} label="Bookings"/>
 					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/kp"} label="KP" />
+                    <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/villages"} label="Villages"/>
                     {applicationsTab}
 				</ul>
 				<Switch>
@@ -69,6 +72,9 @@ class ManageContainerPage extends React.Component {
                     <Route path="/event/:eventId(\d+)/manage/applications">
                         <ApplicationTab {...this.props} />
                     </Route>
+                    <Route path="/event/:eventId(\d+)/manage/villages">
+                        <VillageTab {...this.props} />
+                    </Route>
 				</Switch>
 			</div>
 		</div>)
@@ -83,7 +89,7 @@ const mapStateToProps = (state, props) => {
 	const Bookings = state.getIn(["Bookings", "bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();
 	const Participants = Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
 	return { Event, Bookings, Participants };
-}
+};
 
 const mapDispatchToProps = {
 	getEventBookings: bookings.actions.getEventBookings,
@@ -93,7 +99,7 @@ const mapDispatchToProps = {
     decline: decline
 };
 
-var VisibleManageContainerPage = connect(
+const VisibleManageContainerPage = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(manageEventCheck(ManageContainerPage));
