@@ -26,10 +26,17 @@ permission.createEvent = (req, res, next) => {
 
 };
 
-//todo: make these actually check something
+permission.bookEvent = async function (req, res, next) {
+    const event = await db.event.findOne({where: {id: {[Op.eq]: req.body.eventId}}});
+    const booking = req.body.id ? await db.booking.findOne({where: {id: {[Op.eq]: req.body.id}}}) : null;
+    const organisation = await db.organisation.findOne({where: {id: {[Op.eq]: req.body.organisationId}}});
 
-permission.bookEvent = (req, res, next) => {
-    next();
+    if (P.bookIntoOrganisation(req.user, event, organisation, booking)) {
+        next();
+    } else {
+        res.status(401).end();
+        log.log("error", "Permission bookEvent failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
 };
 
 permission.getEventBookings = (req, res, next) => {

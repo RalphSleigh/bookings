@@ -37,7 +37,7 @@ class App extends React.Component {
 					<div className="col-md-9"><Link to="/" >Home</Link></div>
 					<user.loginStatus />
 				</div>
-				<messages.messages routes={this.props.routes/*quick hack to rerender messages every time we change route*/} />
+                <messages.messages/>
 				{this.props.children}
 			</div>
 		);

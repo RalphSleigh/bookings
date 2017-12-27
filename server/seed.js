@@ -134,7 +134,11 @@ It costs £55`,
         organisationsEnabled: true,
         bigCampMode: true,
         partialDates: 'presets',
-        partialDatesData: [{id: 1, name: 'First Half', mask: 15}, {id: 2, name: 'Second Half', mask: 120}]
+        partialDatesData: [{id: 0, name: 'Whole Event', mask: 127}, {id: 1, name: 'First Half', mask: 15}, {
+            id: 2,
+            name: 'Second Half',
+            mask: 120
+        }]
     }, {
         name: 'Past deadline',
         description:
@@ -204,7 +208,7 @@ function createBookings() {
             eventId: models.events[1].id,
             villageId: models.villages.random().id,
             organisationId: models.organisations.random().id
-        }))
+        }));
     return Promise.all(promises).then(b => {
         models.bookings = b;
         return true
@@ -256,7 +260,7 @@ function getRandomDiet() {
 
 function getDays() {
     if (Math.random() < 0.90) return 127;
-    if (Math.random() < 0.50) return 120
+    if (Math.random() < 0.50) return 120;
     return 15
 }
 
@@ -306,4 +310,4 @@ function getRandomPaymentType() {
 
 Array.prototype.random = function () {
     return this[Math.floor((Math.random() * this.length))];
-}
+};

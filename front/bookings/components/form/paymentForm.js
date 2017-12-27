@@ -10,7 +10,7 @@ export default class PaymentForm extends React.Component {
 	}
 
 	selectPaymentType(e) {
-
+        this.props.updateValidation();
 		this.props.update("paymentType", e.target.value);
 	}
 
@@ -26,7 +26,8 @@ export default class PaymentForm extends React.Component {
 		return (<div>
 			<div className="col-sm-12">
 				<form className="form-horizontal">
-					<div className={this.props.validating ? this.props.chosen !== "" ? valid : invalid : valid}>
+                    <div
+                        className={this.props.validating ? (this.props.chosen && this.props.chosen !== "") ? valid : invalid : valid}>
 						<label className="col-sm-2 control-label">Payment Method:</label>
 						<div className="col-sm-10">
 							{radios}

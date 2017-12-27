@@ -15,6 +15,9 @@ import {
 } from '../actions.js'
 
 import {bookEventCheck} from '../permission.js'
+import {bookIntoOrganisation} from '../../../shared/permissions.js'
+import Moment from "moment/moment";
+
 
 //this is the special case where we are doing the sessions own booking for the event. If we have previously booked then edit that instead of letting them create a new one.  
 
@@ -31,9 +34,14 @@ class MyBookingPage extends React.Component {
         const event = this.props.Event.toJS();
         const user = this.props.User.toJS();
         const booking = this.props.Booking.toJS ? this.props.Booking.toJS() : this.props.Booking;
+        const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, o, booking));
+
 
         const form =
-            <BookingForm user={user} event={event} booking={booking}
+            <BookingForm user={user}
+                         event={event}
+                         booking={booking}
+                         organisations={organisations}
                          submit={booking.id ? (booking) => this.props.saveBooking(booking, true) : this.props.createBooking}
                          updateCurrentBooking={this.props.updateCurrentBooking} cancel={this.props.cancelBooking}/>;
 
@@ -83,13 +91,18 @@ const mapStateToProps = (state, props) => {
 };
 
 const emptyBooking = (User, Event) => {
-    return {
+    const booking = {
         userId: User.get("id"),
         eventId: Event.get("id"),
         userName: User.get("id") === 1 ? '' : User.get("userName"),
         userEmail: User.get("id") === 1 ? '' : User.get("email"),
-        participants: [{id: "TEMP"}]
-    }
+        participants: [{
+            id: "TEMP",
+            days: 2 ** (Moment(Event.get('endDate')).diff(Moment(Event.get('startDate')), 'days') + 1) - 1
+        }]
+    };
+    if (Event.get("organisationsEnabled")) booking.organisationId = Event.getIn(['organisations', 0, 'id']);
+    return booking;
 };
 
 const getEvent = event.actions.getEvent;

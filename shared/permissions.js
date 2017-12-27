@@ -51,4 +51,13 @@ permissions.decideApplication = (user, event) => {
     return false;
 };
 
+permissions.bookIntoOrganisation = (user, event, organisation, booking) => {
+    if (user.roles.find(role => role.name === "admin")) return true; //naturally...
+    if (!permissions.bookEvent(user, event)) return false;//need to be able to book into the event...
+    if (booking && booking.organisationId === organisation.id) return true;//a booking can always book into its existing organisation (used on update)
+    return user.roles.find(role => role.name === "book"
+        && role.eventId === event.id
+        && (role.organisationId === organisation.id || role.organisationId === null));
+};
+
 module.exports = permissions;

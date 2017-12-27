@@ -1,15 +1,15 @@
-var Sequelize = require('sequelize');
-var fs = require('fs');
-var path = require('path');
+const Sequelize = require('sequelize');
+const fs = require('fs');
+const path = require('path');
 
 
-var sequelize = new Sequelize('bookings', null, null, {
+const sequelize = new Sequelize('bookings', null, null, {
 	dialect: 'sqlite', storage: 'database.sqlite',
 	logging: console.log
 });
 
-var db = {};
-var modelsDir = path.join(__dirname, 'models')
+const db = {};
+const modelsDir = path.join(__dirname, 'models')
 
 
 fs
@@ -18,7 +18,7 @@ fs
 		return (file.indexOf('.') !== 0);
 	})
 	.forEach(file => {
-		var model = sequelize['import'](path.join(modelsDir, file));
+        const model = sequelize['import'](path.join(modelsDir, file));
 		db[model.name] = model;
 	});
 

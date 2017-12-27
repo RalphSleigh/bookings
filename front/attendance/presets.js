@@ -74,6 +74,28 @@ export class Config extends React.Component {
     }
 }
 
+export class ParticipantWidget extends React.Component {
+
+    constructor() {
+        super();
+    }
+
+    render() {
+
+        const options = this.props.event.partialDatesData.map(o => <option key={o.id} value={o.mask}>{o.name}</option>);
+
+        return <div className="form-group">
+            <label className="col-sm-3 control-label">Attendance:</label>
+            <div className="col-sm-9">
+                <select value={this.props.days} onChange={this.props.update}
+                        className="form-control">
+                    {options}
+                </select>
+            </div>
+        </div>
+    }
+}
+
 const Row = props => <div className="col-sm-12">
     <div className="form-horizontal">
         <div className="form-group">

@@ -8,6 +8,7 @@ import BookingForm from './form/bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
 import { saveBooking, cancelBooking, updateCurrentBooking } from '../actions.js'
 import {bookEventCheck} from '../permission.js'
+import {bookIntoOrganisation} from "../../../shared/permissions";
 
 
 class EditPage extends React.Component {
@@ -21,13 +22,19 @@ class EditPage extends React.Component {
 
 		const event = this.props.Event.toJS();
 		const booking = this.props.Booking.toJS();
+        const organisations = event.organisations;
 		
 		return (<div>
 			<div className="row" style={{ display: "flex" }}>
 				<div className="col-sm-12 col-md-10">
 					<h3>Booking for {event.Name}</h3>
 					<div className="row">
-						<BookingForm booking={booking} event={event} submit={this.props.saveBooking} cancel={this.props.cancelBooking} updateCurrentBooking={this.props.updateCurrentBooking} />
+                        <BookingForm booking={booking}
+                                     event={event}
+                                     organisations={organisations}
+                                     submit={this.props.saveBooking}
+                                     cancel={this.props.cancelBooking}
+                                     updateCurrentBooking={this.props.updateCurrentBooking}/>
 					</div>
 				</div>
 				<ParticipantQuickList booking={booking} />

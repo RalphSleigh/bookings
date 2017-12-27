@@ -27,9 +27,10 @@ class Messages extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-	var Messages = state.get("Messages")
-	return { Messages };
-}
+    const Messages = state.get("Messages");
+    const router = state.get("router");
+    return {Messages, router};
+};
 /*
 const mapDispatchToProps = (dispatch) => {
   return {

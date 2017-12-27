@@ -10,3 +10,10 @@ export class Config extends React.Component {
 	}
 
 }
+
+export class ParticipantWidget extends React.Component {
+
+    render() {
+        return null;
+    }
+}
