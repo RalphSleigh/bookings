@@ -30,3 +30,21 @@ export const decline = (id) => {
             })
     }
 };
+
+export const LOCAL_ASSIGN_VILLAGE = "MANAGE_LOCAL_ASSIGN_VILLAGE";
+
+const localAssignVillage = (bookingId, villageId) => {
+    return {
+        type: LOCAL_ASSIGN_VILLAGE,
+        bookingId: bookingId,
+        villageId: villageId
+    }
+};
+
+export const assignVillage = (bookingId, villageId) => dispatch => {
+    fetch('/api/village/assign', "POST", {bookingId: bookingId, villageId: villageId})
+        .then(j => {
+            dispatch(updateBookings(j));
+        });
+    dispatch(localAssignVillage(bookingId, villageId))
+};

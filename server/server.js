@@ -81,6 +81,8 @@ server.post('/api/booking/edit', P.bookEvent, bookings.editBooking);			//edit a 
 server.post('/api/booking/delete', P.bookEvent, bookings.deleteBooking);			//delete a booking
 server.post('/api/booking/paid', P.bookEvent, bookings.togglePaid); //toggle paid indicator
 
+server.post('/api/village/assign', P.assignVillage, bookings.assignVillage);
+
 server.get('/debug',(req, res) => { //this is a debug method
 	console.log("User");
 	console.log(req.user);

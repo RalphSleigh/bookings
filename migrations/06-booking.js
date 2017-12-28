@@ -68,7 +68,7 @@ module.exports = {
 					model: "organisations",
 					key: "id",
 				},
-				onDelete: "CASCADE"
+                onDelete: "SET NULL"
 			},
 			villageId: {
 				type: DataTypes.INTEGER,
@@ -77,7 +77,7 @@ module.exports = {
 					model: "villages",
 					key: "id",
 				},
-				onDelete: "CASCADE"
+                onDelete: "SET NULL"
 			},
 			createdAt: {
 				allowNull: false,

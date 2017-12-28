@@ -83,5 +83,18 @@ permission.decideApplication = (req, res, next) => {
         })
 };
 
+permission.assignVillage = async function (req, res, next) {
+    const booking = await db.booking.findOne({
+        where: {id: {[Op.eq]: req.body.bookingId}},
+        include: [{model: db.event}]
+    });
+
+    if (P.assignVillage(req.user, booking.event)) next();
+    else {
+        res.status(401).end();
+        log.log("error", "Permission assignVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
 
 module.exports = permission;

@@ -18,7 +18,9 @@ export default function Bookings(state = initialBookingsState, action) {
         case user.actions.UPDATE_USER:
             return state.set("bookings", null); //invalidates app render if the user changes until we can fetch more user bookings.
         case a.UPDATE_CURRENT_BOOKING:
-            return state.set("currentBooking", Immutable.fromJS(action.booking))
+            return state.set("currentBooking", Immutable.fromJS(action.booking));
+        case manageActions.LOCAL_ASSIGN_VILLAGE:
+            return state.setIn(["bookings", action.bookingId, "villageId"], action.villageId)
     }
     return state;
 }

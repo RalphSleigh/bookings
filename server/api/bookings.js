@@ -155,24 +155,14 @@ bookings.deleteBooking = (req, res) => {
         });
 };
 
-/*
+bookings.assignVillage = async function (req, res) {
+    booking = await db.booking.findOne({where: {id: req.body.bookingId}, include: [{model: db.participant}]});
+    booking.villageId = req.body.villageId;
+    await booking.save();
+    const data = {};
+    data.bookings = [booking];
+    res.json(data);
+};
 
-event.editEvent = (req, res) => {
-	Event.findOne({where:{id:req.body.id}})
-	.then(event =>{
-		if(event ===  null)return res.status(404).end();
-		event.update(req.body)
-		.then(event => {
-			res.json(event);
-		});
-	})
-}
-
-event.deleteEvent = (req, res) => {
-	Event.findOne({where:{id:req.body.id}})
-	.then(event => event.destroy())
-	.then(() => res.json({}));
-}
-*/
 module.exports = bookings;
 

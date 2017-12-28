@@ -7,7 +7,7 @@ import {Route, Switch} from 'react-router-dom';
 import bookings from '../../bookings'
 import events from '../../events'
 import { manageEventCheck } from '../permission.js'
-import {togglePaid, approve, decline} from '../actions.js'
+import {togglePaid, approve, decline, assignVillage} from '../actions.js'
 
 import BookingsTab from './bookings.js'
 import ParticipantsTab from './participants.js'
@@ -96,7 +96,8 @@ const mapDispatchToProps = {
     getEventDetails: events.actions.getEventDetails,
     togglePaid: togglePaid,
     approve: approve,
-    decline: decline
+    decline: decline,
+    assignVillage: assignVillage
 };
 
 const VisibleManageContainerPage = connect(

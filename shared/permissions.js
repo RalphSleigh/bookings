@@ -60,4 +60,8 @@ permissions.bookIntoOrganisation = (user, event, organisation, booking) => {
         && (role.organisationId === organisation.id || role.organisationId === null));
 };
 
+permissions.assignVillage = (user, event) => {
+    return permissions.manageEvent(user, event); //for now the same as an event manager, this will change
+};
+
 module.exports = permissions;

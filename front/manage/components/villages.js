@@ -10,6 +10,8 @@ export default class Villages extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.onDragEnd = this.onDragEnd.bind(this);
     };
 
     static panelClass(total) {
@@ -19,7 +21,11 @@ export default class Villages extends React.Component {
     };
 
     onDragEnd(result) {
-        debugger;
+        if (result.destination === null) return;
+        const bookingId = parseInt(/b([\d]+)/.exec(result.draggableId)[1]);
+        const villageId = result.destination.droppableId === "empty" ? null : parseInt(/v([\d]+)/.exec(result.destination.droppableId)[1]);
+
+        this.props.assignVillage(bookingId, villageId);
     }
 
     render() {
@@ -45,19 +51,26 @@ export default class Villages extends React.Component {
 
         const unassignedBoxes = unassignedBookings.map(b =>
             <Draggable key={b.id} draggableId={'b' + b.id}>
-                {(provided, snapshot) => (
-                    <div ref={provided.innerRef}
-                         style={provided.draggableStyle}
-                         {...provided.dragHandleProps}>
-                        <div className="panel panel-default">
-                            <div className="panel-heading">
-                                <h3 className="panel-title">{(event.bigCampMode ? b.district : b.userName) + " (" + b.size + ")"}</h3>
+                {(provided, snapshot) => {
+                    const style = {
+                        ...provided.draggableStyle,
+                        cursor: 'pointer'
+                    };
+
+                    return (
+                        <div ref={provided.innerRef}
+                             style={style}
+                             {...provided.dragHandleProps}>
+                            <div className="panel panel-default">
+                                <div className="panel-heading">
+                                    <h3 className="panel-title">{(event.bigCampMode ? b.district : b.userName) + " (" + b.size + ")"}</h3>
+                                </div>
+                                <div className="panel-body">
+                                    <p>{b.campWith}</p>
+                                </div>
                             </div>
-                            <div className="panel-body">
-                                <p>{b.campWith}</p>
-                            </div>
-                        </div>
-                    </div>)}
+                        </div>)
+                }}
             </Draggable>);
 
         const villageBoxes = villages.map(v => {
@@ -65,32 +78,46 @@ export default class Villages extends React.Component {
             const bookings = v.bookings.map(b =>
 
                 <Draggable key={b.id} draggableId={'b' + b.id}>
-                    {(provided, snapshot) => (
-                        <p ref={provided.innerRef}
-                           style={provided.draggableStyle}
-                           {...provided.dragHandleProps}>{event.bigCampMode ? b.district : b.userName}</p>)}
+                    {(provided, snapshot) => {
+
+                        const style = {
+                            ...provided.draggableStyle,
+                            cursor: 'pointer'
+                        };
+
+                        return (
+                            <div ref={provided.innerRef}
+                                 style={style}
+                                 {...provided.dragHandleProps}>
+                                {(event.bigCampMode ? b.district : b.userName) + ' (' + b.size + ')'}
+                            </div>)
+                    }}
                 </Draggable>
             );
             return <Droppable key={v.id} droppableId={'v' + v.id}>
                 {(provided, snapshot) => (
-                    <div>
-                        <div className="col-sm-3">
-                            <div className={Villages.panelClass(v.participants)}>
-                                <div className="panel-heading">
-                                    <h3 className="panel-title">{v.name}</h3>
-                                </div>
-                                <div ref={provided.innerRef} className="panel-body">
-                                    {bookings}
-                                    {provided.placeholder}
-                                    <p>Total: {v.participants}</p>
-                                </div>
+                    <div className={Villages.panelClass(v.participants)}>
+                        <div className="panel-heading">
+                            <h3 className="panel-title">{v.name}</h3>
+                        </div>
+                        <div ref={provided.innerRef} className="panel-body">
+                            {bookings}
+                            {provided.placeholder}
+                            <div>
+                                <p>
+                                    <b>Total: {v.participants}</b>
+                                </p>
                             </div>
                         </div>
-
                     </div>
                 )}
             </Droppable>
         });
+
+        const villageColumns = villageBoxes.reduce((a, c, i) => {
+            a[i % 4].push(c);
+            return a
+        }, [[], [], [], []]).map((l, i) => <div key={i} className="col-sm-3">{l}</div>);
 
         return (<DragDropContext onDragEnd={this.onDragEnd}>
             <div className="row">
@@ -98,9 +125,10 @@ export default class Villages extends React.Component {
                     <h4>Drag and drop to configure villages</h4>
                 </div>
                 <div className="col-md-3">
+                    <h5>Unassigned:</h5>
                     <Droppable droppableId="empty">
                         {(provided, snapshot) => (
-                            <div ref={provided.innerRef}>
+                            <div ref={provided.innerRef} className="unassignedVillages">
                                 {unassignedBoxes}
                                 {provided.placeholder}
                             </div>
@@ -109,7 +137,7 @@ export default class Villages extends React.Component {
                 </div>
                 <div className="col-md-9">
                     <div className="row">
-                        {villageBoxes}
+                        {villageColumns}
                     </div>
                 </div>
             </div>
