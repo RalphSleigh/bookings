@@ -64,4 +64,8 @@ permissions.assignVillage = (user, event) => {
     return permissions.manageEvent(user, event); //for now the same as an event manager, this will change
 };
 
+permissions.addVillage = (user, event) => {
+    return permissions.manageEvent(user, event); //for now the same as an event manager, this will change
+};
+
 module.exports = permissions;

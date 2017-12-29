@@ -41,6 +41,21 @@ const localAssignVillage = (bookingId, villageId) => {
     }
 };
 
+export const addVillage = data => dispatch => {
+    fetch('/api/village/create', "POST", data)
+        .then(j => {
+            dispatch(updateEvents(j));
+        });
+};
+
+export const deleteVillage = id => dispatch => {
+    fetch('/api/village/delete', "POST", {id: id})
+        .then(j => {
+            dispatch(updateEvents(j));
+            dispatch(updateBookings(j));
+        });
+};
+
 export const assignVillage = (bookingId, villageId) => dispatch => {
     fetch('/api/village/assign', "POST", {bookingId: bookingId, villageId: villageId})
         .then(j => {

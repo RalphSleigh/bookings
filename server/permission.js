@@ -96,5 +96,16 @@ permission.assignVillage = async function (req, res, next) {
     }
 };
 
+permission.addVillage = async function (req, res, next) {
+    const event = await db.event.findOne({
+        where: {id: {[Op.eq]: req.body.bookingId}}
+    });
+
+    if (P.addVillage(req.user, event)) next();
+    else {
+        res.status(401).end();
+        log.log("error", "Permission assignVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
 
 module.exports = permission;

@@ -82,6 +82,8 @@ server.post('/api/booking/delete', P.bookEvent, bookings.deleteBooking);			//del
 server.post('/api/booking/paid', P.bookEvent, bookings.togglePaid); //toggle paid indicator
 
 server.post('/api/village/assign', P.assignVillage, bookings.assignVillage);
+server.post('/api/village/create', P.addVillage, events.addVillage);
+server.post('/api/village/delete', P.addVillage, events.deleteVillage);
 
 server.get('/debug',(req, res) => { //this is a debug method
 	console.log("User");

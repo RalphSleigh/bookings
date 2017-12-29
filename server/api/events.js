@@ -1,6 +1,7 @@
 const db = require('../orm.js');
 const log = require('../logging.js');
 const updateAssociation = require('./util.js').updateAssociation;
+const Op = db.Sequelize.Op;
 
 const event = {};
 
@@ -66,6 +67,25 @@ event.deleteEvent = (req, res) => {
         .then(event => event.destroy())
         .then(() => res.json({}));
 };
+
+event.addVillage = async function (req, res) {
+    const village = await db.village.create(req.body);
+    const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: village.eventId}}});
+    res.json({events: [event]});
+};
+
+event.deleteVillage = async function (req, res) {
+    const village = await db.village.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    await village.destroy();
+
+    const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: village.eventId}}});
+    const bookings = await db.booking.findAll({
+        where:
+            {eventId: {[Op.eq]: event.id}}, include: [{model: db.participant}]
+    });
+    res.json({events: [event], bookings: bookings});
+};
+
 
 module.exports = event;
 

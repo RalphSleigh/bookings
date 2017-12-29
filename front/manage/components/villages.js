@@ -1,5 +1,6 @@
 import React from 'react'
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd'
+import update from 'immutability-helper';
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
@@ -11,7 +12,11 @@ export default class Villages extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {newVillageName: ''};
+
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.updateVillageName = this.updateVillageName.bind(this);
+        this.addVillage = this.addVillage.bind(this);
     };
 
     static panelClass(total) {
@@ -19,6 +24,31 @@ export default class Villages extends React.Component {
         if (total < 100) return "panel panel-warning";
         return "panel panel-danger";
     };
+
+    updateVillageName(e) {
+
+        this.setState(update(this.state, {newVillageName: {$set: e.target.value}}));
+
+        e.preventDefault()
+    }
+
+    addVillage(e) {
+        this.props.addVillage({
+            name: this.state.newVillageName,
+            eventId: this.props.Event.get("id")
+        });
+        e.preventDefault();
+        this.setState(update(this.state, {newVillageName: {$set: ''}}));
+    }
+
+    deleteVillage(id) {
+        return e => {
+            if (confirm("Are you sure you want to delete this village?")) {
+                this.props.deleteVillage(id);
+            }
+            e.preventDefault();
+        }
+    }
 
     onDragEnd(result) {
         if (result.destination === null) return;
@@ -41,13 +71,13 @@ export default class Villages extends React.Component {
                 , 0);
             v.bookings = bookings.filter(b => b.villageId === v.id).map(b => {
                 return {...b, size: participants.filter(p => p.bookingId === b.id).length}
-            });
+            }).sort((a, b) => b.size - a.size);
             return v;
         });
 
         const unassignedBookings = bookings.filter(b => b.villageId === null).map(b => {
             return {...b, size: participants.filter(p => p.bookingId === b.id).length}
-        });
+        }).sort((a, b) => b.size - a.size);
 
         const unassignedBoxes = unassignedBookings.map(b =>
             <Draggable key={b.id} draggableId={'b' + b.id}>
@@ -98,6 +128,10 @@ export default class Villages extends React.Component {
                 {(provided, snapshot) => (
                     <div className={Villages.panelClass(v.participants)}>
                         <div className="panel-heading">
+                            <button type="button" onClick={this.deleteVillage(v.id)} className="close float-right"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                             <h3 className="panel-title">{v.name}</h3>
                         </div>
                         <div ref={provided.innerRef} className="panel-body">
@@ -113,6 +147,31 @@ export default class Villages extends React.Component {
                 )}
             </Droppable>
         });
+
+        villageBoxes.push(<div key="new" className="panel panel-info">
+            <div className="panel-heading">
+                <h3 className="panel-title">Add Village</h3>
+            </div>
+            <div className="panel-body">
+                <form className="form-horizontal">
+                    <div className="form-group">
+                        <div className="col-sm-12">
+                            <input type="text"
+                                   className="form-control"
+                                   placeholder="Name"
+                                   value={this.state.newVillageName}
+                                   onChange={this.updateVillageName}/>
+                        </div>
+                    </div>
+                    <button disabled={this.state.newVillageName === ''}
+                            className="btn"
+                            onClick={this.addVillage}>
+                        <span
+                            className="glyphicon glyphicon-plus"></span> Add
+                    </button>
+                </form>
+            </div>
+        </div>);
 
         const villageColumns = villageBoxes.reduce((a, c, i) => {
             a[i % 4].push(c);

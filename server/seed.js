@@ -307,7 +307,7 @@ function getRandomMedical() {
 function getRandomCampWith() {
     if (Math.random() < 0.75) return '';
 
-    return "We would like to camp with" + faker.address.city();
+    return "We would like to camp with " + faker.address.city();
 
 }
 
