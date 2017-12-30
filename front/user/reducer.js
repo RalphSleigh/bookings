@@ -2,14 +2,16 @@ import Immutable from 'immutable'
 import * as a from './actions.js'
 
 //const initalUserState = Immutable.fromJS({id:0, name:"Guest", roles:[]});
-const initalUserState = null;
+const initalUserState = Immutable.fromJS({user: null, list: []});
 
 export default function User(state = initalUserState, action) {
 
 	switch (action.type) {
-		case a.UPDATE_USER: return Immutable.fromJS(action.user);
+        case a.UPDATE_USER:
+            return state.set('user', Immutable.fromJS(action.user));
+        case a.UPDATE_LIST:
+            return state.set("list", action.users);
 	}
-
 	return state;
 
 }

@@ -62,7 +62,7 @@ class MyBookingPage extends React.Component {
 
 const mapStateToProps = (state, props) => {
     const eventId = parseInt(props.match.params.eventId)
-    let User = state.get("User");
+    let User = state.getIn(["User", "user"]);
     let Event = state.getIn(["Events", "events", eventId]);
 
     //find the booking, sources:

@@ -60,6 +60,7 @@ server.get('/auth/google/callback',
 server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
 server.get('/api/user', auth.getUser);   		//get current user info
 server.post('/api/user/logout', auth.doLogout); //logout
+server.get('/api/users', P.getUserList, auth.getUserList);
 
 server.get('/api/events', events.getEvents);						//get list of events
 server.get('/api/event/:eventId', events.getEvent);					//get single eventId

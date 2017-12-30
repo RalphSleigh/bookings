@@ -47,7 +47,7 @@ class App extends React.Component {
 //store.dispatch(user.actions.getUser());
 
 const mapStateToProps = (state) => {
-	let User = state.get("User");
+    let User = state.getIn(["User", "user"]);
     let Events = state.get("Events", "events");
 	let Bookings = state.getIn(["Bookings", "bookings"])
 	return { User, Events, Bookings };

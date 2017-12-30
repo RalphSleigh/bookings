@@ -41,4 +41,9 @@ auth.doLogout = function(req, res) {
 		});
 };
 
+auth.getUserList = async function (req, res) {
+    const users = db.user.findAll();
+    res.json({users: users});
+};
+
 module.exports = auth;

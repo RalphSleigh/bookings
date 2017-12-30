@@ -58,7 +58,7 @@ class ApplyPage extends React.Component {
 
 const mapStateToProps = (state, props) => {
     const Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
-    const User = state.get("User");
+    const User = state.getIn(["User", "user"]);
     return {Event, User};
 };
 

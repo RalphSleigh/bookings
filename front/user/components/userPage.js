@@ -18,9 +18,9 @@ class UserPage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-	var {User} = state.toObject();
+    const User = state.getIn(["User", "user"]);
 	return { User };
-}
+};
 /*
 const mapDispatchToProps = (dispatch) => {
   return {

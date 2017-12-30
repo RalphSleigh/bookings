@@ -88,7 +88,7 @@ const getEditApplyButton = (user, event) => {
 
 const mapStateToProps = (state) => {
 
-    const User = state.get("User")
+    const User = state.getIn(["User", "user"]);
     const userId = User.get("id");
     let Events = state.getIn(["Events", "events"]);
 	const Bookings = state.getIn(["Bookings", "bookings"]);

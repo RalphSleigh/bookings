@@ -8,13 +8,14 @@ import bookings from '../../bookings'
 import events from '../../events'
 import { manageEventCheck } from '../permission.js'
 import {togglePaid, approve, decline, assignVillage, addVillage, deleteVillage} from '../actions.js'
+import {getUserList} from "../../user/actions";
 
 import BookingsTab from './bookings.js'
 import ParticipantsTab from './participants.js'
 import KpTab from './kp.js'
 import ApplicationTab from './applications.js'
 import VillageTab from './villages.js'
-
+import RolesTab from './roles.js'
 
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
@@ -34,7 +35,7 @@ class ManageContainerPage extends React.Component {
 	render() {
 
 		//prevent render until we have the data available.
-        if (!this.props.Event || !this.props.Bookings) return <div>Loading Data</div>;
+        if (!this.props.Event || !this.props.Bookings || !this.props.Event.get("user")) return <div>Loading Data</div>;
 
 
 		const event = this.props.Event.toJS();
@@ -54,6 +55,7 @@ class ManageContainerPage extends React.Component {
 					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/bookings"} label="Bookings"/>
 					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/kp"} label="KP" />
                     <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/villages"} label="Villages"/>
+                    <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/roles"} label="Roles"/>
                     {applicationsTab}
 				</ul>
 				<Switch>
@@ -75,6 +77,9 @@ class ManageContainerPage extends React.Component {
                     <Route path="/event/:eventId(\d+)/manage/villages">
                         <VillageTab {...this.props} />
                     </Route>
+                    <Route path="/event/:eventId(\d+)/manage/roles">
+                        <RolesTab {...this.props} />
+                    </Route>
 				</Switch>
 			</div>
 		</div>)
@@ -85,10 +90,11 @@ class ManageContainerPage extends React.Component {
 //we could still have no bookings..
 const mapStateToProps = (state, props) => {
 
+    const User = state.getIn(["User", "user"]);
     const Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
 	const Bookings = state.getIn(["Bookings", "bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();
 	const Participants = Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
-	return { Event, Bookings, Participants };
+    return {User, Event, Bookings, Participants};
 };
 
 const mapDispatchToProps = {
@@ -99,7 +105,8 @@ const mapDispatchToProps = {
     decline: decline,
     assignVillage: assignVillage,
     addVillage: addVillage,
-    deleteVillage: deleteVillage
+    deleteVillage: deleteVillage,
+    getUserList: getUserList
 };
 
 const VisibleManageContainerPage = connect(

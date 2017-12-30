@@ -40,7 +40,7 @@ permission.bookEvent = async function (req, res, next) {
 };
 
 permission.getEventBookings = (req, res, next) => {
-    db.event.findOne({where: {id: {[Op.eq]: req.body.eventId}}})
+    db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}})
         .then(e => {
             if (P.manageEvent(req.user, e)) next();
             else {
@@ -105,6 +105,14 @@ permission.addVillage = async function (req, res, next) {
     else {
         res.status(401).end();
         log.log("error", "Permission assignVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
+permission.getUserList = async function (req, res, next) {
+    if (P.getUserList(req.user)) next();
+    else {
+        res.status(401).end();
+        log.log("error", "Permission getUserList failed for %s on %s", req.user.email || "Guest", req.ip);
     }
 };
 

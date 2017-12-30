@@ -32,7 +32,7 @@ class ApplyThanksPage extends React.Component {
 }
 
 const mapStateToProps = (state, props) => {
-    let User = state.get("User");
+    let User = state.getIn(["User", "user"]);
     let Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
     return {User, Event}
 };

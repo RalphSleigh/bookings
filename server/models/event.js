@@ -61,14 +61,14 @@ module.exports = (sequelize, DataTypes) => {
 
         models.event.addScope('details',
             {
-                include: [{model: models.role}, {model: models.organisation}, {
-                    model: models.application,
-                    include: [models.user]
-                }, {model: models.village}]
+                include: [{model: models.role, include: [models.user, models.organisation, models.village]},
+                    {model: models.organisation},
+                    {model: models.application, include: [models.user]},
+                    {model: models.village},
+                    {model: models.user}]
             },
             {override: true});
     };
-
     return event
 };
 

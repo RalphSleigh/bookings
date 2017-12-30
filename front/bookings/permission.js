@@ -6,7 +6,7 @@ import * as P from '../../shared/permissions.js'
 export const viewBookingCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
         if (props.booking === undefined) return true;
-        return P.viewBooking(state.get("User").toJS(), state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]).toJS());
+        return P.viewBooking(state.getIn(["User", "user"]).toJS(), state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]).toJS());
     },
     redirectPath: "/user",
     wrapperDisplayName: "View Booking check"
@@ -15,7 +15,7 @@ export const viewBookingCheck = connectedRouterRedirect({
 export const applyEventCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
         const Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
-        const User = state.get("User");
+        const User = state.getIn(["User", "user"]);
         return P.applyToBookEvent(User.toJS(), Event.toJS());
     },
     redirectPath: (state, props) => {
@@ -33,7 +33,7 @@ export const bookEventCheck = connectedRouterRedirect({
         if (props.match.params.eventId) event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]).toJS();
         else if (props.match.params.bookingId) event = state.getIn(["Events", "events", state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId), "eventId"])]).toJS();
 
-        const user = state.get("User").toJS();
+        const user = state.getIn(["User", "user"]).toJS();
         return P.bookEvent(user, event);
     },
     redirectPath: "/user",

@@ -68,4 +68,11 @@ permissions.addVillage = (user, event) => {
     return permissions.manageEvent(user, event); //for now the same as an event manager, this will change
 };
 
+permissions.getUserList = user => {
+    if (user.roles.find(role => role.name === "admin")) return true;
+    if (user.roles.find(role => role.name === "create")) return true;
+    if (user.roles.find(role => role.name === "Manage" && role.organisationId === null && role.villageId === null)) return true;
+    return false;
+};
+
 module.exports = permissions;
