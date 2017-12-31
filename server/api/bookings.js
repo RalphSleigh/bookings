@@ -3,6 +3,7 @@ const email = require('../email.js');
 const log = require('../logging.js');
 const config = require('../config.js');
 const updateAssociation = require('./util.js').updateAssociation;
+const Op = db.Sequelize.Op;
 const wrapper = require('../errors');
 
 const bookings = {};
@@ -29,16 +30,31 @@ bookings.getUserBookings = (req, res) => {
 };
 
 bookings.getEventBookings = async function (req, res) {
-    //
+    //need to loop over a users roles and assemble the data they are allowed to see
+    event = await db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}});
 
-    db.booking.findAll({
-        where:
-            {eventId: req.params.eventId}, include: [{model: db.participant}]
-    })
-        .then(bookings => {
-            let data = {bookings};
-            res.json(data);
-        });
+    const scopes = [];
+
+    req.user.roles.filter(r => r.eventId === event.id).forEach(r => {
+
+        let participantScope = null;
+        switch (r.name) {
+            case "KP":
+                participantScope = "KP";
+                break;
+            case "Money":
+                participantScope = "Money";
+                break;
+            default:
+                participantScope = "defaultScope";
+        }
+
+        scopes.push({method: ['Limited', event.id, r.villageId, r.organisationId, participantScope]})
+    });
+
+    const bookings = await db.booking.scope(scopes).findAll();
+    res.json({bookings});
+
 };
 
 bookings.getBooking = (req, res) => {

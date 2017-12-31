@@ -113,6 +113,7 @@ server.get('*', function(req, res) {  //serve index.html on deep paths
 
 server.use((error, req, res, next) => {
     log.error("ERROR: " + error.message + " on " + req.url + " for " + req.user.userName);
+    log.debug(error);
     res.status(500).json({message: error.message});
 });
 

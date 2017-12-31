@@ -22,9 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     participant.associate = models => {
-        models.participant.belongsTo(models.booking)
+        models.participant.belongsTo(models.booking);
 
-        models.participantt.addScope('KP', {
+        models.participant.addScope('KP', {
             attributes: ['id', 'name', 'age', 'diet', 'dietExtra', 'days'],
         });
 

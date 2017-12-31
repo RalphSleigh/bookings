@@ -5,11 +5,12 @@ const path = require('path');
 
 const sequelize = new Sequelize('bookings', null, null, {
 	dialect: 'sqlite', storage: 'database.sqlite',
-	logging: console.log
+    logging: console.log,
+    operatorsAliases: Sequelize.Op.Aliases
 });
 
 const db = {};
-const modelsDir = path.join(__dirname, 'models')
+const modelsDir = path.join(__dirname, 'models');
 
 
 fs
