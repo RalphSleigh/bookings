@@ -2,6 +2,7 @@ const db = require('../orm.js');
 const log = require('../logging.js');
 const updateAssociation = require('./util.js').updateAssociation;
 const Op = db.Sequelize.Op;
+const wrapper = require('../errors');
 
 const application = {};
 
@@ -54,5 +55,5 @@ application.declineApplication = (req, res) => {
 };
 
 
-module.exports = application;
+module.exports = wrapper(application);
 

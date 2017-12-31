@@ -19,7 +19,7 @@ export const applyEventCheck = connectedRouterRedirect({
         return P.applyToBookEvent(User.toJS(), Event.toJS());
     },
     redirectPath: (state, props) => {
-        if (state.getIn(["User", "applications"]).find(a => a.get("eventId") === props.match.params.eventId))
+        if (state.getIn(["User", "user", "applications"]).find(a => a.get("eventId") === props.match.params.eventId))
             return '/event/' + props.match.params.eventId + '/apply/thanks';
         else return '/';
     },

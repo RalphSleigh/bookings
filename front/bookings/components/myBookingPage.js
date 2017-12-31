@@ -34,7 +34,7 @@ class MyBookingPage extends React.Component {
         const event = this.props.Event.toJS();
         const user = this.props.User.toJS();
         const booking = this.props.Booking.toJS ? this.props.Booking.toJS() : this.props.Booking;
-        const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, o, booking));
+        const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, booking, o));
 
 
         const form =

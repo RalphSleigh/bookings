@@ -9,6 +9,7 @@ var auth = require('./auth.js');
 var events = require('./api/events.js');
 var bookings = require('./api/bookings.js');
 const applications = require('./api/applications');
+const roles = require('./api/roles')
 
 var db = require('./orm.js')
 
@@ -62,6 +63,9 @@ server.get('/api/user', auth.getUser);   		//get current user info
 server.post('/api/user/logout', auth.doLogout); //logout
 server.get('/api/users', P.getUserList, auth.getUserList);
 
+server.post('/api/role/create', P.createRole, roles.createRole);
+server.post('/api/role/delete', P.deleteRole, roles.deleteRole);
+
 server.get('/api/events', events.getEvents);						//get list of events
 server.get('/api/event/:eventId', events.getEvent);					//get single eventId
 server.post('/api/event/edit', P.editEvent, events.editEvent);		//edit an event
@@ -77,14 +81,14 @@ server.get('/api/booking/user', bookings.getUserBookings);									//get users  
 server.get('/api/booking/event/:eventId', P.getEventBookings, bookings.getEventBookings);	//get all bookings for an event
 server.get('/api/booking/:bookingId', P.getBooking, bookings.getBooking);	//get a single booking
 
-server.post('/api/booking/:eventId/create', P.bookEvent, bookings.createBooking);//create a booking
-server.post('/api/booking/edit', P.bookEvent, bookings.editBooking);			//edit a booking
+server.post('/api/booking/:eventId/create', P.bookEvent, P.bookIntoOrganisation, bookings.createBooking);//create a booking
+server.post('/api/booking/edit', P.editBooking, P.bookIntoOrganisation, bookings.editBooking);			//edit a booking
 server.post('/api/booking/delete', P.bookEvent, bookings.deleteBooking);			//delete a booking
 server.post('/api/booking/paid', P.bookEvent, bookings.togglePaid); //toggle paid indicator
 
 server.post('/api/village/assign', P.assignVillage, bookings.assignVillage);
 server.post('/api/village/create', P.addVillage, events.addVillage);
-server.post('/api/village/delete', P.addVillage, events.deleteVillage);
+server.post('/api/village/delete', P.deleteVillage, events.deleteVillage);
 
 server.get('/debug',(req, res) => { //this is a debug method
 	console.log("User");
@@ -105,6 +109,11 @@ server.use('/', express.static(path.join(__dirname, '../public'), {fallthrough:t
 
 server.get('*', function(req, res) {  //serve index.html on deep paths
     return res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+
+server.use((error, req, res, next) => {
+    log.error("ERROR: " + error.message + " on " + req.url + " for " + req.user.userName);
+    res.status(500).json({message: error.message});
 });
 
 //GO GO GO

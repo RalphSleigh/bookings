@@ -23,12 +23,14 @@ permissions.applyToBookEvent = (user, event) => {
     return false;
 };
 
-
 permissions.bookEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (event.bookingPolicy === 'guest') return true; //anyone can book
     if (event.bookingPolicy === 'approved' && user.roles.find(role => role.name === "book" && role.eventId === event.id)) return true; //booking approved
     if (event.bookingPolicy === 'registered' && user.id !== 1) return true; //non guest can book registered events
+
+    if (user.roles.find(role => role.eventId === event.id
+            && role.name === "Manage")) return true; //anyone with event management permissions can.
 
     return false;
 };
@@ -36,28 +38,51 @@ permissions.bookEvent = (user, event) => {
 permissions.viewBooking = (user, booking) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (booking.userId === user.id) return true; //owner can
+    if (user.roles.find(role => role.eventId === booking.eventId
+            && role.name === "Manage"
+            && (role.villageId === null || role.villageId === booking.villageId)
+            && (role.organisationId === null || role.organisationId === booking.organisationId))) return true; //event manager
     return false;
 };
 
 permissions.manageEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage
+    if (user.roles.find(role => role.eventId === event.id && role.name !== "book")) return true; //do we have an event management role?
     return false;
 };
 
 permissions.decideApplication = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage
+    if (user.roles.find(role => role.eventId === event.id
+            && role.name === "Manage"
+            && role.villageId === null
+            && role.organisationId === null)) return true; //event manager
     return false;
 };
 
-permissions.bookIntoOrganisation = (user, event, organisation, booking) => {
+permissions.editBooking = (user, event, booking) => {
     if (user.roles.find(role => role.name === "admin")) return true; //naturally...
-    if (!permissions.bookEvent(user, event)) return false;//need to be able to book into the event...
-    if (booking && booking.organisationId === organisation.id) return true;//a booking can always book into its existing organisation (used on update)
-    return user.roles.find(role => role.name === "book"
-        && role.eventId === event.id
-        && (role.organisationId === organisation.id || role.organisationId === null));
+    if (booking.eventId !== event.id) return false; //do the booking/event match?
+    if (user.id === booking.userId) return true; //booking owner can edit
+    if (user.id === event.userId) return true; //event owner can edit
+    if (user.roles.find(role => role.eventId === booking.eventId
+            && role.name === "Manage"
+            && (role.villageId === null || role.villageId === booking.villageId)
+            && (role.organisationId === null || role.organisationId === booking.organisationId))) return true;//event/org/village manager can
+    if (user.roles.find(role => role.eventId === event.id
+            && role.name === "book")) return true; //do we have a book role?
+    return false;
+};
+
+permissions.bookIntoOrganisation = (user, event, booking, organisation) => {
+    if (booking !== null && booking.organisationId === organisation.id) return true; //always allow previous org
+    if (user.roles.find(r => r.name === "book"
+            && r.eventId === event.id
+            && r.organisationId !== null
+            && r.organisationId !== organisation.id)) return false; //we have a book role for another org in the event.
+    return true;
 };
 
 permissions.assignVillage = (user, event) => {
@@ -73,6 +98,12 @@ permissions.getUserList = user => {
     if (user.roles.find(role => role.name === "create")) return true;
     if (user.roles.find(role => role.name === "Manage" && role.organisationId === null && role.villageId === null)) return true;
     return false;
+};
+
+permissions.createRole = (user, event) => {
+    if (user.roles.find(role => role.name === "admin")) return true;
+    if (event === null) return false;
+    return permissions.manageEvent(user, event);
 };
 
 module.exports = permissions;

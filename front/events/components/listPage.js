@@ -27,7 +27,7 @@ class EventList extends React.Component {
 	render() {
         const user = this.props.User.toJS();
         let events = this.props.Events.toSeq().sort((a, b) => a.get("StartDate") - b.get("StartDate")).map((e) => <Event
-            user={user} {...e.toJS()} key={e.get("id")}/>).toArray();
+            User={user} {...e.toJS()} key={e.get("id")}/>).toArray();
 		return (
 			<div className="row">
 				<div className="col-md-12">
@@ -50,7 +50,7 @@ const Event = (props) => {
 
 	const EditLink = showEditLink(() => <NavLink event={props} to={"/event/" + props.id + "/edit"}>Edit</NavLink>);
     const ManageLink = showManageLink(() => <NavLink to={"/event/" + props.id + "/manage"}>Manage</NavLink>);
-    const Button = getEditApplyButton(props.user, props);
+    const Button = getEditApplyButton(props.User, props);
 
 	return (<div className="panel panel-default">
 		<div className="panel-heading"><h3 className="panel-title">{props.name}</h3></div>

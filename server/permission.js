@@ -31,11 +31,36 @@ permission.bookEvent = async function (req, res, next) {
     const booking = req.body.id ? await db.booking.findOne({where: {id: {[Op.eq]: req.body.id}}}) : null;
     const organisation = await db.organisation.findOne({where: {id: {[Op.eq]: req.body.organisationId}}});
 
-    if (P.bookIntoOrganisation(req.user, event, organisation, booking)) {
+    if (P.bookIntoOrganisation(req.user, event, booking, organisation)) {
         next();
     } else {
         res.status(401).end();
         log.log("error", "Permission bookEvent failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
+permission.editBooking = async function (req, res, next) {
+    const event = await db.event.findOne({where: {id: {[Op.eq]: req.body.eventId}}});
+    const booking = await db.booking.findOne({where: {id: {[Op.eq]: req.body.id}}});
+
+    if (P.editBooking(req.user, event, booking)) {
+        next();
+    } else {
+        res.status(401).end();
+        log.log("error", "Permission editEvent failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
+permission.bookIntoOrganisation = async function (req, res, next) {
+    const event = await db.event.findOne({where: {id: {[Op.eq]: req.body.eventId}}});
+    const organisation = await db.organisation.findOne({where: {id: {[Op.eq]: req.body.organisationId}}});
+    const booking = req.body.id ? await db.booking.findOne({where: {id: {[Op.eq]: req.body.id}}}) : null;
+
+    if (P.bookIntoOrganisation(req.user, event, booking, organisation)) {
+        next();
+    } else {
+        res.status(401).end();
+        log.log("error", "Permission bookIntoOrganisation failed for %s on %s", req.user.email || "Guest", req.ip);
     }
 };
 
@@ -98,13 +123,26 @@ permission.assignVillage = async function (req, res, next) {
 
 permission.addVillage = async function (req, res, next) {
     const event = await db.event.findOne({
-        where: {id: {[Op.eq]: req.body.bookingId}}
+        where: {id: {[Op.eq]: req.body.eventId}}
     });
 
     if (P.addVillage(req.user, event)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission assignVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+        log.log("error", "Permission addVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
+permission.deleteVillage = async function (req, res, next) {
+    const village = await db.village.findOne({
+        where: {id: {[Op.eq]: req.body.id}},
+        include: [{model: db.event}]
+    });
+
+    if (P.addVillage(req.user, village.event)) next();
+    else {
+        res.status(401).end();
+        log.log("error", "Permission deleteVillage failed for %s on %s", req.user.email || "Guest", req.ip);
     }
 };
 
@@ -113,6 +151,30 @@ permission.getUserList = async function (req, res, next) {
     else {
         res.status(401).end();
         log.log("error", "Permission getUserList failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
+permission.createRole = async function (req, res, next) {
+    const event = await db.event.findOne({
+        where: {id: {[Op.eq]: req.body.eventId}}
+    });
+    if (P.createRole(req.user, event)) next();
+    else {
+        res.status(401).end();
+        log.log("error", "Permission createRole failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
+permission.deleteRole = async function (req, res, next) {
+    const role = await db.role.findOne({
+        where: {id: {[Op.eq]: req.body.id}},
+        include: [{model: db.event}]
+    });
+
+    if (P.createRole(req.user, role.event)) next();
+    else {
+        res.status(401).end();
+        log.log("error", "Permission deleteRole failed for %s on %s", req.user.email || "Guest", req.ip);
     }
 };
 

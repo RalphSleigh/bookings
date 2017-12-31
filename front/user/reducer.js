@@ -10,7 +10,7 @@ export default function User(state = initalUserState, action) {
         case a.UPDATE_USER:
             return state.set('user', Immutable.fromJS(action.user));
         case a.UPDATE_LIST:
-            return state.set("list", action.users);
+            return state.set("list", Immutable.fromJS(action.users));
 	}
 	return state;
 

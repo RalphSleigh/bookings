@@ -35,7 +35,7 @@ class CreatePage extends React.Component {
 			feeData: {},
 			paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
 			paymentInfo: ""
-		}
+        };
 
 		return (
 			<div>

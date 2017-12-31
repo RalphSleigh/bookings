@@ -89,7 +89,7 @@ function createUsers() {
         return db.user.create({
             userName: faker.name.firstName() + ' ' + faker.name.lastName(),
             password: '',
-            email: faker.internet.email()
+            email: faker.internet.exampleEmail()
         })
     });
     return Promise.all(users).then(users => {
@@ -200,7 +200,7 @@ function createBookings() {
     const promises = new Array(20).fill().map(() =>
         db.booking.create({
             userName: faker.name.findName(),
-            userEmail: faker.internet.email(),
+            userEmail: faker.internet.exampleEmail(),
             userContact: faker.phone.phoneNumber(),
             district: faker.address.city(),
             paymentType: getRandomPaymentType(),

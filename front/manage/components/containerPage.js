@@ -7,7 +7,16 @@ import {Route, Switch} from 'react-router-dom';
 import bookings from '../../bookings'
 import events from '../../events'
 import { manageEventCheck } from '../permission.js'
-import {togglePaid, approve, decline, assignVillage, addVillage, deleteVillage} from '../actions.js'
+import {
+    togglePaid,
+    approve,
+    decline,
+    assignVillage,
+    addVillage,
+    deleteVillage,
+    addRole,
+    deleteRole
+} from '../actions.js'
 import {getUserList} from "../../user/actions";
 
 import BookingsTab from './bookings.js'
@@ -91,10 +100,11 @@ class ManageContainerPage extends React.Component {
 const mapStateToProps = (state, props) => {
 
     const User = state.getIn(["User", "user"]);
+    const UserList = state.getIn(["User", "list"]);
     const Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
 	const Bookings = state.getIn(["Bookings", "bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();
 	const Participants = Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
-    return {User, Event, Bookings, Participants};
+    return {User, UserList, Event, Bookings, Participants};
 };
 
 const mapDispatchToProps = {
@@ -106,7 +116,9 @@ const mapDispatchToProps = {
     assignVillage: assignVillage,
     addVillage: addVillage,
     deleteVillage: deleteVillage,
-    getUserList: getUserList
+    getUserList: getUserList,
+    addRole: addRole,
+    deleteRole: deleteRole
 };
 
 const VisibleManageContainerPage = connect(

@@ -63,3 +63,13 @@ export const assignVillage = (bookingId, villageId) => dispatch => {
         });
     dispatch(localAssignVillage(bookingId, villageId))
 };
+
+export const addRole = role => dispatch => {
+    fetch('/api/role/create', "POST", role)
+        .then(j => dispatch(updateEvents(j)))
+};
+
+export const deleteRole = id => dispatch => {
+    fetch('/api/role/delete', "POST", {id: id})
+        .then(j => dispatch(updateEvents(j)))
+};

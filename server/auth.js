@@ -2,6 +2,7 @@ var extend = require('util')._extend;
 var log = require('./logging.js');
 
 var db = require('./orm.js')
+const Op = db.Sequelize.Op;
 
 var auth = {};
 
@@ -42,7 +43,7 @@ auth.doLogout = function(req, res) {
 };
 
 auth.getUserList = async function (req, res) {
-    const users = db.user.findAll();
+    const users = await db.user.findAll({where: {id: {[Op.not]: 1}}});
     res.json({users: users});
 };
 

@@ -3,6 +3,7 @@ const email = require('../email.js');
 const log = require('../logging.js');
 const config = require('../config.js');
 const updateAssociation = require('./util.js').updateAssociation;
+const wrapper = require('../errors');
 
 const bookings = {};
 
@@ -27,7 +28,9 @@ bookings.getUserBookings = (req, res) => {
         });
 };
 
-bookings.getEventBookings = (req, res) => {
+bookings.getEventBookings = async function (req, res) {
+    //
+
     db.booking.findAll({
         where:
             {eventId: req.params.eventId}, include: [{model: db.participant}]
@@ -164,5 +167,5 @@ bookings.assignVillage = async function (req, res) {
     res.json(data);
 };
 
-module.exports = bookings;
+module.exports = wrapper(bookings);
 

@@ -21,8 +21,11 @@ class App extends React.Component {
 		this.props.getUserBookings();
 	}
 
-	componentWillReceiveProps(nextProps) { //refresh bookings if wwe log in/out
-		if (this.props.User !== null && this.props.User !== nextProps.User) this.props.getUserBookings();
+    componentWillReceiveProps(nextProps) { //refresh bookings/events if we log in/out
+        if (this.props.User !== null && this.props.User !== nextProps.User) {
+            this.props.getUserBookings();
+            this.props.getEvents(); //need to drop the detailed event models if present
+        }
 	}
 
 	render() {
@@ -48,7 +51,7 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
     let User = state.getIn(["User", "user"]);
-    let Events = state.get("Events", "events");
+    let Events = state.getIn(["Events", "events"]);
 	let Bookings = state.getIn(["Bookings", "bookings"])
 	return { User, Events, Bookings };
 }

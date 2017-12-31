@@ -14,9 +14,7 @@ export const editEventCheck = connectedReduxRedirect({
 
 export const createEventCheck = connectedReduxRedirect({
 	authenticatedSelector: (state, props) => {
-        return P.createEvent(state.getIn(["User", "user"])).toJS()
-    )
-        ;
+        return P.createEvent(state.getIn(["User", "user"]).toJS());
 	},
 	redirectPath: "/user",
 	wrapperDisplayName: "Create Event Check"

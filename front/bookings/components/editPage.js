@@ -22,7 +22,9 @@ class EditPage extends React.Component {
 
 		const event = this.props.Event.toJS();
 		const booking = this.props.Booking.toJS();
-        const organisations = event.organisations;
+        const user = this.props.User.toJS();
+
+        const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, booking, o));
 		
 		return (<div>
 			<div className="row" style={{ display: "flex" }}>
@@ -45,14 +47,14 @@ class EditPage extends React.Component {
 }
 
 const mapStateToProps = (state, props) => {
-	//let User = state.get("User");
+    const User = state.getIn(["User", "user"]);
     let Booking = state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]);
     const Event = state.getIn(["Events", "events", Booking.get("eventId")]);
     const CurrentBooking = state.getIn(["Bookings", "currentBooking"]);
 
     Booking = (CurrentBooking ? CurrentBooking.get("id") : null) === Booking.get("id") ? CurrentBooking : Booking;
-	
-	return { Booking, Event }
+
+    return {User, Booking, Event}
 };
 
 const mapDispatchToProps = { saveBooking, cancelBooking, updateCurrentBooking };

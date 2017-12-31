@@ -1,5 +1,6 @@
 import Immutable from 'immutable'
 import * as a from './actions.js'
+import user from '../user'
 
 
 //should Events be a map or list? both suck sometimes..
@@ -14,9 +15,11 @@ export default function Events(state = initalEventState, action) {
             return state.set("events", action.events.reduce((a, c) => {
                 console.log("updating events");
                 return a.set(c.id, Immutable.fromJS(c))
-            }, state.get("events")));
+            }, state.get("events") || Immutable.fromJS({})));
         case a.REMOVE_EVENT:
             return state.deleteIn(["events", action.id]);
+        case user.actions.UPDATE_USER:
+            return state.set("events", null);
     }
     return state;
 }
