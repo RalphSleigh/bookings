@@ -11,7 +11,7 @@ export default function Bookings(state = initialBookingsState, action) {
         //case a.GET_EVENTS: return Immutable.fromJS(action.data);
         case a.UPDATE_BOOKINGS:
             return state.set("bookings", action.bookings.reduce((a, c) => {
-                return a.set(c.id, Immutable.fromJS(c))
+                return a.mergeDeepIn([c.id], Immutable.fromJS(c))
             }, state.get("bookings") || Immutable.Map()));
         case a.DELETE_BOOKING:
             return state.deleteIn(["bookings", action.id]);

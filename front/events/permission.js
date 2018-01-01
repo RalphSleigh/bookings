@@ -41,6 +41,13 @@ export const showBookLink = connectedAuthWrapper({
 	wrapperDisplayName: "showBookLink"
 });
 
+export const showBookingEditLink = connectedAuthWrapper({
+    authenticatedSelector: (state, props) => {
+        return P.editBooking(state.getIn(["User", "user"]).toJS(), props.event, props.booking);
+    },
+    wrapperDisplayName: "showBookLink"
+});
+
 export const showApplyToBookLink = connectedAuthWrapper({
     authenticatedSelector: (state, props) => {
         return P.applyToBookEvent(state.getIn(["User", "user"]).toJS(), props.event);

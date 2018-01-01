@@ -109,7 +109,7 @@ module.exports = (sequelize, DataTypes) => {
                         }
                     };
 
-                const include = [{model: models.participant, scope: scope}];
+            const include = [{model: models.participant.scope(scope)}];
 
                 return {where: where, include: include}
             }

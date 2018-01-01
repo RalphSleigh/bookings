@@ -6,7 +6,14 @@ import ReactMarkdown from 'react-markdown'
 import Moment from 'moment'
 
 import { getEvents } from '../actions.js'
-import {showEditLink, showCreateLink, showBookLink, showManageLink, showApplyToBookLink} from '../permission.js'
+import {
+    showEditLink,
+    showCreateLink,
+    showBookLink,
+    showManageLink,
+    showApplyToBookLink,
+    showBookingEditLink
+} from '../permission.js'
 import { getUserBookings } from '../../bookings/actions.js' //deep import, bad cause circular..
 import {applyToBookEvent} from '../../../shared/permissions.js'
 
@@ -55,7 +62,7 @@ const Event = (props) => {
 	return (<div className="panel panel-default">
 		<div className="panel-heading"><h3 className="panel-title">{props.name}</h3></div>
 		<div className="panel-body">
-            <Button event={props}/>
+            <Button event={props} booking={props.booking}/>
 			<h4>{Moment(props.startDate).format('Do')} - {Moment(props.endDate).format('Do MMMM YYYY')}</h4>
 			<ReactMarkdown escapeHtml={true} source={props.description} />
 			<div className="pull-right">
@@ -69,7 +76,8 @@ const Event = (props) => {
 
 const getEditApplyButton = (user, event) => {
     if (event.booking !== undefined) {
-        return showBookLink(() => <Link to={"/event/" + event.id + "/book"} className="btn btn-primary pull-right">Edit
+        return showBookingEditLink(() => <Link to={"/event/" + event.id + "/book"}
+                                               className="btn btn-primary pull-right">Edit
             My Booking</Link>)
     }
     if (applyToBookEvent(user, event)) {

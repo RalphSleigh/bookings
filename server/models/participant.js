@@ -25,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         models.participant.belongsTo(models.booking);
 
         models.participant.addScope('KP', {
-            attributes: ['id', 'name', 'age', 'diet', 'dietExtra', 'days'],
+            attributes: ['id', 'name', 'age', 'diet', 'dietExtra', 'days', 'bookingId'],
         });
 
         models.participant.addScope('Money', {
-            attributes: ['id', 'name', 'days'],
+            attributes: ['id', 'name', 'days', 'bookingId']
         });
     };
 

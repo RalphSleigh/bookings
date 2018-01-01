@@ -29,12 +29,15 @@ export const applyEventCheck = connectedRouterRedirect({
 export const bookEventCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
         //we could be called from /booking/1/edit or /event/1/book, need to handle both
-        let event = null;
-        if (props.match.params.eventId) event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]).toJS();
-        else if (props.match.params.bookingId) event = state.getIn(["Events", "events", state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId), "eventId"])]).toJS();
+        const User = state.getIn(["User", "user"]);
+        if (props.match.params.eventId) Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
+        else if (props.match.params.bookingId) Event = state.getIn(["Events", "events", state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId), "eventId"])]);
 
-        const user = state.getIn(["User", "user"]).toJS();
-        return P.bookEvent(user, event);
+        const existingBooking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id")).toJS();
+
+        const user = User.toJS();
+        const event = Event.toJS();
+        return P.bookEvent(user, event) || P.editBooking(user, event, existingBooking);
     },
     redirectPath: "/user",
     wrapperDisplayName: "Create Event Check"

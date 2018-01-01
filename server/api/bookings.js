@@ -53,7 +53,12 @@ bookings.getEventBookings = async function (req, res) {
     });
 
     const bookings = await db.booking.scope(scopes).findAll();
-    res.json({bookings});
+
+    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
+
+    const flat = results.reduce((a, b) => a.concat(b), []);
+
+    res.json({bookings: flat});
 
 };
 
