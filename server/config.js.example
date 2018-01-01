@@ -20,6 +20,14 @@ config.GoogleClientSecret =	"";
 config.GoogleCallback = "http://localhost:8080/auth/google/callback"
 
 /**
+ * Log on with Facebook
+ */
+
+config.FacebookAppID = "";
+config.FacebookAppSecret = "";
+
+
+/**
  * Google API Service Account to send e-mail
  */
 

@@ -1,5 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
     const user = sequelize.define('user', {
+        facebookProfileId: {
+            type: DataTypes.STRING
+        },
         userName: {
             type: DataTypes.STRING
         },

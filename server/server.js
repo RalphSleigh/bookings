@@ -52,6 +52,16 @@ server.use('/api/*', apiLogger);
 ***** ROUTES ************************
 *************************************/
 
+server.get('/auth/facebook',
+    passport.authenticate('facebook', {scope: ['email']}));
+
+server.get('/auth/facebook/callback',
+    passport.authenticate('facebook', {failureRedirect: '/user'}),
+    function (req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/');
+    });
+
 server.get('/auth/google',
   passport.authenticate('google', { scope: ['email','profile'] })); //google OAuth redirect
 

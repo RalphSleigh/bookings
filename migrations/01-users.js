@@ -7,6 +7,9 @@ module.exports = {
 				primaryKey: true,
 				type: DataTypes.INTEGER
 			},
+            facebookProfileId: {
+                type: DataTypes.STRING
+            },
 			userName: {
 				type: DataTypes.STRING
 			},

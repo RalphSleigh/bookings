@@ -33,11 +33,11 @@ export const bookEventCheck = connectedRouterRedirect({
         if (props.match.params.eventId) Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
         else if (props.match.params.bookingId) Event = state.getIn(["Events", "events", state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId), "eventId"])]);
 
-        const existingBooking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id")).toJS();
+        const existingBooking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"));
 
         const user = User.toJS();
         const event = Event.toJS();
-        return P.bookEvent(user, event) || P.editBooking(user, event, existingBooking);
+        return P.bookEvent(user, event) || P.editBooking(user, event, existingBooking ? existingBooking.toJS() : null);
     },
     redirectPath: "/user",
     wrapperDisplayName: "Create Event Check"

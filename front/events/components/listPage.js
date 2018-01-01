@@ -36,11 +36,11 @@ class EventList extends React.Component {
         let events = this.props.Events.toSeq().sort((a, b) => a.get("StartDate") - b.get("StartDate")).map((e) => <Event
             User={user} {...e.toJS()} key={e.get("id")}/>).toArray();
 		return (
-			<div className="row">
-				<div className="col-md-12">
+            <div className="row vStretch">
+                <div className="col-sm-12">
 					{events}
 				</div>
-				<div className="col-md-12">
+                <div className="col-sm-12">
 					<CreateButton clickCreate={this.clickCreate} />
 				</div>
 			</div>)
