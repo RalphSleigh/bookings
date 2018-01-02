@@ -78,6 +78,8 @@ export default class BookingUserDetails extends React.Component {
             </div>
         </div>
 
+        const disabled = !this.props.guest && this.props.user.email !== null;
+
         return (
             <div>
                 <div className="col-sm-12">
@@ -94,7 +96,7 @@ export default class BookingUserDetails extends React.Component {
                             <label className="col-sm-2 control-label">Your e-mail:</label>
                             <div className="col-sm-10">
                                 <input type="e-mail" className="form-control" placeholder="e-mail"
-                                       disabled={!this.props.guest} value={this.props.userEmail}
+                                       disabled={disabled} value={this.props.userEmail}
                                        onChange={this.update("userEmail")}/>
                             </div>
                         </div>

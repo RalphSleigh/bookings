@@ -155,6 +155,7 @@ export default class BookingForm extends React.Component {
                 <p>We will use these if we need to get in touch</p>
             </div>
             <BookingUserDetails
+                user={this.props.user}
                 event={this.props.event}
                 organisations={this.props.organisations}
                 update={this.updateItem}

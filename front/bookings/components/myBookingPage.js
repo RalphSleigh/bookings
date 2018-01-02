@@ -95,7 +95,7 @@ const emptyBooking = (User, Event) => {
         userId: User.get("id"),
         eventId: Event.get("id"),
         userName: User.get("id") === 1 ? '' : User.get("userName"),
-        userEmail: User.get("id") === 1 ? '' : User.get("email"),
+        userEmail: User.get("id") === 1 ? '' : User.get("email") ? User.get("email") : '',
         participants: [{
             id: "TEMP",
             days: 2 ** (Moment(Event.get('endDate')).diff(Moment(Event.get('startDate')), 'days') + 1) - 1
