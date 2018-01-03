@@ -52,6 +52,13 @@ permissions.manageEvent = (user, event) => {
     return false;
 };
 
+permissions.manageWholeEvent = (user, event) => {
+    if (user.roles.find(role => role.name === "admin")) return true; //admin can always
+    if (event.userId === user.id) return true;  //event owner can manage
+    if (user.roles.find(role => role.eventId === event.id && role.name !== "book" && role.villageId === null && role.organisationId === null)) return true; //do we have a whole event management role?
+    return false;
+};
+
 permissions.decideApplication = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage

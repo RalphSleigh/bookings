@@ -2,12 +2,10 @@ import React from 'react'
 import update from 'immutability-helper';
 import {Typeahead} from 'react-bootstrap-typeahead';
 
-//import bookings from '../bookings'
-//import { manageEventCheck } from '../permission.js'
+import {manageWholeEventCheck} from '../permission.js'
 
-import W from '../../../shared/woodcraft.js'
 
-export default class Roles extends React.Component {
+class Roles extends React.Component {
 
     constructor(props) {
         super(props);
@@ -63,9 +61,9 @@ export default class Roles extends React.Component {
 
         const event = this.props.Event.toJS();
         const userList = this.props.UserList.toJS().map(u => {
-            u.search = u.userName + ' <' + u.email + '>';
+            u.search = u.userName + ' <' + (u.email || '') + '>';
             return u;
-        });
+        }).sort((a, b) => nameSort(a.userName, b.userName));
 
         const globalRoles = event.roles.filter(r => r.villageId === null && r.organisationId === null);
 
@@ -210,3 +208,16 @@ export default class Roles extends React.Component {
         </div>)
     }
 }
+
+export default manageWholeEventCheck(Roles);
+
+const nameSort = (a, b) => {
+    var splitA = a.split(" ");
+    var splitB = b.split(" ");
+    var lastA = splitA[splitA.length - 1];
+    var lastB = splitB[splitB.length - 1];
+
+    if (lastA < lastB) return -1;
+    if (lastA > lastB) return 1;
+    return 0;
+};

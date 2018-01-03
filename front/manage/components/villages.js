@@ -3,11 +3,11 @@ import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd'
 import update from 'immutability-helper';
 
 //import bookings from '../bookings'
-//import { manageEventCheck } from '../permission.js'
+import {manageWholeEventCheck} from '../permission.js'
 
 //import W from '../../../shared/woodcraft.js'
 
-export default class Villages extends React.Component {
+class Villages extends React.Component {
 
     constructor(props) {
         super(props);
@@ -204,3 +204,4 @@ export default class Villages extends React.Component {
     }
 }
 
+export default manageWholeEventCheck(Villages);

@@ -6,7 +6,7 @@ import {Route, Switch} from 'react-router-dom';
 
 import bookings from '../../bookings'
 import events from '../../events'
-import { manageEventCheck } from '../permission.js'
+import {manageEventCheck, manageWholeEventWrapper} from '../permission.js'
 import {
     togglePaid,
     approve,
@@ -19,12 +19,12 @@ import {
 } from '../actions.js'
 import {getUserList} from "../../user/actions";
 
-import BookingsTab from './bookings.js'
-import ParticipantsTab from './participants.js'
-import KpTab from './kp.js'
-import ApplicationTab from './applications.js'
-import VillageTab from './villages.js'
-import RolesTab from './roles.js'
+import BookingsPage from './bookings.js'
+import ParticipantsPage from './participants.js'
+import KpPage from './kp.js'
+import ApplicationPage from './applications.js'
+import VillagePage from './villages.js'
+import RolesPage from './roles.js'
 
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
@@ -52,42 +52,49 @@ class ManageContainerPage extends React.Component {
 
         const showApplications = event.bookingPolicy === 'approved' && event.applications;
 
-        const applicationsTab = showApplications ?
-            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/applications"}
-                       label={'Applications (' + event.applications.length + ')'}/> : null;
+        const ApplicationsTab = showApplications ?
+            manageWholeEventWrapper(() => <CustomTab
+                to={"/event/" + this.props.match.params.eventId + "/manage/applications"}
+                label={'Applications (' + event.applications.length + ')'}/>) : null;
 
-		return (<div className="row">
+        const VillagesTab = manageWholeEventWrapper(() => <CustomTab
+            to={"/event/" + this.props.match.params.eventId + "/manage/villages"} label="Villages"/>);
+        const RolesTab = manageWholeEventWrapper(() => <CustomTab
+            to={"/event/" + this.props.match.params.eventId + "/manage/roles"} label="Roles"/>);
+
+
+        return (<div className="row">
 			<div className="col-sm-12">
 				<h3>Report for {event.name}</h3>
 				<ul className="nav nav-tabs">
 					<CustomTab activeOnlyWhenExact to={"/event/" + this.props.match.params.eventId + "/manage"} label="Participants" />
 					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/bookings"} label="Bookings"/>
 					<CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/kp"} label="KP" />
-                    <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/villages"} label="Villages"/>
-                    <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/roles"} label="Roles"/>
-                    {applicationsTab}
+                    <VillagesTab {...this.props}/>
+                    <RolesTab {...this.props}/>
+                    <ApplicationsTab {...this.props}/>
 				</ul>
 				<Switch>
                     <Route exact path="/event/:eventId(\d+)/manage">
-						<ParticipantsTab {...this.props} />
+                        <ParticipantsPage {...this.props} />
 					</Route>
                     <Route path="/event/:eventId(\d+)/manage/participants">
-						<ParticipantsTab {...this.props} />
+                        <ParticipantsPage {...this.props} />
 					</Route>
                     <Route path="/event/:eventId(\d+)/manage/bookings">
-						<BookingsTab {...this.props} />
+                        <BookingsPage {...this.props} />
 					</Route>
                     <Route path="/event/:eventId(\d+)/manage/kp">
-						<KpTab {...this.props} />
+                        <KpPage {...this.props} />
 					</Route>
                     <Route path="/event/:eventId(\d+)/manage/applications">
-                        <ApplicationTab {...this.props} />
+                        <ApplicationPage {...this.props} />
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/villages">
-                        <VillageTab {...this.props} />
+                        <VillagePage {...this.props} />
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/roles">
-                        <RolesTab {...this.props} />
+                        <RolesPage {...this.props} />
                     </Route>
 				</Switch>
 			</div>

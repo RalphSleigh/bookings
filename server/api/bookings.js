@@ -35,6 +35,8 @@ bookings.getEventBookings = async function (req, res) {
 
     const scopes = [];
 
+    if (req.user.roles.find(role => role.name === "admin") || req.user.id === event.userId) scopes.push({method: ['Limited', event.id, null, null, 'defaultScope']});
+
     req.user.roles.filter(r => r.eventId === event.id).forEach(r => {
 
         let participantScope = null;
