@@ -76,7 +76,7 @@ const Event = (props) => {
 
 const getEditApplyButton = (user, event) => {
     if (event.booking !== undefined) {
-        return showBookingEditLink(() => <Link to={"/event/" + event.id + "/book"}
+        return showBookingEditLink(() => <Link to={"/booking/" + event.booking.id + "/edit"}
                                                className="btn btn-primary pull-right">Edit
             My Booking</Link>)
     }

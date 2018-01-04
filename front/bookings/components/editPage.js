@@ -1,13 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-//import { Link  } from 'react-router'
 
-
-//import event from '../../events'
 import BookingForm from './form/bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
 import { saveBooking, cancelBooking, updateCurrentBooking } from '../actions.js'
-import {bookEventCheck} from '../permission.js'
+import {editBookingCheck} from '../permission.js'
 import {bookIntoOrganisation} from "../../../shared/permissions";
 
 
@@ -31,7 +28,8 @@ class EditPage extends React.Component {
 				<div className="col-sm-12 col-md-10">
 					<h3>Booking for {event.Name}</h3>
 					<div className="row">
-                        <BookingForm booking={booking}
+                        <BookingForm user={user}
+                                     booking={booking}
                                      event={event}
                                      organisations={organisations}
                                      submit={this.props.saveBooking}
@@ -64,4 +62,4 @@ const VisibleEditPage = connect(
 	mapDispatchToProps
 )(EditPage);
 
-export default bookEventCheck(VisibleEditPage);
+export default editBookingCheck(VisibleEditPage);

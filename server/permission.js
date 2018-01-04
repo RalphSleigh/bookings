@@ -53,6 +53,8 @@ permission.editBooking = async function (req, res, next) {
 
 permission.bookIntoOrganisation = async function (req, res, next) {
     const event = await db.event.findOne({where: {id: {[Op.eq]: req.body.eventId}}});
+
+    if (event.organisationsEnabled === false) return next();
     const organisation = await db.organisation.findOne({where: {id: {[Op.eq]: req.body.organisationId}}});
     const booking = req.body.id ? await db.booking.findOne({where: {id: {[Op.eq]: req.body.id}}}) : null;
 

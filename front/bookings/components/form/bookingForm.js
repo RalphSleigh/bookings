@@ -69,7 +69,7 @@ export default class BookingForm extends React.Component {
             return p;
         }); //remove temp ids from new participants
 
-        this.props.submit(state, this.state.new);
+        this.props.submit(state, this.state.new ? true : (this.props.booking.userId === this.props.user.id));
         e.preventDefault();
     }
 
@@ -138,7 +138,8 @@ export default class BookingForm extends React.Component {
             userEmail: this.props.booking.userEmail,
             userContact: this.props.booking.userContact,
             district: this.props.booking.district,
-            organisationId: this.props.booking.organisationId
+            organisationId: this.props.booking.organisationId,
+            bookingId: this.props.booking.id
         };
 
         const permissionDetails = {

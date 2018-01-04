@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-
 import event from '../../events'
 import BookingForm from './form/bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'

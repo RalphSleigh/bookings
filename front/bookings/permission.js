@@ -1,4 +1,5 @@
 import {connectedRouterRedirect,} from 'redux-auth-wrapper/history4/redirect'
+import {withRouter} from 'react-router'
 
 import * as P from '../../shared/permissions.js'
 
@@ -28,16 +29,30 @@ export const applyEventCheck = connectedRouterRedirect({
 
 export const bookEventCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
-        //we could be called from /booking/1/edit or /event/1/book, need to handle both
-        const User = state.getIn(["User", "user"]);
-        if (props.match.params.eventId) Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
-        else if (props.match.params.bookingId) Event = state.getIn(["Events", "events", state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId), "eventId"])]);
 
-        const existingBooking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"));
+        const User = state.getIn(["User", "user"]);
+        const Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
 
         const user = User.toJS();
         const event = Event.toJS();
-        return P.bookEvent(user, event) || P.editBooking(user, event, existingBooking ? existingBooking.toJS() : null);
+        return P.bookEvent(user, event);
+    },
+    redirectPath: "/user",
+    wrapperDisplayName: "Create Event Check"
+});
+
+export const editBookingCheck = connectedRouterRedirect({
+    authenticatedSelector: (state, props) => {
+        //called from /booking/1/edit
+        const User = state.getIn(["User", "user"]);
+        const Booking = state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]);
+        const Event = state.getIn(["Events", "events", Booking.get("eventId")]);
+
+        const user = User.toJS();
+        const event = Event.toJS();
+        const booking = Booking.toJS();
+
+        return P.editBooking(user, event, booking);
     },
     redirectPath: "/user",
     wrapperDisplayName: "Create Event Check"

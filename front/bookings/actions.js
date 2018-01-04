@@ -48,7 +48,7 @@ export const saveBooking = (booking, own) => {
         fetch('/api/booking/edit', "POST", booking, dispatch)
             .then(j => {
                 dispatch(updateBookings(j));
-                dispatch(updateCurrentBooking(null))
+                dispatch(updateCurrentBooking(null));
                 dispatch(own ? push('/event/' + booking.eventId + '/book/thanks') : push('/event/' + booking.eventId + '/manage/bookings'));
             });
     }
