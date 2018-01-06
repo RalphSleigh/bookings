@@ -11,6 +11,11 @@ export default class KP extends React.Component {
 		super(props);
 	}
 
+    shouldComponentUpdate(nextProps, nextState) {
+        //rerendering the tables suck, lets not do it.
+        return !this.props.Bookings.equals(nextProps.Bookings);
+    }
+
 	render() {
 
 		//const event = this.props.Event.toJS();

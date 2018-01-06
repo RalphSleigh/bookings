@@ -45,6 +45,22 @@ permissions.viewBooking = (user, booking) => {
     return false;
 };
 
+permissions.viewOrganisation = (user, event, organisation) => {
+    if (user.roles.find(role => role.name === "admin")) return true; //admin can
+    if (event.userId === user.id) return true; //owner can
+    if (user.roles.find(role => role.eventId === event.id
+            && (role.organisationId === null || role.organisationId === organisation.id))) return true;
+    return false;
+};
+
+permissions.viewVillage = (user, event, village) => {
+    if (user.roles.find(role => role.name === "admin")) return true; //admin can
+    if (event.userId === user.id) return true; //owner can
+    if (user.roles.find(role => role.eventId === event.id
+            && (role.villageId === null || role.villageId === village.id))) return true;
+    return false;
+};
+
 permissions.manageEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage

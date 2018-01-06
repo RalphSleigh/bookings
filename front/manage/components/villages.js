@@ -4,6 +4,7 @@ import update from 'immutability-helper';
 
 //import bookings from '../bookings'
 import {manageWholeEventCheck} from '../permission.js'
+import Immutable from "immutable";
 
 //import W from '../../../shared/woodcraft.js'
 
@@ -62,7 +63,7 @@ class Villages extends React.Component {
 
         const event = this.props.Event.toJS();
         const bookings = this.props.Bookings.toJS();
-        const participants = this.props.Participants.toJS();
+        const participants = this.props.Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List()).toJS();
 
         const villages = (event.villages || []).map(v => {
 

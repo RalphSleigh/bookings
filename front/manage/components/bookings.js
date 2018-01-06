@@ -22,6 +22,11 @@ export default class Bookings extends React.Component {
         this.exportCSV = this.exportCSV.bind(this);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        //rerendering the tables suck, lets not do it.
+        return !this.props.Bookings.equals(nextProps.Bookings);
+    }
+
     exportCSV() {
         const data = this.props.Bookings.toJS();
         const exportedData = data.map(b => [b.id,

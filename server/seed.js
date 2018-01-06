@@ -186,7 +186,7 @@ function createOrganisations() {
 
 function createVillages() {
     let i = 0;
-    const promises = new Array(10).fill().map(() => {
+    const promises = new Array(100).fill().map(() => {
         i++;
         return db.village.create({name: 'Village-' + i, eventId: models.events[1].id})
     });
@@ -197,7 +197,7 @@ function createVillages() {
 }
 
 function createBookings() {
-    const promises = new Array(20).fill().map(() =>
+    const promises = new Array(300).fill().map(() =>
         db.booking.create({
             userName: faker.name.findName(),
             userEmail: faker.internet.exampleEmail(),
@@ -217,9 +217,9 @@ function createBookings() {
 }
 
 function createParticipants() {
-    const promises = new Array(getRandomInt(500, 600)).fill().map(() =>
+    const promises = new Array(getRandomInt(9000, 11000)).fill().map(() =>
         db.participant.create({
-            name: faker.name.firstName() + ' ' + faker.name.lastName(),
+            name: faker.name.firstName(getRandomInt(0, 1)) + ' ' + faker.name.lastName(),
             age: getRandomInt(5, 20),
             diet: getRandomDiet(),
             dietExtra: getRandomDietExtra(),
