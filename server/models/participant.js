@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         models.participant.addScope('Money', {
-            attributes: ['id', 'name', 'days', 'bookingId']
+            attributes: ['id', 'name', 'days', 'age', 'bookingId']
         });
     };
 

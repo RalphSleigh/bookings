@@ -29,3 +29,10 @@ export const manageWholeEventCheck = connectedRouterRedirect({
     redirectPath: "/user",
     wrapperDisplayName: "manageWholeEventCheck"
 });
+
+export const showBookingEditLink = connectedAuthWrapper({
+    authenticatedSelector: (state, props) => {
+        return P.editBooking(state.getIn(["User", "user"]).toJS(), props.event, props.booking);
+    },
+    wrapperDisplayName: "showBookingEditLink"
+});

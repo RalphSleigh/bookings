@@ -126,7 +126,7 @@ class Roles extends React.Component {
 
                     <div className="col-sm-2">
                         <label className="control-label">Role:</label>
-                        <select value={this.state.org} onChange={this.updateOption("role")} className="form-control">
+                        <select value={this.state.role} onChange={this.updateOption("role")} className="form-control">
                             <option value="Manage">Manage</option>
                             <option value="View">View</option>
                             <option value="KP">KP</option>

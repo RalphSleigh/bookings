@@ -49,14 +49,13 @@ class ManageContainerPage extends React.Component {
 
 
         const event = this.props.Event.toJS();
-        //React.cloneElement(this.props.children, {myprop: this.route.myprop})
 
         const showApplications = event.bookingPolicy === 'approved' && event.applications;
 
         const ApplicationsTab = showApplications ?
             manageWholeEventWrapper(() => <CustomTab
                 to={"/event/" + this.props.match.params.eventId + "/manage/applications"}
-                label={'Applications (' + event.applications.length + ')'}/>) : null;
+                label={'Applications (' + event.applications.length + ')'}/>) : () => null;
 
         const VillagesTab = manageWholeEventWrapper(() => <CustomTab
             to={"/event/" + this.props.match.params.eventId + "/manage/villages"} label="Villages"/>);
