@@ -2,13 +2,13 @@ const readline = require('readline');
 const bcrypt = require('bcrypt');
 const faker = require('faker/locale/en_GB');
 const {execSync} = require('child_process');
-
+const path = require('path');
 
 const db = require('./orm.js');
 
 
-execSync('.\\node_modules\\.bin\\sequelize db:migrate:undo:all');
-execSync('.\\node_modules\\.bin\\sequelize db:migrate');
+execSync(path.join('.','node_modules','.bin','sequelize') + ' db:migrate:undo:all');
+execSync(path.join('.','node_modules','.bin','sequelize') + ' db:migrate');
 
 const models = {};
 
