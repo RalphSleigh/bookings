@@ -4,7 +4,5 @@ services:
     build:
       context: .
       dockerfile: dockerfile
-    deploy:
-      replicas: 1
     ports:
-      8080:8080
+      - 8080:8080
