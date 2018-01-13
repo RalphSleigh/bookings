@@ -1,6 +1,6 @@
 /node_modules
 database.sqlite
-server/config.js
+config.js
 server/googlejwt.json
 npm-debug.log
 .eslintrc.json
