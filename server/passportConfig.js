@@ -6,7 +6,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const bcrypt = require('bcrypt');
 
 var log = require("./logging.js");
-const config = require("./config.js");
+const config = require("../config.js");
 
 const db = require('./orm.js');
 const Op = db.Sequelize.Op;

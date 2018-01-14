@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var config = require("./config.js");
+var config = require("../config.js");
 var log = require("./logging.js");
 
 var express = require('express');

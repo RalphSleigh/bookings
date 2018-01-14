@@ -1,6 +1,6 @@
 var google = require('googleapis');
 var gmail = google.gmail('v1');
-var config = require('./config.js');
+var config = require('../config.js');
 var log = require('./logging.js');
 
 var emailTemplate = require('email-templates').EmailTemplate;
