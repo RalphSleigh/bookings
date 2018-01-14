@@ -1,39 +1,53 @@
-/*
-Config options, fill them in and rename the file
-*/
+let config = {};
 
-const config = {}
+if(process.env.bookings_env !== "dev") {
 
-/**
- * Server config
- */
-config.host = "localhost"
-config.port = 8080
-config.basePath = "http://localhost:8080/";
+    config = getConfigFromVault();
 
-/**
- *  Log on with google OAuth
- */
+} else {
 
-config.GoogleClientID = "";
-config.GoogleClientSecret =	"";
-config.GoogleCallback = "http://localhost:8080/auth/google/callback"
+    /**
+     * Server config
+     */
+    config.host = "localhost";
+    config.port = 8080;
+    config.basePath = "http://localhost:8080/";
 
-/**
- * Log on with Facebook
- */
+    /**
+     *  Log on with google OAuth
+     */
+    config.GoogleClientID = "";
+    config.GoogleClientSecret = "";
+    config.GoogleCallback = "http://localhost:8080/auth/google/callback";
 
-config.FacebookAppID = "";
-config.FacebookAppSecret = "";
+    /**
+     * Log on with Facebook
+     */
+    config.FacebookAppID = "";
+    config.FacebookAppSecret = "";
 
-
-/**
- * Google API Service Account to send e-mail
- */
-
-config.email = true;
-config.emailFrom = "";
-config.emailClientEmail = "";
-config.emailPrivateKey = "-----BEGIN PRIVATE KEY-----";
-
+    /**
+     * Service Account to send e-mail
+     */
+    config.email = true;
+    config.emailFrom = "bookings-auto@woodcraft.org.uk";
+    config.emailClientEmail = "";
+    config.emailPrivateKey = ""
+    }
 module.exports = config;
+
+async function getConfigFromVault() {
+
+    const options = {
+        apiVersion: 'v1', // default
+        endpoint: 'http://127.0.0.1:8200', // default
+        token: process.env.bookings_vault_token
+    };
+
+    const role_name = "bookings_"+process.env.bookings_env;
+
+    const vault = require("node-vault")(options);
+    const secret = await vault.getApproleRoleSecret({role_name:role_name});
+    console.log(secret);
+
+}
