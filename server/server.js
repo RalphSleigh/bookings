@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-var config = require("../config.js");
+(async () => {
+var config = await require("../config.js");
 var log = require("./logging.js");
 
 var express = require('express');
@@ -13,7 +14,7 @@ const roles = require('./api/roles')
 
 var db = require('./orm.js')
 
-var passport = require('./passportConfig.js');
+var passport = await require('./passportConfig.js');
 
 
 
@@ -153,4 +154,6 @@ function ensureUser (req, res, next) {
 			guestUser = req.user = user.get({plain:true});
 		})
 		.finally(() => next());
-}
+};
+
+})();

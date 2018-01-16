@@ -1,3 +1,4 @@
+module.exports = (async () => {
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
@@ -5,8 +6,8 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 
 const bcrypt = require('bcrypt');
 
-var log = require("./logging.js");
-const config = require("../config.js");
+const log = require("./logging.js");
+const config = await require("../config.js");
 
 const db = require('./orm.js');
 const Op = db.Sequelize.Op;
@@ -95,4 +96,6 @@ passport.use(new LocalStrategy({
 ));
 
 
-module.exports = passport;
+return passport;
+
+})();
