@@ -1,8 +1,9 @@
+module.exports = (async () => {
 let config = {};
 
 if(process.env.bookings_env !== "dev") {
 
-    config = getConfigFromVault();
+    return await getConfigFromVault();
 
 } else {
 
@@ -12,6 +13,12 @@ if(process.env.bookings_env !== "dev") {
     config.host = "localhost";
     config.port = 8080;
     config.basePath = "http://localhost:8080/";
+
+    /**
+     * Database
+     */
+
+    config.databaseURL = "sqlite://bookings.sqlite/bookings";
 
     /**
      *  Log on with google OAuth
@@ -32,22 +39,54 @@ if(process.env.bookings_env !== "dev") {
     config.email = true;
     config.emailFrom = "bookings-auto@woodcraft.org.uk";
     config.emailClientEmail = "";
-    config.emailPrivateKey = ""
-    }
-module.exports = config;
+    config.emailPrivateKey = "";
+
+    return config;
+}
+
 
 async function getConfigFromVault() {
 
-    const options = {
-        apiVersion: 'v1', // default
-        endpoint: 'http://127.0.0.1:8200', // default
-        token: process.env.bookings_vault_token
-    };
+    try {
+        const options = {
+            apiVersion: 'v1',
+            endpoint: 'https://127.0.0.1:8200',
+            token: process.env.bookings_vault_token //this token must allow us to create a corresponding approle secret
+        };
 
-    const role_name = "bookings_"+process.env.bookings_env;
+        const role_name = "bookings_" + process.env.bookings_env;
 
-    const vault = require("node-vault")(options);
-    const secret = await vault.getApproleRoleSecret({role_name:role_name});
-    console.log(secret);
+        const vault = require("node-vault")(options);
+        const secret = await vault.getApproleRoleSecret({role_name: role_name});//get an approle secret
+        const login = await vault.approleLogin({role_id:process.env.bookings_role_id, secret_id:secret.data.secret_id});//use it to login as the approle
+        vault.token = login.auth.client_token;
 
+        const vaultConfig = {};
+
+        vaultConfig.host = await getValue(vault, "HOST");
+        vaultConfig.port = await getValue(vault, "PORT");
+        vaultConfig.basePath = await getValue(vault, "BASE_PATH");
+
+        vaultConfig.databaseURL = await getValue(vault,"DB_URL");
+
+        vaultConfig.GoogleClientID = await getValue(vault, "GOOGLE_CLIENT_ID");
+        vaultConfig.GoogleClientSecret = await getValue(vault, "GOOGLE_CLIENT_SECRET");
+        vaultConfig.GoogleCallback = vaultConfig.basePath+'auth/google/callback';
+
+        vaultConfig.FacebookAppID = await getValue(vault, "FACEBOOK_APP_ID");
+        vaultConfig.FacebookAppSecret = await getValue(vault, "FACEBOOK_APP_SECRET");
+
+        vaultConfig.email = await getValue(vault, "EMAIL_ENABLED");
+
+        return Promise.resolve(vaultConfig);
+    } catch(error) {
+        console.log(error);
+        return {}
+    }
 }
+
+async function getValue(vault, value) {
+    const response =  await vault.read('kv/bookings/'+process.env.bookings_env+'/'+value);
+    return response.data.value;
+};
+})();
