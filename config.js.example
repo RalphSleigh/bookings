@@ -50,7 +50,7 @@ async function getConfigFromVault() {
     try {
         const options = {
             apiVersion: 'v1',
-            endpoint: 'https://127.0.0.1:8200',
+            endpoint: process.env.bookings_vault_url,
             token: process.env.bookings_vault_token //this token must allow us to create a corresponding approle secret
         };
 
