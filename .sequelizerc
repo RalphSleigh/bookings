@@ -1,3 +1,6 @@
+/*
+Can't work with async config..
+
 const path = require('path');
 
 module.exports = Promise.resolve({
@@ -6,3 +9,5 @@ module.exports = Promise.resolve({
   'seeders-path': path.resolve('server', 'seeders'),
   'migrations-path': path.resolve('migrations')
 })
+
+*/
