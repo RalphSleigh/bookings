@@ -54,6 +54,8 @@ async function getConfigFromVault() {
             token: process.env.bookings_vault_token //this token must allow us to create a corresponding approle secret
         };
 
+        console.log("URL IS"+process.env.bookings_vault_token);
+
         const role_name = "bookings_" + process.env.bookings_env;
 
         const vault = require("node-vault")(options);
