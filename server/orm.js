@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
     const config = await require("../config");
 
+    console.log(config);
+
 
     const sequelize = new Sequelize(config.databaseURL, {
         operatorsAliases: Sequelize.Op.Aliases
