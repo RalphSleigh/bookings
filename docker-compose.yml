@@ -10,3 +10,4 @@ services:
       - bookings_vault_token
       - bookings_env
       - bookings_role_id
+      - bookings_vault_url
