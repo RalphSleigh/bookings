@@ -1,5 +1,10 @@
 FROM node:9
 
+ARG bookings_vault_url
+ARG bookings_vault_token
+ARG bookings_env
+ARG bookings_role_id
+
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

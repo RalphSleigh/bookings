@@ -4,6 +4,11 @@ services:
     build:
       context: .
       dockerfile: dockerfile
+      args:
+        - bookings_vault_url
+        - bookings_vault_token
+        - bookings_env
+        - bookings_role_id
     ports:
       - 8080:8080
     environment:
