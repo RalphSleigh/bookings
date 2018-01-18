@@ -5,6 +5,7 @@ ARG bookings_vault_token
 ARG bookings_env
 ARG bookings_role_id
 ENV NODE_EXTRA_CA_CERTS=/usr/src/app/cacert.pem
+ENV NODE_ENV=production
 
 # Create app directory
 RUN mkdir -p /usr/src/app
