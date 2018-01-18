@@ -103,6 +103,7 @@ const path = require('path');
             .then(createApplications)
             .then(() => {
                 console.log("Done Seeding");
+                process.exit(0);
             });
 
     } else {
