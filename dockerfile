@@ -16,6 +16,8 @@ RUN npm install
 COPY . /usr/src/app
 RUN node ./server/seed.js seed
 
+RUN node ./node_modules/webpack/bin/webpack.js
+
 
 EXPOSE 8080
 
