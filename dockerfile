@@ -11,13 +11,14 @@ ENV NODE_ENV=production
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package.json /usr/src/app/
-RUN npm install
-
 COPY . /usr/src/app
+RUN npm install
+RUN node ./node_modules/webpack/bin/webpack.js
+
+
 RUN node ./server/seed.js seed
 
-RUN node ./node_modules/webpack/bin/webpack.js
+
 
 
 EXPOSE 8080
