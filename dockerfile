@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 
 
 COPY package.json /usr/src/app/
-RUN npm install
+RUN npm install -dev
 
 COPY . /usr/src/app
 RUN node ./node_modules/webpack/bin/webpack.js
