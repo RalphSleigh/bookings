@@ -6,19 +6,18 @@ var log = require("./logging.js");
 var express = require('express');
 var path = require('path');
 
-var auth = require('./auth.js');
-var events = require('./api/events.js');
-var bookings = require('./api/bookings.js');
-const applications = require('./api/applications');
-const roles = require('./api/roles')
+    var auth = await require('./auth.js');
+    var events = await require('./api/events.js');
+    var bookings = await require('./api/bookings.js');
+    const applications = await require('./api/applications');
+    const roles = await require('./api/roles')
 
-var db = require('./orm.js')
+    var db = await require('./orm.js')
 
 var passport = await require('./passportConfig.js');
 
 
-
-var P = require('./permission.js')
+    var P = await require('./permission.js')
 
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
