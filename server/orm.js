@@ -1,7 +1,7 @@
 module.exports = (async () => {
-const Sequelize = require('sequelize');
-const fs = require('fs');
-const path = require('path');
+    const Sequelize = require('sequelize');
+    const fs = require('fs');
+    const path = require('path');
     const config = await require("../config");
 
     console.log(config);
@@ -9,10 +9,10 @@ const path = require('path');
 
     const sequelize = new Sequelize(config.databaseURL, {
         operatorsAliases: Sequelize.Op.Aliases
-});
+    });
 
     const db = {};
-const modelsDir = path.join(__dirname, 'models');
+    const modelsDir = path.join(__dirname, 'models');
 
 
     fs
@@ -29,10 +29,10 @@ const modelsDir = path.join(__dirname, 'models');
         if (db[modelName].associate) {
             db[modelName].associate(db);
         }
-});
+    });
 
     db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+    db.Sequelize = Sequelize;
 
     return db;
 

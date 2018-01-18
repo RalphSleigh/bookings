@@ -100,7 +100,10 @@ const path = require('path');
             .then(createVillages)
             .then(createBookings)
             .then(createParticipants)
-            .then(createApplications);
+            .then(createApplications)
+            .then(() => {
+                console.log("Done Seeding");
+            });
 
     } else {
         console.log("please specify sync or seed");
