@@ -79,7 +79,7 @@ async function getConfigFromVault() {
 
         vaultConfig.GoogleClientID = await getValue(vault, "GOOGLE_CLIENT_ID");
         vaultConfig.GoogleClientSecret = await getValue(vault, "GOOGLE_CLIENT_SECRET");
-        vaultConfig.GoogleCallback = vaultConfig.basePath+'auth/google/callback';
+        vaultConfig.GoogleCallback = vaultConfig.basePath+'/auth/google/callback';
 
         vaultConfig.FacebookAppID = await getValue(vault, "FACEBOOK_APP_ID");
         vaultConfig.FacebookAppSecret = await getValue(vault, "FACEBOOK_APP_SECRET");
