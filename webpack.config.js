@@ -49,7 +49,7 @@ if (PROD) module.exports.plugins.push(new webpack.DefinePlugin({
 	}
 }), new MinifyPlugin());
 
-else module.export.plugins.push(new webpack.SourceMapDevToolPlugin({
+else module.exports.plugins.push(new webpack.SourceMapDevToolPlugin({
     filename: "[file].map",
     exclude: "vendor"
 }));
