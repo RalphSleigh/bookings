@@ -14,7 +14,7 @@ const Op = db.Sequelize.Op;
 passport.use(new FacebookStrategy({
         clientID: config.FacebookAppID,
         clientSecret: config.FacebookAppSecret,
-        callbackURL: "http://localhost:8080/auth/facebook/callback",
+        callbackURL: config.basePath + "/auth/facebook/callback",
         profileFields: ['id', 'emails', 'displayName']
     },
     function (accessToken, refreshToken, profile, cb) {
