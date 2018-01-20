@@ -57,7 +57,7 @@
     "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
-    "pg": "^7.4.1",
+    "pg": "6.4.1",
     "react": "^16.2.0",
     "react-addons-shallow-compare": "^15.4.1",
     "react-beautiful-dnd": "^3.0.0",
