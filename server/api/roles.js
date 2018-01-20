@@ -1,5 +1,4 @@
-module.exports = (async () => {
-    const db = await require('../orm.js');
+const db = require('../orm.js');
     const log = require('../logging.js');
     const Op = db.Sequelize.Op;
     const wrapper = require('../errors');
@@ -27,7 +26,6 @@ module.exports = (async () => {
         res.json({events: [event]});
     };
 
-    return wrapper(role);
+module.exports = wrapper(role);
 
-})();
 

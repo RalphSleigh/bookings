@@ -1,11 +1,10 @@
-module.exports = (async () => {
-var extend = require('util')._extend;
-var log = require('./logging.js');
+const extend = require('util')._extend;
+const log = require('./logging.js');
 
-    var db = await require('./orm.js')
+const db = require('./orm.js');
 const Op = db.Sequelize.Op;
 
-    var auth = {};
+const auth = {} = module.exports;
 
     /*
     auth.doLogin = function(req, res) {
@@ -48,6 +47,4 @@ const Op = db.Sequelize.Op;
         res.json({users: users});
 };
 
-    return auth;
 
-})();

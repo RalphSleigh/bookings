@@ -1,92 +1,94 @@
-module.exports = (async () => {
-let config = {};
+module.exports = () => {
+    if (process.env.BOOKINGS_VAULT_URL) {
 
-if(process.env.bookings_env !== "dev") {
+        return getConfigFromVault();
 
-    return await getConfigFromVault();
+    } else {
 
-} else {
+        const config = {};
+        /**
+         * Server config
+         */
+        config.HOST = "localhost";
+        config.PORT = 8080;
+        config.BASE_PATH = "http://localhost:8080/";
 
-    /**
-     * Server config
-     */
-    config.host = "localhost";
-    config.port = 8080;
-    config.basePath = "http://localhost:8080/";
+        /**
+         * Database
+         */
 
-    /**
-     * Database
-     */
+        config.DB_URL = "sqlite://bookings.sqlite";
 
-    config.databaseURL = "sqlite://bookings.sqlite/bookings";
+        /**
+         *  Log on with google OAuth
+         */
+        config.GOOGLE_CLIENT_ID = "dsfgh";
+        config.GOOGLE_CLIENT_SECRET = "sdfgh";
+        config.GOOGLE_CALLBACK = "http://localhost:8080/auth/google/callback";
 
-    /**
-     *  Log on with google OAuth
-     */
-    config.GoogleClientID = "";
-    config.GoogleClientSecret = "";
-    config.GoogleCallback = "http://localhost:8080/auth/google/callback";
+        /**
+         * Log on with Facebook
+         */
+        config.FACEBOOK_APP_ID = "sfgh";
+        config.FACEBOOK_APP_SECRET = "fghfg";
 
-    /**
-     * Log on with Facebook
-     */
-    config.FacebookAppID = "";
-    config.FacebookAppSecret = "";
+        /**
+         * Service Account to send e-mail
+         */
+        config.EMAIL = false;
+        config.EMAIL_FROM = "bookings-auto@woodcraft.org.uk";
+        config.EMAIL_CLIENT_EMAIL = "";
+        config.EMAIL_PRIVATE_KEY = "";
 
-    /**
-     * Service Account to send e-mail
-     */
-    config.email = true;
-    config.emailFrom = "bookings-auto@woodcraft.org.uk";
-    config.emailClientEmail = "";
-    config.emailPrivateKey = "";
-
-    return config;
-}
-
+        module.exports = config;
+        return Promise.resolve(config);
+    }
+};
 
 async function getConfigFromVault() {
 
-        if(!process.env.bookings_env)throw new Error('bookings_env not set');
-        if(!process.env.bookings_vault_url)throw new Error('bookings_vault_url not set');
-        if(!process.env.bookings_vault_token)throw new Error('bookings_vault_token not set');
-        if(!process.env.bookings_role_id)throw new Error('bookings_role_id not set');
-
     try {
+
+        const url = require('url').URL;
+
+        const vaultURL = new url(process.env.BOOKINGS_VAULT_URL);
+        const connectURL = new url(process.env.BOOKINGS_VAULT_URL);
+
+        connectURL.username = "";
+        connectURL.password = "";
+        connectURL.pathname = "";
 
         const options = {
             apiVersion: 'v1',
-            endpoint: process.env.bookings_vault_url,
-            token: process.env.bookings_vault_token //this token must allow us to create a corresponding approle secret
+            endpoint: connectURL.toString().slice(0, -1), //don't ask stupid module..
+            token: vaultURL.password //this token must allow us to create a corresponding approle secret
         };
 
-        console.log("URL IS"+process.env.bookings_vault_url);
+        const role_name = "bookings_" + vaultURL.username;
 
-        const role_name = "bookings_" + process.env.bookings_env;
-
-        console.log(options);
         const vault = require("node-vault")(options);
         const secret = await vault.getApproleRoleSecret({role_name: role_name});//get an approle secret
-        const login = await vault.approleLogin({role_id:process.env.bookings_role_id, secret_id:secret.data.secret_id});//use it to login as the approle
+        const login = await vault.approleLogin({role_id:role_name, secret_id:secret.data.secret_id});//use it to login as the approle
         vault.token = login.auth.client_token;
 
         const vaultConfig = {};
 
-        vaultConfig.host = await getValue(vault, "HOST");
-        vaultConfig.port = await getValue(vault, "PORT");
-        vaultConfig.basePath = await getValue(vault, "BASE_PATH");
+        vaultConfig.HOST = await getValue(vault, vaultURL.username, "HOST");
+        vaultConfig.PORT = await getValue(vault, vaultURL.username, "PORT");
+        vaultConfig.BASE_PATH = await getValue(vault, vaultURL.username, "BASE_PATH");
 
-        vaultConfig.databaseURL = await getValue(vault,"DB_URL");
+        vaultConfig.DB_URL = await getValue(vault, vaultURL.username,"DB_URL");
 
-        vaultConfig.GoogleClientID = await getValue(vault, "GOOGLE_CLIENT_ID");
-        vaultConfig.GoogleClientSecret = await getValue(vault, "GOOGLE_CLIENT_SECRET");
-        vaultConfig.GoogleCallback = vaultConfig.basePath+'/auth/google/callback';
+        vaultConfig.GOOGLE_CLIENT_ID = await getValue(vault, vaultURL.username, "GOOGLE_CLIENT_ID");
+        vaultConfig.GOOGLE_CLIENT_SECRET = await getValue(vault, vaultURL.username, "GOOGLE_CLIENT_SECRET");
+        vaultConfig.GOOGLE_CALLBACK = vaultConfig.BASE_PATH + 'auth/google/callback';
 
-        vaultConfig.FacebookAppID = await getValue(vault, "FACEBOOK_APP_ID");
-        vaultConfig.FacebookAppSecret = await getValue(vault, "FACEBOOK_APP_SECRET");
+        vaultConfig.FACEBOOK_APP_ID = await getValue(vault, vaultURL.username, "FACEBOOK_APP_ID");
+        vaultConfig.FACEBOOK_APP_SECRET = await getValue(vault, vaultURL.username, "FACEBOOK_APP_SECRET");
 
-        vaultConfig.email = await getValue(vault, "EMAIL_ENABLED");
+        vaultConfig.EMAIL = await getValue(vault, vaultURL.username, "EMAIL_ENABLED");
 
+        module.exports = vaultConfig;
         return Promise.resolve(vaultConfig);
     } catch(error) {
         console.log(error);
@@ -94,8 +96,7 @@ async function getConfigFromVault() {
     }
 }
 
-async function getValue(vault, value) {
-    const response =  await vault.read('kv/bookings/'+process.env.bookings_env+'/'+value);
+async function getValue(vault, role_name, value) {
+    const response =  await vault.read('kv/bookings/'+role_name+'/'+value);
     return response.data.value;
-};
-})();
+}

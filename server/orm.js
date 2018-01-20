@@ -1,13 +1,9 @@
-module.exports = (async () => {
+const config = require("../config");
     const Sequelize = require('sequelize');
     const fs = require('fs');
     const path = require('path');
-    const config = await require("../config");
 
-    console.log(config);
-
-
-    const sequelize = new Sequelize(config.databaseURL, {
+const sequelize = new Sequelize(config.DB_URL, {
         operatorsAliases: Sequelize.Op.Aliases
     });
 
@@ -34,6 +30,4 @@ module.exports = (async () => {
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
 
-    return db;
-
-})();
+module.exports = db;

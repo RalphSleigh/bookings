@@ -5,17 +5,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile
-      args:
-        - bookings_vault_url
-        - bookings_vault_token
-        - bookings_env
-        - bookings_role_id
-        - DEBUG
-        - NODE_ENV=production
     ports:
       - 8080:8080
     environment:
-      - bookings_vault_token
-      - bookings_env
-      - bookings_role_id
       - bookings_vault_url

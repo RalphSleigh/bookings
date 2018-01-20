@@ -1,10 +1,6 @@
 FROM node:9
 
 ARG bookings_vault_url
-ARG bookings_vault_token
-ARG bookings_env
-ARG bookings_role_id
-ARG DEBUG
 
 ENV NODE_EXTRA_CA_CERTS=/usr/src/app/cacert.pem
 ENV NODE_ENV=production
@@ -13,7 +9,6 @@ ENV NODE_ENV=production
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-
 COPY package.json /usr/src/app/
 RUN npm install -dev
 
@@ -21,11 +16,7 @@ COPY . /usr/src/app
 #we want to do this, but takes to much ram so for now prebuild and include in the copy
 #RUN node ./node_modules/webpack/bin/webpack.js
 
-
 RUN node ./server/seed.js seed
-
-
-
 
 EXPOSE 8080
 

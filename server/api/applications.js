@@ -1,5 +1,4 @@
-module.exports = (async () => {
-    const db = await require('../orm.js');
+const db = require('../orm.js');
     const log = require('../logging.js');
     const updateAssociation = require('./util.js').updateAssociation;
     const Op = db.Sequelize.Op;
@@ -56,5 +55,5 @@ module.exports = (async () => {
     };
 
 
-    return wrapper(application);
-})();
+module.exports = wrapper(application);
+

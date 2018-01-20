@@ -1,4 +1,4 @@
-module.exports = (async () => {
+const config = require('../config');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
@@ -6,15 +6,14 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const bcrypt = require('bcrypt');
 
 const log = require("./logging.js");
-const config = await require("../config.js");
 
-    const db = await require('./orm.js');
+const db = require('./orm.js');
 const Op = db.Sequelize.Op;
 
 passport.use(new FacebookStrategy({
-        clientID: config.FacebookAppID,
-        clientSecret: config.FacebookAppSecret,
-        callbackURL: config.basePath + "/auth/facebook/callback",
+        clientID: config.FACEBOOK_APP_ID,
+        clientSecret: config.FACEBOOK_APP_SECRET,
+        callbackURL: config.BASE_PATH + "/auth/facebook/callback",
         profileFields: ['id', 'emails', 'displayName']
     },
     function (accessToken, refreshToken, profile, cb) {
@@ -49,9 +48,9 @@ passport.use(new FacebookStrategy({
 
 
 passport.use(new GoogleStrategy({
-        clientID: config.GoogleClientID,
-        clientSecret: config.GoogleClientSecret,
-        callbackURL: config.GoogleCallback
+        clientID: config.GOOGLE_CLIENT_ID,
+        clientSecret: config.GOOGLE_CLIENT_SECRET,
+        callbackURL: config.GOOGLE_CALLBACK
     },
     function (accessToken, refreshToken, profile, cb) {
         db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
@@ -95,6 +94,5 @@ passport.use(new LocalStrategy({
 ));
 
 
-return passport;
+module.exports = passport;
 
-})();
