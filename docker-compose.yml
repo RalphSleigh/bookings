@@ -1,6 +1,7 @@
 version: "3"
 services:
   bookings:
+    restart: always
     build:
       context: .
       dockerfile: dockerfile
@@ -17,4 +18,3 @@ services:
       - bookings_env
       - bookings_role_id
       - bookings_vault_url
-restart: always
