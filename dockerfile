@@ -1,6 +1,6 @@
 FROM node:9
 
-ARG bookings_vault_url
+ARG BOOKINGS_VAULT_URL
 
 ENV NODE_EXTRA_CA_CERTS=/usr/src/app/cacert.pem
 ENV NODE_ENV=production
