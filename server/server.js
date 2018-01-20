@@ -131,7 +131,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
         });
 
 //GO GO GO
-        log.info("Listening");
+        log.info("Listening on " + config.HOST + ":" + config.PORT);
         server.listen(config.PORT, config.HOST);
 
 
