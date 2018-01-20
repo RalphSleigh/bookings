@@ -4,6 +4,8 @@ ARG bookings_vault_url
 ARG bookings_vault_token
 ARG bookings_env
 ARG bookings_role_id
+ARG DEBUG
+
 ENV NODE_EXTRA_CA_CERTS=/usr/src/app/cacert.pem
 ENV NODE_ENV=production
 
