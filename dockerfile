@@ -16,7 +16,8 @@ COPY package.json /usr/src/app/
 RUN npm install -dev
 
 COPY . /usr/src/app
-RUN node ./node_modules/webpack/bin/webpack.js
+#we want to do this, but takes to much ram so for now prebuild and include in the copy
+#RUN node ./node_modules/webpack/bin/webpack.js
 
 
 RUN node ./server/seed.js seed
