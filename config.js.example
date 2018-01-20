@@ -47,7 +47,7 @@ if(process.env.bookings_env !== "dev") {
 
 async function getConfigFromVault() {
 
-
+        if(!process.env.bookings_env)throw new Error('bookings_env not set');
         if(!process.env.bookings_vault_url)throw new Error('bookings_vault_url not set');
         if(!process.env.bookings_vault_token)throw new Error('bookings_vault_token not set');
         if(!process.env.bookings_role_id)throw new Error('bookings_role_id not set');

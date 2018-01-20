@@ -17,3 +17,4 @@ services:
       - bookings_env
       - bookings_role_id
       - bookings_vault_url
+restart: always
