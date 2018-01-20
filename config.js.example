@@ -64,6 +64,7 @@ async function getConfigFromVault() {
 
         const role_name = "bookings_" + process.env.bookings_env;
 
+        console.log(options);
         const vault = require("node-vault")(options);
         const secret = await vault.getApproleRoleSecret({role_name: role_name});//get an approle secret
         const login = await vault.approleLogin({role_id:process.env.bookings_role_id, secret_id:secret.data.secret_id});//use it to login as the approle
