@@ -1,4 +1,5 @@
 const db = require('../orm.js');
+const config = require('../../config');
 const email = require('../email.js');
 const log = require('../logging.js');
 const updateAssociation = require('./util.js').updateAssociation;
