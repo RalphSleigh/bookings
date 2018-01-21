@@ -74,27 +74,30 @@ if (config.email) {
 
 } else {
 	module.exports = (to, templateName, values) => {
-		console.log(values);
-		log.log("info", "NOT Emailing %s template %s", to, templateName);
-		var templateDir = path.join(__dirname, 'templates', templateName);
-		var template = new emailTemplate(templateDir);
-		template.render(values)
-			.then(parts => {
-				var mail = mailcomposer({
-					from: "Woodcraft Folk Bookings <" + config.emailFrom + ">",
-					sender: config.emailFrom,
-					to: to,
-					subject: parts.subject,
-					text: parts.text,
-					html: parts.html
-				});
-				mail.build((err, message) => {
-					if (err) {
-						console.log(err);
-						return;
-					}
-					console.log(message.toString());
-				})
-			});
-	};
+        /*
+        console.log(values);
+        log.log("info", "NOT Emailing %s template %s", to, templateName);
+        var templateDir = path.join(__dirname, 'templates', templateName);
+        var template = new emailTemplate(templateDir);
+        template.render(values)
+            .then(parts => {
+                var mail = mailcomposer({
+                    from: "Woodcraft Folk Bookings <" + config.emailFrom + ">",
+                    sender: config.emailFrom,
+                    to: to,
+                    subject: parts.subject,
+                    text: parts.text,
+                    html: parts.html
+                });
+                mail.build((err, message) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log(message.toString());
+                })
+            });*/
+    };
+
 }
+;
