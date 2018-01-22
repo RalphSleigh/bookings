@@ -16,6 +16,7 @@ const alignedWithColorsAndTime = format.combine(
 );
 
 const logger = createLogger({
+    level: 'debug',
     format: alignedWithColorsAndTime,
     transports: [new transports.Console()]
 });
