@@ -1,6 +1,7 @@
 const {createLogger, format, transports} = require('winston');
 
 const alignedWithColorsAndTime = format.combine(
+    format.splat(),
     format.colorize(),
     format.timestamp(),
     format.align(),
@@ -10,7 +11,7 @@ const alignedWithColorsAndTime = format.combine(
         } = info;
 
         const ts = timestamp.slice(0, 19).replace('T', ' ');
-        return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ''}`;
+        return `${ts} [${level}]: ${message}`;
     }),
 );
 
