@@ -8,6 +8,21 @@ import cloneDeep from 'lodash/cloneDeep'
 import update from 'immutability-helper';
 import Moment from 'moment'
 
+import {
+    Button,
+    Row,
+    Col,
+    Card,
+    CardText,
+    CardBody,
+    CardTitle,
+    Form,
+    FormGroup,
+    Label,
+    Input
+} from 'reactstrap';
+
+
 //this is a massive component that handles the state of the booking form.
 
 export default class BookingForm extends React.Component {
@@ -103,12 +118,12 @@ export default class BookingForm extends React.Component {
         if (this.props.event.bigCampMode && empty(this.props.booking.district)) results.push("Please fill in your group/district");
 
         if (this.props.booking.participants) this.props.booking.participants.forEach((p, k) => {
-            if (p.name === "") {
+            if (empty(p.name)) {
                 results.push("Participant #" + (k + 1) + " does not have a name");
                 return;
             }
-            if (p.age === "") results.push("Please fill in the age for " + p.name);
-            if (p.diet === "") results.push("Please choose a diet for " + p.name);
+            if (empty(p.age)) results.push("Please fill in the age for " + p.name);
+            if (empty(p.diet)) results.push("Please choose a diet for " + p.name);
         });
 
         if (this.props.event.feeModel !== "free" && (!this.props.booking.paymentType || this.props.booking.paymentType === "")) results.push("Please choose a payment option");
@@ -150,11 +165,13 @@ export default class BookingForm extends React.Component {
             campWith: this.props.booking.campWith
         };
 
-        return (<div>
-            <div className="col-sm-12">
-                <h3>Your Details</h3>
-                <p>We will use these if we need to get in touch</p>
-            </div>
+        return (<Form>
+            <Row>
+                <Col>
+                    <h3>Your Details</h3>
+                    <p>We will use these if we need to get in touch</p>
+                </Col>
+            </Row>
             <BookingUserDetails
                 user={this.props.user}
                 event={this.props.event}
@@ -162,10 +179,12 @@ export default class BookingForm extends React.Component {
                 update={this.updateItem}
                 guest={this.guest}
                 validating={this.state.validation > 0} {...userDetails}/>
-            <div className="col-sm-12">
-                <h3>Participants</h3>
-                <p>Please fill out for every person attending (including yourself if applicable)</p>
-            </div>
+            <Row>
+                <Col>
+                    <h3>Participants</h3>
+                    <p>Please fill out for every person attending (including yourself if applicable)</p>
+                </Col>
+            </Row>
             <ParticipantForm participants={this.props.booking.participants}
                              event={this.props.event}
                              update={this.updateParticipantDetails}
@@ -173,9 +192,11 @@ export default class BookingForm extends React.Component {
                              delete={this.deleteParticipant}
                              validating={this.state.validation > 1}
                              updateValidation={this.updateValidation(1)}/>
-            <div className="col-sm-12">
-                <h3>Money</h3>
-            </div>
+            <Row className="mb-3">
+                <Col>
+                    <h3>Money</h3>
+                </Col>
+            </Row>
             <FeeForm event={this.props.event} participants={this.props.booking.participants}/>
             {this.props.event.feeModel === "free" ? null :
                 <PaymentForm update={this.updateItem}
@@ -183,28 +204,38 @@ export default class BookingForm extends React.Component {
                              chosen={this.props.booking.paymentType}
                              validating={this.state.validation > 2}
                              updateValidation={this.updateValidation(2)}/>}
-            <div className="col-sm-12">
-                <h3>Responsibility</h3>
-            </div>
+            <Row className="mb-3">
+                <Col>
+                    <h3>Responsibility</h3>
+                </Col>
+            </Row>
             <PermissionForm event={this.props.event}
                             update={this.updateItem}
                             validating={this.state.validation > 3}
                             {...permissionDetails}
                             updateValidation={this.updateValidation(4)}/>
-            <div className="col-sm-12">
-                <h3>Submit</h3>
-                <p>When you have finished click here to submit your booking. You can always come back and edit it before
-                    the deadline</p>
-                <ValidationList errors={validationMessages}/>
-                <div className="btn-toolbar">
-                    <button disabled={validationMessages.length !== 0}
-                            className="btn btn-success"
+            <Row>
+                <Col>
+                    <h3>Submit</h3>
+                    <p>When you have finished click here to submit your booking. You can always come back and edit it
+                        before the deadline.</p>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <ValidationList errors={validationMessages}/>
+                </Col>
+            </Row>
+            <FormGroup row>
+                <Col>
+                    <Button disabled={validationMessages.length !== 0}
+                            color="success"
                             onClick={this.submit}>Submit Booking
-                    </button>
+                    </Button>
                     {this.state.new ? null : deleteButtons}
-                </div>
-            </div>
-        </div>)
+                </Col>
+            </FormGroup>
+        </Form>)
     }
 }
 
@@ -213,10 +244,11 @@ const ValidationList = (props) => {
 
     const items = props.errors.map(e => <li key={e}>{e}</li>);
 
-    return (<div className="panel panel-warning">
-        <div className="panel-heading">Still to do:</div>
+    return (<Card className="mb-3" body outline color="warning">
+        <CardTitle>Still to do:</CardTitle>
         <ul>{items}</ul>
-    </div>);
+    </Card>);
+
 };
 
 function empty(value) {

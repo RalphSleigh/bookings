@@ -20,9 +20,8 @@ export default class FeeForm extends React.Component {
 
 		const BookingFeeForm = fee[this.props.event.feeModel].BookingForm;
 
-		return (<div className="col-sm-12">
+        return (
 			<BookingFeeForm feeData={this.props.event.feeData} participants={this.props.participants} />
-		</div>
 		)
 	}
 }

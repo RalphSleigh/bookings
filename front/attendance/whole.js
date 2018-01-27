@@ -3,6 +3,10 @@ import React from 'react'
 export const name = "whole";
 export const selection = "Whole event only";
 
+import {
+    Col
+} from 'reactstrap';
+
 export class Config extends React.Component {
 
 	render() {
@@ -14,6 +18,6 @@ export class Config extends React.Component {
 export class ParticipantWidget extends React.Component {
 
     render() {
-        return null;
+        return <Col sm={11}/>;
     }
 }

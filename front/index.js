@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
@@ -19,16 +20,15 @@ import events from './events'
 import bookings from './bookings'
 
 
-
 const history = createHistory()
 const middleware = routerMiddleware(history)
 
 const rootReducer = combineReducers({
-	User: user.reducer,
-	Messages: messages.reducer,
-	Events: events.reducer,
-	Bookings: bookings.reducer,
-	router: routerReducer
+    User: user.reducer,
+    Messages: messages.reducer,
+    Events: events.reducer,
+    Bookings: bookings.reducer,
+    router: routerReducer
 });
 
 const store = createStore(rootReducer, Immutable.Map(), applyMiddleware(thunk, middleware));

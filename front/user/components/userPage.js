@@ -1,20 +1,32 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {doLogin} from '../actions.js'
-import {FacebookLoginButton, GoogleLoginButton} from 'react-social-login-buttons';
+import {FacebookLoginButton, GoogleLoginButton, MicrosoftLoginButton} from 'react-social-login-buttons';
+import SocialLoginButton from 'react-social-login-buttons/lib/buttons/SocialLoginButton';
+import {
+    Button,
+    Row,
+    Col,
+    Card,
+    CardText,
+    CardBody,
+    CardTitle,
+    Form,
+    FormGroup,
+    Label,
+    Input
+} from 'reactstrap';
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faYahoo} from '@fortawesome/fontawesome-free-brands'
+
 
 class UserPage extends React.Component {
 
     render() {
         const data = this.props.User.toObject();
 
-        var page = data.id === 1 ? <LoginForm doLogin={this.props.doLogin}/> : <UserProfile user={data}/>;
-
-        return (
-            <div className="row">
-                {page}
-            </div>
-        )
+        return data.id === 1 ? <LoginForm doLogin={this.props.doLogin}/> : <UserProfile user={data}/>;
     }
 }
 
@@ -32,7 +44,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapDispatchToProps = {doLogin};
 
-var VisibleUserPage = connect(
+const VisibleUserPage = connect(
     mapStateToProps,
     mapDispatchToProps
 )(UserPage);
@@ -63,51 +75,75 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        return (<div>
-            <div className="col-sm-8">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h4>Social Login</h4>
-                    </div>
-                    <div className="panel-body">
-                        <p>Please use one of the following services to authenticate:</p>
-                        <div className="row">
-                            <div className="col-md-5">
+        return (<Row>
+            <Col sm={7}>
+                <Card>
+                    <CardBody>
+                        <CardTitle>Social Login</CardTitle>
+                        <CardText>Please use one of the following services to authenticate:</CardText>
+                        <Row>
+                            <Col sm={6}>
                                 <GoogleLoginButton onClick={() => {
                                     window.location = '/auth/google'
                                 }}/>
                                 <FacebookLoginButton text="Login with Facebook" onClick={() => {
                                     window.location = '/auth/facebook'
                                 }}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="col-sm-4">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h4>Local Login</h4>
-                    </div>
-                    <div className="panel-body">
-                        <p>Sign in with a provided e-mail address/password</p>
-                        <form>
-                            <div className="form-group">
-                                <label htmlFor="LoginFormEmail">Email address</label>
-                                <input type="email" value={this.state.email} className="form-control"
-                                       id="LoginFormEmail" placeholder="Email" onChange={this.updateEmail}/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="LoginFormPassword">Password</label>
-                                <input type="password" value={this.state.password} className="form-control"
-                                       id="LoginFormPassword" placeholder="Password" onChange={this.updatePassword}/>
-                            </div>
-                            <button type="submit" onClick={this.submit} className="btn btn-default">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>)
+                                <MicrosoftLoginButton onClick={() => {
+                                    window.location = '/auth/microsoft'
+                                }}/>
+                                <MyYahooLoginButton onClick={() => {
+                                    window.location = '/auth/yahoo'
+                                }}/>
+                            </Col>
+                        </Row>
+                    </CardBody>
+                </Card>
+            </Col>
+            <Col sm={5}>
+                <Card>
+                    <CardBody>
+                        <CardTitle>Local Login</CardTitle>
+                        <CardText>Only use this if Ralph has told you to.</CardText>
+                        <Form>
+                            <FormGroup row>
+                                <Label for="email" sm={4}>
+                                    Email Address
+                                </Label>
+                                <Col>
+                                    <Input type="email"
+                                           name="email"
+                                           placeholded="e-mail"
+                                           value={this.state.email}
+                                           onChange={this.updateEmail}
+                                    />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Label for="password" sm={4}>
+                                    Password
+                                </Label>
+                                <Col>
+                                    <Input type="password"
+                                           name="password"
+                                           placeholded="password"
+                                           value={this.state.password}
+                                           onChange={this.updatePassword}
+                                    />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col sm={{size: 8, offset: 4}}>
+                                    <Button type="submit"
+                                            onClick={this.submit}
+                                            color="primary">Submit</Button>
+                                </Col>
+                            </FormGroup>
+                        </Form>
+                    </CardBody>
+                </Card>
+            </Col>
+        </Row>);
     }
 }
 
@@ -121,6 +157,22 @@ class UserProfile extends React.Component {
             </div>
         )
     }
-
-
 }
+
+
+const MyYahooLoginButton = (props) => {
+
+    const customProps = {
+        style: {background: "#2f2268"},
+        activeStyle: {background: "#16094F"}
+
+    };
+
+
+    return <SocialLoginButton{...{...customProps, ...props}}>
+        <FontAwesomeIcon style={{verticalAlign: 'middle', width: "1em", marginLeft: "0.6em", marginRight: "0.6em"}}
+                         icon={faYahoo}/>
+        <span style={{verticalAlign: 'middle'}}>Log on with Yahoo!</span>
+    </SocialLoginButton>
+};
+

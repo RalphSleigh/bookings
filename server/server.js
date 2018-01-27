@@ -73,6 +73,22 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.get('/auth/google/callback',
             passport.authenticate('google', {successRedirect: "/", failureRedirect: '/user'})); // google OAuth callback
 
+        server.get('/auth/yahoo',
+            passport.authenticate('yahoo')); //google OAuth redirect
+
+        server.get('/auth/yahoo/callback',
+            passport.authenticate('yahoo', {successRedirect: "/", failureRedirect: '/user'})); // google OAuth callback
+
+        server.get('/auth/microsoft',
+            passport.authenticate('microsoft', {scope: ['https://graph.microsoft.com/user.read']}));
+
+        server.get('/auth/microsoft/callback',
+            passport.authenticate('microsoft', {failureRedirect: '/login'}),
+            function (req, res) {
+                // Successful authentication, redirect home.
+                res.redirect('/');
+            });
+
         server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
         server.get('/api/user', auth.getUser);   		//get current user info
         server.post('/api/user/logout', auth.doLogout); //logout

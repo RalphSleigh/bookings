@@ -2,6 +2,22 @@ import React from 'react'
 import attendance from '../../../attendance'
 import {ParticipantWidget} from "../../../attendance/presets";
 
+import {
+    Button,
+    Row,
+    Col,
+    FormGroup,
+    Label,
+    Input,
+    Card,
+    CardBody,
+    CardTitle,
+    CardImg,
+    CardImgOverlay
+} from 'reactstrap';
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/fontawesome-free-solid'
 
 export default class ParticipantsForm extends React.Component {
 
@@ -47,24 +63,23 @@ export default class ParticipantsForm extends React.Component {
 
         const AttendanceWidget = attendance[this.props.event.partialDates].ParticipantWidget;
 
-        let rows = participants.map(p => <ParticipantRow key={p.id}
+
+        let rows = participants.map((p, i) => <ParticipantRow key={p.id}
+                                                              index={i}
                                                          {...p}
                                                          update={this.update(p.id)}
                                                          delete={this.delete(p.id)}
                                                          valid={this.valid}
                                                          event={this.props.event}
                                                          AttendanceWidget={AttendanceWidget}/>);
-
-        return (<div>
-                <div className="col-sm-12">
-                    <div className="row participants">
-                        {rows}
-                    </div>
-                </div>
-                <div className="col-sm-12 top15">
-                    <button className="btn btn-default" onClick={this.add}>More People!</button>
-                </div>
-            </div>
+        return (<React.Fragment>
+                {rows}
+                <Row className="mb-3">
+                    <Col>
+                        <Button color="info" onClick={this.add}>More People!</Button>
+                    </Col>
+                </Row>
+            </React.Fragment>
         )
     }
 }
@@ -75,56 +90,67 @@ const ParticipantRow = (props) => {
 
     const attendance = <props.AttendanceWidget days={props.days} event={props.event} update={props.update("days")}/>;
 
-    return (<div className="col-sm-12 participantrow">
-        <form className="form-horizontal">
-            <div className="form-group">
-                <div className={props.valid(props.name)}>
-                    <label className="col-sm-3 control-label">Name:</label>
-                    <div className="col-sm-3">
-                        <input type="text" value={props.name || ''} onChange={props.update("name")}
-                               className="form-control" placeholder="Name"/>
-                    </div>
-                </div>
-                <div className={props.valid(props.age)}>
-                    <label className="col-sm-1 control-label">Age:</label>
-                    <div className="col-sm-1">
-                        <input type="text" value={props.age || ''} onChange={props.update("age")}
-                               className="form-control" placeholder="Age"/>
-                    </div>
-                </div>
-                <div className={props.valid(props.diet)}>
-                    <label className="col-sm-1 control-label">Diet:</label>
-                    <div className="col-sm-2">
-                        <select value={props.diet || ''} onChange={props.update("diet")} className="form-control">
-                            <option>Please Select</option>
-                            <option value="omnivore">Omnivore</option>
-                            <option value="vegetarian">Vegetarian</option>
-                            <option value="vegan">Vegan</option>
-                        </select>
-                    </div>
-                </div>
-                <div className="col-sm-1">
-                    <button type="submit" onClick={props.delete} className="btn btn-warning"><span
-                        className="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                </div>
-            </div>
-        </form>
-        <form className="form-horizontal">
-            <div className="form-group">
-                <label className="col-sm-3 control-label">Additional dietary information or allergies:</label>
-                <div className="col-sm-9">
-                    <textarea value={props.dietExtra || ''} onChange={props.update("dietExtra")}
-                              className="form-control" rows="2"></textarea>
-                </div>
-            </div>
-            <div className="form-group">
-                <label className="col-sm-3 control-label">Additional medical information &amp; medication taken:</label>
-                <div className="col-sm-9">
-                    <textarea className="form-control" value={props.medical || ''} onChange={props.update("medical")}
-                              rows="2"></textarea>
-                </div>
-            </div>
-            {attendance}
-        </form>
-    </div>)
+    return (<Card className="mb-3">
+        <CardImg top src="/participant-header.jpg" alt="Card image cap"/>
+        <CardImgOverlay>
+            <CardTitle style={{marginTop: "-0.85em", marginLeft: "-0.60em"}}>#{props.index + 1}</CardTitle>
+        </CardImgOverlay>
+        <CardBody>
+            <FormGroup row>
+                <Label sm={2}>Name:</Label>
+                <Col sm={3}>
+                    <Input type="text"
+                           value={props.name || ''}
+                           onChange={props.update("name")}
+                           vaild={props.valid(props.name)}
+                           placeholder="Name"/>
+                </Col>
+                <Label sm={1}>Age:</Label>
+                <Col sm={2}>
+                    <Input type="text"
+                           className={props.valid(props.age)}
+                           value={props.age || ''}
+                           onChange={props.update("age")}
+                           placeholder="Age"/>
+                </Col>
+                <Label sm={1}>Diet:</Label>
+                <Col sm={3}>
+                    <Input type="select" value={props.diet || ''}
+                           onChange={props.update("diet")}
+                           vaild={props.valid(props.diet)}>
+                        <option>Please Select</option>
+                        <option value="omnivore">Omnivore</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                    </Input>
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label sm={2}>Additional dietary information or allergies:</Label>
+                <Col sm={10}>
+                    <Input type="textarea"
+                           value={props.dietExtra || ''}
+                           onChange={props.update("dietExtra")}
+                           rows="3"/>
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label sm={2}>Additional medical information &amp; medication taken:</Label>
+                <Col sm={10}>
+                    <Input type="textarea"
+                           value={props.medical || ''}
+                           onChange={props.update("medical")}
+                           rows="3"/>
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                {attendance}
+                <Col sm={1}>
+                    <Button type="submit" onClick={props.delete} color="warning">
+                        <span style={{color: 'white'}}><FontAwesomeIcon icon={faTimes}/></span>
+                    </Button>
+                </Col>
+            </FormGroup>
+        </CardBody>
+    </Card>)
 };

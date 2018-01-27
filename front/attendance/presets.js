@@ -4,6 +4,17 @@ import cloneDeep from 'lodash/cloneDeep'
 export const name = "presets";
 export const selection = "Predefined options";
 
+import {
+    Button,
+    Row,
+    Col,
+    FormGroup,
+    Label,
+    Input,
+    Card,
+    CardBody
+} from 'reactstrap';
+
 export class Config extends React.Component {
 
     constructor() {
@@ -52,8 +63,8 @@ export class Config extends React.Component {
         //<AttendanceConfig data={this.state.event.partialDatesData} update={this.updateData('partialDatesData')} />
         const options = this.props.data || [];
 
-        const optionRows = options.map(o => <Row key={o.id} name={o.name} mask={o.mask} update={this.update(o.id)}
-                                                 delete={this.delete(o.id)} updateMask={this.updateMask(o.id)}/>);
+        const optionRows = options.map(o => <RowC key={o.id} name={o.name} mask={o.mask} update={this.update(o.id)}
+                                                  delete={this.delete(o.id)} updateMask={this.updateMask(o.id)}/>);
 
         return <div className="row">
             <div className="col-sm-7"><h4>Description</h4></div>
@@ -84,19 +95,21 @@ export class ParticipantWidget extends React.Component {
 
         const options = this.props.event.partialDatesData.map(o => <option key={o.id} value={o.mask}>{o.name}</option>);
 
-        return <div className="form-group">
-            <label className="col-sm-3 control-label">Attendance:</label>
-            <div className="col-sm-9">
-                <select value={this.props.days} onChange={this.props.update}
-                        className="form-control">
+        return (<React.Fragment>
+            <Label sm={2}>
+                Attendance:
+            </Label>
+            <Col sm={3}>
+                <Input type="select" value={this.props.days} onChange={this.props.update}>
                     {options}
-                </select>
-            </div>
-        </div>
+                </Input>
+            </Col>
+            <Col sm={6}/>
+        </React.Fragment>);
     }
 }
 
-const Row = props => <div className="col-sm-12">
+const RowC = props => <div className="col-sm-12">
     <div className="form-horizontal">
         <div className="form-group">
             <div className="col-sm-7">

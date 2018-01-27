@@ -1,5 +1,12 @@
 import React from 'react'
 
+import {
+    Col,
+    FormGroup,
+    Label,
+    Input
+} from 'reactstrap';
+
 export default class BookingUserDetails extends React.Component {
 
     constructor(props) {
@@ -23,93 +30,87 @@ export default class BookingUserDetails extends React.Component {
     }
 
     valid(item) {
-        const valid = "form-group";
-        const invalid = "form-group has-error";
-
-        if (this.props.validating && (!item || item === "")) return invalid;
-        return valid;
+        if (this.props.validating && (!item || item === "")) return false;
+        return null;
     }
 
     render() {
 
-        const district = this.props.event.bigCampMode ? <div className={this.valid(this.props.district)}>
-            <label className="col-sm-2 control-label">Group/District:</label>
-            <div className="col-sm-10">
-                <input type="tel" className="form-control" placeholder="Group/District"
-                       value={this.props.district || ''} onChange={this.update("district")}/>
-            </div>
-        </div> : null;
+        const district = this.props.event.bigCampMode ?
+            <FormGroup row>
+                <Label sm={2}>Group/District:</Label>
+                <Col sm={10}>
+                    <Input type="text"
+                           placeholder="Group/District"
+                           value={this.props.district || ''}
+                           onChange={this.update("district")}
+                           valid={this.valid(this.props.district)}
+                    />
+                </Col>
+            </FormGroup> : null;
 
         let organisations = null;
 
         if (this.props.event.organisationsEnabled) {
             if (this.props.organisations.length === 1) {
-                organisations = <div className="form-group">
-                    <label className="col-sm-2 control-label">Organisation:</label>
-                    <div className="col-sm-10">
-                        <input className="form-control" disabled value={this.props.organisations[0].name}/>
-                    </div>
-                </div>
+                organisations =
+                    <FormGroup row>
+                        <Label sm={2}>Organisation:</Label>
+                        <Col sm={10}>
+                            <Input type="text"
+                                   value={this.props.organisations[0].name}
+                                   disabled/>
+                        </Col>
+                    </FormGroup>
             } else {
                 const options = this.props.organisations.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
-                organisations = <div className="form-group">
-                    <label className="col-sm-2 control-label">Organisation:</label>
-                    <div className="col-sm-10">
-                        <select value={this.props.organisationId} onChange={this.updateOrg}
-                                className="form-control">
+                organisations = <FormGroup row>
+                    <Label sm={2}>Organisation:</Label>
+                    <Col sm={10}>
+                        <Input type="select" value={this.props.organisationId} onChange={this.updateOrg}>
                             {options}
-                        </select>
-                    </div>
-                </div>
+                        </Input>
+                    </Col>
+                </FormGroup>
             }
         }
 
-        let orgSection = null;
-
-        if (district || organisations) orgSection = <div>
-            <div className="col-sm-12">
-                <h3>Your Group</h3>
-            </div>
-            <div className="col-sm-12">
-                <form className="form-horizontal">
-                    {district}
-                    {organisations}
-                </form>
-            </div>
-        </div>;
-
-        return (
-            <div>
-                <div className="col-sm-12">
-                    <form className="form-horizontal">
-                        <div className={this.valid(this.props.userName)}>
-                            <label className="col-sm-2 control-label">Your Name:</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control"
-                                       placeholder="Name"
-                                       value={this.props.userName || ''}
-                                       onChange={this.update("userName")}/>
-                            </div>
-                        </div>
-                        <div className={this.valid(this.props.userEmail)}>
-                            <label className="col-sm-2 control-label">Your e-mail:</label>
-                            <div className="col-sm-10">
-                                <input type="e-mail" className="form-control"
-                                       placeholder="e-mail"
-                                       value={this.props.userEmail}
-                                       onChange={this.update("userEmail")}/>
-                            </div>
-                        </div>
-                        <div className={this.valid(this.props.userContact)}>
-                            <label className="col-sm-2 control-label">Phone Number:</label>
-                            <div className="col-sm-10">
-                                <input type="tel" className="form-control" placeholder="Phone"
-                                       value={this.props.userContact || ''} onChange={this.update("userContact")}/>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                {orgSection}
-            </div>)
+        return (<React.Fragment>
+            <FormGroup row>
+                <Label sm={2}>Your Name:</Label>
+                <Col sm={10}>
+                    <Input
+                        type="text"
+                        placeholder="Name"
+                        value={this.props.userName || ''}
+                        onChange={this.update("userName")}
+                        valid={this.valid(this.props.userName)}
+                    />
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label sm={2}>Your e-mail:</Label>
+                <Col sm={10}>
+                    <Input type="text"
+                           placeholder="e-mail"
+                           value={this.props.userEmail}
+                           onChange={this.update("userEmail")}
+                           valid={this.valid(this.props.userEmail)}
+                    /></Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label sm={2}>Phone Number:</Label>
+                <Col sm={10}>
+                    <Input type="text"
+                           placeholder="Phone"
+                           value={this.props.userContact}
+                           onChange={this.update("userContact")}
+                           valid={this.valid(this.props.userContact)}
+                    />
+                </Col>
+            </FormGroup>
+            {district}
+            {organisations}
+        </React.Fragment>)
     }
 };

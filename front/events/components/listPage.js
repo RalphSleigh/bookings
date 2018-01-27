@@ -1,11 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
-import { push } from 'react-router-redux'
+import {connect} from 'react-redux'
+import {Link, NavLink} from 'react-router-dom'
+import {push} from 'react-router-redux'
 import ReactMarkdown from 'react-markdown'
 import Moment from 'moment'
 
-import { getEvents } from '../actions.js'
+import {getEvents} from '../actions.js'
 import {
     showEditLink,
     showCreateLink,
@@ -14,81 +14,96 @@ import {
     showApplyToBookLink,
     showBookingEditLink
 } from '../permission.js'
-import { getUserBookings } from '../../bookings/actions.js' //deep import, bad cause circular..
+import {getUserBookings} from '../../bookings/actions.js' //deep import, bad cause circular..
 import {applyToBookEvent} from '../../../shared/permissions.js'
+
+import {
+    Button,
+    Row,
+    Col,
+    Card,
+    CardBody,
+    CardTitle,
+    CardSubtitle,
+    CardImg
+} from 'reactstrap';
 
 //Event listing
 
 class EventList extends React.Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		this.clickCreate = this.clickCreate.bind(this);
-	}
+        this.clickCreate = this.clickCreate.bind(this);
+    }
 
-	clickCreate(e) {
-		e.preventDefault();
-		dispatch(push('/event/create'));
-	}
+    clickCreate(e) {
+        e.preventDefault();
+        dispatch(push('/event/create'));
+    }
 
-	render() {
+    render() {
         const user = this.props.User.toJS();
         let events = this.props.Events.toSeq().sort((a, b) => a.get("StartDate") - b.get("StartDate")).map((e) => <Event
             User={user} {...e.toJS()} key={e.get("id")}/>).toArray();
-		return (
-            <div className="row vStretch">
-                <div className="col-sm-12">
-					{events}
-				</div>
-                <div className="col-sm-12">
-					<CreateButton clickCreate={this.clickCreate} />
-				</div>
-			</div>)
-	}
+        return (<React.Fragment>
+            <Row>
+                <Col>
+                    {events}
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <CreateButton clickCreate={this.clickCreate}/>
+                </Col>
+            </Row>
+        </React.Fragment>);
+
+    }
 }
 
-const CreateButton = showCreateLink((props) => <button className="btn btn-success" onClick={props.clickCreate}>New Event</button>)
-
-
+const CreateButton = showCreateLink((props) => <Button color="success" onClick={props.clickCreate}>New
+    Event</Button>);
 
 
 const Event = (props) => {
 
 
-	const EditLink = showEditLink(() => <NavLink event={props} to={"/event/" + props.id + "/edit"}>Edit</NavLink>);
+    const EditLink = showEditLink(() => <NavLink event={props} to={"/event/" + props.id + "/edit"}>Edit</NavLink>);
     const ManageLink = showManageLink(() => <NavLink to={"/event/" + props.id + "/manage"}>Manage</NavLink>);
-    const Button = getEditApplyButton(props.User, props);
+    const EditApplyButton = getEditApplyButton(props.User, props);
 
-	return (<div className="panel panel-default">
-		<div className="panel-heading"><h3 className="panel-title">{props.name}</h3></div>
-		<div className="panel-body">
-            <Button event={props} booking={props.booking}/>
-			<h4>{Moment(props.startDate).format('Do')} - {Moment(props.endDate).format('Do MMMM YYYY')}</h4>
-			<ReactMarkdown escapeHtml={true} source={props.description} />
-			<div className="pull-right">
-				<EditLink event={props}/>
-				{" "}
-				<ManageLink event={props} />
-			</div>
-		</div>
-	</div>)
+    return (<Card className="mb-3">
+        <CardImg top src="/event-header.jpg" alt="Card image cap"/>
+        <CardBody>
+            <EditApplyButton event={props} booking={props.booking}/>
+            <CardTitle>{props.name}</CardTitle>
+            <CardSubtitle>{Moment(props.startDate).format('Do')} - {Moment(props.endDate).format('Do MMMM YYYY')}</CardSubtitle>
+            <ReactMarkdown escapeHtml={true} source={props.description}/>
+            <div className="float-right">
+                <EditLink event={props}/>
+                {" "}
+                <ManageLink event={props}/>
+            </div>
+        </CardBody>
+    </Card>);
 };
 
 const getEditApplyButton = (user, event) => {
     if (event.booking !== undefined) {
         return showBookingEditLink(() => <Link to={"/booking/" + event.booking.id + "/edit"}
-                                               className="btn btn-primary pull-right">Edit
+                                               className="btn btn-primary float-right">Edit
             My Booking</Link>)
     }
     if (applyToBookEvent(user, event)) {
         return showApplyToBookLink(() => <Link to={"/event/" + event.id + "/apply"}
-                                               className="btn btn-primary pull-right">Apply to book</Link>);
+                                               className="btn btn-primary float-right">Apply to book</Link>);
     }
     if (event.application !== undefined) {
-        return () => <button className="btn btn-primary pull-right disabled" disabled>Applied</button>;
+        return () => <button className="btn btn-primary float-right disabled" disabled>Applied</button>;
     }
     return showBookLink(() => <Link to={"/event/" + event.id + "/book"}
-                                    className="btn btn-primary pull-right">Book</Link>)
+                                    className="btn btn-primary float-right">Book</Link>)
 };
 
 
@@ -99,7 +114,7 @@ const mapStateToProps = (state) => {
     const User = state.getIn(["User", "user"]);
     const userId = User.get("id");
     let Events = state.getIn(["Events", "events"]);
-	const Bookings = state.getIn(["Bookings", "bookings"]);
+    const Bookings = state.getIn(["Bookings", "bookings"]);
     Events = Events.map(e => {
         e = e.set("booking", Bookings.find(b => b.get("eventId") === e.get('id') && b.get("userId") === userId));
         return e.set("application", User.get("applications").find(a => a.get('eventId') === e.get('id')));
@@ -109,13 +124,13 @@ const mapStateToProps = (state) => {
 
 
 const mapDispatchToProps = {
-	getEvents: getEvents,
-	getUserBookings: getUserBookings
+    getEvents: getEvents,
+    getUserBookings: getUserBookings
 };
 
 var VisibleEventList = connect(
-	mapStateToProps,
-	mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(EventList);
 
 export default VisibleEventList;

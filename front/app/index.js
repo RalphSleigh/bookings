@@ -9,6 +9,13 @@ import bookings from '../bookings'
 
 import {withRouter} from 'react-router-dom';
 
+import {
+    Container,
+    Row,
+    Col
+} from 'reactstrap';
+
+
 class App extends React.Component {
 
     constructor(props) {
@@ -35,32 +42,36 @@ class App extends React.Component {
             Data</div>;
 
 
-        return (<div>
-                <div id="header" className="container mainBody vContainer">
-                    <div className="row">
-                        <header className="col-sm-12">
-                            <img className="pull-right" src="/logo.png" style={{height: "75px"}}/>
-                            <h2>booktest.ealingwoocraft.org.uk</h2>
-                        </header>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-9"><Link to="/">Home</Link></div>
-                        <user.loginStatus/>
-                    </div>
-
-
-                    <messages.messages/>
-                    {this.props.children}
-
-                    <div className="row">
-                        <footer className="col-sm-12"><p className="small text-center">&copy; 2018 <a
-                            href="https://www.woodcraft.org.uk/">Woodcraft
-                            Folk</a>, Source on <a href="https://github.com/RalphSleigh/bookings">Github</a>.</p>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-        );
+        return (<Container>
+            <Row className="align-items-center">
+                <Col>
+                    <h2 className="align-middle">booktest.ealingwoocraft.org.uk</h2>
+                </Col>
+                <Col sm="auto">
+                    <img className="float-right" src="/logo.png" style={{height: "75px"}}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Link to="/">Home</Link>
+                </Col>
+                <Col sm="auto">
+                    <user.loginStatus/>
+                </Col>
+            </Row>
+            <Row>
+                <messages.messages/>
+            </Row>
+            {this.props.children}
+            <Row>
+                <Col>
+                    <footer><p className="small text-center">&copy; 2018 <a
+                        href="https://www.woodcraft.org.uk/">Woodcraft
+                        Folk</a>, Source on <a href="https://github.com/RalphSleigh/bookings">Github</a>.</p>
+                    </footer>
+                </Col>
+            </Row>
+        </Container>);
     }
 }
 

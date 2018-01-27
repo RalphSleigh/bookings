@@ -24,9 +24,7 @@ class LoginStatus extends React.Component {
         else var link = <a onClick={this.logout} href="#">Logout</a>;
 
         return (
-            <div className="col-md-3">
-                <p className="pull-right">Logged in as: <b>{data.userName}</b> ({link})</p>
-            </div>
+            <p className="text-right">Logged in as: <b>{data.userName}</b> ({link})</p>
         )
     }
 }

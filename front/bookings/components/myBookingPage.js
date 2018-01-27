@@ -17,6 +17,10 @@ import {bookEventCheck} from '../permission.js'
 import {bookIntoOrganisation} from '../../../shared/permissions.js'
 import Moment from "moment/moment";
 
+import {
+    Row,
+    Col,
+} from 'reactstrap';
 
 //this is the special case where we are doing the sessions own booking for the event. If we have previously booked then edit that instead of letting them create a new one.  
 
@@ -44,18 +48,13 @@ class MyBookingPage extends React.Component {
                          submit={booking.id ? (booking) => this.props.saveBooking(booking, true) : this.props.createBooking}
                          updateCurrentBooking={this.props.updateCurrentBooking} cancel={this.props.cancelBooking}/>;
 
-        return (<div>
-                <div className="row" style={{display: "flex"}}>
-                    <div className="col-sm-12 col-md-10">
-                        <h3>Booking for {event.name}</h3>
-                        <div className="row">
-                            {form}
-                        </div>
-                    </div>
-                    <ParticipantQuickList booking={booking}/>
-                </div>
-            </div>
-        )
+        return (<Row>
+            <Col xs={12} sm={12} md={10}>
+                <h3>Booking for {event.name}</h3>
+                {form}
+            </Col>
+            <ParticipantQuickList booking={booking}/>
+        </Row>);
     }
 }
 

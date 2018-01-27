@@ -3,6 +3,8 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+const YahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy;
+const MicrosoftStrategy = require('passport-microsoft').Strategy;
 const bcrypt = require('bcrypt');
 
 const log = require("./logging.js");
@@ -58,6 +60,7 @@ passport.use(new GoogleStrategy({
                 if (created) {
                     user.userName = profile.displayName;
                     //calling save will remove the assosiated Role data, lets get it again..
+                    log.info("Created User from Google %s %s", profile.displayName, profile.emails[0].value);
                     return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
                 }
                 return user;
@@ -66,6 +69,50 @@ passport.use(new GoogleStrategy({
             .catch(e => cb(e, null));
     }
 ));
+
+passport.use(new YahooStrategy({
+        clientID: config.YAHOO_CLIENT_ID,
+        clientSecret: config.YAHOO_CLIENT_SECRET,
+        callbackURL: config.BASE_PATH + "/auth/yahoo/callback",
+
+    },
+    function (accessToken, refreshToken, profile, cb) {
+        db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
+            .spread((user, created) => {
+                if (created) {
+                    user.userName = profile.displayName;
+                    //calling save will remove the assosiated Role data, lets get it again..
+                    log.info("Created User from Yahoo %s %s", profile.displayName, profile.emails[0].value);
+                    return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
+                }
+                return user;
+            })
+            .then(u => cb(null, u.get({plain: true})))
+            .catch(e => cb(e, null));
+    }
+));
+
+passport.use(new MicrosoftStrategy({
+        clientID: config.MICROSOFT_CLIENT_ID,
+        clientSecret: config.MICROSOFT_CLIENT_SECRET,
+        callbackURL: config.BASE_PATH + "/auth/microsoft/callback"
+    },
+    function (accessToken, refreshToken, profile, cb) {
+        db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
+            .spread((user, created) => {
+                if (created) {
+                    user.userName = profile.displayName;
+                    //calling save will remove the assosiated Role data, lets get it again..
+                    log.info("Created User from Microsoft %s %s", profile.displayName, profile.emails[0].value);
+                    return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
+                }
+                return user;
+            })
+            .then(u => cb(null, u.get({plain: true})))
+            .catch(e => cb(e, null));
+    }
+));
+
 
 passport.serializeUser(function (user, done) {
     done(null, user);
