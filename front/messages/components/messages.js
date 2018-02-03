@@ -1,5 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import {
+    UncontrolledAlert,
+    Col
+} from 'reactstrap';
 
 class Messages extends React.Component {
 
@@ -10,19 +14,17 @@ class Messages extends React.Component {
 	render() {
 		const data = this.props.Messages.toObject();
 
-		if (data.success && new Date().getTime() - data.success.time.getTime() < 10000) var success = <div className="alert alert-success">{data.success.message}</div>
-		if (data.warning && new Date().getTime() - data.warning.time.getTime() < 10000) var warning = <div className="alert alert-warning">{data.warning.message}</div>
+        if (data.success && new Date().getTime() - data.success.time.getTime() < 10000) var success = <UncontrolledAlert
+            color="success">{data.success.message}</UncontrolledAlert>
+        if (data.warning && new Date().getTime() - data.warning.time.getTime() < 10000) var warning = <UncontrolledAlert
+            color="warning">{data.warning.message}</UncontrolledAlert>
 
 		if (!success && !warning) return null;
 
-		return (
-			<div className="row">
-				<div className="col-md-12">
-					{success}
-					{warning}
-				</div>
-			</div>
-		)
+        return (<Col sm={12}>
+            {success}
+            {warning}
+        </Col>)
 	}
 }
 

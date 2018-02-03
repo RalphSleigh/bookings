@@ -1,5 +1,5 @@
 import React from 'react'
-import {MultiSelect, SimpleSelect} from 'react-selectize';
+import {MultiSelect, SimpleSelect} from '../../lib/react-selectize'; //Local version to fix bootstrap dropdowns.
 import update from 'immutability-helper';
 import * as P from '../../../shared/permissions.js'
 import debounce from 'debounce'
@@ -10,6 +10,26 @@ import moment from 'moment'
 
 import W from '../../../shared/woodcraft.js'
 import Immutable from "immutable";
+
+import {
+    Button,
+    Row,
+    Col,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    Card,
+    CardBody,
+    CardTitle,
+    CardImg,
+    CardImgOverlay,
+    Nav,
+    NavItem,
+    NavLink,
+    TabContents,
+    TabPane
+} from 'reactstrap';
 
 export default class Filter extends React.Component {
 
@@ -140,53 +160,53 @@ export default class Filter extends React.Component {
 
         const {Bookings, Participants, ...rest} = this.props;
 
-        return (<div>
-            <form className="form-horizontal">
-                <div className="form-group">
-                    <div className="col-sm-3">
-                        <label className="control-label">Filter by Organisation:</label>
-                        <MultiSelect
-                            values={this.state.orgs}
-                            onValuesChange={this.updateOrgs}
-                            placeholder={wholeEvent ? "All Organisations" : "All Permissible Organisations"}
-                            options={orgOptions}
-                            theme="bootstrap3"
-                        />
-                    </div>
 
-                    <div className="col-sm-3">
-                        <label className="control-label">Filter by Village:</label>
-                        <MultiSelect
-                            values={this.state.villages}
-                            onValuesChange={this.updateVillages}
-                            placeholder={wholeEvent ? "All Villages" : "All Permissible Villages"}
-                            options={villageOptions}
-                            theme="bootstrap3"
-                        />
-                    </div>
+        return (
+            <React.Fragment>
+                <Form>
+                    <FormGroup row className="mt-3">
+                        <Col sm={3}>
+                            <Label>Filter by Organisation:</Label>
+                            <MultiSelect
+                                values={this.state.orgs}
+                                onValuesChange={this.updateOrgs}
+                                placeholder={wholeEvent ? "All Organisations" : "All Permissible Organisations"}
+                                options={orgOptions}
+                                theme="bootstrap3"
+                            />
+                        </Col>
+                        <Col sm={3}>
+                            <Label>Filter by Village:</Label>
+                            <MultiSelect
+                                values={this.state.villages}
+                                onValuesChange={this.updateVillages}
+                                placeholder={wholeEvent ? "All Villages" : "All Permissible Villages"}
+                                options={villageOptions}
+                                theme="bootstrap3"
+                            />
+                        </Col>
+                        <Col sm={3}>
+                            <Label>Filter by Day:</Label>
+                            <SimpleSelect
+                                value={this.state.day}
+                                onValueChange={this.updateDay}
+                                placeholder="Any"
+                                options={days}
+                                theme="bootstrap3"
+                            />
+                        </Col>
+                        <Col sm={3}>
+                            <Label className="control-label">Search:</Label>
+                            <Input type="text"
+                                   value={this.state.search}
+                                   onChange={this.updateSearch}
+                                   placeholder="Search"/>
+                        </Col>
+                    </FormGroup>
+                </Form>
+                {React.cloneElement(this.props.children, {...this.state.data, ...rest})}
+            </React.Fragment>
+        );
 
-                    <div className="col-sm-3">
-                        <label className="control-label">Filter by Day:</label>
-                        <SimpleSelect
-                            value={this.state.day}
-                            onValueChange={this.updateDay}
-                            placeholder="Any"
-                            options={days}
-                            theme="bootstrap3"
-                        />
-                    </div>
-
-                    <div className="col-sm-3">
-                        <label className="control-label">Search:</label>
-                        <input type="text"
-                               className="form-control"
-                               value={this.state.search}
-                               onChange={this.updateSearch}
-                               placeholder="Search"/>
-                    </div>
-                </div>
-            </form>
-            {React.cloneElement(this.props.children, {...this.state.data, ...rest})}
-        </div>)
     }
 }

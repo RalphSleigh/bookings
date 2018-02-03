@@ -7,227 +7,219 @@ import fee from '../../fee'
 import attendance from '../../attendance'
 import OrgansationForm from './organisationForm.js'
 import cloneDeep from "lodash/cloneDeep";
+import {
+    Button,
+    Row,
+    Col,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    Card,
+    CardBody,
+    CardTitle,
+    CardImg,
+    CardImgOverlay
+} from 'reactstrap';
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faLock, faLockOpen} from '@fortawesome/fontawesome-free-solid'
 
 
 export default class EditForm extends React.Component {
 
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		this.state = {};
-		this.state.event = this.props.event;
-		this.state.delete = false;
+        this.state = {};
+        this.state.event = this.props.event;
+        this.state.delete = false;
 
-		this.state.event.bookingPolicy = this.state.event.bookingPolicy || 'guest';
-		this.state.event.partialDates = this.state.event.partialDates || 'whole';
-		this.state.event.organisations = this.state.event.organisations || [];
+        this.state.event.bookingPolicy = this.state.event.bookingPolicy || 'guest';
+        this.state.event.partialDates = this.state.event.partialDates || 'whole';
+        this.state.event.organisations = this.state.event.organisations || [];
 
-		this.update = this.update.bind(this);
-		this.updateData = this.updateData.bind(this);
-		this.updateChecked = this.updateChecked.bind(this);
-		this.updatePaymentOptions = this.updatePaymentOptions.bind(this);
+        this.update = this.update.bind(this);
+        this.updateData = this.updateData.bind(this);
+        this.updateChecked = this.updateChecked.bind(this);
+        this.updatePaymentOptions = this.updatePaymentOptions.bind(this);
 
-		this.clickRevert = this.clickRevert.bind(this);
-		this.clickDeleteLock = this.clickDeleteLock.bind(this);
-		this.clickDelete = this.clickDelete.bind(this);
-		this.clickSave = this.clickSave.bind(this);
-	}
+        this.clickDeleteLock = this.clickDeleteLock.bind(this);
+        this.clickDelete = this.clickDelete.bind(this);
+        this.clickSave = this.clickSave.bind(this);
+    }
 
-	update(item) {
-		return e => {
-			this.setState(update(this.state, { event: { [item]: { $set: e.target.value } } }));
-		}
-	}
+    update(item) {
+        return e => {
+            this.setState(update(this.state, {event: {[item]: {$set: e.target.value}}}));
+        }
+    }
 
-	updateData(item) {
-		return data => {
-			this.setState(update(this.state, { event: { [item]: { $set: data } } }));
-		}
-	}
+    updateData(item) {
+        return data => {
+            this.setState(update(this.state, {event: {[item]: {$set: data}}}));
+        }
+    }
 
-	updateChecked(item) {
-		return e => {
-			this.setState(update(this.state, { event: { [item]: { $set: e.target.checked } } }));
-		}
-	}
+    updateChecked(item) {
+        return e => {
+            this.setState(update(this.state, {event: {[item]: {$set: e.target.checked}}}));
+        }
+    }
 
-	updatePaymentOptions(e) {
-		this.setState(update(this.state, { event: { paymentTypes: { $set: e.target.value.split("\n") } } }));
-	}
+    updatePaymentOptions(e) {
+        this.setState(update(this.state, {event: {paymentTypes: {$set: e.target.value.split("\n")}}}));
+    }
 
-	clickRevert(e) {
-		this.setState(this.props.event);
-		e.preventDefault();
-	}
+    clickDeleteLock(e) {
+        this.setState({delete: !this.state.delete});
+        e.preventDefault();
+    }
 
-	clickDeleteLock(e) {
-		this.setState({ delete: !this.state.delete });
-		e.preventDefault();
-	}
+    clickDelete(e) {
+        this.props.deleteEvent({id: this.props.event.id});
+        e.preventDefault();
+    }
 
-	clickDelete(e) {
-		this.props.deleteEvent({ id: this.props.event.id });
-		e.preventDefault();
-	}
-
-	clickSave(e) {
+    clickSave(e) {
         const state = cloneDeep(this.state.event);
         state.organisations = state.organisations.map(o => {
             if (typeof o.id === "string") delete o.id;
             return o;
         }); //remove temp ids
         this.props.saveEvent(state);
-		e.preventDefault();
-	}
+        e.preventDefault();
+    }
 
-	render() {
+    render() {
 
-		const feeOptions = map(fee, f => <option value={f.name} key={f.name + "key"}>{f.selection}</option>);
-		const attendanceOptions = map(attendance, a => <option value={a.name} key={a.name + "key"}>{a.selection}</option>);
+        const feeOptions = map(fee, f => <option value={f.name} key={f.name + "key"}>{f.selection}</option>);
+        const attendanceOptions = map(attendance, a => <option value={a.name}
+                                                               key={a.name + "key"}>{a.selection}</option>);
 
-		const FeeConfig = fee[this.state.event.feeModel].Config;
+        const FeeConfig = fee[this.state.event.feeModel].Config;
 
-		const AttendanceConfig = attendance[this.state.event.partialDates].Config;
+        const AttendanceConfig = attendance[this.state.event.partialDates].Config;
 
         let attendanceFields = null;
 
-        if (this.state.event.partialDates !== 'whole') attendanceFields = (<div className="form-group">
-			<label className="col-sm-2 control-label">Attendance Options:</label>
-			<div className="col-sm-10">
-				<AttendanceConfig data={this.state.event.partialDatesData} update={this.updateData('partialDatesData')} />
-			</div>
-        </div>);
-		let paymentFields = null;
-		let feeOptionFields = null;
+        if (this.state.event.partialDates !== 'whole') attendanceFields = (
+            <FormGroup row>
+                <Label sm={2}>Attendance Options:</Label>
+                <Col sm={10}>
+                    <AttendanceConfig data={this.state.event.partialDatesData}
+                                      update={this.updateData('partialDatesData')}/>
+                </Col>
+            </FormGroup>);
 
-		if (this.state.event.feeModel !== "free") {
+        let paymentFields = null;
+        let feeOptionFields = null;
 
-			feeOptionFields = (<div className="form-group">
-				<label className="col-sm-2 control-label">Fee Options:</label>
-				<div className="col-sm-10">
-					<FeeConfig fee={this.state.event.feeData} update={this.updateData('feeData')} />
-				</div>
-            </div>);
+        if (this.state.event.feeModel !== "free") {
+
+            feeOptionFields = (
+                <FormGroup row>
+                    <Label sm={2}>Fee Options:</Label>
+                    <Col sm={10}>
+                        <FeeConfig fee={this.state.event.feeData} update={this.updateData('feeData')}/>
+                    </Col>
+                </FormGroup>);
 
             const options = this.state.event.paymentTypes.join("\n");
-			paymentFields = (<div>
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Payment Options:</label>
-					<div className="col-sm-10">
-						<textarea className="form-control" rows="5" value={options} onChange={this.updatePaymentOptions}></textarea>
-					</div>
-				</div>
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Payment Instructions:</label>
-					<div className="col-sm-10">
-						<textarea className="form-control" rows="5" value={this.state.event.paymentInfo} onChange={this.update("paymentInfo")}></textarea>
-					</div>
-				</div>
-			</div>)
-		}
+            paymentFields = (<React.Fragment>
+                {formField("textarea", "Payment Options:", options, this.updatePaymentOptions)}
+                {formField("textarea", "Payment Instructions:", this.state.event.paymentInfo, this.update("paymentInfo"))}
+            </React.Fragment>);
+        }
 
         let organisationForm = this.state.event.organisationsEnabled ?
-			<div className="form-group">
-				<label className="col-sm-2 control-label">Organisations:</label>
-				<div className="col-sm-10">
-					<OrgansationForm orgs={this.state.event.organisations} update={this.updateData('organisations')} />
-				</div>
-			</div>
-			: null;
 
-		let deleteButtons = this.props.new ? null : [<button key="deletelock" type="submit" disabled={!this.state.delete} onClick={this.clickDelete} className="btn btn-danger pull-right">Delete</button>,
-		<button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}><span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
+            <Row>
+                <Col sm={2}>
+                    <Label>Organisations:</Label>
+                </Col>
+                <Col sm={10}>
+                    <OrgansationForm orgs={this.state.event.organisations} update={this.updateData('organisations')}/>
+                </Col>
+            </Row> : null;
 
-		return (<div className="col-sm-12">
-			<form className="form-horizontal">
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Name:</label>
-					<div className="col-sm-10">
-						<input type="text" className="form-control" placeholder="Name" value={this.state.event.name} onChange={this.update("name")} />
-					</div>
-				</div>
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Description:</label>
-					<div className="col-sm-10">
-						<textarea className="form-control" rows="5" value={this.state.event.description} onChange={this.update("description")}></textarea>
-					</div>
-				</div>
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Start date:</label>
-					<div className="col-sm-10">
-						<input type="date" className="form-control" value={Moment(this.state.event.startDate).format("YYYY-MM-DD")} onChange={this.update("startDate")} />
-					</div>
-				</div>
-				<div className="form-group">
-					<label className="col-sm-2 control-label">End date:</label>
-					<div className="col-sm-10">
-						<input type="date" className="form-control" value={Moment(this.state.event.endDate).format("YYYY-MM-DD")} onChange={this.update("endDate")} />
-					</div>
-				</div>
+        let deleteButtons = this.props.new ? null : [<Button key="deletelock"
+                                                             type="submit"
+                                                             disabled={!this.state.delete}
+                                                             onClick={this.clickDelete}
+                                                             className="float-right"
+                                                             color="danger">
+            Delete</Button>,
+            <Button key="delete"
+                    className="float-right mr-1"
+                    type="submit"
+                    color="danger"
+                    onClick={this.clickDeleteLock}>
+                <span style={{color: 'white'}}><FontAwesomeIcon icon={!this.state.delete ? faLockOpen : faLock}/></span>
+            </Button>];
 
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Booking Deadline:</label>
-					<div className="col-sm-10">
-						<input type="date" className="form-control" value={Moment(this.state.event.bookingDeadline).format("YYYY-MM-DD")} onChange={this.update("bookingDeadline")} />
-					</div>
-				</div>
 
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Booking Policy:</label>
-					<div className="col-sm-10">
-						<select value={this.state.event.bookingPolicy} onChange={this.update('bookingPolicy')} className="form-control">
-							<option value={'guest'} key={'guest'}>Guest</option>
-							<option value={'registered'} key={'registered'}>Registered</option>
-							<option value={'approved'} key={'approved'}>Approved</option>
-						</select>
-					</div>
-				</div>
-
-				<div className="form-group">
-                    <label className="col-sm-2 control-label">Big Camp Mode:</label>
-					<div className="col-sm-10">
-                        <Switch checked={!!this.state.event.bigCampMode} onChange={this.updateChecked('bigCampMode')}/>
-					</div>
-				</div>
-
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Enable Organisations</label>
-					<div className="col-sm-10">
-						<Switch checked={!!this.state.event.organisationsEnabled} onChange={this.updateChecked('organisationsEnabled')} />
-					</div>
-				</div>
-				{organisationForm}
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Attendance Policy:</label>
-					<div className="col-sm-10">
-						<select value={this.state.event.partialDates} onChange={this.update('partialDates')} className="form-control">
-							{attendanceOptions}
-						</select>
-					</div>
-				</div>
-				{attendanceFields}
-				<div className="form-group">
-					<label className="col-sm-2 control-label">Fee Structure:</label>
-					<div className="col-sm-10">
-						<select value={this.state.event.feeModel} onChange={this.update('feeModel')} className="form-control">
-							{feeOptions}
-						</select>
-					</div>
-				</div>
-				{feeOptionFields}
-				{paymentFields}
-				<div className="form-group">
-					<div className="col-sm-offset-2 col-sm-10">
-						<div className="btn-toolbar">
-							<button type="submit" className="btn btn-success" onClick={this.clickSave}>Save</button>
-							<button type="submit" className="btn btn-warning" onClick={this.clickRevert}>Revert</button>
-
-							{deleteButtons}
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>)
-	}
+        return (<Row>
+            <Col>
+                <Form>
+                    {formField("text", "Name:", this.state.event.name, this.update("name"), "Event Name")}
+                    {formField("textarea", "Description:", this.state.event.description, this.update("description"))}
+                    {formField("date", "Start Date:", Moment(this.state.event.startDate).format("YYYY-MM-DD"), this.update("startDate"))}
+                    {formField("date", "End Date:", Moment(this.state.event.endDate).format("YYYY-MM-DD"), this.update("endDate"))}
+                    {formField("date", "Booking Deadline:", Moment(this.state.event.bookingDeadline).format("YYYY-MM-DD"), this.update("bookingDeadline"))}
+                    <FormGroup>
+                        <Label>Booking Policy:</Label>
+                        <Input type="select" value={this.state.event.bookingPolicy}
+                               onChange={this.update('bookingPolicy')}>
+                            <option value={'guest'} key={'guest'}>Guest</option>
+                            <option value={'registered'} key={'registered'}>Registered</option>
+                            <option value={'approved'} key={'approved'}>Approved</option>
+                        </Input>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label xs={2}>Big Camp Mode:</Label>
+                        <Col xs={10} className="mt-1">
+                            <Switch checked={!!this.state.event.bigCampMode}
+                                    onChange={this.updateChecked('bigCampMode')}/>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label xs={2}>Enable Organisations:</Label>
+                        <Col xs={10} className="mt-1">
+                            <Switch checked={!!this.state.event.organisationsEnabled}
+                                    onChange={this.updateChecked('organisationsEnabled')}/>
+                        </Col>
+                    </FormGroup>
+                    {organisationForm}
+                    <FormGroup>
+                        <Label>Attendance Policy:</Label>
+                        <Input type="select" value={this.state.event.partialDates}
+                               onChange={this.update('partialDates')}>
+                            {attendanceOptions}
+                        </Input>
+                    </FormGroup>
+                    {attendanceFields}
+                    <FormGroup>
+                        <Label>Fee Structure:</Label>
+                        <Input type="select" value={this.state.event.feeModel} onChange={this.update('feeModel')}>
+                            {feeOptions}
+                        </Input>
+                    </FormGroup>
+                    {feeOptionFields}
+                    {paymentFields}
+                    <Row>
+                        <Col>
+                            <Button color="success" onClick={this.clickSave}>Save</Button>
+                            {deleteButtons}
+                        </Col>
+                    </Row>
+                </Form>
+            </Col>
+        </Row>);
+    }
 }
+
+const formField = (type, label, value, update, placeholder = null) => (<FormGroup>
+    <Label for={label}>{label}</Label>
+    <Input type={type} name={label} placeholder={placeholder} value={value || ''} onChange={update}/>
+</FormGroup>);

@@ -6,6 +6,11 @@ import EventForm from './eventForm.js'
 import { getEvent, saveEvent, deleteEvent } from '../actions.js'
 import { editEventCheck } from '../permission.js'
 
+import {
+    Row,
+    Col
+} from 'reactstrap';
+
 class EditPage extends React.Component {
 
 	render() {
@@ -13,18 +18,16 @@ class EditPage extends React.Component {
 
 		let event = this.props.Event.toJS();
 		//const data = this.props.user.toObject();
-		return (
-			<div>
-				<div className="row">
-					<div className="col-sm-12">
-						<h3>Edit Event - {event.name}</h3>
-					</div>
-				</div>
-				<div className="row">
-					<EventForm event={event} saveEvent={this.props.saveEvent} deleteEvent={this.props.deleteEvent} />
-				</div>
-			</div>
-		)
+
+        return (<React.Fragment>
+            <Row>
+                <Col>
+                    <h3>Edit Event - {event.name}</h3>
+                </Col>
+            </Row>
+            <EventForm event={event} saveEvent={this.props.saveEvent} deleteEvent={this.props.deleteEvent}/>
+        </React.Fragment>);
+
 	}
 }
 

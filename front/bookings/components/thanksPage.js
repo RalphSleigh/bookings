@@ -5,6 +5,12 @@ import { browserHistory } from 'react-router'
 
 //import event from '../../events'
 import { redirectFromThanks } from '../actions.js'
+import {
+    Row,
+    Col,
+    Table
+} from 'reactstrap';
+
 
 //confirmation page for bookings
 
@@ -15,8 +21,6 @@ class ThanksPage extends React.Component {
 		super(props);
 
 	}
-
-
 
 	render() {
 
@@ -34,28 +38,27 @@ class ThanksPage extends React.Component {
 
 		const participants = booking.participants.map(p => <ParticipantRow key={p.id} {...p} />);
 
-		return (<div>
-			<div className="row">
-				<div className="col-sm-12">
-					<h3>Thanks for booking for {event.name}</h3>
-					<p>You can come back and <Link to={"/event/" + event.id + "/book"}>edit</Link> your booking at any time before the deadline</p>
-					<h4>Participants booked</h4>
-					<table className="table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Age</th>
-								<th>Diet</th>
-							</tr>
-						</thead>
-						<tbody>
-							{participants}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		)
+
+        return (<Row>
+            <Col>
+                <h3>Thanks for booking for {event.name}</h3>
+                <p>You can come back and <Link to={"/event/" + event.id + "/book"}>edit</Link> your booking at any time
+                    before the deadline</p>
+                <h4>Participants booked</h4>
+                <Table striped>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Diet</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {participants}
+                    </tbody>
+                </Table>
+            </Col>
+        </Row>);
 	}
 }
 

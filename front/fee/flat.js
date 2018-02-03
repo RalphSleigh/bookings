@@ -1,8 +1,22 @@
 import React from 'react'
 //This event has a flat per participant cost.
+
 import {
+    Button,
     Row,
-    Col
+    Col,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    InputGroup,
+    InputGroupAddon,
+    Card,
+    CardBody,
+    CardTitle,
+    CardImg,
+    CardImgOverlay,
+    Table
 } from 'reactstrap';
 
 export const name = "flat";
@@ -25,19 +39,18 @@ export class Config extends React.Component {
 
         const amount = this.props.fee.amount || "";
 
-        return (<div className="row">
-            <div className="form-group">
-                <label className="col-sm-2 control-label">Fee per participant:</label>
-                <div className="col-sm-10">
-                    <div className="input-group">
-                        <span className="input-group-addon">£</span>
-                        <input type="number" className="form-control" placeholder="35" value={amount}
-                               onChange={this.update}/>
+        return (<FormGroup row>
+            <Label sm={3}>Fee per participant:</Label>
+            <Col sm={9}>
+                <InputGroup>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">£</span>
                     </div>
-                </div>
-            </div>
-        </div>)
-
+                    <Input type="number" className="form-control" placeholder="35" value={amount}
+                           onChange={this.update}/>
+                </InputGroup>
+            </Col>
+        </FormGroup>);
     }
 }
 

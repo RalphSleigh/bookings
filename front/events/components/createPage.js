@@ -8,6 +8,11 @@ import EventForm from './eventForm.js'
 import { createEventCheck } from '../permission.js'
 import { createEvent } from '../actions.js'
 
+import {
+    Row,
+    Col
+} from 'reactstrap';
+
 class CreatePage extends React.Component {
 
 	constructor(props) {
@@ -37,18 +42,14 @@ class CreatePage extends React.Component {
 			paymentInfo: ""
         };
 
-		return (
-			<div>
-				<div className="row">
-					<div className="col-sm-12">
-						<h3>New Event</h3>
-					</div>
-				</div>
-				<div className="row">
-					<EventForm event={event} new={true} saveEvent={this.saveEvent} />
-				</div>
-			</div>
-		)
+        return (<React.Fragment>
+            <Row>
+                <Col>
+                    <h3>New Event</h3>
+                </Col>
+            </Row>
+            <EventForm event={event} new={true} saveEvent={this.saveEvent}/>
+        </React.Fragment>);
 	}
 }
 

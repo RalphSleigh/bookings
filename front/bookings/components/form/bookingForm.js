@@ -8,19 +8,19 @@ import cloneDeep from 'lodash/cloneDeep'
 import update from 'immutability-helper';
 import Moment from 'moment'
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faLock, faLockOpen} from '@fortawesome/fontawesome-free-solid'
+
 import {
     Button,
     Row,
     Col,
     Card,
-    CardText,
-    CardBody,
     CardTitle,
     Form,
     FormGroup,
-    Label,
-    Input
 } from 'reactstrap';
+import {faTimes} from "@fortawesome/fontawesome-free-solid/index";
 
 
 //this is a massive component that handles the state of the booking form.
@@ -140,13 +140,18 @@ export default class BookingForm extends React.Component {
 
         const validationMessages = this.validateBooking();
 
-        const deleteButtons = this.state.new ? null : [<button key="deletelock" type="submit"
+        const deleteButtons = this.state.new ? null : [<Button key="deletelock"
+                                                               className="float-right ml-1"
                                                                disabled={this.state.deleteLock}
                                                                onClick={this.clickDelete}
-                                                               className="btn btn-danger pull-right">Cancel
-            Booking</button>,
-            <button key="delete" type="submit" className="btn btn-danger pull-right" onClick={this.clickDeleteLock}>
-                <span className="glyphicon glyphicon-lock" aria-hidden="true"></span></button>];
+                                                               color="danger">Cancel
+            Booking</Button>,
+            <Button key="delete"
+                    color="danger"
+                    onClick={this.clickDeleteLock}
+                    className="float-right">
+                <span style={{color: 'white'}}><FontAwesomeIcon
+                    icon={this.state.deleteLock ? faLockOpen : faLock}/></span></Button>];
 
         const userDetails = {
             userName: this.props.booking.userName,

@@ -1,17 +1,11 @@
 import React from 'react'
 
 import {
-    Button,
     Row,
     Col,
     FormGroup,
     Label,
-    Input,
-    Card,
-    CardBody,
-    CardTitle,
-    CardImg,
-    CardImgOverlay
+    Input
 } from 'reactstrap';
 
 export default class PermissionForm extends React.Component {
@@ -106,7 +100,6 @@ export default class PermissionForm extends React.Component {
                 </Label>
                 <Col sm={10}>
                     <Input type="textarea"
-                           placeholder="Name"
                            value={this.props.campWith || ''}
                            onChange={this.updateEmergency("campWith")}/>
                 </Col>
@@ -137,8 +130,7 @@ export default class PermissionForm extends React.Component {
                 </Col>
             </Row>
             <FormGroup row>
-                <Label for="checkbox2" sm={2}>Checkbox</Label>
-                <Col sm={10}>
+                <Col sm={{size: 10, offset: 2}}>
                     <FormGroup check>
                         <Label check>
                             <Input type="checkbox" checked={!!this.props.permission}

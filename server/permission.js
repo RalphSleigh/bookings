@@ -2,7 +2,7 @@ const P = require('../shared/permissions.js');
 const db = require('./orm.js');
 const log = require('./logging.js');
 const Op = db.Sequelize.Op;
-
+const wrapper = require('./errors');
 
 //This file exports permission checks as express middlewares, in theory the client shouldn;t allow bad requests.
 
@@ -47,7 +47,19 @@ permission.editBooking = async function (req, res, next) {
         next();
     } else {
         res.status(401).end();
-        log.log("error", "Permission editEvent failed for %s on %s", req.user.email || "Guest", req.ip);
+        log.log("error", "Permission editBooking failed for %s on %s", req.user.email || "Guest", req.ip);
+    }
+};
+
+permission.deleteBooking = async function (req, res, next) {
+    const booking = await db.booking.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    const event = await db.event.findOne({where: {id: {[Op.eq]: booking.eventId}}});
+
+    if (P.deleteBooking(req.user, event, booking)) {
+        next();
+    } else {
+        res.status(401).end();
+        log.log("error", "Permission deleteBooking failed for %s on %s", req.user.email || "Guest", req.ip);
     }
 };
 
@@ -180,5 +192,5 @@ permission.deleteRole = async function (req, res, next) {
     }
 };
 
-module.exports = permission;
+module.exports = wrapper(permission);
 

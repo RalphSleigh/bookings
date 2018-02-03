@@ -27,6 +27,16 @@ import ApplicationPage from './applications.js'
 import VillagePage from './villages.js'
 import RolesPage from './roles.js'
 
+import {
+    Row,
+    Col,
+    Nav,
+    NavItem,
+    NavLink
+} from 'reactstrap';
+
+import classnames from 'classnames';
+
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
 
@@ -63,7 +73,59 @@ class ManageContainerPage extends React.Component {
             to={"/event/" + this.props.match.params.eventId + "/manage/roles"} label="Roles"/>);
 
 
-        return (<div className="row">
+        return (<React.Fragment>
+                <Row>
+                    <Col>
+                        <Nav tabs>
+                            <CustomTab activeOnlyWhenExact to={"/event/" + this.props.match.params.eventId + "/manage"}
+                                       label="Participants"/>
+                            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/bookings"}
+                                       label="Bookings"/>
+                            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/kp"} label="KP"/>
+                            <VillagesTab {...this.props}/>
+                            <RolesTab {...this.props}/>
+                            <ApplicationsTab {...this.props}/>
+                        </Nav>
+                    </Col>
+                </Row>
+                <Switch>
+                    <Route exact path="/event/:eventId(\d+)/manage">
+                        <Filter {...this.props} >
+                            <ParticipantsPage/>
+                        </Filter>
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/participants">
+                        <Filter {...this.props} >
+                            <ParticipantsPage/>
+                        </Filter>
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/bookings">
+                        <Filter {...this.props} >
+                            <BookingsPage/>
+                        </Filter>
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/kp">
+                        <Filter {...this.props} >
+                            <KpPage/>
+                        </Filter>
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/applications">
+                        <ApplicationPage {...this.props} />
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/villages">
+                        <VillagePage {...this.props} />
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/roles">
+                        <RolesPage {...this.props} />
+                    </Route>
+                </Switch>
+            </React.Fragment>
+
+
+        );
+
+
+        (<div className="row">
             <div className="col-sm-12">
                 <ul className="nav nav-tabs">
                     <CustomTab activeOnlyWhenExact to={"/event/" + this.props.match.params.eventId + "/manage"}
@@ -147,12 +209,11 @@ const CustomTab = ({label, to, activeOnlyWhenExact}) => (
         path={to}
         exact={activeOnlyWhenExact}
         children={({match}) => (
-            <li className={match ? "active" : ""}>
-                <Link to={to}>
+            <NavItem>
+                <NavLink className={classnames({active: match})} tag={Link} to={to}>
                     {label}
-                </Link>
-            </li>
-        )}
+                </NavLink>
+            </NavItem>)}
     />
 );
 

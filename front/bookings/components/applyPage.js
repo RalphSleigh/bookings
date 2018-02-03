@@ -5,6 +5,16 @@ import {applyEventCheck} from '../permission.js'
 import {applyToBook} from '../actions.js'
 import update from 'immutability-helper';
 
+import {
+    Button,
+    Row,
+    Col,
+    FormGroup,
+    Label,
+    Input,
+    Form
+} from 'reactstrap';
+
 
 //Apply to be able to book an event
 
@@ -34,24 +44,24 @@ class ApplyPage extends React.Component {
         const event = this.props.Event.toJS();
         const user = this.props.User.toJS();
 
-        return <div>
-            <div className="row">
-                <div className="col-sm-12">
+        return (<React.Fragment>
+            <Row>
+                <Col>
                     <h3>Apply to book for <b>{event.name}</b></h3>
-                    <p>Hi {user.userName}, Please let us know below who you are booking for below: </p>
-                    <div className="form-group">
-                        <textarea className="form-control" value={this.state.message || ''}
-                                  onChange={this.updateMessage}></textarea>
-                    </div>
-                    <div className="form-group">
-                        <button className="btn btn-primary" onClick={this.apply}
-                                disabled={this.state.message === ''}>Submit
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+                    <Form>
+                        <FormGroup>
+                            <Label>Hi {user.userName}, Please let us know below who you are booking for below: </Label>
+                            <Input type="textarea" value={this.state.message || ''}
+                                   onChange={this.updateMessage}/>
+                        </FormGroup>
+                        <Button color="primary"
+                                onClick={this.apply}
+                                disabled={this.state.message === ''}
+                        >Submit</Button>
+                    </Form>
+                </Col>
+            </Row>
+        </React.Fragment>);
     }
 }
 

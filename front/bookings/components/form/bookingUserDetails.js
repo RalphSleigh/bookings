@@ -93,7 +93,7 @@ export default class BookingUserDetails extends React.Component {
                 <Col sm={10}>
                     <Input type="text"
                            placeholder="e-mail"
-                           value={this.props.userEmail}
+                           value={this.props.userEmail || ''}
                            onChange={this.update("userEmail")}
                            valid={this.valid(this.props.userEmail)}
                     /></Col>
@@ -103,7 +103,7 @@ export default class BookingUserDetails extends React.Component {
                 <Col sm={10}>
                     <Input type="text"
                            placeholder="Phone"
-                           value={this.props.userContact}
+                           value={this.props.userContact || ''}
                            onChange={this.update("userContact")}
                            valid={this.valid(this.props.userContact)}
                     />

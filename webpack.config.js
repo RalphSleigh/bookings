@@ -11,7 +11,7 @@ console.log(PROD);
 module.exports = {
     entry: {
         app: './front/index.js',
-        vendor: ['babel-polyfill', 'whatwg-fetch', 'react', 'redux', 'react-redux', 'react-dom', 'immutable', 'moment', 'redux-auth-wrapper', 'lodash/cloneDeep', 'lodash/map', 'react-markdown', 'react-table', 'react-router', 'react-beautiful-dnd', 'react-selectize', 'react-bootstrap-typeahead']
+        vendor: ['babel-polyfill', 'whatwg-fetch', 'react', 'redux', 'react-redux', 'react-dom', 'immutable', 'moment', 'redux-auth-wrapper', 'lodash/cloneDeep', 'lodash/map', 'react-markdown', 'react-table', 'react-router', 'react-beautiful-dnd', 'react-bootstrap-typeahead']
 
     },
 

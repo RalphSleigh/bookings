@@ -1,47 +1,47 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 import BookingForm from './form/bookingForm.js'
 import ParticipantQuickList from './participantQuickList.js'
-import { saveBooking, cancelBooking, updateCurrentBooking } from '../actions.js'
+import {saveBooking, cancelBooking, updateCurrentBooking} from '../actions.js'
 import {editBookingCheck} from '../permission.js'
 import {bookIntoOrganisation} from "../../../shared/permissions";
 
+import {
+    Row,
+    Col,
+} from 'reactstrap';
 
 class EditPage extends React.Component {
 
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-	}
+    }
 
-	render() {
+    render() {
 
-		const event = this.props.Event.toJS();
-		const booking = this.props.Booking.toJS();
+        const event = this.props.Event.toJS();
+        const booking = this.props.Booking.toJS();
         const user = this.props.User.toJS();
 
         const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, booking, o));
-		
-		return (<div>
-			<div className="row" style={{ display: "flex" }}>
-				<div className="col-sm-12 col-md-10">
-					<h3>Booking for {event.Name}</h3>
-					<div className="row">
-                        <BookingForm user={user}
-                                     booking={booking}
-                                     event={event}
-                                     organisations={organisations}
-                                     submit={this.props.saveBooking}
-                                     cancel={this.props.cancelBooking}
-                                     updateCurrentBooking={this.props.updateCurrentBooking}/>
-					</div>
-				</div>
-				<ParticipantQuickList booking={booking} />
-			</div>
-		</div>
-		)
-	}
+
+
+        return (<Row>
+            <Col xs={12} sm={12} md={10}>
+                <h3>Booking for {event.name}</h3>
+                <BookingForm user={user}
+                             booking={booking}
+                             event={event}
+                             organisations={organisations}
+                             submit={this.props.saveBooking}
+                             cancel={this.props.cancelBooking}
+                             updateCurrentBooking={this.props.updateCurrentBooking}/>
+            </Col>
+            <ParticipantQuickList booking={booking}/>
+        </Row>);
+    }
 }
 
 const mapStateToProps = (state, props) => {
@@ -55,11 +55,11 @@ const mapStateToProps = (state, props) => {
     return {User, Booking, Event}
 };
 
-const mapDispatchToProps = { saveBooking, cancelBooking, updateCurrentBooking };
+const mapDispatchToProps = {saveBooking, cancelBooking, updateCurrentBooking};
 
 const VisibleEditPage = connect(
-	mapStateToProps,
-	mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(EditPage);
 
 export default editBookingCheck(VisibleEditPage);

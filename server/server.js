@@ -114,7 +114,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         server.post('/api/booking/:eventId/create', P.bookEvent, P.bookIntoOrganisation, bookings.createBooking);//create a booking
         server.post('/api/booking/edit', P.editBooking, P.bookIntoOrganisation, bookings.editBooking);			//edit a booking
-        server.post('/api/booking/delete', P.bookEvent, bookings.deleteBooking);			//delete a booking
+        server.post('/api/booking/delete', P.deleteBooking, bookings.deleteBooking);			//delete a booking
         server.post('/api/booking/paid', P.bookEvent, bookings.togglePaid); //toggle paid indicator
 
         server.post('/api/village/assign', P.assignVillage, bookings.assignVillage);
@@ -142,7 +142,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         server.use((error, req, res, next) => {
             log.error("ERROR: " + error.message + " on " + req.url + " for " + req.user.userName);
-            log.debug(error);
+            log.debug(error.stack);
             res.status(500).json({message: error.message});
         });
 
