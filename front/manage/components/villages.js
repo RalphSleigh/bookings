@@ -6,6 +6,22 @@ import update from 'immutability-helper';
 import {manageWholeEventCheck} from '../permission.js'
 import Immutable from "immutable";
 
+import {
+    Row,
+    Col,
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    Input,
+    Table,
+    CardColumn,
+    CardDeck
+} from 'reactstrap';
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faTimes, faPlus} from '@fortawesome/fontawesome-free-solid'
+
 //import W from '../../../shared/woodcraft.js'
 
 class Villages extends React.Component {
@@ -92,14 +108,12 @@ class Villages extends React.Component {
                         <div ref={provided.innerRef}
                              style={style}
                              {...provided.dragHandleProps}>
-                            <div className="panel panel-default">
-                                <div className="panel-heading">
-                                    <h3 className="panel-title">{(event.bigCampMode ? b.district : b.userName) + " (" + b.size + ")"}</h3>
-                                </div>
-                                <div className="panel-body">
+                            <Card className="mb-3">
+                                <CardBody>
+                                    <CardTitle>{(event.bigCampMode ? b.district : b.userName) + " (" + b.size + ")"}</CardTitle>
                                     <p>{b.campWith}</p>
-                                </div>
-                            </div>
+                                </CardBody>
+                            </Card>
                         </div>)
                 }}
             </Draggable>);
@@ -125,66 +139,65 @@ class Villages extends React.Component {
                     }}
                 </Draggable>
             );
+
             return <Droppable key={v.id} droppableId={'v' + v.id}>
                 {(provided, snapshot) => (
-                    <div className={Villages.panelClass(v.participants)}>
-                        <div className="panel-heading">
-                            <button type="button" onClick={this.deleteVillage(v.id)} className="close float-right"
-                                    aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h3 className="panel-title">{v.name}</h3>
-                        </div>
-                        <div ref={provided.innerRef} className="panel-body">
-                            {bookings}
-                            {provided.placeholder}
-                            <div>
-                                <p>
-                                    <b>Total: {v.participants}</b>
-                                </p>
+                    <Card>
+                        <CardBody>
+                            <Button outline color="warning" onClick={this.deleteVillage(v.id)}
+                                    className="float-right"
+                                    aria-label="Close"><span aria-hidden="true"><FontAwesomeIcon
+                                icon={faTimes}/></span>
+                            </Button>
+                            <CardTitle>{v.name}</CardTitle>
+                            <div ref={provided.innerRef} style={{minHeight: "20px"}}>
+                                {bookings}
+                                {provided.placeholder}
                             </div>
-                        </div>
-                    </div>
+                            <p>
+                                <b>Total: {v.participants}</b>
+                            </p>
+                        </CardBody>
+                    </Card>
                 )}
-            </Droppable>
+            </Droppable>;
         });
 
-        villageBoxes.push(<div key="new" className="panel panel-info">
-            <div className="panel-heading">
-                <h3 className="panel-title">Add Village</h3>
-            </div>
-            <div className="panel-body">
-                <form className="form-horizontal">
-                    <div className="form-group">
-                        <div className="col-sm-12">
-                            <input type="text"
-                                   className="form-control"
-                                   placeholder="Name"
-                                   value={this.state.newVillageName}
-                                   onChange={this.updateVillageName}/>
-                        </div>
-                    </div>
-                    <button disabled={this.state.newVillageName === ''}
-                            className="btn"
-                            onClick={this.addVillage}>
-                        <span
-                            className="glyphicon glyphicon-plus"></span> Add
-                    </button>
-                </form>
-            </div>
-        </div>);
+        villageBoxes.push(<Card key="new">
+                <CardBody>
+                    <CardTitle>Add Village</CardTitle>
+                    <Input type="text"
+                           placeholder="Name"
+                           value={this.state.newVillageName}
+                           onChange={this.updateVillageName}
 
-        const villageColumns = villageBoxes.reduce((a, c, i) => {
-            a[i % 4].push(c);
+                    />
+                    <Button className="mt-2"
+                            disabled={this.state.newVillageName === ''}
+                            color="success"
+                            onClick={this.addVillage}>
+                        <span aria-hidden="true"><FontAwesomeIcon
+                            icon={faPlus}/></span> Add
+                    </Button>
+                </CardBody>
+            </Card>
+        );
+
+
+        const villageCardDecks = villageBoxes.reduce((a, c) => {
+            a[a.length - 1].length > 2 ? a.push([c]) : a[a.length - 1].push(c)
             return a
-        }, [[], [], [], []]).map((l, i) => <div key={i} className="col-sm-3">{l}</div>);
+        }, [[]])
+            .map((a, i) => <CardDeck className="mb-3" key={i}>{a}</CardDeck>);
 
         return (<DragDropContext onDragEnd={this.onDragEnd}>
-            <div className="row">
-                <div className="col-md-12">
+            <Row>
+                <Col>
                     <h4>Drag and drop to configure villages</h4>
-                </div>
-                <div className="col-md-3">
+                </Col>
+            </Row>
+            <Row>
+                <Col sm={3}>
                     <h5>Unassigned:</h5>
                     <Droppable droppableId="empty">
                         {(provided, snapshot) => (
@@ -194,14 +207,12 @@ class Villages extends React.Component {
                             </div>
                         )}
                     </Droppable>
-                </div>
-                <div className="col-md-9">
-                    <div className="row">
-                        {villageColumns}
-                    </div>
-                </div>
-            </div>
-        </DragDropContext>)
+                </Col>
+                <Col sm={9}>
+                    {villageCardDecks}
+                </Col>
+            </Row>
+        </DragDropContext>);
     }
 }
 

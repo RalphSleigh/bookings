@@ -1,6 +1,4 @@
 import React from 'react'
-//import { connect } from 'react-redux'
-//import Immutable from 'immutable'
 import {Link} from 'react-router-dom'
 import ReactTable from 'react-table'
 import Moment from 'moment'
@@ -10,6 +8,16 @@ import update from "immutability-helper";
 
 //import bookings from '../bookings'
 import {showBookingEditLink} from '../permission.js'
+
+import {
+    Row,
+    Col,
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    Table
+} from 'reactstrap';
 
 
 //import W from '../../../shared/woodcraft.js'
@@ -124,24 +132,31 @@ export default class Bookings extends React.Component {
         //const sortables=[{column:"userName", sortFunction:nameSort},"userEmail","userContact","participants","paymentType","updatedAt"];
         const expanded = {[this.state.expanded]: true};
 
-        return (<div>
-            <button className="button pull-right" onClick={this.exportCSV}>Export CSV</button>
-            <h4>Total Bookings: {bookings.length}</h4>
-
-            <ReactTable
-                expanded={expanded}
-                getTrProps={(state, rowInfo, column) => {
-                    if (rowInfo) return {onClick: this.updateExpanded(rowInfo.viewIndex)};
-                    return {}
-                }}
-                onSortedChange={this.updateExpanded(null)}
-                onPageChange={this.updateExpanded(null)}
-                SubComponent={subRow}
-                data={data}
-                columns={columns}
-                showPagination={true}
-                showPageSizeOption={false}/>
-        </div>)
+        return (<React.Fragment>
+            <Row>
+                <Col>
+                    <Button className="float-right" onClick={this.exportCSV}>Export CSV</Button>
+                    <h4>Total Bookings: {bookings.length}</h4>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <ReactTable
+                        expanded={expanded}
+                        getTrProps={(state, rowInfo, column) => {
+                            if (rowInfo) return {onClick: this.updateExpanded(rowInfo.viewIndex)};
+                            return {}
+                        }}
+                        onSortedChange={this.updateExpanded(null)}
+                        onPageChange={this.updateExpanded(null)}
+                        SubComponent={subRow}
+                        data={data}
+                        columns={columns}
+                        showPagination={true}
+                        showPageSizeOption={false}/>
+                </Col>
+            </Row>
+        </React.Fragment>);
     }
 }
 
@@ -157,35 +172,39 @@ const subRow = row => {
         <td>{p.age}</td>
     </tr>);
 
-    return <div className="panel panel-success">
-        <div className="panel-heading"><h3 className="panel-title">
-            {row.original.b.district ? row.original.b.district + " - " : null}
-            {row.original.b.userName}</h3></div>
-        <div className="panel-body">
-            <div className="row">
-                <div className="col-md-4">
-                    <p><b>Booking Contact E-mail:</b> {row.original.b.userEmail}</p>
-                    <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
-                    {village ? <p><b>Village:</b> {village.name}</p> : null}
-                    {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
-                    <p><b>Participants:</b> {row.original.participants}</p>
-                </div>
-                <div className="col-md-8">
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Age</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {participants}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    return (
+        <Card>
+            <CardBody>
+                <CardTitle>
+                    {row.original.b.district ? row.original.b.district + " - " : null}
+                    {row.original.b.userName}
+                </CardTitle>
+
+                <Row>
+                    <Col sm={4}>
+                        <p><b>Booking Contact E-mail:</b> {row.original.b.userEmail}</p>
+                        <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
+                        {village ? <p><b>Village:</b> {village.name}</p> : null}
+                        {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
+                        <p><b>Participants:</b> {row.original.participants}</p>
+                    </Col>
+                    <Col sm={8}>
+                        <Table>
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {participants}
+                            </tbody>
+                        </Table>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
+    );
 };
 
 const nameSort = (a, b) => {

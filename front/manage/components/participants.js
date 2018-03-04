@@ -7,6 +7,16 @@ import update from 'immutability-helper';
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
 
+import {
+    Row,
+    Col,
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    CardSubtitle,
+} from 'reactstrap';
+
 import W from '../../../shared/woodcraft.js'
 
 export default class Participants extends React.Component {
@@ -56,11 +66,11 @@ export default class Participants extends React.Component {
         const participants = this.props.Participants.toJS();
 
 
-        const groups = W.map(w => {
+        const groups = W.reduce((a, w) => {
             const people = participants.filter((p) => p.age === '' ? false : w.filter(p.age));
-            if (people.length === 0) return null;
-            return (<h5 key={w.name}>{w.name}: {people.length}</h5>);
-        });
+            if (people.length === 0) return a;
+            return a + ` ${w.name}: ${people.length}`;
+        }, '');
 
         //const prows = participants.sort(nameSort).map(p => <tr key={p.id}><td>{p.name}</td><td>{p.age}</td><td>{p.diet}</td><td>{bookings.find(b => b.id === p.bookingId).userName}</td></tr>)
 
@@ -93,24 +103,32 @@ export default class Participants extends React.Component {
 
         const expanded = {[this.state.expanded]: true};
 
-        return (<div>
-            <button className="button pull-right" onClick={this.exportCSV}>Export CSV</button>
-            <h4>Total Participants: {participants.length}</h4>
-            {groups}
-            <ReactTable
-                expanded={expanded}
-                getTrProps={(state, rowInfo, column) => {
-                    if (rowInfo) return {onClick: this.updateExpanded(rowInfo.viewIndex)};
-                    return {}
-                }}
-                onSortedChange={this.updateExpanded(null)}
-                onPageChange={this.updateExpanded(null)}
-                SubComponent={subRow}
-                data={data}
-                columns={columns}
-                showPageSizeOption={false}
-                showPagination={true}/>
-        </div>)
+        return (<React.Fragment>
+            <Row>
+                <Col>
+                    <Button className="float-right" onClick={this.exportCSV}>Export CSV</Button>
+                    <h4>Total Participants: {participants.length}</h4>
+                    <p>{groups}</p>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <ReactTable
+                        expanded={expanded}
+                        getTrProps={(state, rowInfo, column) => {
+                            if (rowInfo) return {onClick: this.updateExpanded(rowInfo.viewIndex)};
+                            return {}
+                        }}
+                        onSortedChange={this.updateExpanded(null)}
+                        onPageChange={this.updateExpanded(null)}
+                        SubComponent={subRow}
+                        data={data}
+                        columns={columns}
+                        showPageSizeOption={false}
+                        showPagination={true}/>
+                </Col>
+            </Row>
+        </React.Fragment>);
     }
 }
 
@@ -122,28 +140,31 @@ const subRow = row => {
     const organisation = event.organisations.find(o => row.original.b.organisationId === o.id);
     const attendance = event.partialDates === "presets" ? event.partialDatesData.find(d => d.mask === row.original.p.days) : null;
 
-    return <div className="panel panel-success">
-        <div className="panel-heading"><h3 className="panel-title">{row.original.name}</h3></div>
-        <div className="panel-body">
-            <div className="row">
-                <div className="col-md-4">
+
+    return (<Card>
+        <CardBody>
+            <CardTitle>
+                {row.original.name}
+            </CardTitle>
+            <Row>
+                <Col sm={4}>
                     {row.original.b.district ? <p><b>Group/District:</b> {row.original.b.district}</p> : null}
                     <p><b>Booking Contact:</b> {row.original.b.userName}</p>
                     <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
                     {village ? <p><b>Village:</b> {village.name}</p> : null}
                     {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
                     {attendance ? <p><b>Attendance:</b> {attendance.name}</p> : null}
-                </div>
-                <div className="col-md-4">
+                </Col>
+                <Col sm={4}>
                     <p><b>Diet:</b> {row.original.diet} </p>
                     <p><b>Diet Info:</b></p><p>{row.original.p.dietExtra}</p>
-                </div>
-                <div className="col-md-4">
+                </Col>
+                <Col sm={4}>
                     <p><b>Medical:</b></p><p>{row.original.p.medical}</p>
-                </div>
-            </div>
-        </div>
-    </div>
+                </Col>
+            </Row>
+        </CardBody>
+    </Card>);
 };
 
 
