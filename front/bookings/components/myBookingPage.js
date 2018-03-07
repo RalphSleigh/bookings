@@ -53,7 +53,7 @@ class MyBookingPage extends React.Component {
                 <h3>Booking for {event.name}</h3>
                 {form}
             </Col>
-            <ParticipantQuickList booking={booking}/>
+            <ParticipantQuickList booking={booking} event={event}/>
         </Row>);
     }
 }

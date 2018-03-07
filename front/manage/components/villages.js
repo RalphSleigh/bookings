@@ -78,8 +78,9 @@ class Villages extends React.Component {
     render() {
 
         const event = this.props.Event.toJS();
-        const bookings = this.props.Bookings.toJS();
-        const participants = this.props.Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List()).toJS();
+        const bookings = this.props.bookings;
+        const participants = bookings.reduce((r, b) => [...r, ...b.participants], []);
+        //const participants = this.props.Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List()).toJS();
 
         const villages = (event.villages || []).map(v => {
 

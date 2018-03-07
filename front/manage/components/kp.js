@@ -23,18 +23,19 @@ export default class KP extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         //rerendering the tables suck, lets not do it.
-        return !this.props.Bookings.equals(nextProps.Bookings);
+        //return !this.props.Bookings.equals(nextProps.Bookings);
+        return true
     }
 
     render() {
 
         //const event = this.props.Event.toJS();
         //const bookings = this.props.Bookings.toJS();
-        const participants = this.props.Participants.toJS();
+        const participants = this.props.participants;
 
 
         const groups = W.map(w => {
-            const people = participants.filter((p) => p.age === '' ? false : w.filter(p.age));
+            const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.name);
             if (people.length === 0) return null;
             return (<tr key={w.name}>
                 <td>{w.name}</td>

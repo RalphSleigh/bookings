@@ -14,7 +14,8 @@ export default class ParticipantsList extends React.Component {
 
         const list = this.props.booking.participants
         const groups = W.map(w => {
-            const people = list.filter((p) => p.age === '' ? false : w.filter(p.age)).map((p, k) => <p
+            const people = list.filter((p) => p.age === '' ? false : w.filter(p.age, this.props.event.startDate)).map((p, k) =>
+                <p
                 key={k}>{p.name}</p>);
             if (people.length === 0) return null;
             return (<div className="participantQuickList" key={w.name}>

@@ -11,7 +11,7 @@ module.exports = {
 				type: DataTypes.STRING
 			},
 			age: {
-				type: DataTypes.STRING
+                type: DataTypes.DATE
 			},
 			diet: {
 				type: DataTypes.STRING

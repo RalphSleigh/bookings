@@ -36,8 +36,9 @@ export default class Bookings extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         //rerendering the tables suck, lets not do it.
-        if (this.state !== nextState) return true;
-        return !this.props.Bookings.equals(nextProps.Bookings);
+        //if (this.state !== nextState) return true;
+        //return !this.props.Bookings.equals(nextProps.Bookings);
+        return true;
     }
 
     componentWillReceiveProps() {
@@ -78,7 +79,7 @@ export default class Bookings extends React.Component {
     render() {
 
         //const event = this.props.Event.toJS();
-        const bookings = this.props.Bookings.toJS();
+        const bookings = this.props.bookings;
         const user = this.props.User.toJS();
         //const participants = this.props.Participants.toJS();
 

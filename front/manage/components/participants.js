@@ -3,6 +3,7 @@ import csv from 'csv-file-creator'
 import ReactTable from 'react-table'
 import Moment from 'moment'
 import update from 'immutability-helper';
+import map from 'lodash/map'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
@@ -32,8 +33,9 @@ export default class Participants extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         //rerendering the tables suck, lets not do it.
-        if (this.state !== nextState) return true;
-        return !this.props.Bookings.equals(nextProps.Bookings);
+        //if (this.state !== nextState) return true;
+        //return !this.props.Bookings.equals(nextProps.Bookings);
+        return true;
     }
 
     componentWillReceiveProps() {
@@ -62,23 +64,24 @@ export default class Participants extends React.Component {
     render() {
 
         //const event = this.props.Event.toJS();
-        const bookings = this.props.Bookings.toJS();
-        const participants = this.props.Participants.toJS();
+        const bookings = this.props.bookings;
+        const participants = this.props.participants;
+
 
 
         const groups = W.reduce((a, w) => {
-            const people = participants.filter((p) => p.age === '' ? false : w.filter(p.age));
+            const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.name);
             if (people.length === 0) return a;
             return a + ` ${w.name}: ${people.length}`;
         }, '');
 
         //const prows = participants.sort(nameSort).map(p => <tr key={p.id}><td>{p.name}</td><td>{p.age}</td><td>{p.diet}</td><td>{bookings.find(b => b.id === p.bookingId).userName}</td></tr>)
 
-        const data = participants.sort(nameSort).map(p => {
+        const data = participants.map(p => {
             const b = bookings.find(b => b.id === p.bookingId);
             return {
                 name: p.name,
-                age: p.age ? parseInt(p.age) : "", //hack for now
+                age: p.age,
                 diet: p.diet,
                 booked: b.userName,
                 district: b.district,

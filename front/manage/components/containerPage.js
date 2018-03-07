@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import Immutable from 'immutable'
 import {Route, Switch} from 'react-router-dom';
 
+
 import bookings from '../../bookings'
 import events from '../../events'
 import {manageEventCheck, manageWholeEventWrapper} from '../permission.js'
@@ -26,6 +27,8 @@ import KpPage from './kp.js'
 import ApplicationPage from './applications.js'
 import VillagePage from './villages.js'
 import RolesPage from './roles.js'
+
+import W from '../../../shared/woodcraft'
 
 import {
     Row,
@@ -50,6 +53,29 @@ class ManageContainerPage extends React.Component {
     componentWillMount() {
         this.props.getEventDetails(this.props.match.params.eventId);
         this.props.getEventBookings(this.props.match.params.eventId);
+
+        this.prepData(this.props.Bookings, this.props.Event)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.Bookings !== this.props.Bookings) this.prepData(nextProps.Bookings, nextProps.Event)
+    }
+
+    prepData(Bookings, Event) {
+        //DeImmutable data and calculate ages, to avoid needing to do it on render. Store result in State.
+
+        const event = Event.toJS();
+
+        const startDate = event.startDate; //todo store this as a moment.
+
+        const bookings = Bookings.valueSeq().toJS().filter(b => b.eventId === event.id);
+        bookings.forEach(b => {
+            b.participants.forEach(p => {
+                p.ageGroup = W.find(w => w.filter(p.age, startDate)).name
+            })
+        });
+
+        this.setState({bookings: bookings})
     }
 
     render() {
@@ -72,7 +98,7 @@ class ManageContainerPage extends React.Component {
         const RolesTab = manageWholeEventWrapper(() => <CustomTab
             to={"/event/" + this.props.match.params.eventId + "/manage/roles"} label="Roles"/>);
 
-
+        const {Bookings, ...props} = this.props;
         return (<React.Fragment>
                 <Row>
                     <Col>
@@ -90,85 +116,39 @@ class ManageContainerPage extends React.Component {
                 </Row>
                 <Switch>
                     <Route exact path="/event/:eventId(\d+)/manage">
-                        <Filter {...this.props} >
+                        <Filter bookings={this.state.bookings} {...props} >
                             <ParticipantsPage/>
                         </Filter>
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/participants">
-                        <Filter {...this.props} >
+                        <Filter bookings={this.state.bookings} {...props} >
                             <ParticipantsPage/>
                         </Filter>
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/bookings">
-                        <Filter {...this.props} >
+                        <Filter bookings={this.state.bookings} {...props} >
                             <BookingsPage/>
                         </Filter>
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/kp">
-                        <Filter {...this.props} >
+                        <Filter bookings={this.state.bookings} {...props} >
                             <KpPage/>
                         </Filter>
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/applications">
-                        <ApplicationPage {...this.props} />
+                        <ApplicationPage bookings={this.state.bookings} {...props} />
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/villages">
-                        <VillagePage {...this.props} />
+                        <VillagePage bookings={this.state.bookings} {...props} />
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/roles">
-                        <RolesPage {...this.props} />
+                        <RolesPage bookings={this.state.bookings} {...props} />
                     </Route>
                 </Switch>
             </React.Fragment>
 
 
         );
-
-
-        (<div className="row">
-            <div className="col-sm-12">
-                <ul className="nav nav-tabs">
-                    <CustomTab activeOnlyWhenExact to={"/event/" + this.props.match.params.eventId + "/manage"}
-                               label="Participants"/>
-                    <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/bookings"} label="Bookings"/>
-                    <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/kp"} label="KP"/>
-                    <VillagesTab {...this.props}/>
-                    <RolesTab {...this.props}/>
-                    <ApplicationsTab {...this.props}/>
-                </ul>
-                <Switch>
-                    <Route exact path="/event/:eventId(\d+)/manage">
-                        <Filter {...this.props} >
-                            <ParticipantsPage/>
-                        </Filter>
-                    </Route>
-                    <Route path="/event/:eventId(\d+)/manage/participants">
-                        <Filter {...this.props} >
-                            <ParticipantsPage/>
-                        </Filter>
-                    </Route>
-                    <Route path="/event/:eventId(\d+)/manage/bookings">
-                        <Filter {...this.props} >
-                            <BookingsPage/>
-                        </Filter>
-                    </Route>
-                    <Route path="/event/:eventId(\d+)/manage/kp">
-                        <Filter {...this.props} >
-                            <KpPage/>
-                        </Filter>
-                    </Route>
-                    <Route path="/event/:eventId(\d+)/manage/applications">
-                        <ApplicationPage {...this.props} />
-                    </Route>
-                    <Route path="/event/:eventId(\d+)/manage/villages">
-                        <VillagePage {...this.props} />
-                    </Route>
-                    <Route path="/event/:eventId(\d+)/manage/roles">
-                        <RolesPage {...this.props} />
-                    </Route>
-                </Switch>
-            </div>
-        </div>)
     }
 }
 
@@ -179,7 +159,7 @@ const mapStateToProps = (state, props) => {
     const User = state.getIn(["User", "user"]);
     const UserList = state.getIn(["User", "list"]);
     const Event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]);
-    const Bookings = state.getIn(["Bookings", "bookings"]).filter(b => b.get("eventId") === Event.get("id")).toList();
+    const Bookings = state.getIn(["Bookings", "bookings"]);
     return {User, UserList, Event, Bookings};
 };
 

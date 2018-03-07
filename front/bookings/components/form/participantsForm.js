@@ -98,23 +98,26 @@ const ParticipantRow = (props) => {
         <CardBody>
             <FormGroup row>
                 <Label sm={2}>Name:</Label>
-                <Col sm={3}>
+                <Col sm={10}>
                     <Input type="text"
                            value={props.name || ''}
                            onChange={props.update("name")}
                            vaild={props.valid(props.name)}
                            placeholder="Name"/>
                 </Col>
-                <Label sm={1}>Age:</Label>
-                <Col sm={2}>
-                    <Input type="text"
+            </FormGroup>
+            <FormGroup row>
+                <Label sm={2}>Date of Birth:</Label>
+                <Col sm={3}>
+                    <Input type="date"
                            className={props.valid(props.age)}
                            value={props.age || ''}
                            onChange={props.update("age")}
-                           placeholder="Age"/>
+                    />
                 </Col>
                 <Label sm={1}>Diet:</Label>
                 <Col sm={3}>
+
                     <Input type="select" value={props.diet || ''}
                            onChange={props.update("diet")}
                            vaild={props.valid(props.diet)}>

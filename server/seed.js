@@ -7,6 +7,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
         const {execSync} = require('child_process');
         const path = require('path');
         const umzug = require('umzug');
+        const momentRandom = require('moment-random');
 
         const db = require('./orm.js');
 
@@ -248,7 +249,7 @@ It also demonstrates the Ealing donation structure`,
             const promises = new Array(getRandomInt(9000, 11000)).fill().map(() =>
                 db.participant.create({
                     name: faker.name.firstName(getRandomInt(0, 1)) + ' ' + faker.name.lastName(),
-                    age: getRandomInt(5, 20),
+                    age: momentRandom("2016-01-01", "1980-01-01"),
                     diet: getRandomDiet(),
                     dietExtra: getRandomDietExtra(),
                     medical: getRandomMedical(),

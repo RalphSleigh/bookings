@@ -36,7 +36,7 @@ export default class Filter extends React.Component {
     constructor(props) {
         super(props);
 
-        const Participants = this.props.Bookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
+        const participants = this.props.bookings.reduce((r, b) => [...r, ...b.participants], []);
 
 
         this.state = {
@@ -44,7 +44,7 @@ export default class Filter extends React.Component {
             villages: [],
             day: null,
             search: '',
-            data: {Bookings: this.props.Bookings, Participants: Participants}
+            data: {bookings: this.props.bookings, participants: participants}
         };
         this.updateOrgs = this.updateOrgs.bind(this);
         this.updateVillages = this.updateVillages.bind(this);
@@ -80,47 +80,55 @@ export default class Filter extends React.Component {
     }
 
     updateData(source) {
-        let FilteredBookings = source.Bookings.filter(b => {
+        let filteredBookings = source.bookings.filter(b => {
+            if (b.totalParticipants) b.participants = b.totalParticipants;
             if (this.state.orgs.length === 0) return true;
-            return this.state.orgs.find(o => o.value === b.get("organisationId"))
+            return this.state.orgs.find(o => o.value === b.organisationId)
         }).filter(b => {
             if (this.state.villages.length === 0) return true;
-            return this.state.villages.find(v => v.value === b.get("villageId"))
+            return this.state.villages.find(v => v.value === b.villageId)
         });
 
-        if (this.state.day) FilteredBookings = FilteredBookings.map(b => b.set("participants", b.get("participants").filter(p => p.get("days") & this.state.day.value)));
+        if (this.state.day) filteredBookings = filteredBookings.map(b => {
+            b.totalParticipants = b.participants;
+            b.participants = b.participants.filter(p => p.days & this.state.day.value);
+            return b;
+        });
 
-        if (this.state.search.length > 2) FilteredBookings = FilteredBookings.reduce(this.searchBooking, Immutable.List());
+        if (this.state.search.length > 2) filteredBookings = filteredBookings.reduce(this.searchBooking, []);
 
-        const Participants = FilteredBookings.equals(this.state.data.Bookings) ? this.state.data.Participants : FilteredBookings.reduce((r, b) => r.concat(b.get("participants")), Immutable.List());//just easier to do this here than find a plain javascript object map function
+        const participants = filteredBookings === this.state.data.bookings ? this.state.data.participants : filteredBookings.reduce((r, b) => [...r, ...b.participants], []);//just easier to do this here than find a plain javascript object map function
 
         this.setState(update(this.state, {
             data: {
                 $set: {
-                    Participants: Participants,
-                    Bookings: FilteredBookings
+                    participants: participants,
+                    bookings: filteredBookings
                 }
             }
         }));
 
     }
 
-
 //TODO: Proper server side database searching
     searchBooking(R, booking) {
         const term = this.state.search;
 
-        const newParticipants = booking.get("participants").filter(p => p.get("name").includes(term));
+        booking.totalParticipants = booking.participants;
+
+        const newParticipants = booking.participants.filter(p => p.name.includes(term));
 
         const bookingFound = (
-            booking.get("userName").includes(term)
-            || booking.get("userEmail").includes(term)
-            || booking.get("userContact").includes(term)
-            || booking.get("district").includes(term)
-            || booking.get("userContact").includes(term))
+            booking.userName.includes(term)
+            || booking.userEmail.includes(term)
+            || booking.userContact.includes(term)
+            || booking.district.includes(term)
+            || booking.userContact.includes(term));
 
-        if (bookingFound || !newParticipants.isEmpty()) {
-            return R.push(booking.set("participants", newParticipants))
+        if (bookingFound || newParticipants.length > 0) {
+            booking.participants = newParticipants;
+            R.push(booking);
+            return R
         }
         return R
     }
@@ -158,7 +166,7 @@ export default class Filter extends React.Component {
             mask++;
         }
 
-        const {Bookings, Participants, ...rest} = this.props;
+        const {Bookings, Participants, bookings, ...rest} = this.props;
 
 
         return (
