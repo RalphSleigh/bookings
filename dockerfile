@@ -4,6 +4,14 @@ ARG BOOKINGS_VAULT_URL
 
 ENV NODE_ENV=production
 
+RUN apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++ \
+    && npm install \
+        [ your npm dependencies here ] \
+    && apk del .gyp
+
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
