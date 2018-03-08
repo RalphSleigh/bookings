@@ -1,4 +1,4 @@
-FROM node:9
+FROM node:9-alpine
 
 ARG BOOKINGS_VAULT_URL
 
