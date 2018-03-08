@@ -16,6 +16,7 @@ services:
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-postgres-init/init.sql
     ports:
           - 8001:5432
 volumes:
