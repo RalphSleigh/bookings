@@ -10,14 +10,14 @@ var mailcomposer = require("mailcomposer");
 //var mimebuilder = require('mailbuild');
 
 
-if (config.email) {
+if (config.EMAIL) {
 
 	var jwtClient = new google.auth.JWT(
-		config.emailClientEmail,
+        config.EMAIL_CLIENT_EMAIL,
 		null,
-		config.emailPrivateKey,
+        config.EMAIL_PRIVATE_KEY,
 		['https://www.googleapis.com/auth/gmail.send'],
-		config.emailFrom
+        config.EMAIL_FROM
 	);
 
 	jwtClient.authorize(function (err) {

@@ -129,8 +129,8 @@ const ParticipantRow = (props) => {
                 </Col>
             </FormGroup>
             <FormGroup row>
-                <Label sm={2}>Additional dietary information or allergies:</Label>
-                <Col sm={10}>
+                <Label sm={3}>Additional dietary requirement or food related allergies:</Label>
+                <Col sm={9}>
                     <Input type="textarea"
                            value={props.dietExtra || ''}
                            onChange={props.update("dietExtra")}
@@ -138,8 +138,8 @@ const ParticipantRow = (props) => {
                 </Col>
             </FormGroup>
             <FormGroup row>
-                <Label sm={2}>Additional medical information &amp; medication taken:</Label>
-                <Col sm={10}>
+                <Label sm={3}>Additional medical information &amp; medication taken:</Label>
+                <Col sm={9}>
                     <Input type="textarea"
                            value={props.medical || ''}
                            onChange={props.update("medical")}

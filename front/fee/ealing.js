@@ -13,6 +13,8 @@ import {
     InputGroup
 } from 'reactstrap';
 
+import moment from 'moment';
+
 export class Config extends React.Component {
 
     constructor(props) {
@@ -72,8 +74,7 @@ export class BookingForm extends React.Component {
 
     render() {
 
-
-        const accompanied = this.props.participants.find(p => parseInt(p.age) > 15) === undefined ? false : true;
+        const accompanied = this.props.participants.find(p => moment(this.props.event.startDate).diff(moment(p.age), 'years') > 15) === undefined ? false : true;
 
         const amount = this.props.feeData.amount;
 

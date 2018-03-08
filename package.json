@@ -46,7 +46,7 @@
     "cookie-session": "^2.0.0-alpha.2",
     "csv-file-creator": "^1.0.7",
     "debounce": "^1.1.0",
-    "email-templates": "^3.1.8",
+    "email-templates": "^2",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
     "faker": "^4.1.0",
