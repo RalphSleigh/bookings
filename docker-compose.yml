@@ -9,3 +9,19 @@ services:
       - 8080:8080
     environment:
       - BOOKINGS_VAULT_URL
+    depends_on:
+      - db
+    networks:
+          - postgres
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+          - postgres
+volumes:
+     pgdata:
+networks:
+  postgres:
+    driver: bridge

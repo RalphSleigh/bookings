@@ -20,7 +20,8 @@ import {
 } from 'reactstrap';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faTimes, faPlus} from '@fortawesome/fontawesome-free-solid'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import faPlus from '@fortawesome/fontawesome-free-solid/faPlus'
 
 //import W from '../../../shared/woodcraft.js'
 

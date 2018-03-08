@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
 const MinifyPlugin = require("babel-minify-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 
 const PROD = (process.env.NODE_ENV === 'production');
@@ -13,6 +15,12 @@ module.exports = {
         app: './front/index.js',
         vendor: ['babel-polyfill', 'whatwg-fetch', 'react', 'redux', 'react-redux', 'react-dom', 'immutable', 'moment', 'redux-auth-wrapper', 'lodash/cloneDeep', 'lodash/map', 'react-markdown', 'react-table', 'react-router', 'react-beautiful-dnd', 'react-bootstrap-typeahead']
 
+    },
+
+    resolve: {
+        alias: {
+            '@fortawesome/fontawesome-free-solid$': '@fortawesome/fontawesome-free-solid/shakable.es.js'
+        }
     },
 
     output: {
@@ -51,4 +59,4 @@ else module.exports.plugins.push(new webpack.SourceMapDevToolPlugin({
     exclude: "vendor"
 }));
 
-//if (!PROD) module.exports.plugins.push(new require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
+if (!PROD) module.exports.plugins.push(new BundleAnalyzerPlugin());

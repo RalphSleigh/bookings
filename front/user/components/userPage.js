@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faYahoo} from '@fortawesome/fontawesome-free-brands'
+import faYahoo from '@fortawesome/fontawesome-free-brands/faYahoo'
 
 
 class UserPage extends React.Component {

@@ -9,7 +9,8 @@ import update from 'immutability-helper';
 import Moment from 'moment'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faLock, faLockOpen} from '@fortawesome/fontawesome-free-solid'
+import faLockOpen from '@fortawesome/fontawesome-free-solid/faLockOpen'
+import faLock from '@fortawesome/fontawesome-free-solid/faLock'
 
 import {
     Button,
@@ -20,7 +21,7 @@ import {
     Form,
     FormGroup,
 } from 'reactstrap';
-import {faTimes} from "@fortawesome/fontawesome-free-solid/index";
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 
 
 //this is a massive component that handles the state of the booking form.

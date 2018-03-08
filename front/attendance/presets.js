@@ -16,7 +16,7 @@ import {
 } from 'reactstrap';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faTimes} from '@fortawesome/fontawesome-free-solid'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 
 export class Config extends React.Component {
 
