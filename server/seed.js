@@ -249,7 +249,7 @@ It also demonstrates the Ealing donation structure`,
             const promises = new Array(getRandomInt(9000, 11000)).fill().map(() =>
                 db.participant.create({
                     name: faker.name.firstName(getRandomInt(0, 1)) + ' ' + faker.name.lastName(),
-                    age: momentRandom("2016-01-01", "1980-01-01"),
+                    age: momentRandom("2016-01-01", "1980-01-01").toDate(),
                     diet: getRandomDiet(),
                     dietExtra: getRandomDietExtra(),
                     medical: getRandomMedical(),
