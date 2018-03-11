@@ -15,6 +15,7 @@ RUN apk add --no-cache --virtual .gyp \
         make \
         g++ \
     && npm install \
+    && npm rebuild bcrypt --build-from-source
     && apk del .gyp
 
 COPY . /usr/src/app
