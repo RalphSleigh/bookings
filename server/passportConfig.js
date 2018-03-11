@@ -73,7 +73,7 @@ passport.use(new GoogleStrategy({
 passport.use(new YahooStrategy({
         clientID: config.YAHOO_CLIENT_ID,
         clientSecret: config.YAHOO_CLIENT_SECRET,
-        callbackURL: config.BASE_PATH + "/auth/yahoo/callback",
+        passReqToCallback: true
 
     },
     function (accessToken, refreshToken, profile, cb) {
