@@ -31,6 +31,9 @@ export class Config extends React.Component {
     render() {
         //Thou shalt not ever use JS numbers for currency...
         const amount = this.props.fee.amount || 35;
+        const unaccompanied = amount === 35 ? 50 : amount * 1.5;
+        const unaccompaniedDiscount = amount === 35 ? 25 : amount * 0.75;
+        const discount = amount === 35 ? 20 : amount * 0.5;
 
         return (<Row>
             <Col>
@@ -45,8 +48,8 @@ export class Config extends React.Component {
                     <tbody>
                     <tr>
                         <td>Unaccompanied Elfins, Pioneers &amp; Venturers</td>
-                        <td>£{Math.round(amount * 1.5)}</td>
-                        <td>£{Math.round(amount * 0.75)}</td>
+                        <td>£{Math.round(unaccompanied)}</td>
+                        <td>£{Math.round(unaccompaniedDiscount)}</td>
                     </tr>
                     <tr>
                         <td>Elfins, Pioneers &amp; Venturers accompanied by a responsible adult, DFs and Adults</td>
@@ -61,7 +64,7 @@ export class Config extends React.Component {
                                 </InputGroup>
                             </FormGroup>
                         </td>
-                        <td>£{Math.round(amount * 0.5)}</td>
+                        <td>£{Math.round(discount)}</td>
                     </tr>
                     </tbody>
                 </Table>
@@ -77,9 +80,13 @@ export class BookingForm extends React.Component {
         const accompanied = this.props.participants.find(p => moment(this.props.event.startDate).diff(moment(p.age), 'years') > 15) === undefined ? false : true;
 
         const amount = this.props.feeData.amount;
+        const amount = this.props.fee.amount || 35;
+        const unaccompanied = amount === 35 ? 50 : amount * 1.5;
+        const unaccompaniedDiscount = amount === 35 ? 25 : amount * 0.75;
+        const discount = amount === 35 ? 20 : amount * 0.5;
 
-        const total = this.props.participants.length * Math.round(this.props.feeData.amount * (accompanied ? 1 : 1.5));
-        const totalDiscounted = this.props.participants.length * Math.round(this.props.feeData.amount * (accompanied ? 0.5 : 0.75));
+        const total = this.props.participants.length * Math.round(accompanied ? amount : unaccompanied);
+        const totalDiscounted = this.props.participants.length * Math.round(accompanied ? discount : unaccompaniedDiscoun);
 
         return (<div className="col-sm-12">
             <table className="table">
@@ -93,13 +100,13 @@ export class BookingForm extends React.Component {
                 <tbody>
                 <tr>
                     <td>Unaccompanied Elfins, Pioneers &amp; Venturers</td>
-                    <td>£{Math.round(amount * 1.5)}</td>
-                    <td>£{Math.round(amount * 0.75)}</td>
+                    <td>£{Math.round(unaccompanied)}</td>
+                    <td>£{Math.round(unaccompaniedDiscount)}</td>
                 </tr>
                 <tr>
                     <td>Elfins, Pioneers &amp; Venturers accompanied by a responsible adult, DFs and Adults</td>
                     <td>£{Math.round(amount)}</td>
-                    <td>£{Math.round(amount * 0.5)}</td>
+                    <td>£{Math.round(discount)}</td>
                 </tr>
                 <tr>
                     <td><b>My
