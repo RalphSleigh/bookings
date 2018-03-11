@@ -3,7 +3,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const YahooStrategy = require('passport-yahoo-token');
+const YahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy;
 const MicrosoftStrategy = require('passport-microsoft').Strategy;
 const bcrypt = require('bcrypt');
 
@@ -73,10 +73,10 @@ passport.use(new GoogleStrategy({
 passport.use(new YahooStrategy({
         clientID: config.YAHOO_CLIENT_ID,
         clientSecret: config.YAHOO_CLIENT_SECRET,
-        passReqToCallback: true
+        callbackURL: config.BASE_PATH + "/auth/yahoo/callback",
 
     },
-    function (accessToken, refreshToken, profile, cb) {
+    function (accessToken, refreshToken, token, profile, cb) {
         db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
             .spread((user, created) => {
                 if (created) {
