@@ -15,7 +15,7 @@ import {
     CardImgOverlay
 } from 'reactstrap';
 
-import ontAwesomeIcon from '@fortawesome/react-fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 
 let orgkey = 0;
