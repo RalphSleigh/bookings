@@ -3,7 +3,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const YahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy;
+const YahooStrategy = require('passport-yahoo-token');
 const MicrosoftStrategy = require('passport-microsoft').Strategy;
 const bcrypt = require('bcrypt');
 
