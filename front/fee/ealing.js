@@ -85,7 +85,7 @@ export class BookingForm extends React.Component {
         const discount = amount === 35 ? 20 : amount * 0.5;
 
         const total = this.props.participants.length * Math.round(accompanied ? amount : unaccompanied);
-        const totalDiscounted = this.props.participants.length * Math.round(accompanied ? discount : unaccompaniedDiscoun);
+        const totalDiscounted = this.props.participants.length * Math.round(accompanied ? discount : unaccompaniedDiscount);
 
         return (<div className="col-sm-12">
             <table className="table">
