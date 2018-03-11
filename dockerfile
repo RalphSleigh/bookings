@@ -11,6 +11,7 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 
 RUN apk --no-cache add --virtual builds-deps build-base python
+RUN npm install node-pre-gyp
 RUN npm install
 RUN npm rebuild bcrypt --build-from-source
 
