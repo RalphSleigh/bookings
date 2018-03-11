@@ -12,6 +12,7 @@ COPY package.json /usr/src/app/
 
 RUN apk --no-cache add --virtual builds-deps build-base python
 RUN npm install npm install -g npm@latest
+RUN npm install sqlite3
 RUN npm install
 RUN npm rebuild bcrypt --build-from-source
 
