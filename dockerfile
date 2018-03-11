@@ -10,10 +10,9 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
 
-RUN apk --no-cache add --virtual builds-deps build-base python \
-    && npm install \
-    && npm rebuild bcrypt --build-from-source \
-    && apk del .gyp
+RUN apk --no-cache add --virtual builds-deps build-base python
+RUN npm install
+RUN npm rebuild bcrypt --build-from-source
 
 COPY . /usr/src/app
 #we want to do this, but takes to much ram so for now prebuild and include in the copy
