@@ -15,6 +15,7 @@ RUN npm install npm install -g npm@latest
 RUN npm install sqlite3
 RUN npm install bcrypt
 RUN npm install
+RUN npm rebuild bcrypt --build-from-source
 
 COPY . /usr/src/app
 #we want to do this, but takes to much ram so for now prebuild and include in the copy
