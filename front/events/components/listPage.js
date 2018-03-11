@@ -90,6 +90,10 @@ const Event = (props) => {
 };
 
 const getEditApplyButton = (user, event) => {
+    if (event.bookingPolicy !== 'guest' && user.id === 1)
+        return () => <Link to={"/user"}
+                           className="btn btn-primary float-right">Log in to Book</Link>;
+
     if (event.booking !== undefined) {
         return showBookingEditLink(() => <Link to={"/booking/" + event.booking.id + "/edit"}
                                                className="btn btn-primary float-right">Edit

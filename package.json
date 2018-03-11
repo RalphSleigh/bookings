@@ -75,6 +75,8 @@
     "passport-yahoo-oauth2": "https://github.com/francisalvinbarretto/passport-yahoo-oauth/tarball/master",
     "passport-yahoo-token": "^2.1.0",
     "pg": "6.4.1",
+    "prelude-extension": "^0.1.0",
+    "prelude-ls": "^1.1.2",
     "react": "^16.2.0",
     "react-addons-shallow-compare": "^15.4.1",
     "react-beautiful-dnd": "^3.0.0",
@@ -99,6 +101,7 @@
     "sequelize-cli": "^3.2.0",
     "sequelize-json": "^2.1.2",
     "sqlite3": "^3.1.13",
+    "tether": "^1.4.3",
     "whatwg-fetch": "^2.0.2",
     "winston": "^3.0.0-rc1"
   }
