@@ -80,7 +80,6 @@ export class BookingForm extends React.Component {
         const accompanied = this.props.participants.find(p => moment(this.props.event.startDate).diff(moment(p.age), 'years') > 15) === undefined ? false : true;
 
         const amount = this.props.feeData.amount;
-        const amount = this.props.fee.amount || 35;
         const unaccompanied = amount === 35 ? 50 : amount * 1.5;
         const unaccompaniedDiscount = amount === 35 ? 25 : amount * 0.75;
         const discount = amount === 35 ? 20 : amount * 0.5;
