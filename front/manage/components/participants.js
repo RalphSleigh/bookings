@@ -45,7 +45,7 @@ export default class Participants extends React.Component {
     exportCSV() {
         const exportedData = this.props.participants.map(p => [p.id,
             p.name,
-            p.age,
+            Moment(p.age).format("DD/MM/YYYY"),
             p.diet,
             p.dietExtra,
             p.medical]);
