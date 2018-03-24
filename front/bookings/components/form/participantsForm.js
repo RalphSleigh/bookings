@@ -4,6 +4,13 @@ import Moment from 'moment'
 import attendance from '../../../attendance'
 import {ParticipantWidget} from "../../../attendance/presets";
 
+import DateTimePicker from 'react-widgets/lib/DateTimePicker'
+import momentLocalizer from 'react-widgets-moment'
+import 'react-widgets/dist/css/react-widgets.css'
+
+momentLocalizer();
+
+
 import {
     Button,
     Row,
@@ -44,6 +51,13 @@ export default class ParticipantsForm extends React.Component {
         }
     }
 
+    updateAge(k) {
+        return date => {
+            this.props.updateValidation();
+            this.props.update(k, "age", date);
+        }
+    }
+
     delete(k) {
         return (e) => {
             this.props.delete(k);
@@ -68,12 +82,13 @@ export default class ParticipantsForm extends React.Component {
 
         let rows = participants.map((p, i) => <ParticipantRow key={p.id}
                                                               index={i}
-                                                         {...p}
-                                                         update={this.update(p.id)}
-                                                         delete={this.delete(p.id)}
-                                                         valid={this.valid}
-                                                         event={this.props.event}
-                                                         AttendanceWidget={AttendanceWidget}/>);
+                                                              {...p}
+                                                              update={this.update(p.id)}
+                                                              updateAge={this.updateAge(p.id)}
+                                                              delete={this.delete(p.id)}
+                                                              valid={this.valid}
+                                                              event={this.props.event}
+                                                              AttendanceWidget={AttendanceWidget}/>);
         return (<React.Fragment>
                 {rows}
                 <Row className="mb-3">
@@ -111,10 +126,13 @@ const ParticipantRow = (props) => {
             <FormGroup row>
                 <Label sm={2}>Date of Birth:</Label>
                 <Col sm={3}>
-                    <Input type="date"
-                           className={props.valid(props.age)}
-                           value={Moment(props.age).format("YYYY-MM-DD") || ''}
-                           onChange={props.update("age")}
+                    <DateTimePicker
+                        value={props.age ? new Date(props.age) : null}
+                        onChange={props.updateAge}
+                        editFormat={'DD/MM/YYYY'}
+                        format={'DD/MM/YYYY'}
+                        time={false}
+                        inputProps={{className: 'form-control ' + props.valid(props.age), placeholder: 'DD/MM/YYYY'}}
                     />
                 </Col>
                 <Label sm={1}>Diet:</Label>

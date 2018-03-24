@@ -4,7 +4,6 @@ const MinifyPlugin = require("babel-minify-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
-
 const PROD = (process.env.NODE_ENV === 'production');
 
 
@@ -34,7 +33,14 @@ module.exports = {
             use: ['babel-loader']
         }, {
             test: /\.css$/,
-            use: ['style-loader', 'css-loader']
+            use: ['style-loader', 'css-loader', 'resolve-url-loader']
+        }, {
+            test: /\.(gif|ttf|eot|svg|woff2?)$/, use: {
+                loader: 'url-loader',
+                options: {
+                    limit: 8192
+                }
+            }
         }]
     },
     externals: {

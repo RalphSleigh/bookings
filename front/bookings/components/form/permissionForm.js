@@ -82,13 +82,13 @@ export default class PermissionForm extends React.Component {
                     </Label>
                     <Col sm={10}>
                         <Input type="text"
-                               placeholder="Name"
+                               placeholder="Phone number"
                                value={this.props.emergencyPhone || ''}
                                valid={this.valid(this.props.emergencyPhone)}
                                onChange={this.updateEmergency("emergencyPhone")}/>
                     </Col>
                 </FormGroup>
-            </React.Fragment>
+            </React.Fragment>;
 
 
         const campWith = this.props.event.bigCampMode ?
