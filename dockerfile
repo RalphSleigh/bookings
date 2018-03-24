@@ -21,7 +21,7 @@ COPY . /usr/src/app
 #we want to do this, but takes to much ram so for now prebuild and include in the copy
 #RUN node ./node_modules/webpack/bin/webpack.js
 
-RUN node ./server/seed.js seed
+#RUN node ./server/seed.js seed
 
 EXPOSE 8080
 
