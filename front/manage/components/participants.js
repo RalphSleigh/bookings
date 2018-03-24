@@ -48,9 +48,11 @@ export default class Participants extends React.Component {
             Moment(p.age).format("DD/MM/YYYY"),
             p.diet,
             p.dietExtra,
-            p.medical]);
+            p.medical,
+            p.createdAt,
+            p.updatedAt]);
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Created At', 'Updated At'], ...exportedData]);
     }
 
     updateExpanded(id) {
