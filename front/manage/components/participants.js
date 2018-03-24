@@ -63,7 +63,7 @@ export default class Participants extends React.Component {
 
     render() {
 
-        //const event = this.props.Event.toJS();
+        const event = this.props.Event.toJS();
         const bookings = this.props.bookings;
         const participants = this.props.participants;
 
@@ -81,7 +81,7 @@ export default class Participants extends React.Component {
             const b = bookings.find(b => b.id === p.bookingId);
             return {
                 name: p.name,
-                age: p.age,
+                age: p.ageAtStart,
                 diet: p.diet,
                 booked: b.userName,
                 district: b.district,
@@ -98,11 +98,13 @@ export default class Participants extends React.Component {
             sortable: true,
             sortMethod: nameSort,
             Cell: row => row.value.name
-        },
-            {accessor: "district", Header: "District", sortable: true},
-            {accessor: "age", Header: "Age", sortable: true},
+        }];
+
+        if (event.bigCampMode) columns.push({accessor: "district", Header: "District", sortable: true});
+
+        columns.push({accessor: "age", Header: "Age", sortable: true},
             {accessor: "diet", Header: "Diet", sortable: true, minWidth: 70},
-            {accessor: "booked", Header: "Booked By", sortable: true, minWidth: 50}];
+            {accessor: "booked", Header: "Booked By", sortable: true, minWidth: 50});
 
         const expanded = {[this.state.expanded]: true};
 
@@ -151,16 +153,20 @@ const subRow = row => {
             </CardTitle>
             <Row>
                 <Col sm={4}>
+                    <p><b>DOB: </b>{Moment(row.original.p.age).format("DD/MM/YYYY")}</p>
                     {row.original.b.district ? <p><b>Group/District:</b> {row.original.b.district}</p> : null}
                     <p><b>Booking Contact:</b> {row.original.b.userName}</p>
                     <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
                     {village ? <p><b>Village:</b> {village.name}</p> : null}
                     {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
                     {attendance ? <p><b>Attendance:</b> {attendance.name}</p> : null}
+                    {!event.bigCampMode ? <p><b>Emergency Contact:</b> {row.original.b.emergencyName}</p> : null}
+                    {!event.bigCampMode ? <p><b>Emergency Phone:</b> {row.original.b.emergencyPhone}</p> : null}
                 </Col>
                 <Col sm={4}>
                     <p><b>Diet:</b> {row.original.diet} </p>
                     <p><b>Diet Info:</b></p><p>{row.original.p.dietExtra}</p>
+                    <p><b>Anything Else:</b></p><p>{row.original.b.note}</p>
                 </Col>
                 <Col sm={4}>
                     <p><b>Medical:</b></p><p>{row.original.p.medical}</p>

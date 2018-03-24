@@ -170,7 +170,7 @@ const subRow = row => {
 
     const participants = row.original.b.participants.map(p => <tr key={p.id}>
         <td>{p.name}</td>
-        <td>{p.age}</td>
+        <td>{p.ageAtStart}</td>
     </tr>);
 
     return (
@@ -188,6 +188,8 @@ const subRow = row => {
                         {village ? <p><b>Village:</b> {village.name}</p> : null}
                         {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
                         <p><b>Participants:</b> {row.original.participants}</p>
+                        <p><b>Anything Else:</b></p><p>{row.original.b.note}</p>
+                        {event.bigCampMode ? <p><b>Camp With: </b>{row.original.b.campWith}</p> : null}
                     </Col>
                     <Col sm={8}>
                         <Table>

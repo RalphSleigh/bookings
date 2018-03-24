@@ -6,6 +6,8 @@ import {
     Col,
 } from 'reactstrap';
 
+const moment = require("moment");
+
 W.reverse();
 
 export default class ParticipantsList extends React.Component {
@@ -14,7 +16,7 @@ export default class ParticipantsList extends React.Component {
 
         const list = this.props.booking.participants
         const groups = W.map(w => {
-            const people = list.filter((p) => p.age === '' ? false : w.filter(p.age, this.props.event.startDate)).map((p, k) =>
+            const people = list.filter((p) => p.age === '' ? false : w.filter(moment(this.props.event.startDate).diff(moment(p.age), 'years'))).map((p, k) =>
                 <p
                 key={k}>{p.name}</p>);
             if (people.length === 0) return null;

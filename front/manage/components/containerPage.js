@@ -38,6 +38,7 @@ import {
     NavLink
 } from 'reactstrap';
 
+const moment = require("moment");
 import classnames from 'classnames';
 
 
@@ -66,12 +67,13 @@ class ManageContainerPage extends React.Component {
 
         const event = Event.toJS();
 
-        const startDate = event.startDate; //todo store this as a moment.
+        const startDate = moment(event.startDate); //todo store this as a moment.
 
         const bookings = Bookings.valueSeq().toJS().filter(b => b.eventId === event.id);
         bookings.forEach(b => {
             b.participants.forEach(p => {
-                p.ageGroup = W.find(w => w.filter(p.age, startDate)).name
+                p.ageAtStart = startDate.diff(moment(p.age), 'years');
+                p.ageGroup = W.find(w => w.filter(p.ageAtStart)).name
             })
         });
 
@@ -93,8 +95,8 @@ class ManageContainerPage extends React.Component {
                 to={"/event/" + this.props.match.params.eventId + "/manage/applications"}
                 label={'Applications (' + event.applications.length + ')'}/>) : () => null;
 
-        const VillagesTab = manageWholeEventWrapper(() => <CustomTab
-            to={"/event/" + this.props.match.params.eventId + "/manage/villages"} label="Villages"/>);
+        const VillagesTab = manageWholeEventWrapper(() => event.bigCampMode ? <CustomTab
+            to={"/event/" + this.props.match.params.eventId + "/manage/villages"} label="Villages"/> : null);
         const RolesTab = manageWholeEventWrapper(() => <CustomTab
             to={"/event/" + this.props.match.params.eventId + "/manage/roles"} label="Roles"/>);
 

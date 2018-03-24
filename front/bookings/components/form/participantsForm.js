@@ -1,4 +1,6 @@
 import React from 'react'
+import Moment from 'moment'
+
 import attendance from '../../../attendance'
 import {ParticipantWidget} from "../../../attendance/presets";
 
@@ -111,7 +113,7 @@ const ParticipantRow = (props) => {
                 <Col sm={3}>
                     <Input type="date"
                            className={props.valid(props.age)}
-                           value={props.age || ''}
+                           value={Moment(props.age).format("YYYY-MM-DD") || ''}
                            onChange={props.update("age")}
                     />
                 </Col>

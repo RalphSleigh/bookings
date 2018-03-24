@@ -173,26 +173,27 @@ export default class Filter extends React.Component {
             <React.Fragment>
                 <Form>
                     <FormGroup row className="mt-3">
-                        <Col sm={3}>
-                            <Label>Filter by Organisation:</Label>
-                            <MultiSelect
-                                values={this.state.orgs}
-                                onValuesChange={this.updateOrgs}
-                                placeholder={wholeEvent ? "All Organisations" : "All Permissible Organisations"}
-                                options={orgOptions}
-                                theme="bootstrap3"
-                            />
-                        </Col>
-                        <Col sm={3}>
-                            <Label>Filter by Village:</Label>
-                            <MultiSelect
-                                values={this.state.villages}
-                                onValuesChange={this.updateVillages}
-                                placeholder={wholeEvent ? "All Villages" : "All Permissible Villages"}
-                                options={villageOptions}
-                                theme="bootstrap3"
-                            />
-                        </Col>
+                        {event.bigCampMode ? <React.Fragment>
+                            <Col sm={3}>
+                                <Label>Filter by Organisation:</Label>
+                                <MultiSelect
+                                    values={this.state.orgs}
+                                    onValuesChange={this.updateOrgs}
+                                    placeholder={wholeEvent ? "All Organisations" : "All Permissible Organisations"}
+                                    options={orgOptions}
+                                    theme="bootstrap3"
+                                />
+                            </Col>
+                            <Col sm={3}>
+                                <Label>Filter by Village:</Label>
+                                <MultiSelect
+                                    values={this.state.villages}
+                                    onValuesChange={this.updateVillages}
+                                    placeholder={wholeEvent ? "All Villages" : "All Permissible Villages"}
+                                    options={villageOptions}
+                                    theme="bootstrap3"
+                                />
+                            </Col></React.Fragment> : null}
                         <Col sm={3}>
                             <Label>Filter by Day:</Label>
                             <SimpleSelect
