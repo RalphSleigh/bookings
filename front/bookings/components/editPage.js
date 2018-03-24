@@ -39,7 +39,7 @@ class EditPage extends React.Component {
                              cancel={this.props.cancelBooking}
                              updateCurrentBooking={this.props.updateCurrentBooking}/>
             </Col>
-            <ParticipantQuickList booking={booking}/>
+            <ParticipantQuickList booking={booking} event={event}/>
         </Row>);
     }
 }

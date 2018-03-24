@@ -45,10 +45,10 @@ class App extends React.Component {
         return (<Container>
             <Row className="align-items-center">
                 <Col>
-                    <h2 className="align-middle">booktest.ealingwoocraft.org.uk</h2>
+                    <h2 className="align-middle">bookings.ealingwoodcraft.org.uk</h2>
                 </Col>
                 <Col sm="auto">
-                    <img className="float-right" src="/logo.png" style={{height: "75px"}}/>
+                    <img className="float-right" src="/logo.png " style={{height: "75px"}}/>
                 </Col>
             </Row>
             <Row>

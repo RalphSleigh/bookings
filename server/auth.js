@@ -26,7 +26,7 @@ const auth = {} = module.exports;
     */
 
     auth.getUser = function(req, res) {
-        log.log("debug", "New Session: %s %s %s", req.ip, req.headers["user-agent"], req.user.userName);
+        log.log("info", "New Session: %s %s %s", req.ip, req.headers["user-agent"], req.user.userName);
         const resUser = extend({}, req.user);
         delete resUser.password;
         res.json(resUser);
