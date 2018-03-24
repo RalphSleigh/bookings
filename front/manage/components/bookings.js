@@ -53,8 +53,7 @@ export default class Bookings extends React.Component {
     }
 
     exportCSV() {
-        const data = this.props.Bookings.toJS();
-        const exportedData = data.map(b => [b.id,
+        const exportedData = this.props.bookings.map(b => [b.id,
             b.userName,
             b.userEmail,
             b.userContact,

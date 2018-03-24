@@ -43,15 +43,14 @@ export default class Participants extends React.Component {
     }
 
     exportCSV() {
-        const data = this.props.Participants.toJS();
-        const exportedData = data.map(p => [p.id,
+        const exportedData = this.props.participants.map(p => [p.id,
             p.name,
             p.age,
             p.diet,
             p.dietExtra,
             p.medical]);
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'Age', 'Diet', 'Requirements &  Allergies', 'Medical'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical'], ...exportedData]);
     }
 
     updateExpanded(id) {
