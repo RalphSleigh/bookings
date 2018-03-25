@@ -100,11 +100,11 @@ async function getConfigFromVault() {
         vaultConfig.FACEBOOK_APP_ID = await getValue(vault, vaultURL.username, "FACEBOOK_APP_ID");
         vaultConfig.FACEBOOK_APP_SECRET = await getValue(vault, vaultURL.username, "FACEBOOK_APP_SECRET");
 
-        vaultConfig.MICROSOFT_APP_ID = await getValue(vault, vaultURL.username, "MICROSOFT_APP_ID");
-        vaultConfig.MICROSOFT_APP_SECRET = await getValue(vault, vaultURL.username, "MICROSOFT_APP_SECRET");
+        vaultConfig.MICROSOFT_APP_ID = await getValue(vault, vaultURL.username, "MICROSOFT_CLIENT_ID");
+        vaultConfig.MICROSOFT_APP_SECRET = await getValue(vault, vaultURL.username, "MICROSOFT_CLIENT_SECRET");
 
-        vaultConfig.YAHOO_APP_ID = await getValue(vault, vaultURL.username, "YAHOO_APP_ID");
-        vaultConfig.YAHOO_APP_SECRET = await getValue(vault, vaultURL.username, "YAHOO_APP_SECRET");
+        vaultConfig.YAHOO_APP_ID = await getValue(vault, vaultURL.username, "YAHOO_CLIENT_ID");
+        vaultConfig.YAHOO_APP_SECRET = await getValue(vault, vaultURL.username, "YAHOO_CLIENT_SECRET");
 
         vaultConfig.EMAIL = await getValue(vault, vaultURL.username, "EMAIL_ENABLED");
 
