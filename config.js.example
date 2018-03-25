@@ -33,6 +33,20 @@ module.exports = () => {
         config.FACEBOOK_APP_SECRET = "fghfg";
 
         /**
+         * Login with Yahoo!
+          */
+
+          config.YAHOO_CLIENT_ID = "";
+           config.YAHOO_CLIENT_SECRET = "";
+
+           /**
+           * Login with Microsoft
+           */
+
+           config.MICROSOFT_CLIENT_ID = "";
+           config.MICROSOFT_CLIENT_SECRET = "";
+
+        /**
          * Service Account to send e-mail
          */
         config.EMAIL = false;
@@ -85,6 +99,12 @@ async function getConfigFromVault() {
 
         vaultConfig.FACEBOOK_APP_ID = await getValue(vault, vaultURL.username, "FACEBOOK_APP_ID");
         vaultConfig.FACEBOOK_APP_SECRET = await getValue(vault, vaultURL.username, "FACEBOOK_APP_SECRET");
+
+        vaultConfig.MICROSOFT_APP_ID = await getValue(vault, vaultURL.username, "MICROSOFT_APP_ID");
+        vaultConfig.MICROSOFT_APP_SECRET = await getValue(vault, vaultURL.username, "MICROSOFT_APP_SECRET");
+
+        vaultConfig.YAHOO_APP_ID = await getValue(vault, vaultURL.username, "YAHOO_APP_ID");
+        vaultConfig.YAHOO_APP_SECRET = await getValue(vault, vaultURL.username, "YAHOO_APP_SECRET");
 
         vaultConfig.EMAIL = await getValue(vault, vaultURL.username, "EMAIL_ENABLED");
 
