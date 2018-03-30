@@ -13,6 +13,9 @@ module.exports = () => {
         config.PORT = 8080;
         config.BASE_PATH = "http://localhost:8080/";
 
+        config.AWS_LOGGING_KEY = "";
+        config.AWS_LOGGING_SECRET = "";
+
         /**
          * Database
          */
@@ -90,6 +93,9 @@ async function getConfigFromVault() {
         vaultConfig.HOST = await getValue(vault, vaultURL.username, "HOST");
         vaultConfig.PORT = await getValue(vault, vaultURL.username, "PORT");
         vaultConfig.BASE_PATH = await getValue(vault, vaultURL.username, "BASE_PATH");
+
+        vaultConfig.AWS_LOGGING_KEY = await getValue(vault, vaultURL.username,"AWS_LOGGING_KEY");
+        vaultConfig.AWS_LOGGING_SECRET = await getValue(vault, vaultURL.username,"AWS_LOGGING_SECRET");
 
         vaultConfig.DB_URL = await getValue(vault, vaultURL.username,"DB_URL");
 
