@@ -133,7 +133,6 @@ require("../config.js")()//config returns a promise the first time then overwrit
             res.status(404).end();
         });
 
-
         server.use('/', express.static(path.join(__dirname, '../public'), {fallthrough: true, index: "index.html"}));
 
         server.get('*', function (req, res) {  //serve index.html on deep paths
@@ -141,13 +140,23 @@ require("../config.js")()//config returns a promise the first time then overwrit
         });
 
         server.use((error, req, res, next) => {
-            log.error("ERROR: " + error.message + " on " + req.url + " for " + req.user.userName);
+            log.error({
+                message: "string on url for user",
+                string: error.message,
+                url: req.url,
+                user: req.user.userName
+            });
             log.debug(error.stack);
             res.status(500).json({message: error.message});
         });
 
 //GO GO GO
-        log.info("Listening on " + config.HOST + ":" + config.PORT);
+        log.info({
+            message: "Server Startup hostname:port for baseURL",
+            hostname: config.HOST,
+            port: config.PORT,
+            baseURL: config.BASE_PATH
+        });
         server.listen(config.PORT, config.HOST);
 
 
@@ -156,7 +165,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
          *************************************/
 
         function apiLogger(req, res, next) {
-            log.log("info", "%s called %s", req.user.email || "Guest", req.baseUrl);
+            log.info({message: "email called url", email: req.user.email || "Guest", url: req.baseUrl});
             next();
         }
 

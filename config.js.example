@@ -15,6 +15,7 @@ module.exports = () => {
 
         config.AWS_LOGGING_KEY = "";
         config.AWS_LOGGING_SECRET = "";
+        config.AWS_LOGGING_STREAM = "";
 
         /**
          * Database
@@ -96,6 +97,7 @@ async function getConfigFromVault() {
 
         vaultConfig.AWS_LOGGING_KEY = await getValue(vault, vaultURL.username,"AWS_LOGGING_KEY");
         vaultConfig.AWS_LOGGING_SECRET = await getValue(vault, vaultURL.username,"AWS_LOGGING_SECRET");
+        vaultConfig.AWS_LOGGING_STREAM = await getValue(vault, vaultURL.username,"AWS_LOGGING_STREAM");
 
         vaultConfig.DB_URL = await getValue(vault, vaultURL.username,"DB_URL");
 
