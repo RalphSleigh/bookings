@@ -9,8 +9,9 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
+COPY package-lock.json /usr/src/app/
 
-RUN apk --no-cache add --virtual builds-deps build-base python
+RUN apk --no-cache add --virtual builds-deps build-base python git
 RUN npm install npm install -g npm@latest
 RUN npm install sqlite3
 RUN npm install bcrypt
