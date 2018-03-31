@@ -141,8 +141,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         server.use((error, req, res, next) => {
             log.error({
-                message: "string on url for user",
-                string: error.message,
+                message: "{errorMessage} on {url} for {user}",
+                errorMessage: error.message,
                 url: req.url,
                 user: req.user.userName
             });
@@ -152,7 +152,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
 //GO GO GO
         log.info({
-            message: "Server Startup hostname:port for baseURL",
+            message: "Server Startup {hostname}:{port} for {baseURL}",
             hostname: config.HOST,
             port: config.PORT,
             baseURL: config.BASE_PATH
@@ -165,7 +165,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
          *************************************/
 
         function apiLogger(req, res, next) {
-            log.info({message: "email called url", email: req.user.email || "Guest", url: req.baseUrl});
+            log.info({message: "{email} called {url}", email: req.user.email || "Guest", url: req.baseUrl});
             next();
         }
 

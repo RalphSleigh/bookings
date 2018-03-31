@@ -6,45 +6,50 @@ const Op = db.Sequelize.Op;
 
 const auth = {} = module.exports;
 
-    /*
-    auth.doLogin = function(req, res) {
-            User.findOne({where:{email:req.body.email}, include:[{model:Role}]})
-            .then((user) => {
-                if(user !== null && bcrypt.compareSync(req.body.password, user.password)) {
+/*
+auth.doLogin = function(req, res) {
+        User.findOne({where:{email:req.body.email}, include:[{model:Role}]})
+        .then((user) => {
+            if(user !== null && bcrypt.compareSync(req.body.password, user.password)) {
 
-                    req.session.user = user;
+                req.session.user = user;
 
-                    //send client a copy of user object without password field
-                    var resUser = extend({}, user.dataValues);
-                    delete resUser.password
-                    res.send(resUser).end();
-                } else {
-                    res.status(401).end();
-                }
-            });
-    }
-    */
+                //send client a copy of user object without password field
+                var resUser = extend({}, user.dataValues);
+                delete resUser.password
+                res.send(resUser).end();
+            } else {
+                res.status(401).end();
+            }
+        });
+}
+*/
 
-    auth.getUser = function(req, res) {
-        log.log("info", "New Session: %s %s %s", req.ip, req.headers["user-agent"], req.user.userName);
-        const resUser = extend({}, req.user);
-        delete resUser.password;
-        res.json(resUser);
+auth.getUser = function (req, res) {
+    log.info({
+        message: "New Session: {ip} {userAgent} {user}",
+        ip: req.ip,
+        userAgent: req.headers["user-agent"],
+        user: req.user.userName
+    });
+    const resUser = extend({}, req.user);
+    delete resUser.password;
+    res.json(resUser);
 };
 
-    auth.doLogout = function(req, res) {
-        req.logout();
-        db.user.scope('withData').findOne({where: {userName: 'Guest'}})
-            .then((user) => {
-                req.logIn(user, (err => {
-                    res.send(user).end();
-                }))
-            });
+auth.doLogout = function (req, res) {
+    req.logout();
+    db.user.scope('withData').findOne({where: {userName: 'Guest'}})
+        .then((user) => {
+            req.logIn(user, (err => {
+                res.send(user).end();
+            }))
+        });
 };
 
-    auth.getUserList = async function (req, res) {
-        const users = await db.user.findAll({where: {id: {[Op.not]: 1}}});
-        res.json({users: users});
+auth.getUserList = async function (req, res) {
+    const users = await db.user.findAll({where: {id: {[Op.not]: 1}}});
+    res.json({users: users});
 };
 
 

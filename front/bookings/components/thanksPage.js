@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { browserHistory } from 'react-router'
+import moment from 'moment'
 
 //import event from '../../events'
 import { redirectFromThanks } from '../actions.js'
@@ -36,7 +37,10 @@ class ThanksPage extends React.Component {
 
 		const booking = this.props.Booking.toJS();
 
-		const participants = booking.participants.map(p => <ParticipantRow key={p.id} {...p} />);
+        const participants = booking.participants.map(p => {
+            p.age = moment(event.startDate).diff(moment(p.age), 'years');
+            return p;
+        }).map(p => <ParticipantRow key={p.id} {...p} />);
 
 
         return (<Row>

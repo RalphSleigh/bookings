@@ -3,7 +3,7 @@ import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 
 import * as P from '../../shared/permissions.js'
 
-export const editEventCheck = connectedReduxRedirect({
+export const editEventCheck = connectedRouterRedirect({
 	authenticatedSelector: (state, props) => {
 		if (props.event === undefined) return true;
         return P.editEvent(state.getIn(["User", "user"]).toJS(), state.getIn(["Events", "event", parseInt(props.match.params.eventId)]).toJS());
@@ -12,7 +12,7 @@ export const editEventCheck = connectedReduxRedirect({
 	wrapperDisplayName: "Edit Event Check"
 });
 
-export const createEventCheck = connectedReduxRedirect({
+export const createEventCheck = connectedRouterRedirect({
 	authenticatedSelector: (state, props) => {
         return P.createEvent(state.getIn(["User", "user"]).toJS());
 	},

@@ -4,7 +4,7 @@ const log = require('./logging.js');
 const Op = db.Sequelize.Op;
 const wrapper = require('./errors');
 
-//This file exports permission checks as express middlewares, in theory the client shouldn;t allow bad requests.
+//This file exports permission checks as express middlewares, in theory the client shouldn't allow bad requests.
 
 const permission = {};
 
@@ -13,7 +13,7 @@ permission.editEvent = (req, res, next) => {
     if (P.editEvent(req.user, req.body)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission editEvent failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -21,7 +21,7 @@ permission.createEvent = (req, res, next) => {
     if (P.createEvent(req.user)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission createEvent failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 
 };
@@ -35,7 +35,7 @@ permission.bookEvent = async function (req, res, next) {
         next();
     } else {
         res.status(401).end();
-        log.log("error", "Permission bookEvent failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -47,7 +47,7 @@ permission.editBooking = async function (req, res, next) {
         next();
     } else {
         res.status(401).end();
-        log.log("error", "Permission editBooking failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -59,7 +59,7 @@ permission.deleteBooking = async function (req, res, next) {
         next();
     } else {
         res.status(401).end();
-        log.log("error", "Permission deleteBooking failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -74,7 +74,7 @@ permission.bookIntoOrganisation = async function (req, res, next) {
         next();
     } else {
         res.status(401).end();
-        log.log("error", "Permission bookIntoOrganisation failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -84,7 +84,7 @@ permission.getEventBookings = (req, res, next) => {
             if (P.manageEvent(req.user, e)) next();
             else {
                 res.status(401).end();
-                log.log("error", "Permission getEventBookings failed for %s on %s", req.user.email || "Guest", req.ip);
+                logError(req);
             }
         });
 };
@@ -95,7 +95,7 @@ permission.getBooking = (req, res, next) => {
             if (P.viewBooking(req.user, b)) next();
             else {
                 res.status(401).end();
-                log.log("error", "Permission getBooking failed for %s on %s", req.user.email || "Guest", req.ip);
+                logError(req);
             }
         })
 };
@@ -106,7 +106,7 @@ permission.applyToBookEvent = (req, res, next) => {
             if (P.applyToBookEvent(req.user, e)) next();
             else {
                 res.status(401).end();
-                log.log("error", "Permission getBooking failed for %s on %s", req.user.email || "Guest", req.ip);
+                logError(req);
             }
         })
 };
@@ -117,7 +117,7 @@ permission.decideApplication = (req, res, next) => {
             if (P.decideApplication(req.user, a.event)) next();
             else {
                 res.status(401).end();
-                log.log("error", "Permission decideApplication failed for %s on %s", req.user.email || "Guest", req.ip);
+                logError(req);
             }
         })
 };
@@ -131,7 +131,7 @@ permission.assignVillage = async function (req, res, next) {
     if (P.assignVillage(req.user, booking.event)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission assignVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -143,7 +143,7 @@ permission.addVillage = async function (req, res, next) {
     if (P.addVillage(req.user, event)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission addVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -156,7 +156,7 @@ permission.deleteVillage = async function (req, res, next) {
     if (P.addVillage(req.user, village.event)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission deleteVillage failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -164,7 +164,7 @@ permission.getUserList = async function (req, res, next) {
     if (P.getUserList(req.user)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission getUserList failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -175,7 +175,7 @@ permission.createRole = async function (req, res, next) {
     if (P.createRole(req.user, event)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission createRole failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
@@ -188,9 +188,17 @@ permission.deleteRole = async function (req, res, next) {
     if (P.createRole(req.user, role.event)) next();
     else {
         res.status(401).end();
-        log.log("error", "Permission deleteRole failed for %s on %s", req.user.email || "Guest", req.ip);
+        logError(req);
     }
 };
 
 module.exports = wrapper(permission);
 
+const logError = (req) => {
+    const stack = new Error().stack, caller = stack.split('\n')[2].trim();
+    log.warn({
+        message: "Permission {permission} failed for {user}",
+        permission: caller,
+        user: req.user.email || "Guest"
+    })
+};

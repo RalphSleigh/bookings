@@ -15,7 +15,7 @@ const alignedWithColorsAndTime = format.combine(
         } = info;
 
         let keys = Object.keys(args);
-        message = keys.reduce((a, k) => a.replace(k, args[k]), message);
+        message = keys.reduce((a, k) => a.replace('{' + k + '}', args[k]), message);
 
         const ts = timestamp.slice(0, 19).replace('T', ' ');
         return `${ts} [${level}]: ${message}`;
@@ -37,7 +37,7 @@ if (config.AWS_LOGGING_KEY) {
             } = info;
 
             let keys = Object.keys(args);
-            message = keys.reduce((a, k) => a.replace(k, args[k]), message);
+            message = keys.reduce((a, k) => a.replace('{' + k + '}', args[k]), message);
 
             const ts = timestamp.slice(0, 19).replace('T', ' ');
             info.message = `${ts} [${level}]: ${message}`;
