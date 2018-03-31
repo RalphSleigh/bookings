@@ -25,6 +25,7 @@ passport.use(new FacebookStrategy({
                     if (created) {
                         log.info("Created User from Facebook %s %s", profile.displayName, user.email);
                         user.userName = profile.displayName;
+                        user.source = "Facebook";
                         //calling save will remove the assosiated Role data, lets get it again..
                         return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
                     }
@@ -38,6 +39,7 @@ passport.use(new FacebookStrategy({
                     if (created) {
                         log.info("Created User from Facebook with profile ID %s %s (no e-mail)", profile.displayName, profile.id);
                         user.userName = profile.displayName;
+                        user.source = "Facebook";
                         //calling save will remove the assosiated Role data, lets get it again..
                         return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
                     }
@@ -59,6 +61,7 @@ passport.use(new GoogleStrategy({
             .spread((user, created) => {
                 if (created) {
                     user.userName = profile.displayName;
+                    user.source = "Google";
                     //calling save will remove the assosiated Role data, lets get it again..
                     log.info("Created User from Google %s %s", profile.displayName, profile.emails[0].value);
                     return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
@@ -81,6 +84,7 @@ passport.use(new YahooStrategy({
             .spread((user, created) => {
                 if (created) {
                     user.userName = profile.displayName;
+                    user.source = "Yahoo";
                     //calling save will remove the assosiated Role data, lets get it again..
                     log.info("Created User from Yahoo %s %s", profile.displayName, profile.emails[0].value);
                     return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
@@ -102,6 +106,7 @@ passport.use(new MicrosoftStrategy({
             .spread((user, created) => {
                 if (created) {
                     user.userName = profile.displayName;
+                    user.source = "Microsoft";
                     //calling save will remove the assosiated Role data, lets get it again..
                     log.info("Created User from Microsoft %s %s", profile.displayName, profile.emails[0].value);
                     return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
