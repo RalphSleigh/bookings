@@ -79,6 +79,7 @@ bookings.createBooking = (req, res) => {
     let newBooking = req.body;
     newBooking.guestUUID = req.cookies.guestUUID;
     newBooking.userId = newBooking.userId || req.user.id;
+    newBooking.maxParticipants = newBooking.participants.length;
 
     db.booking.create(newBooking, {
         include: [{
@@ -132,9 +133,10 @@ bookings.editBooking = (req, res) => {
 
 bookings.editBooking = (req, res) => {
     db.booking.findOne({where: {id: req.body.id}})
-        .then(booking =>
-            booking.update(req.body)//this ignores partitipants!
-        )
+        .then(booking => {
+            req.body.maxParticipants = Math.max(booking.maxParticipants, req.body.participants.length);
+            return booking.update(req.body)//this ignores partitipants!
+        })
         .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
         .then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
         .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]}))

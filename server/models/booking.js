@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         guestUUID: {
             type: DataTypes.UUID
+        },
+        maxParticipants: {
+            type: DataTypes.INTEGER
         }
     });
 

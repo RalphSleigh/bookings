@@ -122,7 +122,8 @@ export default class EditForm extends React.Component {
                 <FormGroup row>
                     <Label sm={2}>Fee Options:</Label>
                     <Col sm={10}>
-                        <FeeConfig fee={this.state.event.feeData} update={this.updateData('feeData')}/>
+                        <FeeConfig event={this.state.event} fee={this.state.event.feeData}
+                                   update={this.updateData('feeData')}/>
                     </Col>
                 </FormGroup>);
 

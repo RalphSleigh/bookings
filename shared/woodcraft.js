@@ -10,7 +10,7 @@ const woodcraft = [
     {
         name: "Elfins",
         filter: age => {
-            return age > 5 && age < 11
+            return age > 5 && age < 10
         }
     },
     {

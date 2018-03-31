@@ -77,7 +77,7 @@ permission.bookIntoOrganisation = async function (req, res, next) {
         logError(req);
     }
 };
-
+//TODO: rewrite these as async
 permission.getEventBookings = (req, res, next) => {
     db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}})
         .then(e => {

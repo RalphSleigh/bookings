@@ -14,7 +14,6 @@ import Immutable from 'immutable'
 import { combineReducers } from 'redux-immutable';
 import {ConnectedRouter, routerReducer, routerMiddleware} from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
-import { withRouter } from 'react-router-dom';
 
 import user from './user'
 import messages from './messages'
