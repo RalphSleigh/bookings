@@ -272,7 +272,7 @@ function blankParticipant(event) {
         diet: '',
         dietExtra: '',
         medical: '',
-        days: 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1
+        days: event.partialDates === 'whole' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask
     }
 }
 

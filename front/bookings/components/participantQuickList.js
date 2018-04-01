@@ -14,7 +14,7 @@ export default class ParticipantsList extends React.Component {
 
     render() {
 
-        const list = this.props.booking.participants
+        const list = this.props.booking.participants.filter(p => p.name !== '' && p.age !== '' && p.diet !== '');
         const groups = W.map(w => {
             const people = list.filter((p) => p.age === '' ? false : w.filter(moment(this.props.event.startDate).diff(moment(p.age), 'years'))).map((p, k) =>
                 <p

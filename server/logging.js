@@ -44,7 +44,7 @@ if (config.AWS_LOGGING_KEY) {
         })),
         level: 'info',
         jsonMessage: true,
-        logGroupName: 'bookings', // REQUIRED
+        logGroupName: config.AWS_LOGGING_GROUP, // REQUIRED
         logStreamName: config.AWS_LOGGING_STREAM, // REQUIRED
         awsAccessKeyId: config.AWS_LOGGING_KEY,
         awsSecretKey: config.AWS_LOGGING_SECRET,

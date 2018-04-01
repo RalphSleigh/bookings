@@ -3,7 +3,7 @@ import Moment from 'moment'
 import Switch from 'react-toggle'
 import update from 'immutability-helper';
 import map from 'lodash/map'
-import fee from '../../fee'
+import fee from '../../../shared/fee'
 import attendance from '../../attendance'
 import OrgansationForm from './organisationForm.js'
 import cloneDeep from "lodash/cloneDeep";

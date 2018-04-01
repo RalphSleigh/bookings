@@ -1,6 +1,6 @@
 import React from 'react'
 
-import fee from '../../../fee'
+import fee from '../../../../shared/fee'
 
 
 export default class FeeForm extends React.Component {
