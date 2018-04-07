@@ -1,17 +1,23 @@
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        return queryInterface
-            .changeColumn('events', 'feeModel', {
-                type: Sequelize.ENUM('free', 'flat', 'ealing', 'big'),
-                allowNull: false
-            });
+        return queryInterface.sequelize.query(`ALTER TYPE "enum_events_feeModel" ADD VALUE 'big'`);
     },
 
-    down: function (queryInterface, Sequelize) {
-        return queryInterface
-            .changeColumn('events', 'feeModel', {
-                type: Sequelize.ENUM('free', 'flat', 'ealing'),
-                allowNull: false
-            });
+    down: (queryInterface, Sequelize) => {
+        return queryInterface.sequelize.query(`
+        DELETE 
+        FROM
+            pg_enum
+        WHERE
+            enumlabel = 'big' AND
+            enumtypid = (
+                SELECT
+                    oid
+                FROM
+                    pg_type
+                WHERE
+                    typname = 'enum_events_feeModel'
+            )
+    `);
     }
 };
