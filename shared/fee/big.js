@@ -253,8 +253,8 @@ const owedWholeEvent = (event, participants, booking) => {
 
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
-    const filteredParticipants = participants
-        .filter(p => p.name !== '' && p.age !== '' && p.diet !== '')
+    const filteredParticipants = cloneDeep(participants)
+        .filter(p => p.name && p.age && p.diet)
         .map(p => {
             if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
             return p;
@@ -286,8 +286,8 @@ const owedPresetEvent = (event, participants, booking) => {
 
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
-    const filteredParticipants = participants
-        .filter(p => p.name !== '' && p.age !== '' && p.diet !== '')
+    const filteredParticipants = cloneDeep(participants)
+        .filter(p => p.name && p.age && p.diet)
         .map(p => {
             if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
             p.days = event.partialDatesData.find(d => d.mask === p.days);
@@ -306,7 +306,7 @@ const owedPresetEvent = (event, participants, booking) => {
     }, {}));
 
     const combinedCosts = rawCosts.reduce((a, c) => {
-        if (a[c.date] && a[c.date][c.mask] && a[c.date][c.type]) a[c.date][c.mask][c.type].count++;
+        if (a[c.date] && a[c.date][c.mask] && a[c.date][c.mask][c.type]) a[c.date][c.mask][c.type].count++;
         else {
             a[c.date] = a[c.date] || {};
             a[c.date][c.mask] = a[c.date][c.mask] || {};
@@ -315,16 +315,16 @@ const owedPresetEvent = (event, participants, booking) => {
         return a;
     }, {});
 
-    return [linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
+    return [...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
 };
 
 const linesWithoutPartial = combined => reduce(combined, (a, c, i) => [...a, ...map(c, (l, t) => {
     if (t === 'normal') return {
-        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked before ${i} at £${l.amount}`,
+        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     };
     else return {
-        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked before ${i} at £${l.amount}`,
+        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     }
 })], []);
@@ -332,11 +332,11 @@ const linesWithoutPartial = combined => reduce(combined, (a, c, i) => [...a, ...
 const linesWithPartial = (combined, event) => reduce(combined, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, ...map(c1, (l, t) => {
     console.log(i1);
     if (t === 'normal') return {
-        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${i} at £${l.amount}`,
+        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     };
     else return {
-        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked for ${i1} before ${i} at £${l.amount}`,
+        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     }
 })], [])], []);

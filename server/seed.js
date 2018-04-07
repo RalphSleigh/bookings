@@ -222,34 +222,62 @@ async function seed() {
 
     function createEvents() {
         events = [{
-            name: 'Ralphs Event',
+            name: 'Ealing Style Camp',
             description:
-                `This a cool event for cool people
+                `
+This event is configured with the options used for Ealing events:
 
-Its free!`,
-            startDate: new Date("2019-8-8"),
+* Small camp mode for single people/families booking themselves in.
+* Users must be registered to book, but approval is not required.
+* No organisations, villages, or partial attendance.
+* Ealing's fee structure based on our pricing policy (including the weird defaults on £35)`,
+            startDate: new Date("2019-8-6"),
             endDate: new Date("2019-8-10"),
-            bookingDeadline: new Date("2019-8-4"),
+            bookingDeadline: new Date("2019-8-1"),
             userId: 2,
-            feeModel: "free",
-            feeData: {},
+            feeModel: "ealing",
+            feeData: {amount: 35},
             bookingPolicy: 'approved',
             paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
             paymentInfo: "Ho Ho Ho",
             organisationsEnabled: false,
-            bigCampMode: true
+            bigCampMode: false
         }, {
-            name: 'This is a large event with many people',
+            name: 'Large Event',
             description:
-                `This event has several hundred people booked already
+                `
+ This event is configured to represent a much larger event:
 
-It costs £55`,
+* Assumed one person will book a whole group of people in.
+* Users must apply to book before being allowed.
+* Bookings are sorted into organisations and villages.
+* Three attendance options available
+* Large camp fee structure, early, normal and late rates, cancellation fee and woodchip discount. 
+* Should have ~300 people booked in already`,
             startDate: new Date("2019-10-8"),
             endDate: new Date("2019-10-14"),
-            bookingDeadline: new Date("2019-10-4"),
+            bookingDeadline: new Date("2019-06-01"),
             userId: 2,
-            feeModel: "flat",
-            feeData: {amount: 55},
+            feeModel: "big",
+            feeData: {
+                buckets: [{
+                    id: 'early',
+                    date: new Date('2018-04-01'),
+                    amount: {'Whole Event': 90, 'First Half': 50, 'Second Half': 50}
+                },
+                    {
+                        id: 'normal',
+                        date: new Date('2018-06-01'),
+                        amount: {'Whole Event': 100, 'First Half': 55, 'Second Half': 55}
+                    },
+                    {
+                        id: 'late',
+                        date: new Date('2019-01-01'),
+                        amount: {'Whole Event': 150, 'First Half': 100, 'Second Half': 100}
+                    }],
+                woodchips: 0.5,
+                cancel: 50
+            },
             bookingPolicy: 'approved',
             paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
             paymentInfo: `plz give us *all* teh monies`,
@@ -261,23 +289,6 @@ It costs £55`,
                 name: 'Second Half',
                 mask: 120
             }]
-        }, {
-            name: 'Past deadline',
-            description:
-                `This event is past its booking deadline, but nothing happens yet
-
-It also demonstrates the Ealing donation structure`,
-            startDate: new Date("2019-4-8"),
-            endDate: new Date("2019-4-10"),
-            bookingDeadline: new Date("2016-11-4"),
-            bookingPolicy: 'guest',
-            userId: 2,
-            feeModel: "ealing",
-            feeData: {amount: 35},
-            paymentTypes: ["Cheque", "Bank Transfer"],
-            paymentInfo: `plz give us *all* teh monies`,
-            organisationsEnabled: false,
-            bigCampMode: false
         }];
         const promises = events.map(e => {
             return db.event.create(e)
@@ -308,7 +319,7 @@ It also demonstrates the Ealing donation structure`,
 
     function createVillages() {
         let i = 0;
-        const promises = new Array(100).fill().map(() => {
+        const promises = new Array(5).fill().map(() => {
             i++;
             return db.village.create({name: 'Village-' + i, eventId: models.events[1].id})
         });
@@ -319,7 +330,7 @@ It also demonstrates the Ealing donation structure`,
     }
 
     function createBookings() {
-        const promises = new Array(300).fill().map(() =>
+        const promises = new Array(16).fill().map(() =>
             db.booking.create({
                 userName: faker.name.findName(),
                 userEmail: faker.internet.exampleEmail(),
@@ -339,7 +350,7 @@ It also demonstrates the Ealing donation structure`,
     }
 
     function createParticipants() {
-        const promises = new Array(getRandomInt(9000, 11000)).fill().map(() =>
+        const promises = new Array(getRandomInt(290, 310)).fill().map(() =>
             db.participant.create({
                 name: faker.name.firstName(getRandomInt(0, 1)) + ' ' + faker.name.lastName(),
                 age: momentRandom("2016-01-01", "1980-01-01").toISOString(),

@@ -59,7 +59,7 @@ export default class BookingForm extends React.Component {
     }
 
     updateParticipantDetails(id, item, value) {
-        let participants = this.props.booking.participants;
+        let participants = cloneDeep(this.props.booking.participants);
 
         const participant = participants.find(p => p.id === id);
         participant[item] = value;
