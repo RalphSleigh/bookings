@@ -197,13 +197,16 @@ export default class BookingForm extends React.Component {
                              add={this.addParticipant}
                              delete={this.deleteParticipant}
                              validating={this.state.validation > 1}
-                             updateValidation={this.updateValidation(1)}/>
+                             updateValidation={this.updateValidation(1)}
+                             env={this.props.env}
+            />
             <Row className="mb-3">
                 <Col>
                     <h3>Money</h3>
                 </Col>
             </Row>
-            <FeeForm event={this.props.event} participants={this.props.booking.participants}/>
+            <FeeForm event={this.props.event} participants={this.props.booking.participants}
+                     booking={this.props.booking}/>
             {this.props.event.feeModel === "free" ? null :
                 <PaymentForm update={this.updateItem}
                              event={this.props.event}

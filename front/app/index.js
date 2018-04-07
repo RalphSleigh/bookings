@@ -41,37 +41,43 @@ class App extends React.Component {
         if (this.props.User === null || this.props.Events === null || this.props.Bookings === null) return <div>Loading
             Data</div>;
 
+        const envMarker = this.props.Env === 'dev' ? <div className="envMarker"><p>TEST</p></div> : null;
 
-        return (<Container>
-            <Row className="align-items-center">
-                <Col>
-                    <h2 className="align-middle">bookings.ealingwoodcraft.org.uk</h2>
-                </Col>
-                <Col sm="auto">
-                    <img className="float-right" src="/logo.png " style={{height: "75px"}}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Link to="/">Home</Link>
-                </Col>
-                <Col sm="auto">
-                    <user.loginStatus/>
-                </Col>
-            </Row>
-            <Row>
-                <messages.messages/>
-            </Row>
-            {this.props.children}
-            <Row>
-                <Col>
-                    <footer><p className="small text-center">&copy; 2018 <a
-                        href="https://www.woodcraft.org.uk/">Woodcraft
-                        Folk</a>, Source on <a href="https://github.com/RalphSleigh/bookings">Github</a>.</p>
-                    </footer>
-                </Col>
-            </Row>
-        </Container>);
+        return (
+            <React.Fragment>
+                {envMarker}
+                <Container>
+                    <Row className="align-items-center">
+                        <Col>
+                            <h2 className="align-middle">bookings.ealingwoodcraft.org.uk</h2>
+                        </Col>
+                        <Col sm="auto">
+                            <img className="float-right" src="/logo.png " style={{height: "75px"}}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Link to="/">Home</Link>
+                        </Col>
+                        <Col sm="auto">
+                            <user.loginStatus/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <messages.messages/>
+                    </Row>
+                    {this.props.children}
+                    <Row>
+                        <Col>
+                            <footer><p className="small text-center">&copy; 2018 <a
+                                href="https://www.woodcraft.org.uk/">Woodcraft
+                                Folk</a>, Source on <a href="https://github.com/RalphSleigh/bookings">Github</a>.</p>
+                            </footer>
+                        </Col>
+                    </Row>
+                </Container>
+            </React.Fragment>
+        );
     }
 }
 
@@ -80,9 +86,10 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
     let User = state.getIn(["User", "user"]);
     let Events = state.getIn(["Events", "events"]);
-    let Bookings = state.getIn(["Bookings", "bookings"])
-    return {User, Events, Bookings};
-}
+    let Bookings = state.getIn(["Bookings", "bookings"]);
+    let Env = state.get("App");
+    return {User, Events, Bookings, Env};
+};
 
 const mapDispatchToProps = {
     getUser: user.actions.getUser,

@@ -89,6 +89,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
                 res.redirect('/');
             });
 
+        server.get('/api/env', (req, res) => res.json({env: config.ENV}));
+
         server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
         server.get('/api/user', auth.getUser);   		//get current user info
         server.post('/api/user/logout', auth.doLogout); //logout

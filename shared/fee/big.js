@@ -212,7 +212,7 @@ export class BookingForm extends React.Component {
 
         //this.props.feeData.amount
         //
-        const feesOwed = getFeesOwed(this.props.event, this.props.participants);
+        const feesOwed = getFeesOwed(this.props.event, this.props.participants, this.props.booking);
         const tableLines = feesOwed.map(l => <tr key={l.line}>
             <td>{l.line}</td>
             <td>£{l.total}</td>
@@ -228,68 +228,129 @@ export class BookingForm extends React.Component {
                         <td><b>£{feesOwed.reduce((a, c) => {
                             return a + c.total
                         }, 0)}</b></td>
-                </tr>
-                </tbody>
+                    </tr>
+                    </tbody>
                 </Table>
             </Col>
         </Row>)
     }
 }
 
-const isWoodchip = (e, p) => {
 
-    return moment(e.startDate).diff(moment(p.age), 'years') < 6
-};
+export function getFeesOwed(event, participants, booking) {
 
-const getFeeForBucket = (bucket, event, participant) => {
-
-    if (event.partialDates === 'whole' || !event.partialDatesData) {
-        return bucket.amount * (isWoodchip(event, participant) ? event.feeData.woodchips : 1)
-    } else {
-        const attendanceName = event.partialDatesData.find(d => d.mask === participant.days).name;
-        return bucket.amount[attendanceName] * (isWoodchip(event, participant) ? event.feeData.woodchips : 1);
+    switch (event.partialDates) {
+        case 'whole':
+            return owedWholeEvent(event, participants, booking);
+        case 'presets':
+            return owedPresetEvent(event, participants, booking);
+        default:
+            return [{line: "Unsupported attendance/fee combo", total: 0}]
     }
-};
+}
 
-export function getFeesOwed(event, participants) {
+const owedWholeEvent = (event, participants, booking) => {
 
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
-    const rawCosts = participants
+    const filteredParticipants = participants
         .filter(p => p.name !== '' && p.age !== '' && p.diet !== '')
         .map(p => {
             if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
             return p;
-        })
-        .map(p => sortedBuckets.reduce((a, c) => {
-            if (p.updatedAt < c.date) return {
-                type: isWoodchip(event, p) ? 'woodchip' : 'normal',
-                date: c.date,
-                amount: getFeeForBucket(c, event, p)
-            };
-            else return a;
-        }, {}));
+        });
+
+    const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
+        if (p.updatedAt < c.date) return {
+            type: isWoodchip(event, p) ? 'woodchip' : 'normal',
+            date: c.date,
+            mask: p.days,
+            amount: c.amount * (isWoodchip(event, p) ? event.feeData.woodchips : 1)
+        };
+        else return a;
+    }, {}));
 
     const combinedCosts = rawCosts.reduce((a, c) => {
-        a[c.date] = a[c.date] ? a[c.date] : {};
-        if (a[c.date][c.type]) {
-            a[c.date][c.type].count++;
-        } else {
+        if (a[c.date] && a[c.date][c.type]) a[c.date][c.type].count++;
+        else {
+            a[c.date] = a[c.date] || {};
             a[c.date][c.type] = {count: 1, amount: c.amount};
         }
         return a;
     }, {});
 
-    const costLines = reduce(combinedCosts, (a, c, i) => [...a, ...map(c, (l, t) => {
-        if (t === 'normal') return {
-            line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked before ${i} at £${l.amount}`,
-            total: l.count * l.amount
-        };
-        else return {
-            line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked before ${i} at £${l.amount}`,
-            total: l.count * l.amount
-        }
-    })], []);
+    return [...linesWithoutPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
+};
 
-    return costLines;
-}
+const owedPresetEvent = (event, participants, booking) => {
+
+    const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
+
+    const filteredParticipants = participants
+        .filter(p => p.name !== '' && p.age !== '' && p.diet !== '')
+        .map(p => {
+            if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+            p.days = event.partialDatesData.find(d => d.mask === p.days);
+            p.days = p.days ? p.days.name : event.partialDatesData[0].name;
+            return p;
+        });
+
+    const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
+        if (p.updatedAt < c.date) return {
+            type: isWoodchip(event, p) ? 'woodchip' : 'normal',
+            date: c.date,
+            mask: p.days,
+            amount: c.amount[p.days] * (isWoodchip(event, p) ? event.feeData.woodchips : 1)
+        };
+        else return a;
+    }, {}));
+
+    const combinedCosts = rawCosts.reduce((a, c) => {
+        if (a[c.date] && a[c.date][c.mask] && a[c.date][c.type]) a[c.date][c.mask][c.type].count++;
+        else {
+            a[c.date] = a[c.date] || {};
+            a[c.date][c.mask] = a[c.date][c.mask] || {};
+            a[c.date][c.mask][c.type] = {count: 1, amount: c.amount};
+        }
+        return a;
+    }, {});
+
+    return [linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
+};
+
+const linesWithoutPartial = combined => reduce(combined, (a, c, i) => [...a, ...map(c, (l, t) => {
+    if (t === 'normal') return {
+        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked before ${i} at £${l.amount}`,
+        total: l.count * l.amount
+    };
+    else return {
+        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked before ${i} at £${l.amount}`,
+        total: l.count * l.amount
+    }
+})], []);
+
+const linesWithPartial = (combined, event) => reduce(combined, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, ...map(c1, (l, t) => {
+    console.log(i1);
+    if (t === 'normal') return {
+        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${i} at £${l.amount}`,
+        total: l.count * l.amount
+    };
+    else return {
+        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked for ${i1} before ${i} at £${l.amount}`,
+        total: l.count * l.amount
+    }
+})], [])], []);
+
+const cancelledFee = (event, participants, booking) => {
+
+    if (!booking.maxParticipants || booking.maxParticipants <= participants.length || event.feeData.cancel === 0) return [];
+    return [{
+        line: `${booking.maxParticipants - participants.length} cancelled bookings at £${event.feeData.cancel}`,
+        total: (booking.maxParticipants - participants.length) * event.feeData.cancel
+    }]
+};
+
+const isWoodchip = (e, p) => {
+
+    return moment(e.startDate).diff(moment(p.age), 'years') < 6
+};

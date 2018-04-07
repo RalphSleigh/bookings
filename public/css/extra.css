@@ -498,3 +498,15 @@ td.rdtYear:hover {
 .rdtTime td {
     cursor: default;
 }
+
+.envMarker {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+}
+
+.envMarker p {
+    font-size: 200%;
+    color: red;
+}

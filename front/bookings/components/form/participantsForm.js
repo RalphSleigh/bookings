@@ -46,7 +46,8 @@ export default class ParticipantsForm extends React.Component {
     update(k) {
         return item => e => {
             this.props.updateValidation();
-            this.props.update(k, item, e.target.value);
+            const value = item === "days" ? parseInt(e.target.value) : e.target.value;
+            this.props.update(k, item, value);
             e.preventDefault();
         }
     }
@@ -88,7 +89,8 @@ export default class ParticipantsForm extends React.Component {
                                                               delete={this.delete(p.id)}
                                                               valid={this.valid}
                                                               event={this.props.event}
-                                                              AttendanceWidget={AttendanceWidget}/>);
+                                                              AttendanceWidget={AttendanceWidget}
+                                                              env={this.props.env}/>);
         return (<React.Fragment>
                 {rows}
                 <Row className="mb-3">
@@ -110,7 +112,10 @@ const ParticipantRow = (props) => {
     return (<Card className="mb-3">
         <CardImg top src="/participant-header.jpg" alt="Card image cap"/>
         <CardImgOverlay>
-            <CardTitle style={{marginTop: "-0.85em", marginLeft: "-0.60em"}}>#{props.index + 1}</CardTitle>
+            <CardTitle style={{
+                marginTop: "-0.85em",
+                marginLeft: "-0.60em"
+            }}>#{props.index + 1} {props.env === 'dev' ? `(${props.id} ${props.updatedAt})` : ''}</CardTitle>
         </CardImgOverlay>
         <CardBody>
             <FormGroup row>

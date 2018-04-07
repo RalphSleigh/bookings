@@ -37,7 +37,8 @@ class EditPage extends React.Component {
                              organisations={organisations}
                              submit={this.props.saveBooking}
                              cancel={this.props.cancelBooking}
-                             updateCurrentBooking={this.props.updateCurrentBooking}/>
+                             updateCurrentBooking={this.props.updateCurrentBooking}
+                             env={this.props.Env}/>
             </Col>
             <ParticipantQuickList booking={booking} event={event}/>
         </Row>);
@@ -52,7 +53,9 @@ const mapStateToProps = (state, props) => {
 
     Booking = (CurrentBooking ? CurrentBooking.get("id") : null) === Booking.get("id") ? CurrentBooking : Booking;
 
-    return {User, Booking, Event}
+    const Env = state.get("App");
+
+    return {User, Booking, Event, Env}
 };
 
 const mapDispatchToProps = {saveBooking, cancelBooking, updateCurrentBooking};

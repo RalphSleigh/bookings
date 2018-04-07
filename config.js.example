@@ -9,6 +9,8 @@ module.exports = () => {
         /**
          * Server config
          */
+        config.ENV = "dev";
+
         config.HOST = "localhost";
         config.PORT = 8080;
         config.BASE_PATH = "http://localhost:8080/";
@@ -91,6 +93,8 @@ async function getConfigFromVault() {
         vault.token = login.auth.client_token;
 
         const vaultConfig = {};
+
+        vaultConfig.ENV = await getValue(vault, vaultURL.username, "ENV");
 
         vaultConfig.HOST = await getValue(vault, vaultURL.username, "HOST");
         vaultConfig.PORT = await getValue(vault, vaultURL.username, "PORT");

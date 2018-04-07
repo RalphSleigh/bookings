@@ -46,7 +46,8 @@ class MyBookingPage extends React.Component {
                          booking={booking}
                          organisations={organisations}
                          submit={booking.id ? (booking) => this.props.saveBooking(booking, true) : this.props.createBooking}
-                         updateCurrentBooking={this.props.updateCurrentBooking} cancel={this.props.cancelBooking}/>;
+                         updateCurrentBooking={this.props.updateCurrentBooking} cancel={this.props.cancelBooking}
+                         env={this.props.env}/>;
 
         return (<Row>
             <Col xs={12} sm={12} md={10}>
@@ -85,7 +86,9 @@ const mapStateToProps = (state, props) => {
 
     let Booking = currentBooking || existingBooking || localBooking || emptyBooking(User, Event);
 
-    return {User, Event, Booking}
+    const Env = state.get("App");
+
+    return {User, Event, Booking, Env}
 };
 
 const emptyBooking = (User, Event) => {
