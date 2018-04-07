@@ -105,6 +105,9 @@ export default class ParticipantsForm extends React.Component {
 
 const ParticipantRow = (props) => {
 
+    const debugInfo = props.env === 'dev' ? <span
+        style={{color: 'red'}}>{'id: ' + props.id + ' updated: ' + Moment(props.updatedAt).format('YYYY-MM-DD')}</span> : null;
+
     //{props.validating ? props.name === "" || props.age === "" || props.diet === "" ? invalid : valid : valid}
 
     const attendance = <props.AttendanceWidget days={props.days} event={props.event} update={props.update("days")}/>;
@@ -115,7 +118,7 @@ const ParticipantRow = (props) => {
             <CardTitle style={{
                 marginTop: "-0.85em",
                 marginLeft: "-0.60em"
-            }}>#{props.index + 1} {props.env === 'dev' ? `(${props.id} ${props.updatedAt})` : ''}</CardTitle>
+            }}>#{props.index + 1} {debugInfo}</CardTitle>
         </CardImgOverlay>
         <CardBody>
             <FormGroup row>

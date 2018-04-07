@@ -123,13 +123,18 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/api/village/create', P.addVillage, events.addVillage);
         server.post('/api/village/delete', P.deleteVillage, events.deleteVillage);
 
-        server.get('/debug', (req, res) => { //this is a debug method
-            console.log("User");
-            console.log(req.user);
-            console.log("Session");
-            console.log(req.session);
-            res.json({});
-        });
+        if (config.ENV === 'dev') {
+
+            server.get('/api/setdate/:participantId/:date', bookings.updateParticipantDate);
+
+            server.get('/debug', (req, res) => { //this is a debug method
+                console.log("User");
+                console.log(req.user);
+                console.log("Session");
+                console.log(req.session);
+                res.json({});
+            });
+        }
 
         server.get('/api/*', function (req, res) { //404 unknown api calls
             res.status(404).end();
