@@ -201,7 +201,7 @@ bookings.assignVillage = async function (req, res) {
 
 bookings.updateParticipantDate = async function (req, res) {
 
-    const results = await db.sequelize.query("UPDATE `participants` SET `updatedAt` = $date WHERE `id` = $id",
+    const results = await db.sequelize.query('UPDATE participants SET "updatedAt" = $date WHERE id = $id',
         {
             bind: {id: req.params.participantId, date: moment(req.params.date).format('YYYY-MM-DD HH:mm:ss.SSS')},
             type: db.sequelize.QueryTypes.UPDATE
