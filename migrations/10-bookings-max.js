@@ -5,6 +5,6 @@ module.exports = {
         })
     },
     down: function (migration, DataTypes) {
-        return migration.removeColumn("participants", 'maxParticipants');
+        return migration.removeColumn('bookings', 'maxParticipants');
     }
 };
