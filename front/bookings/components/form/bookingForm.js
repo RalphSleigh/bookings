@@ -124,7 +124,7 @@ export default class BookingForm extends React.Component {
                 return;
             }
             if (empty(p.age)) results.push("Please fill in the age for " + p.name);
-            if (empty(p.diet)) results.push("Please choose a diet for " + p.name);
+            if (empty(p.diet)) results.push("Please select a diet for " + p.name);
         });
 
         if (this.props.event.feeModel !== "free" && (!this.props.booking.paymentType || this.props.booking.paymentType === "")) results.push("Please choose a payment option");
