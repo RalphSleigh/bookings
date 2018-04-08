@@ -276,7 +276,11 @@ This event is configured with the options used for Ealing events:
                         amount: {'Whole Event': 150, 'First Half': 100, 'Second Half': 100}
                     }],
                 woodchips: 0.5,
-                cancel: 50
+                cancel: 50,
+                desc: `This camp costs £100 for the whole time, or £55 for half the camp.
+There is a £10/5 discount for booking before the 1st of April, and it costs a lot more if you book in 2019.
+
+Woodchips are half price, and there is a £50 charge for cancelled bookings.`
             },
             bookingPolicy: 'approved',
             paymentTypes: ["Cash", "Cheque", "Bank Transfer"],

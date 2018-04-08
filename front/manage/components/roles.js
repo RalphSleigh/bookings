@@ -4,6 +4,18 @@ import {Typeahead} from 'react-bootstrap-typeahead';
 
 import {manageWholeEventCheck} from '../permission.js'
 
+import {
+    Row,
+    Col,
+    Button,
+    FormGroup,
+    Table,
+    Label,
+    Input
+} from 'reactstrap';
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 
 class Roles extends React.Component {
 
@@ -73,10 +85,12 @@ class Roles extends React.Component {
             <td>{r.user.userName}</td>
             <td>{r.name}</td>
             <td>{r.name === "Owner" ? null :
-                <button type="button" onClick={this.deleteRole(r.id)} className="close float-right"
+
+                <Button onClick={this.deleteRole(r.id)} color="warning" size="sm" className="float-right"
                         aria-label="Delete">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <span aria-hidden="true"><FontAwesomeIcon
+                        icon={faTimes}/></span>
+                </Button>
             }</td>
         </tr>);
 
@@ -86,10 +100,11 @@ class Roles extends React.Component {
             <td>{r.name}</td>
             <td>{r.organisation.name}</td>
             <td>
-                <button type="button" onClick={this.deleteRole(r.id)} className="close float-right"
+                <Button onClick={this.deleteRole(r.id)} color="warning" size="sm" className="float-right"
                         aria-label="Delete">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <span aria-hidden="true"><FontAwesomeIcon
+                        icon={faTimes}/></span>
+                </Button>
             </td>
         </tr>);
 
@@ -99,113 +114,119 @@ class Roles extends React.Component {
             <td>{r.name}</td>
             <td>{r.village.name}</td>
             <td>
-                <button type="button" onClick={this.deleteRole(r.id)} className="close float-right"
+                <Button onClick={this.deleteRole(r.id)} color="warning" size="sm" className="float-right"
                         aria-label="Delete">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <span aria-hidden="true"><FontAwesomeIcon
+                        icon={faTimes}/></span>
+                </Button>
             </td>
         </tr>);
 
         const orgOptions = event.organisations.map(o => <option key={o.id} value={o.id}>{o.name}</option>);
         const villageOptions = event.villages.map(v => <option key={v.id} value={v.id}>{v.name}</option>);
 
-        return (<div>
-            <h6>Here you can assign roles to other users so they can help you administer the event</h6>
-            <form className="form-horizontal">
-                <div className="form-group">
+        return (<Row>
+            <Col sm={12}>
+                <h6>Here you can assign roles to other users so they can help you administer the event</h6>
+            </Col>
+            <Col sm={5}>
+                <FormGroup>
+                    <Label>User:</Label>
+                    <Typeahead
+                        ref="typeahead"
+                        options={userList}
+                        labelKey="search"
+                        onChange={this.updateUser}
+                        placeholder="Name"/>
+                </FormGroup>
+            </Col>
+            <Col sm={2}>
+                <FormGroup>
+                    <Label className="control-label">Role:</Label>
+                    <Input type="select" value={this.state.role} onChange={this.updateOption("role")}
+                           className="form-control">
+                        <option value="Manage">Manage</option>
+                        <option value="View">View</option>
+                        <option value="KP">KP</option>
+                        <option value="Money">Money</option>
+                    </Input>
+                </FormGroup>
+            </Col>
+            <Col sm={2}>
+                <FormGroup>
+                    <Label className="control-label">Organisation:</Label>
+                    <Input type="select" value={this.state.org} onChange={this.updateOption("org")}
+                           className="form-control">
+                        <option value={''}>All</option>
+                        {orgOptions}
+                    </Input>
+                </FormGroup>
+            </Col>
+            <Col sm={2}>
+                <FormGroup>
+                    <Label className="control-label">Village:</Label>
+                    <Input type="select" value={this.state.village} onChange={this.updateOption("village")}
+                           className="form-control">
+                        <option value={''}>All</option>
+                        {villageOptions}
+                    </Input>
+                </FormGroup>
+            </Col>
+            <Col sm={1}>
+                <Label className="control-label">&nbsp;</Label>
+                <Button disabled={this.state.user.length !== 1} type="submit" onClick={this.addRole}
+                        color="success"><span
+                    className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                </Button>
+            </Col>
+            <Col sm={12}>
+                <h4>Event Roles</h4>
+                <p>These roles grant access to the whole event, Managers here can also assign Villages and Roles.</p>
+                <Table striped size="sm">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {globalRows}
+                    </tbody>
+                </Table>
+                <h4>Organisation Roles</h4>
+                <p>These grant access to bookings within the specified organisation only</p>
+                <Table striped size="sm">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Organisation</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {orgRows}
+                    </tbody>
+                </Table>
+                <h4>Village Roles</h4>
+                <p>These grant access to bookings within the specified Village only</p>
+                <Table striped size="sm">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Organisation</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {villageRows}
+                    </tbody>
+                </Table>
+            </Col>
+        </Row>);
 
-                    <div className="col-sm-5">
-                        <label className="control-label">User:</label>
-                        <Typeahead
-                            ref="typeahead"
-                            options={userList}
-                            labelKey="search"
-                            onChange={this.updateUser}
-                            placeholder="Name"/>
-                    </div>
-
-                    <div className="col-sm-2">
-                        <label className="control-label">Role:</label>
-                        <select value={this.state.role} onChange={this.updateOption("role")} className="form-control">
-                            <option value="Manage">Manage</option>
-                            <option value="View">View</option>
-                            <option value="KP">KP</option>
-                            <option value="Money">Money</option>
-                        </select>
-                    </div>
-
-                    <div className="col-sm-2">
-                        <label className="control-label">Organisation:</label>
-                        <select value={this.state.org} onChange={this.updateOption("org")} className="form-control">
-                            <option value={''}>All</option>
-                            {orgOptions}
-                        </select>
-                    </div>
-
-                    <div className="col-sm-2">
-                        <label className="control-label">Village:</label>
-                        <select value={this.state.village} onChange={this.updateOption("village")}
-                                className="form-control">
-                            <option value={''}>All</option>
-                            {villageOptions}
-                        </select>
-                    </div>
-
-                    <div className="col-sm-1">
-                        <label className="control-label">&nbsp;</label>
-                        <button disabled={this.state.user.length !== 1} type="submit" onClick={this.addRole}
-                                className="btn btn-success"><span
-                            className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <h4>Event Roles</h4>
-            <p>These roles grant access to the whole event, Managers here can also assign Villages and Roles.</p>
-            <table className="table table-striped table-compact">
-                <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {globalRows}
-                </tbody>
-            </table>
-            <h4>Organisation Roles</h4>
-            <p>These grant access to bookings within the specified organisation only</p>
-            <table className="table table-striped table-compact">
-                <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th>Organisation</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {orgRows}
-                </tbody>
-            </table>
-            <h4>Village Roles</h4>
-            <p>These grant access to bookings within the specified Village only</p>
-            <table className="table table-striped table-compact">
-                <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th>Organisation</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {villageRows}
-                </tbody>
-            </table>
-        </div>)
     }
 }
 

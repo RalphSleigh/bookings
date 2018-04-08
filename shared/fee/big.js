@@ -4,6 +4,7 @@ import update from 'immutability-helper';
 import cloneDeep from "lodash/cloneDeep";
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
+import ReactMarkdown from 'react-markdown'
 //this implements a pricing policy for large camps
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
@@ -44,7 +45,7 @@ export class Config extends React.Component {
                 id: "bucket" + bucketKey,
                 date: new Date(),
                 amount: 0
-            }], woodchips: 0.5, cancel: 50
+            }], woodchips: 0.5, cancel: 50, desc: ''
         });
         bucketKey++;
     }
@@ -158,6 +159,15 @@ export class Config extends React.Component {
         return (<React.Fragment>
             <Row>
                 <Col>
+                    <FormGroup>
+                        <Label>Description (Markdown supported):</Label>
+                        <Input type="textarea" name="description" value={this.props.fee.desc}
+                               onChange={this.update('desc')}/>
+                    </FormGroup>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
                     <h4>Date buckets</h4>
                     <Table>
                         <thead>
@@ -219,6 +229,9 @@ export class BookingForm extends React.Component {
         </tr>);
 
         return (<Row>
+            <Col sm={12}>
+                <ReactMarkdown escapeHtml={true} source={this.props.event.feeData.desc}/>
+            </Col>
             <Col>
                 <Table>
                     <thead></thead>
