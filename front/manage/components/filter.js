@@ -156,8 +156,8 @@ export default class Filter extends React.Component {
             v.selectable = P.viewVillage(user, event, v)
         });
 
-        const startDate = moment(event.startDate);
-        const endDate = moment(event.endDate);
+        const startDate = moment.utc(event.startDate).startOf('day');
+        const endDate = moment.utc(event.endDate).startOf('day').add(1, 'days');
         const days = [];
         let mask = 0;
 
