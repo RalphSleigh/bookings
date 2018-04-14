@@ -1,9 +1,11 @@
 module.exports = {
     up: function (queryInterface, Sequelize) {
+        if (queryInterface.sequelize.connectionManager.dialectName === 'sqlite') return true;
         return queryInterface.sequelize.query(`ALTER TYPE "enum_events_feeModel" ADD VALUE 'big'`);
     },
 
     down: (queryInterface, Sequelize) => {
+        if (queryInterface.sequelize.connectionManager.dialectName === 'sqlite') return true;
         return queryInterface.sequelize.query(`
         DELETE 
         FROM
