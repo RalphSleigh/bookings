@@ -233,7 +233,7 @@ This event is configured with the options used for Ealing events:
 * Ealing's fee structure based on our pricing policy (including the weird defaults on £35)`,
             startDate: new Date("2019-08-06T00:00:00Z"),
             endDate: new Date("2019-08-10T00:00:00Z"),
-            bookingDeadline: new Date("2019-8-01T00:00:00Z"),
+            bookingDeadline: new Date("2019-08-01T00:00:00Z"),
             userId: 2,
             feeModel: "ealing",
             feeData: {amount: 35},
