@@ -218,7 +218,6 @@ export default class Money extends React.Component {
                         <th>Fees</th>
                         <th>Payments</th>
                         <th>Total</th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>

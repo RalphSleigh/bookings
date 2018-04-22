@@ -357,7 +357,7 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
         const promises = new Array(getRandomInt(290, 310)).fill().map(() =>
             db.participant.create({
                 name: faker.name.firstName(getRandomInt(0, 1)) + ' ' + faker.name.lastName(),
-                age: momentRandom("2016-01-01T00:00:00Z", "1980-01-01T00:00:00Z").toISOString(),
+                age: new Date(momentRandom("2016-01-01T00:00:00Z", "1980-01-01T00:00:00Z").toISOString()),
                 diet: getRandomDiet(),
                 dietExtra: getRandomDietExtra(),
                 medical: getRandomMedical(),
