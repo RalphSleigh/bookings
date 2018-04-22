@@ -31,33 +31,40 @@ bookings.getUserBookings = (req, res) => {
         });
 };
 
-bookings.getEventBookings = async function (req, res) {
-    //need to loop over a users roles and assemble the data they are allowed to see
-    event = await db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}});
+const getUserScopes = (user, event) => {
 
     const scopes = [];
 
-    if (req.user.roles.find(role => role.name === "admin") || req.user.id === event.userId) scopes.push({method: ['Limited', event.id, null, null, 'defaultScope']});
+    if (user.roles.find(role => role.name === "admin") || user.id === event.userId) scopes.push({method: ['Limited', event.id, null, null, 'defaultScope', true]});
 
-    req.user.roles.filter(r => r.eventId === event.id).forEach(r => {
+    user.roles.filter(r => r.eventId === event.id).forEach(r => {
 
         let participantScope = null;
+        let includePayments = false;
         switch (r.name) {
             case "KP":
                 participantScope = "KP";
                 break;
             case "Money":
                 participantScope = "Money";
+                includePayments = true;
                 break;
             default:
                 participantScope = "defaultScope";
         }
 
-        scopes.push({method: ['Limited', event.id, r.villageId, r.organisationId, participantScope]})
+        scopes.push({method: ['Limited', event.id, r.villageId, r.organisationId, participantScope, includePayments]})
     });
 
-    const bookings = await db.booking.scope(scopes).findAll();
+    return scopes;
 
+};
+
+bookings.getEventBookings = async function (req, res) {
+    //need to loop over a users roles and assemble the data they are allowed to see
+    event = await db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}});
+
+    const scopes = getUserScopes(req.user, event);
     const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
 
     const flat = results.reduce((a, b) => a.concat(b), []);
@@ -192,6 +199,37 @@ bookings.assignVillage = async function (req, res) {
     const data = {};
     data.bookings = [booking];
     res.json(data);
+};
+
+bookings.addPayment = async function (req, res, next) {
+    if (req.body.type === 'payment') {
+        await db.payment.create(req.body);
+    } else if (req.body.type === 'adjustment') {
+        const payment = await db.payment.findOne({
+            where: {
+                [Op.and]: [
+                    {type: {[Op.eq]: 'adjustment'}},
+                    {
+                        bookingId: {[Op.eq]: req.body.bookingId}
+                    }
+                ]
+            }
+        });
+        if (payment) await payment.update(req.body);
+        else await db.payment.create(req.body);
+    }
+
+    const booking = await db.booking.findOne({
+        where: {id: {[Op.eq]: req.body.bookingId}},
+        include: [{model: db.event}]
+    }); //get the booking, but we can't send this as dangerous scope.
+
+    const scopes = getUserScopes(req.user, booking.event);
+    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findOne({where: {id: booking.id}})));
+
+    const flat = results.reduce((a, b) => a.concat(b), []);
+
+    res.json({bookings: flat});
 };
 
 /**

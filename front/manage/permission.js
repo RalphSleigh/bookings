@@ -36,3 +36,12 @@ export const showBookingEditLink = connectedAuthWrapper({
     },
     wrapperDisplayName: "showBookingEditLink"
 });
+
+export const manageMoneyWrapper = connectedAuthWrapper({
+    authenticatedSelector: (state, props) => {
+        const user = state.getIn(["User", "user"]).toJS();
+        const event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]).toJS();
+        return P.viewMoney(user, event);
+    },
+    wrapperDisplayName: "manageWholeEventWrapper"
+});

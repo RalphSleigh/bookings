@@ -192,6 +192,19 @@ permission.deleteRole = async function (req, res, next) {
     }
 };
 
+permission.addPayment = async function (req, res, next) {
+    const booking = await db.booking.findOne({
+        where: {id: {[Op.eq]: req.body.bookingId}},
+        include: [{model: db.event}]
+    });
+
+    if (P.addPayment(req.user, booking)) next();
+    else {
+        res.status(401).end();
+        logError(req);
+    }
+};
+
 module.exports = wrapper(permission);
 
 const logError = (req) => {

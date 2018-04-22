@@ -138,4 +138,20 @@ permissions.createRole = (user, event) => {
     return permissions.manageEvent(user, event);
 };
 
+permissions.viewMoney = (user, event) => {
+    if (user.roles.find(role => role.name === "admin")) return true;
+    if (user.id === event.userId) return true; //event owner
+    if (user.roles.find(role => role.name === "Money" && role.eventId === event.id)) return true;
+    return false
+};
+
+permissions.addPayment = (user, booking) => {
+    if (user.roles.find(role => role.name === "admin")) return true;
+    if (user.id === booking.event.userId) return true; //event owner can
+    if (user.roles.find(role => role.name === "Money" && role.eventId === booking.event.id && role.organisationId === null)) return true; //global money role
+    if (user.roles.find(role => role.name === "Money" && role.eventId === booking.event.id && role.organisationId === booking.organisationId)) return true; //org money
+    return false;
+};
+
+
 module.exports = permissions;

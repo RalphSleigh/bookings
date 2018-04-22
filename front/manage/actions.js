@@ -73,3 +73,8 @@ export const deleteRole = id => dispatch => {
     fetch('/api/role/delete', "POST", {id: id})
         .then(j => dispatch(updateEvents(j)))
 };
+
+export const addPayment = payment => dispatch => {
+    fetch('/api/payment/add', 'POST', payment)
+        .then(j => dispatch(updateBookings(j)))
+};

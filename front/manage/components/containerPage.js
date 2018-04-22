@@ -7,7 +7,7 @@ import {Route, Switch} from 'react-router-dom';
 
 import bookings from '../../bookings'
 import events from '../../events'
-import {manageEventCheck, manageWholeEventWrapper} from '../permission.js'
+import {manageEventCheck, manageWholeEventWrapper, manageMoneyWrapper} from '../permission.js'
 import {
     togglePaid,
     approve,
@@ -16,7 +16,8 @@ import {
     addVillage,
     deleteVillage,
     addRole,
-    deleteRole
+    deleteRole,
+    addPayment
 } from '../actions.js'
 import {getUserList} from "../../user/actions";
 
@@ -27,6 +28,7 @@ import KpPage from './kp.js'
 import ApplicationPage from './applications.js'
 import VillagePage from './villages.js'
 import RolesPage from './roles.js'
+import MoneyPage from './money.js'
 
 import W from '../../../shared/woodcraft'
 
@@ -100,6 +102,9 @@ class ManageContainerPage extends React.Component {
         const RolesTab = manageWholeEventWrapper(() => <CustomTab
             to={"/event/" + this.props.match.params.eventId + "/manage/roles"} label="Roles"/>);
 
+        const MoneyTab = manageMoneyWrapper(() => <CustomTab
+            to={"/event/" + this.props.match.params.eventId + "/manage/money"} label="Money"/>);
+
         const {Bookings, ...props} = this.props;
         return (<React.Fragment>
                 <Row>
@@ -113,6 +118,7 @@ class ManageContainerPage extends React.Component {
                             <VillagesTab {...this.props}/>
                             <RolesTab {...this.props}/>
                             <ApplicationsTab {...this.props}/>
+                            <MoneyTab {...this.props} />
                         </Nav>
                     </Col>
                 </Row>
@@ -146,6 +152,9 @@ class ManageContainerPage extends React.Component {
                     <Route path="/event/:eventId(\d+)/manage/roles">
                         <RolesPage bookings={this.state.bookings} {...props} />
                     </Route>
+                    <Route path="/event/:eventId(\d+)/manage/money">
+                        <MoneyPage bookings={this.state.bookings} {...props} />
+                    </Route>
                 </Switch>
             </React.Fragment>
 
@@ -176,7 +185,8 @@ const mapDispatchToProps = {
     deleteVillage: deleteVillage,
     getUserList: getUserList,
     addRole: addRole,
-    deleteRole: deleteRole
+    deleteRole: deleteRole,
+    addPayment: addPayment
 };
 
 const VisibleManageContainerPage = connect(

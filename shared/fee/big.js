@@ -264,6 +264,8 @@ export function getFeesOwed(event, participants, booking) {
 
 const owedWholeEvent = (event, participants, booking) => {
 
+    participants.forEach(p => isWoodchip(event, p));
+
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
     const filteredParticipants = cloneDeep(participants)
@@ -296,6 +298,8 @@ const owedWholeEvent = (event, participants, booking) => {
 };
 
 const owedPresetEvent = (event, participants, booking) => {
+
+    participants.forEach(p => isWoodchip(event, p));
 
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
@@ -343,7 +347,6 @@ const linesWithoutPartial = combined => reduce(combined, (a, c, i) => [...a, ...
 })], []);
 
 const linesWithPartial = (combined, event) => reduce(combined, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, ...map(c1, (l, t) => {
-    console.log(i1);
     if (t === 'normal') return {
         line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
@@ -365,5 +368,7 @@ const cancelledFee = (event, participants, booking) => {
 
 const isWoodchip = (e, p) => {
 
-    return moment(e.startDate).diff(moment(p.age), 'years') < 6
+    if (typeof p.type !== "undefined") return p.type;
+    p.type = moment(e.startDate).diff(moment(p.age), 'years') < 6;
+    return p.type;
 };

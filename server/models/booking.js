@@ -63,7 +63,13 @@ module.exports = (sequelize, DataTypes) => {
             }
         });
 
-        models.booking.addScope('Limited', (event, village, organisation, scope) => {
+        models.booking.hasMany(models.payment, {
+            foreignKey: {
+                allowNull: false,
+            }
+        });
+
+        models.booking.addScope('Limited', (event, village, organisation, scope, includePayments) => {
 
                 let where = null;
 
@@ -114,6 +120,7 @@ module.exports = (sequelize, DataTypes) => {
 
             const include = [{model: models.participant.scope(scope)}];
 
+            if (includePayments) include.push({model: models.payment});
                 return {where: where, include: include}
             }
         );

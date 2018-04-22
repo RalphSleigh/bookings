@@ -123,6 +123,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/api/village/create', P.addVillage, events.addVillage);
         server.post('/api/village/delete', P.deleteVillage, events.deleteVillage);
 
+        server.post('/api/payment/add', P.addPayment, bookings.addPayment);
+
         if (config.ENV === 'dev') {
 
             server.get('/api/setdate/:participantId/:date', bookings.updateParticipantDate);
