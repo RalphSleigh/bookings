@@ -126,3 +126,19 @@ export class BookingForm extends React.Component {
         </div>)
     }
 }
+
+export function getFeesOwed(event, participants, booking) {
+    const accompanied = participants.find(p => moment(event.startDate).diff(moment(p.age), 'years') > 15) === undefined ? false : true;
+
+    const amount = event.feeData.amount;
+    const unaccompanied = amount === 35 ? 50 : amount * 1.5;
+    const unaccompaniedDiscount = amount === 35 ? 25 : amount * 0.75;
+    const discount = amount === 35 ? 20 : amount * 0.5;
+
+    const total = participants.length * Math.round(accompanied ? amount : unaccompanied);
+    const totalDiscounted = participants.length * Math.round(accompanied ? discount : unaccompaniedDiscount);
+
+    const line = `${participants.length} ${participants.length < 2 ? "person" : "people"}, ${accompanied ? "Accompanied" : "Unaccompanied"} (Discount: ${totalDiscounted})`;
+
+    return [{line: line, total: total}];
+}

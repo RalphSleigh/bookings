@@ -43,16 +43,27 @@ export default class Participants extends React.Component {
     }
 
     exportCSV() {
-        const exportedData = this.props.participants.map(p => [p.id,
-            p.name,
-            Moment(p.age).format("DD/MM/YYYY"),
-            p.diet,
-            p.dietExtra,
-            p.medical,
-            p.createdAt,
-            p.updatedAt]);
+        const exportedData = this.props.participants.map(p => {
+            const b = this.props.bookings.find(b => b.id === p.bookingId);
+
+            return [p.id,
+                p.name,
+                Moment(p.age).format("DD/MM/YYYY"),
+                p.diet,
+                p.dietExtra,
+                p.medical,
+                b.userName,
+                b.userEmail,
+                b.userContact,
+                b.emergencyName,
+                b.emergencyPhone,
+                b.note,
+                p.createdAt,
+                p.updatedAt]
+
+        });
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Created At', 'Updated At'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'Created At', 'Updated At'], ...exportedData]);
     }
 
     updateExpanded(id) {
