@@ -17,7 +17,8 @@ import {
     deleteVillage,
     addRole,
     deleteRole,
-    addPayment
+    addPayment,
+    deletePayment
 } from '../actions.js'
 import {getUserList} from "../../user/actions";
 
@@ -186,7 +187,8 @@ const mapDispatchToProps = {
     getUserList: getUserList,
     addRole: addRole,
     deleteRole: deleteRole,
-    addPayment: addPayment
+    addPayment: addPayment,
+    deletePayment: deletePayment
 };
 
 const VisibleManageContainerPage = connect(

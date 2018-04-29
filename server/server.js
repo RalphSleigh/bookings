@@ -91,7 +91,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         server.get('/api/env', (req, res) => res.json({env: config.ENV}));
 
-        server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
+
         server.get('/api/user', auth.getUser);   		//get current user info
         server.post('/api/user/logout', auth.doLogout); //logout
         server.get('/api/users', P.getUserList, auth.getUserList);
@@ -124,8 +124,11 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/api/village/delete', P.deleteVillage, events.deleteVillage);
 
         server.post('/api/payment/add', P.addPayment, bookings.addPayment);
+        server.post('/api/payment/delete', P.addPayment, bookings.deletePayment);
 
         if (config.ENV === 'dev') {
+
+            server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
 
             server.get('/api/setdate/:participantId/:date', bookings.updateParticipantDate);
 

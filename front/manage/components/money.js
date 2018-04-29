@@ -7,6 +7,9 @@ import Moment from 'moment'
 import fee from '../../../shared/fee'
 import update from 'immutability-helper';
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+
 import {
     Row,
     Col,
@@ -20,6 +23,10 @@ import {
 
 import W from '../../../shared/woodcraft.js'
 
+
+const RedCurrency = props => props.quantity < 0 ? <span style={{color: 'red'}}><Currency {...props} /></span> :
+    <Currency {...props} />
+
 export default class Money extends React.Component {
 
     constructor(props) {
@@ -30,6 +37,7 @@ export default class Money extends React.Component {
         this.updateAmount = this.updateAmount.bind(this);
         this.updateNote = this.updateNote.bind(this);
         this.addPayment = this.addPayment.bind(this);
+        this.deletePayement = this.deletePayement.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -52,6 +60,15 @@ export default class Money extends React.Component {
         this.setState(update(this.state, {note: {$set: e.target.value}}));
     }
 
+    deletePayement(id) {
+        return e => {
+            if (confirm("Are you sure you want to delete this?")) this.props.deletePayment({
+                id: id
+            });
+            e.preventDefault();
+        }
+    }
+
     addPayment(type) {
         return e => {
 
@@ -61,6 +78,9 @@ export default class Money extends React.Component {
                 note: this.state.note,
                 bookingId: this.state.expanded
             });
+
+            this.setState(update(this.state, {note: {$set: ''}, amount: {$set: 0}}));
+
             e.preventDefault();
         }
     }
@@ -90,7 +110,7 @@ export default class Money extends React.Component {
                 currency="GBP"
             /></td>
             <td><Currency
-                quantity={paid - owed}
+                quantity={owed - paid}
                 currency="GBP"
             /></td>
         </tr>
@@ -109,10 +129,11 @@ export default class Money extends React.Component {
         this.totalOwed += owed;
         this.totalPaid += paid;
 
-        const adjustmentRow = b.payments.filter(p => p.type === 'adjustment').map(r => <tr key={`adjust${b.id}`}>
-            <td>x</td>
+        const adjustmentRow = b.payments.filter(p => p.type === 'adjustment').map((r, i) => <tr
+            key={`adjust` + b.id + r.id}>
+            <td><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={this.deletePayement(r.id)} icon={faTimes}/></td>
             <td>{Moment(r.updatedAt).format('L') + ' ' + r.note}</td>
-            <td><Currency
+            <td><RedCurrency
                 quantity={r.amount}
                 currency="GBP"
             /></td>
@@ -120,18 +141,19 @@ export default class Money extends React.Component {
             <td></td>
         </tr>);
 
-        const paymentRows = b.payments.filter(p => p.type === 'payment').map((r, i) => <tr key={`adjust${b.id}${i}`}>
-            <td>x</td>
+        const paymentRows = b.payments.filter(p => p.type === 'payment').map((r, i) => <tr
+            key={`payment` + b.id + r.id}>
+            <td><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={this.deletePayement(r.id)} icon={faTimes}/></td>
             <td>{Moment(r.updatedAt).format('L') + ' ' + r.note}</td>
             <td></td>
-            <td><Currency
+            <td><RedCurrency
                 quantity={r.amount}
                 currency="GBP"
             /></td>
             <td></td>
         </tr>);
 
-        const feeRows = this.getFeesOwed(event, b.participants, b).map((r, i) => <tr key={`owed${b.id} ${i}`}>
+        const feeRows = this.getFeesOwed(event, b.participants, b).map((r, i) => <tr key={`owed` + b.id + i}>
             <td></td>
             <td>{r.line}</td>
             <td><Currency
@@ -142,15 +164,21 @@ export default class Money extends React.Component {
             <td></td>
         </tr>);
 
-        const hasAdjustment = b.payments.find(p => p.type === 'adjustment');
-
         return <React.Fragment key={b.id}>
             <tr onClick={this.expand(0)} style={{borderTop: 'solid black 3px'}}>
                 <td></td>
                 <td colSpan={4}><b>{name}</b></td>
             </tr>
+            <tr>
+                <td></td>
+                <td style={{borderBottom: 'solid #888888 2px'}} colSpan={4}><b>Fees</b></td>
+            </tr>
             {feeRows}
             {adjustmentRow}
+            <tr>
+                <td></td>
+                <td style={{borderBottom: 'solid #888888 2px'}} colSpan={4}><b>Payments</b></td>
+            </tr>
             {paymentRows}
             <tr>
                 <td></td>
@@ -166,9 +194,10 @@ export default class Money extends React.Component {
                             </InputGroup>
                         </Col>
                         <Col sm={6}>
-                            <Button color="success" onClick={this.addPayment('payment')}>Add Payment</Button>{' '}
+                            <Button color="success" disabled={this.state.amount <= 0}
+                                    onClick={this.addPayment('payment')}>Add Payment</Button>{' '}
                             <Button color="warning"
-                                    onClick={this.addPayment('adjustment')}>{hasAdjustment ? 'Update Adjustment' : 'Add Adjustment'}</Button>
+                                    onClick={this.addPayment('adjustment')}>Add Price Adjustment</Button>
                         </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -191,7 +220,7 @@ export default class Money extends React.Component {
                     currency="GBP"
                 /></b></td>
                 <td><b><Currency
-                    quantity={paid - owed}
+                    quantity={owed - paid}
                     currency="GBP"
                 /></b></td>
             </tr>
@@ -223,7 +252,7 @@ export default class Money extends React.Component {
                         <th>Booking</th>
                         <th>Fees</th>
                         <th>Payments</th>
-                        <th>Total</th>
+                        <th>Outstanding</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -247,7 +276,7 @@ export default class Money extends React.Component {
                         </td>
                         <td><b>
                             <Currency
-                                quantity={this.totalPaid - this.totalOwed}
+                                quantity={this.totalOwed - this.totalPaid}
                                 currency="GBP"
                             /></b>
                         </td>

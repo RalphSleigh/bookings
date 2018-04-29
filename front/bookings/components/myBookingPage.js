@@ -84,7 +84,20 @@ const mapStateToProps = (state, props) => {
         (localStorageData.eventId === Event.get("id")) &&
         (localStorageData.userId === User.get("id"))) ? localStorageData : false;
 
-    let Booking = currentBooking || existingBooking || localBooking || emptyBooking(User, Event);
+    const prevBooking = (Event, Bookings, User) => {
+        let prevBooking = Event.get("bigCampMode") === false ? Bookings.get("bookings").filter(b => b.get("userId") === User.get("id")).toList().sort((a, b) => a.get('participants').size < b.get('participants').size).get(0) : null;
+
+        let i = 0;
+
+        if (prevBooking) {
+            prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id");
+            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", 'Tempcopy' + i++).delete("bookingId")));
+        }
+
+        return prevBooking
+    };
+
+    let Booking = currentBooking || existingBooking || localBooking || prevBooking(Event, Bookings, User) || emptyBooking(User, Event);
 
     const Env = state.get("App");
 

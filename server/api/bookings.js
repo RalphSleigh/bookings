@@ -202,27 +202,33 @@ bookings.assignVillage = async function (req, res) {
 };
 
 bookings.addPayment = async function (req, res, next) {
-    if (req.body.type === 'payment') {
-        await db.payment.create(req.body);
-    } else if (req.body.type === 'adjustment') {
-        const payment = await db.payment.findOne({
-            where: {
-                [Op.and]: [
-                    {type: {[Op.eq]: 'adjustment'}},
-                    {
-                        bookingId: {[Op.eq]: req.body.bookingId}
-                    }
-                ]
-            }
-        });
-        if (payment) await payment.update(req.body);
-        else await db.payment.create(req.body);
-    }
+
+    await db.payment.create(req.body);
 
     const booking = await db.booking.findOne({
         where: {id: {[Op.eq]: req.body.bookingId}},
         include: [{model: db.event}]
     }); //get the booking, but we can't send this as dangerous scope.
+
+    const scopes = getUserScopes(req.user, booking.event);
+    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findOne({where: {id: booking.id}})));
+
+    const flat = results.reduce((a, b) => a.concat(b), []);
+
+    res.json({bookings: flat});
+};
+
+bookings.deletePayment = async function (req, res, next) {
+
+
+    const payment = await db.payment.findOne({where: {id: {[Op.eq]: req.body.id}}});
+
+    const booking = await db.booking.findOne({
+        where: {id: {[Op.eq]: payment.bookingId}},
+        include: [{model: db.event}]
+    }); //get the booking, but we can't send this as dangerous scope.
+
+    await payment.destroy();
 
     const scopes = getUserScopes(req.user, booking.event);
     const results = await Promise.all(scopes.map(s => db.booking.scope(s).findOne({where: {id: booking.id}})));

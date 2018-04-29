@@ -26,13 +26,15 @@ class UserPage extends React.Component {
     render() {
         const data = this.props.User.toObject();
 
-        return data.id === 1 ? <LoginForm doLogin={this.props.doLogin}/> : <UserProfile user={data}/>;
+        return data.id === 1 ? <LoginForm doLogin={this.props.doLogin} env={this.props.env}/> :
+            <UserProfile user={data}/>;
     }
 }
 
 const mapStateToProps = (state) => {
     const User = state.getIn(["User", "user"]);
-    return {User};
+    const env = state.get("App");
+    return {User, env};
 };
 /*
 const mapDispatchToProps = (dispatch) => {
@@ -76,13 +78,13 @@ class LoginForm extends React.Component {
 
     render() {
         return (<Row>
-            <Col sm={7}>
+            <Col sm={this.props.env === 'dev' ? 7 : 12}>
                 <Card>
                     <CardBody>
                         <CardTitle>Social Login</CardTitle>
                         <CardText>Please use one of the following services to authenticate:</CardText>
                         <Row>
-                            <Col sm={6}>
+                            <Col sm={this.props.env === 'dev' ? 6 : 3}>
                                 <GoogleLoginButton onClick={() => {
                                     window.location = '/auth/google'
                                 }}/>
@@ -100,49 +102,50 @@ class LoginForm extends React.Component {
                     </CardBody>
                 </Card>
             </Col>
-            <Col sm={5}>
-                <Card>
-                    <CardBody>
-                        <CardTitle>Local Login</CardTitle>
-                        <CardText>Only use this if Ralph has told you to.</CardText>
-                        <Form>
-                            <FormGroup row>
-                                <Label for="email" sm={4}>
-                                    Email Address
-                                </Label>
-                                <Col>
-                                    <Input type="email"
-                                           name="email"
-                                           placeholded="e-mail"
-                                           value={this.state.email}
-                                           onChange={this.updateEmail}
-                                    />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Label for="password" sm={4}>
-                                    Password
-                                </Label>
-                                <Col>
-                                    <Input type="password"
-                                           name="password"
-                                           placeholded="password"
-                                           value={this.state.password}
-                                           onChange={this.updatePassword}
-                                    />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Col sm={{size: 8, offset: 4}}>
-                                    <Button type="submit"
-                                            onClick={this.submit}
-                                            color="primary">Submit</Button>
-                                </Col>
-                            </FormGroup>
-                        </Form>
-                    </CardBody>
-                </Card>
-            </Col>
+            {this.props.env === 'dev' ?
+                <Col sm={5}>
+                    <Card>
+                        <CardBody>
+                            <CardTitle>Local Login</CardTitle>
+                            <CardText>Only use this if Ralph has told you to.</CardText>
+                            <Form>
+                                <FormGroup row>
+                                    <Label for="email" sm={4}>
+                                        Email Address
+                                    </Label>
+                                    <Col>
+                                        <Input type="email"
+                                               name="email"
+                                               placeholded="e-mail"
+                                               value={this.state.email}
+                                               onChange={this.updateEmail}
+                                        />
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Label for="password" sm={4}>
+                                        Password
+                                    </Label>
+                                    <Col>
+                                        <Input type="password"
+                                               name="password"
+                                               placeholded="password"
+                                               value={this.state.password}
+                                               onChange={this.updatePassword}
+                                        />
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Col sm={{size: 8, offset: 4}}>
+                                        <Button type="submit"
+                                                onClick={this.submit}
+                                                color="primary">Submit</Button>
+                                    </Col>
+                                </FormGroup>
+                            </Form>
+                        </CardBody>
+                    </Card>
+                </Col> : null}
         </Row>);
     }
 }

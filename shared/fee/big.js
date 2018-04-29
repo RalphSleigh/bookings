@@ -264,12 +264,10 @@ export function getFeesOwed(event, participants, booking) {
 
 const owedWholeEvent = (event, participants, booking) => {
 
-    participants.forEach(p => isWoodchip(event, p));
-
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
     const filteredParticipants = cloneDeep(participants)
-        .filter(p => p.name && p.age && p.diet)
+        .filter(p => p.name && p.age)
         .map(p => {
             if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
             return p;
@@ -299,12 +297,10 @@ const owedWholeEvent = (event, participants, booking) => {
 
 const owedPresetEvent = (event, participants, booking) => {
 
-    participants.forEach(p => isWoodchip(event, p));
-
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
     const filteredParticipants = cloneDeep(participants)
-        .filter(p => p.name && p.age && p.diet)
+        .filter(p => p.name && p.age)
         .map(p => {
             if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
             p.days = event.partialDatesData.find(d => d.mask === p.days);
@@ -367,8 +363,5 @@ const cancelledFee = (event, participants, booking) => {
 };
 
 const isWoodchip = (e, p) => {
-
-    if (typeof p.type !== "undefined") return p.type;
-    p.type = moment(e.startDate).diff(moment(p.age), 'years') < 6;
-    return p.type;
+    return Date.parse(e.startDate) - Date.parse(p.age) < 189216000000
 };

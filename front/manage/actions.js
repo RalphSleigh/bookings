@@ -78,3 +78,8 @@ export const addPayment = payment => dispatch => {
     fetch('/api/payment/add', 'POST', payment)
         .then(j => dispatch(updateBookings(j)))
 };
+
+export const deletePayment = payment => dispatch => {
+    fetch('/api/payment/delete', 'POST', payment)
+        .then(j => dispatch(updateBookings(j)))
+};
