@@ -84,7 +84,7 @@ class LoginForm extends React.Component {
                         <CardTitle>Social Login</CardTitle>
                         <CardText>Please use one of the following services to authenticate:</CardText>
                         <Row>
-                            <Col sm={this.props.env === 'dev' ? 6 : 3}>
+                            <Col sm={this.props.env === 'dev' ? 6 : 5}>
                                 <GoogleLoginButton onClick={() => {
                                     window.location = '/auth/google'
                                 }}/>

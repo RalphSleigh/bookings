@@ -15,7 +15,7 @@ import {
     showBookingEditLink
 } from '../permission.js'
 import {getUserBookings} from '../../bookings/actions.js' //deep import, bad cause circular..
-import {applyToBookEvent} from '../../../shared/permissions.js'
+import {applyToBookEvent, manageEvent} from '../../../shared/permissions.js'
 
 import {
     Button,
@@ -44,7 +44,8 @@ class EventList extends React.Component {
 
     render() {
         const user = this.props.User.toJS();
-        let events = this.props.Events.toSeq().sort((a, b) => a.get("StartDate") - b.get("StartDate")).map((e) => <Event
+        let events = this.props.Events.toSeq().filter(e => manageEvent(user, e.toJS()) || new Date(e.get("startDate")) > new Date()).sort((a, b) => a.get("startDate") - b.get("startDate")).map((e) =>
+            <Event
             User={user} {...e.toJS()} key={e.get("id")}/>).toArray();
         return (<React.Fragment>
             <Row>
