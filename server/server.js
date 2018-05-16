@@ -50,6 +50,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.use(bodyParser.json());
         server.use(passport.initialize());
         server.use(passport.session());
+        server.use(newSessionLogger);
         server.use(ensureUser);  //if passport does not log us in, set req.user to the guest user object, this makes handlers simpler.
         server.use('/api/*', apiLogger);
 
@@ -64,6 +65,13 @@ require("../config.js")()//config returns a promise the first time then overwrit
             passport.authenticate('facebook', {failureRedirect: '/user'}),
             function (req, res) {
                 // Successful authentication, redirect home.
+                log.info({
+                    message: "User logged in from Facebook {ip} {session} {user} {email}",
+                    ip: req.ip,
+                    session: req.session.id,
+                    user: req.user.userName,
+                    email: req.user.email
+                });
                 res.redirect('/');
             });
 
@@ -71,13 +79,35 @@ require("../config.js")()//config returns a promise the first time then overwrit
             passport.authenticate('google', {scope: ['email', 'profile']})); //google OAuth redirect
 
         server.get('/auth/google/callback',
-            passport.authenticate('google', {successRedirect: "/", failureRedirect: '/user'})); // google OAuth callback
+            passport.authenticate('google', {failureRedirect: '/user'}),
+            function (req, res) {
+                // Successful authentication, redirect home.
+                log.info({
+                    message: "User logged in from Google {ip} {session} {user} {email}",
+                    ip: req.ip,
+                    session: req.session.id,
+                    user: req.user.userName,
+                    email: req.user.email
+                });
+                res.redirect('/');
+            }); // google OAuth callback
 
         server.get('/auth/yahoo',
             passport.authenticate('yahoo')); //google OAuth redirect
 
         server.get('/auth/yahoo/callback',
-            passport.authenticate('yahoo', {successRedirect: "/", failureRedirect: '/user'})); // google OAuth callback
+            passport.authenticate('yahoo', {failureRedirect: '/user'}),
+            function (req, res) {
+                // Successful authentication, redirect home.
+                log.info({
+                    message: "User logged in from Yahoo {ip} {session} {user} {email}",
+                    ip: req.ip,
+                    session: req.session.id,
+                    user: req.user.userName,
+                    email: req.user.email
+                });
+                res.redirect('/');
+            }); // google OAuth callback
 
         server.get('/auth/microsoft',
             passport.authenticate('microsoft', {scope: ['https://graph.microsoft.com/user.read']}));
@@ -86,6 +116,13 @@ require("../config.js")()//config returns a promise the first time then overwrit
             passport.authenticate('microsoft', {failureRedirect: '/login'}),
             function (req, res) {
                 // Successful authentication, redirect home.
+                log.info({
+                    message: "User logged in from Microsoft {ip} {session} {user} {email}",
+                    ip: req.ip,
+                    session: req.session.id,
+                    user: req.user.userName,
+                    email: req.user.email
+                });
                 res.redirect('/');
             });
 
@@ -177,11 +214,16 @@ require("../config.js")()//config returns a promise the first time then overwrit
          *************************************/
 
         function apiLogger(req, res, next) {
-            log.info({message: "{email} called {url}", email: req.user.email || "Guest", url: req.baseUrl});
+            log.info({
+                message: "{email} called {url} {session}",
+                email: req.user.email || "Guest",
+                url: req.baseUrl,
+                session: req.session.id
+            });
             next();
         }
 
-        let guestUser = false;//store the guest user objecct to avoid a query on every request.
+        let guestUser = false;//store the guest user object to avoid a query on every request.
         function ensureUser(req, res, next) {
             if (req.user) return next();
             if (guestUser) {
@@ -193,6 +235,19 @@ require("../config.js")()//config returns a promise the first time then overwrit
                     guestUser = req.user = user.get({plain: true});
                 })
                 .finally(() => next());
+        }
+
+        function newSessionLogger(req, res, next) {
+            if (!req.session.logged) {
+                req.session.logged = true;
+                log.info({
+                    message: "New Session: {ip} {userAgent} {session}",
+                    ip: req.ip,
+                    userAgent: req.headers["user-agent"],
+                    session: req.session.id
+                });
+            }
+            next();
         }
 
     }).catch(e => {

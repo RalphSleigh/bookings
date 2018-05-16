@@ -26,12 +26,6 @@ auth.doLogin = function(req, res) {
 */
 
 auth.getUser = function (req, res) {
-    log.info({
-        message: "New Session: {ip} {userAgent} {user}",
-        ip: req.ip,
-        userAgent: req.headers["user-agent"],
-        user: req.user.userName
-    });
     const resUser = extend({}, req.user);
     delete resUser.password;
     res.json(resUser);
