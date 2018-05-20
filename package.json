@@ -70,6 +70,7 @@
     "nodemailer": "^4.4.1",
     "openid": "^2.0.6",
     "passport": "^0.4.0",
+    "passport-azure-ad": "^3.0.12",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",

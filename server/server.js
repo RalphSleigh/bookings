@@ -48,6 +48,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
             store: new SQLiteStore
         }));
         server.use(bodyParser.json());
+        server.use(bodyParser.urlencoded({extended: true}));
         server.use(passport.initialize());
         server.use(passport.session());
         server.use(newSessionLogger);
@@ -109,20 +110,12 @@ require("../config.js")()//config returns a promise the first time then overwrit
                 res.redirect('/');
             }); // google OAuth callback
 
-        server.get('/auth/microsoft',
-            passport.authenticate('microsoft', {scope: ['https://graph.microsoft.com/user.read']}));
+        server.get('/auth/microsoft', passport.authenticate('azuread-openidconnect', {failureRedirect: '/'}));
 
-        server.get('/auth/microsoft/callback',
-            passport.authenticate('microsoft', {failureRedirect: '/login'}),
-            function (req, res) {
-                // Successful authentication, redirect home.
-                log.info({
-                    message: "User logged in from Microsoft {ip} {session} {user} {email}",
-                    ip: req.ip,
-                    session: req.session.id,
-                    user: req.user.userName,
-                    email: req.user.email
-                });
+        server.post('/auth/microsoft/callback',
+            passport.authenticate('azuread-openidconnect', {failureRedirect: '/'}),
+            (req, res) => {
+                log.info('We received a return from AzureAD.');
                 res.redirect('/');
             });
 

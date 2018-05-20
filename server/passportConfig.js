@@ -4,7 +4,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const YahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy;
-const MicrosoftStrategy = require('passport-microsoft').Strategy;
+//const MicrosoftStrategy = require('passport-microsoft').Strategy;
+const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 const bcrypt = require('bcrypt');
 
 const log = require("./logging.js");
@@ -19,6 +20,7 @@ passport.use(new FacebookStrategy({
         profileFields: ['id', 'emails', 'displayName']
     },
     function (accessToken, refreshToken, profile, cb) {
+        console.log(profile);
         if (profile.emails) {
             db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
                 .spread((user, created) => {
@@ -57,6 +59,7 @@ passport.use(new GoogleStrategy({
         callbackURL: config.GOOGLE_CALLBACK
     },
     function (accessToken, refreshToken, profile, cb) {
+        console.log(profile);
         db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
             .spread((user, created) => {
                 if (created) {
@@ -80,6 +83,7 @@ passport.use(new YahooStrategy({
 
     },
     function (accessToken, refreshToken, token, profile, cb) {
+        console.log(profile);
         db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
             .spread((user, created) => {
                 if (created) {
@@ -96,6 +100,41 @@ passport.use(new YahooStrategy({
     }
 ));
 
+passport.use(new OIDCStrategy({
+        identityMetadata: 'https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration',
+        clientID: config.MICROSOFT_CLIENT_ID,
+        responseType: 'id_token',
+        responseMode: 'form_post',
+        redirectUrl: config.BASE_PATH + "/auth/microsoft/callback",
+        allowHttpForRedirectUrl: true,
+        clientSecret: config.MICROSOFT_CLIENT_SECRET,
+        validateIssuer: false,
+        isB2C: false,
+        issuer: null,
+        passReqToCallback: false,
+        scope: ['profile', 'email'],
+        useCookieInsteadOfSession: false,
+    },
+    function (iss, sub, profile, accessToken, refreshToken, cb) {
+        console.log(profile);
+        const email = profile._json.email || profile._json.preferred_username;
+        db.user.scope('withData').findOrCreate({where: {email: email}})
+            .spread((user, created) => {
+                if (created) {
+                    user.userName = profile.displayName;
+                    user.source = "Microsoft";
+                    //calling save will remove the assosiated Role data, lets get it again..
+                    log.info("Created User from Microsoft %s %s", profile.displayName, email);
+                    return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
+                }
+                return user;
+            })
+            .then(u => cb(null, u.get({plain: true})))
+            .catch(e => cb(e, null));
+    }
+));
+
+/*
 passport.use(new MicrosoftStrategy({
         clientID: config.MICROSOFT_CLIENT_ID,
         clientSecret: config.MICROSOFT_CLIENT_SECRET,
@@ -117,7 +156,7 @@ passport.use(new MicrosoftStrategy({
             .catch(e => cb(e, null));
     }
 ));
-
+*/
 
 passport.serializeUser(function (user, done) {
     done(null, user);
