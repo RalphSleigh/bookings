@@ -12,6 +12,5 @@ module.exports = {
     })
         .then(() => queryInterface.addColumn('users', 'facebookProfileId', {
             type: DataTypes.STRING,
-            unique: true
         }))
 };

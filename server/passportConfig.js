@@ -21,7 +21,9 @@ passport.use(new FacebookStrategy({
     },
     function (accessToken, refreshToken, profile, cb) {
         const email = profile.emails ? profile.emails[0].value : null;
-        return getUser(profile.id, profile.displayName, email, 'yahoo');
+        return getUser(profile.id, profile.displayName, email, 'yahoo')
+            .then(u => cb(null, u.get({plain: true})))
+            .catch(e => cb(e, null));
         if (profile.emails) {
             db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
                 .spread((user, created) => {
@@ -60,7 +62,9 @@ passport.use(new GoogleStrategy({
         callbackURL: config.GOOGLE_CALLBACK
     },
     function (accessToken, refreshToken, profile, cb) {
-        return getUser(profile.id, profile.displayName, profile.emails[0].value, 'google');
+        return getUser(profile.id, profile.displayName, profile.emails[0].value, 'google')
+            .then(u => cb(null, u.get({plain: true})))
+            .catch(e => cb(e, null));
         db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
             .spread((user, created) => {
                 if (created) {
@@ -84,7 +88,9 @@ passport.use(new YahooStrategy({
 
     },
     function (accessToken, refreshToken, token, profile, cb) {
-        return getUser(profile.id, profile.displayName, profile.emails[0].value, 'yahoo');
+        return getUser(profile.id, profile.displayName, profile.emails[0].value, 'yahoo')
+            .then(u => cb(null, u.get({plain: true})))
+            .catch(e => cb(e, null));
         db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
             .spread((user, created) => {
                 if (created) {
@@ -118,7 +124,9 @@ passport.use(new OIDCStrategy({
     },
     function (iss, sub, profile, accessToken, refreshToken, cb) {
         const email = profile._json.email || profile._json.preferred_username;
-        return getUser(profile.oid, profile.displayName, email, 'microsoft');
+        return getUser(profile.oid, profile.displayName, email, 'microsoft')
+            .then(u => cb(null, u.get({plain: true})))
+            .catch(e => cb(e, null));
         db.user.scope('withData').findOrCreate({where: {email: email}})
             .spread((user, created) => {
                 if (created) {
@@ -150,17 +158,19 @@ const getUser = async function (id, displayName, email, source) {
     //Do we have a user with the right email but no remote id?
     if (typeof email === 'string') {
         user = await db.user.scope('withData').findOne({where: {email: email}});
-        if (user.remoteId) throw new error("Login from wrong provider, please use your original provider");
-        user.remoteId = combinedId;
-        user.source = source;
-        await user.save();
-        log.debug({
-            message: "Found user based on e-mail, inserting remote id. {user}",
-            user: user.userName
-        });
-        return user;
+        if (user) {
+            if (user.remoteId) throw new error("Login from wrong provider, please use your original provider");
+            user.remoteId = combinedId;
+            user.source = source;
+            await user.save();
+            log.debug({
+                message: "Found user based on e-mail, inserting remote id. {user}",
+                user: user.userName
+            });
+            return user;
+        }
     }
-    user = await user.create({
+    user = await db.user.create({
         userName: displayName,
         email: email,
         source: source,
