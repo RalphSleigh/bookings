@@ -21,7 +21,7 @@ passport.use(new FacebookStrategy({
     },
     function (accessToken, refreshToken, profile, cb) {
         const email = profile.emails ? profile.emails[0].value : null;
-        return getUser(profile.id, profile.displayName, email, 'yahoo')
+        return getUser(profile.id, profile.displayName, email, 'facebook')
             .then(u => cb(null, u.get({plain: true})))
             .catch(e => cb(e, null));
         if (profile.emails) {
@@ -144,7 +144,7 @@ passport.use(new OIDCStrategy({
 ));
 
 const getUser = async function (id, displayName, email, source) {
-    if (typeof id !== 'string') throw new error("No ID from provider");
+    if (typeof id !== 'string') throw new Error("No ID from provider");
     const combinedId = source + id;
     //first, try and find a user by their ID;
     let user = await db.user.scope('withData').findOne({where: {remoteId: combinedId}});
@@ -159,7 +159,7 @@ const getUser = async function (id, displayName, email, source) {
     if (typeof email === 'string') {
         user = await db.user.scope('withData').findOne({where: {email: email}});
         if (user) {
-            if (user.remoteId) throw new error("Login from wrong provider, please use your original provider");
+            if (user.remoteId) throw new Error("Login from wrong provider, please use your original provider");
             user.remoteId = combinedId;
             user.source = source;
             await user.save();
@@ -170,6 +170,7 @@ const getUser = async function (id, displayName, email, source) {
             return user;
         }
     }
+
     user = await db.user.create({
         userName: displayName,
         email: email,

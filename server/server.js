@@ -115,7 +115,13 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/auth/microsoft/callback',
             passport.authenticate('azuread-openidconnect', {failureRedirect: '/'}),
             (req, res) => {
-                log.info('We received a return from AzureAD.');
+                log.info({
+                    message: "User logged in from Yahoo {ip} {session} {user} {email}",
+                    ip: req.ip,
+                    session: req.session.id,
+                    user: req.user.userName,
+                    email: req.user.email
+                });
                 res.redirect('/');
             });
 
