@@ -180,7 +180,7 @@ const getUser = async function (id, displayName, email, source) {
         message: "Creating new user {user}",
         user: user.userName
     });
-    return user;
+    return await db.user.scope('withData').findOne({where: {id: user.id}});
 };
 
 /*
