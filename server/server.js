@@ -116,7 +116,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
             passport.authenticate('azuread-openidconnect', {failureRedirect: '/'}),
             (req, res) => {
                 log.info({
-                    message: "User logged in from Yahoo {ip} {session} {user} {email}",
+                    message: "User logged in from Microsoft {ip} {session} {user} {email}",
                     ip: req.ip,
                     session: req.session.id,
                     user: req.user.userName,
@@ -213,12 +213,16 @@ require("../config.js")()//config returns a promise the first time then overwrit
          *************************************/
 
         function apiLogger(req, res, next) {
+            res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+            res.header('Expires', '-1');
+            res.header('Pragma', 'no-cache');
             log.info({
                 message: "{email} called {url} {session}",
                 email: req.user.email || "Guest",
                 url: req.baseUrl,
                 session: req.session.id
             });
+
             next();
         }
 
