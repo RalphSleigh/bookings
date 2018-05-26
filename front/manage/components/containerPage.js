@@ -76,7 +76,8 @@ class ManageContainerPage extends React.Component {
         bookings.forEach(b => {
             b.participants.forEach(p => {
                 p.ageAtStart = startDate.diff(moment(p.age), 'years');
-                p.ageGroup = W.find(w => w.filter(p.ageAtStart)).name
+                p.ageGroup = W.find(w => w.filter(p.ageAtStart)).singular;
+                p.displayAge = p.ageGroup + (p.ageAtStart < 21 ? ` (${p.ageAtStart})` : '');
             })
         });
 

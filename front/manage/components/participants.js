@@ -93,7 +93,7 @@ export default class Participants extends React.Component {
             const b = bookings.find(b => b.id === p.bookingId);
             return {
                 name: p.name,
-                age: p.ageAtStart,
+                age: p.displayAge,
                 diet: p.diet,
                 booked: b.userName,
                 district: b.district,

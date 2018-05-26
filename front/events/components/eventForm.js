@@ -39,6 +39,8 @@ export default class EditForm extends React.Component {
         this.state.event.bookingPolicy = this.state.event.bookingPolicy || 'guest';
         this.state.event.partialDates = this.state.event.partialDates || 'whole';
         this.state.event.organisations = this.state.event.organisations || [];
+        this.state.event.customQuestions = this.state.event.customQuestions || {};
+
 
         this.update = this.update.bind(this);
         this.updateData = this.updateData.bind(this);
@@ -48,6 +50,7 @@ export default class EditForm extends React.Component {
         this.clickDeleteLock = this.clickDeleteLock.bind(this);
         this.clickDelete = this.clickDelete.bind(this);
         this.clickSave = this.clickSave.bind(this);
+        this.updateExtra = this.updateExtra.bind(this);
     }
 
     update(item) {
@@ -59,6 +62,12 @@ export default class EditForm extends React.Component {
     updateData(item) {
         return data => {
             this.setState(update(this.state, {event: {[item]: {$set: data}}}));
+        }
+    }
+
+    updateExtra(item) {
+        return e => {
+            this.setState(update(this.state, {event: {customQuestions: {[item]: {$set: e.target.value}}}}));
         }
     }
 
@@ -209,6 +218,8 @@ export default class EditForm extends React.Component {
                     </FormGroup>
                     {feeOptionFields}
                     {paymentFields}
+                    {formField("text", "Extra Info Box Question", this.state.event.customQuestions.extraQuestion, this.updateExtra("extraQuestion"))}
+                    {formField("textarea", "Extra Info Template:", this.state.event.customQuestions.extraTemplate, this.updateExtra("extraTemplate"))}
                     <Row>
                         <Col>
                             <Button color="success" onClick={this.clickSave}>Save</Button>
