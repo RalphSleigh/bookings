@@ -193,10 +193,22 @@ permission.deleteRole = async function (req, res, next) {
 };
 
 permission.addPayment = async function (req, res, next) {
-    const booking = await db.booking.findOne({
+
+    let booking = null;
+    if (req.body.bookingId) booking = await db.booking.findOne({
         where: {id: {[Op.eq]: req.body.bookingId}},
         include: [{model: db.event}]
     });
+    else {
+        const payment = await db.payment.findOne({
+            where: {id: {[Op.eq]: req.body.id}},
+            include: [{model: db.booking}]
+        });
+        booking = await db.booking.findOne({
+            where: {id: {[Op.eq]: payment.bookingId}},
+            include: [{model: db.event}]
+        });
+    }
 
     if (P.addPayment(req.user, booking)) next();
     else {
