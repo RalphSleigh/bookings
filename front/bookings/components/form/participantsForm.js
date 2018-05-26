@@ -162,6 +162,7 @@ const ParticipantRow = (props) => {
                     <Input type="textarea"
                            value={props.dietExtra || ''}
                            onChange={props.update("dietExtra")}
+                           placeholder="N/A"
                            rows="3"/>
                 </Col>
             </FormGroup>
@@ -171,6 +172,7 @@ const ParticipantRow = (props) => {
                     <Input type="textarea"
                            value={props.medical || ''}
                            onChange={props.update("medical")}
+                           placeholder="N/A"
                            rows="3"/>
                 </Col>
             </FormGroup>
