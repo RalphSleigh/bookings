@@ -122,7 +122,8 @@ export default class PermissionForm extends React.Component {
                     <Input type="textarea"
                            placeholder=""
                            value={this.props.note || customQuestions.extraTemplate || ''}
-                           onChange={this.updateNote}/>
+                           onChange={this.updateNote}
+                           rows={6}/>
                 </Col>
             </FormGroup>
             {campWith}
