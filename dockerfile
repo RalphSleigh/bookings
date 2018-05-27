@@ -1,4 +1,4 @@
-FROM node:9-alpine
+FROM node:10-alpine
 
 ARG BOOKINGS_VAULT_URL
 
@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 COPY package-lock.json /usr/src/app/
 
-RUN apk --no-cache add --virtual builds-deps build-base python git postgresql-client
+RUN apk --no-cache add --virtual builds-deps build-base python git postgresql-client@10.4-r0
 RUN npm install npm install -g npm@latest
 RUN npm install sqlite3
 RUN npm install bcrypt
