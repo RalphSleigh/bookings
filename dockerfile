@@ -13,10 +13,7 @@ COPY package-lock.json /usr/src/app/
 
 RUN apk --no-cache add --virtual builds-deps build-base python git postgresql-client@10.4-r0
 RUN npm install npm install -g npm@latest
-RUN npm install sqlite3
-RUN npm install bcrypt
 RUN npm install
-RUN npm rebuild bcrypt --build-from-source
 
 COPY . /usr/src/app
 #we want to do this, but takes to much ram so for now prebuild and include in the copy
