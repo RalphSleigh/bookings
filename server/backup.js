@@ -6,9 +6,7 @@ const {spawn} = require('child_process');
 
 const dbURL = new url(config.DB_URL);
 
-console.log(dbURL.protocol);
-
-if (dbURL.protocol !== 'postgres') {
+if (dbURL.protocol !== 'postgres:') {
     log.info("Not postgres, skipping backup");
     return;
 }
