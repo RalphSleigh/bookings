@@ -4,6 +4,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
         const db = require('./orm.js');
 
         const log = require("./logging.js");
+        const backup = require("./backup");
 
         const express = require('express');
         const path = require('path');
