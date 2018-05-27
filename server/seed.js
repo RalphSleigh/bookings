@@ -2,7 +2,7 @@
 require("../config.js")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
     .then(async config => {
         const readline = require('readline');
-        const bcrypt = require('bcrypt');
+        const bcrypt = require('bcrypt-nodejs');
         const faker = require('faker/locale/en_GB');
         const {execSync} = require('child_process');
         const path = require('path');
@@ -43,7 +43,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
 async function update() {
 
     const readline = require('readline');
-    const bcrypt = require('bcrypt');
+    const bcrypt = require('bcrypt-nodejs');
     const faker = require('faker/locale/en_GB');
     const {execSync} = require('child_process');
     const path = require('path');
@@ -75,7 +75,7 @@ async function update() {
 async function sync() {
 
     const readline = require('readline');
-    const bcrypt = require('bcrypt');
+    const bcrypt = require('bcrypt-nodejs');
     const faker = require('faker/locale/en_GB');
     const {execSync} = require('child_process');
     const path = require('path');
@@ -149,7 +149,7 @@ async function sync() {
 async function seed() {
 
     const readline = require('readline');
-    const bcrypt = require('bcrypt');
+    const bcrypt = require('bcrypt-nodejs');
     const faker = require('faker/locale/en_GB');
     const {execSync} = require('child_process');
     const path = require('path');

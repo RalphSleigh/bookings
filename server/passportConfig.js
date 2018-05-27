@@ -6,7 +6,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const YahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy;
 //const MicrosoftStrategy = require('passport-microsoft').Strategy;
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 
 const log = require("./logging.js");
 
