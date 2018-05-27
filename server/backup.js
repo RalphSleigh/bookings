@@ -4,7 +4,7 @@ const log = require("./logging.js");
 const url = require('url').URL;
 const {spawn} = require('child_process');
 
-const dbURL = new url(config.DB_URL;
+const dbURL = new url(config.DB_URL);
 
 if (dbURL.protocol !== 'postgres') {
     log.info("Not postgres, skipping backup");
