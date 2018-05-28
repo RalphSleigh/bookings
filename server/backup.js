@@ -16,15 +16,13 @@ if (dbURL.protocol !== 'postgres:') {
 function doBackup() {
     const process = spawn('pg_dump', [config.DB_URL]);
 
-    process.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
-
     process.stderr.on('data', (data) => {
         log.error(`Backup Error: ${data}`);
     });
 
-    const cipher = crypto.createCipheriv('aes-256-ctr', "PASSWORD", 'iv');
+    const iv = crypto.randomBytes(16);
+    console.log(iv);
+    const cipher = crypto.createCipheriv('aes-256-ctr', "PASSWORD", iv);
 
     process.stdout.pipe(cipher);
     const writable = fs.createWriteStream('out.txt');
