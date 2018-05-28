@@ -34,7 +34,7 @@ module.exports = () => {
         config.AWS_BACKUP_PATH = '';
         config.AWS_BACKUP_KEY = '';
         config.AWS_BACKUP_SECRET = '';
-        config.BACKUP_PRIVATE_KEY = '';
+        config.BACKUP_PUBLIC_KEY = '';
 
         /**
          *  Log on with google OAuth
@@ -121,7 +121,7 @@ async function getConfigFromVault() {
         vaultConfig.AWS_BACKUP_PATH = await getValue(vault, vaultURL.username, "AWS_BACKUP_PATH");
         vaultConfig.AWS_BACKUP_KEY = await getValue(vault, vaultURL.username, "AWS_BACKUP_KEY");
         vaultConfig.AWS_BACKUP_SECRET = await getValue(vault, vaultURL.username, "AWS_BACKUP_SECRET");
-        vaultConfig.BACKUP_PRIVATE_KEY = await getValue(vault, vaultURL.username, "BACKUP_PRIVATE_KEY");
+        vaultConfig.BACKUP_PUBLIC_KEY = await getValue(vault, vaultURL.username, "BACKUP_PUBLIC_KEY");
 
         vaultConfig.GOOGLE_CLIENT_ID = await getValue(vault, vaultURL.username, "GOOGLE_CLIENT_ID");
         vaultConfig.GOOGLE_CLIENT_SECRET = await getValue(vault, vaultURL.username, "GOOGLE_CLIENT_SECRET");
