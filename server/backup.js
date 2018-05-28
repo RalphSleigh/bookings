@@ -4,7 +4,8 @@ const log = require("./logging.js");
 const url = require('url').URL;
 const {spawn} = require('child_process');
 const crypto = require('crypto');
-const fs = require('fs')
+const fs = require('fs');
+const secureStreams = require('node-secure-stream');
 
 const dbURL = new url(config.DB_URL);
 
@@ -20,11 +21,11 @@ function doBackup() {
         log.error(`Backup Error: ${data}`);
     });
 
-    const iv = crypto.randomBytes(16);
-    console.log(iv);
-    const cipher = crypto.createCipheriv('aes-256-ctr', "PASSWORD", iv);
+    const key = fs.readFileSync('pub.pem');
 
-    process.stdout.pipe(cipher);
+    const enc = new SecureStreams.Encrypter({public_key: key});
+
+    process.stdout.pipe(enc);
     const writable = fs.createWriteStream('out.txt');
     cipher.pipe(writable);
 }
