@@ -27,7 +27,7 @@ function doBackup() {
 
     const AWS = require('aws-sdk');
     AWS.config.update({
-        region: 'eu-west-2'
+        region: 'eu-west-2',
         accessKeyId: config.AWS_BACKUP_KEY,
         secretAccessKey: config.AWS_BACKUP_SECRET
     });
