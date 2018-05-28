@@ -21,13 +21,36 @@ function doBackup() {
         log.error(`Backup Error: ${data}`);
     });
 
-    const key = fs.readFileSync('pub.pem');
-
-    const enc = new secureStreams.Encrypter({public_key: key});
+    const enc = new secureStreams.Encrypter({public_key: config.BACKUP_PUBLIC_KEY});
 
     process.stdout.pipe(enc);
-    const writable = fs.createWriteStream('out.txt');
-    enc.pipe(writable);
+
+    const AWS = require('aws-sdk');
+    AWS.config.update({
+        region: 'eu-west-2'
+        accessKeyId: config.AWS_BACKUP_KEY,
+        secretAccessKey: config.AWS_BACKUP_SECRET
+    });
+    const s3 = new AWS.S3();
+
+    const key = `${config.AWS_BUCKET_PATH}/${Math.floor(new Date() / 1000)}.sql.enc`;
+
+    const params = {
+        Bucket: config.AWS_BACKUP_BUCKET,
+        Key: key,
+        Body: enc
+    };
+
+    s3.putObject(params, function (err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);           // successful response
+        /*
+        data = {
+         ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
+         VersionId: "pSKidl4pHBiNwukdbcPXAIs.sshFFOc0"
+        }
+        */
+    });
 }
 
 doBackup();

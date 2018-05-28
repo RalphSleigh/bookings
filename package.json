@@ -30,6 +30,7 @@
     "@fortawesome/react-fontawesome": "0.0.17",
     "@tells/passport-yahoo-oauth2": "^0.1.4",
     "acl": "^0.4.9",
+    "aws-sdk": "^2.247.1",
     "babel": "^6.23.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.2",
