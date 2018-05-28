@@ -27,7 +27,7 @@ function doBackup() {
 
     process.stdout.pipe(enc);
     const writable = fs.createWriteStream('out.txt');
-    cipher.pipe(writable);
+    enc.pipe(writable);
 }
 
 doBackup();
