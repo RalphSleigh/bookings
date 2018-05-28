@@ -23,7 +23,7 @@ function doBackup() {
 
     const key = fs.readFileSync('pub.pem');
 
-    const enc = new SecureStreams.Encrypter({public_key: key});
+    const enc = new secureStreams.Encrypter({public_key: key});
 
     process.stdout.pipe(enc);
     const writable = fs.createWriteStream('out.txt');
