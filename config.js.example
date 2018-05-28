@@ -27,6 +27,16 @@ module.exports = () => {
         config.DB_URL = "sqlite://bookings.sqlite";
 
         /**
+         *  Backups
+         */
+
+        config.AWS_BACKUP_BUCKET = '';
+        config.AWS_BACKUP_PATH = '';
+        config.AWS_BACKUP_KEY = '';
+        config.AWS_BACKUP_SECRET = '';
+        config.BACKUP_PRIVATE_KEY = '';
+
+        /**
          *  Log on with google OAuth
          */
         config.GOOGLE_CLIENT_ID = "dsfgh";
@@ -106,6 +116,12 @@ async function getConfigFromVault() {
         vaultConfig.AWS_LOGGING_GROUP = await getValue(vault, vaultURL.username,"AWS_LOGGING_GROUP");
 
         vaultConfig.DB_URL = await getValue(vault, vaultURL.username,"DB_URL");
+
+        vaultConfig.AWS_BACKUP_BUCKET = await getValue(vault, vaultURL.username, "AWS_BACKUP_BUCKET");
+        vaultConfig.AWS_BACKUP_PATH = await getValue(vault, vaultURL.username, "AWS_BACKUP_PATH");
+        vaultConfig.AWS_BACKUP_KEY = await getValue(vault, vaultURL.username, "AWS_BACKUP_KEY");
+        vaultConfig.AWS_BACKUP_SECRET = await getValue(vault, vaultURL.username, "AWS_BACKUP_SECRET");
+        vaultConfig.BACKUP_PRIVATE_KEY = await getValue(vault, vaultURL.username, "BACKUP_PRIVATE_KEY");
 
         vaultConfig.GOOGLE_CLIENT_ID = await getValue(vault, vaultURL.username, "GOOGLE_CLIENT_ID");
         vaultConfig.GOOGLE_CLIENT_SECRET = await getValue(vault, vaultURL.username, "GOOGLE_CLIENT_SECRET");
