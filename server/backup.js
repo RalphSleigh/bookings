@@ -54,4 +54,4 @@ function doBackup() {
 }
 
 doBackup();
-var j = schedule.scheduleJob('* 1 * * *', doBackup);
+var j = schedule.scheduleJob('0 1 * * *', doBackup);
