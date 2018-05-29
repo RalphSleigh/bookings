@@ -67,6 +67,7 @@
     "moment": "^2.22.1",
     "moment-random": "^1.0.3",
     "morgan": "^1.7.0",
+    "node-schedule": "^1.3.0",
     "node-secure-stream": "^0.1.0",
     "node-vault": "^0.7.1",
     "nodemailer": "^4.6.5",
