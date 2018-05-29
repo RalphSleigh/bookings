@@ -33,7 +33,7 @@ function doBackup() {
     });
     const s3 = new AWS.S3();
 
-    const key = `${config.AWS_BUCKET_PATH}/${Math.floor(new Date() / 1000)}.sql.enc`;
+    const key = `${config.AWS_BACKUP_PATH}/${Math.floor(new Date() / 1000)}.sql.enc`;
 
     const params = {
         Bucket: config.AWS_BACKUP_BUCKET,
