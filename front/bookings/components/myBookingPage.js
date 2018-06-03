@@ -90,7 +90,7 @@ const mapStateToProps = (state, props) => {
         let i = 0;
 
         if (prevBooking) {
-            prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id");
+            prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note");
             prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", 'Tempcopy' + i++).delete("bookingId")));
         }
 

@@ -3,6 +3,7 @@ import csv from 'csv-file-creator'
 import ReactTable from 'react-table'
 import Moment from 'moment'
 import update from 'immutability-helper';
+import eol from 'eol'
 import map from 'lodash/map'
 
 //import bookings from '../bookings'
@@ -61,7 +62,7 @@ export default class Participants extends React.Component {
                 b.userContact,
                 b.emergencyName,
                 b.emergencyPhone,
-                b.note,
+                eol.crlf(b.note),
                 p.createdAt,
                 p.updatedAt]
 
