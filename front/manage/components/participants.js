@@ -126,7 +126,7 @@ export default class Participants extends React.Component {
 
 
         const groups = W.reduce((a, w) => {
-            const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.name);
+            const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.singular);
             if (people.length === 0) return a;
             return a + ` ${w.name}: ${people.length}`;
         }, '');
