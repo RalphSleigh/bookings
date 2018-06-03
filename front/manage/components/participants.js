@@ -62,7 +62,7 @@ export default class Participants extends React.Component {
                 b.userContact,
                 b.emergencyName,
                 b.emergencyPhone,
-                eol.crlf(b.note),
+                eol.crlf(b.note || ''),
                 p.createdAt,
                 p.updatedAt]
 
