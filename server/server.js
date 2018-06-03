@@ -46,8 +46,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
             secret: 'woodcraft',
             resave: false,
             saveUninitialized: true,
-            store: new SQLiteStore
-            //cookie: {maxAge: 1000*60*60*24}
+            store: new SQLiteStore,
+            cookie: {maxAge: 1000 * 60 * 60 * 24}
         }));
         server.use(bodyParser.json());
         server.use(bodyParser.urlencoded({extended: true}));
