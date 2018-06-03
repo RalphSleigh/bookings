@@ -2,6 +2,18 @@ import React from 'react'
 import Moment from 'moment'
 import update from 'immutability-helper';
 
+import {
+    Row,
+    Col,
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    FormGroup,
+    Input,
+    Label
+} from 'reactstrap';
+
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
 
@@ -71,18 +83,42 @@ const ApplicationRow = props => {
 
         const options = props.event.organisations.map(o => <option key={o.id} value={o.id}>{o.name}</option>);
 
-        approveText = <div className="form-group">
-            <label htmlFor="orgSelect">Approve user to book into Organisation:</label>
-            <select className="form-control" id="orgSelect" value={props.organisation || 'any'}
-                    onChange={props.setOrganisation}>
-                <option key={0} value={'any'}>Any</option>
+        approveText = <FormGroup>
+            <Label>Approve user to book into Organisation:</Label>
+            <Input type="select" id="orgSelect" value={props.organisation || 'any'}
+                   onChange={props.setOrganisation}>
                 {options}
-            </select>
-        </div>;
+            </Input>
+        </FormGroup>
 
     } else {
         approveText = <p>Approve user to book into this event:</p>
     }
+
+    return (<Card>
+        <CardBody>
+            <CardTitle>
+                <b>{props.application.user.userName}</b> ({props.application.user.email})
+                - {Moment(props.application.createdAt).fromNow()}
+            </CardTitle>
+            <Row>
+                <Col sm={7}>
+                    <p>{props.application.message}</p>
+                </Col>
+                <Col sm={5}>
+                    {approveText}
+                    <FormGroup row>
+                        <Col>
+                            <Button type="submit" color="success" onClick={props.approve}>Approve
+                            </Button>
+                            <Button type="submit" color="danger" className="ml-2" onClick={props.decline}>Decline
+                            </Button>
+                        </Col>
+                    </FormGroup>
+                </Col>
+            </Row>
+        </CardBody>
+    </Card>);
 
     return (<div className="col-sm-12">
             <div className="panel panel-default">

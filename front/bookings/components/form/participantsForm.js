@@ -8,6 +8,8 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import 'react-widgets/dist/css/react-widgets.css'
 
+import ageFactory from '../../../age'
+
 momentLocalizer();
 
 
@@ -76,6 +78,8 @@ export default class ParticipantsForm extends React.Component {
 
     render() {
 
+        const ageWidgets = ageFactory(this.props.event);
+
         const participants = this.props.participants;
 
         const AttendanceWidget = attendance[this.props.event.partialDates].ParticipantWidget;
@@ -90,7 +94,8 @@ export default class ParticipantsForm extends React.Component {
                                                               valid={this.valid}
                                                               event={this.props.event}
                                                               AttendanceWidget={AttendanceWidget}
-                                                              env={this.props.env}/>);
+                                                              env={this.props.env}
+                                                              ageWidgets={ageWidgets}/>);
         return (<React.Fragment>
                 {rows}
                 <Row className="mb-3">
@@ -132,17 +137,12 @@ const ParticipantRow = (props) => {
                 </Col>
             </FormGroup>
             <FormGroup row>
-                <Label sm={2}>Date of Birth:</Label>
-                <Col sm={3}>
-                    <DateTimePicker
-                        value={props.age ? new Date(props.age) : null}
-                        onChange={props.updateAge}
-                        editFormat={'DD/MM/YYYY'}
-                        format={'DD/MM/YYYY'}
-                        time={false}
-                        inputProps={{className: 'form-control ' + props.valid(props.age), placeholder: 'DD/MM/YYYY'}}
-                    />
-                </Col>
+                <props.ageWidgets.BookingFormWidget
+                    age={props.age}
+                    updateAge={props.updateAge}
+                    valid={props.valid(props.age)}
+                    event={props.event}
+                />
                 <Label sm={1}>Diet:</Label>
                 <Col sm={3}>
 

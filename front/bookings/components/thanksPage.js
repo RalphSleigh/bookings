@@ -11,6 +11,7 @@ import {
     Col,
     Table
 } from 'reactstrap';
+import ageFactory from "../../age";
 
 
 //confirmation page for bookings
@@ -28,6 +29,8 @@ class ThanksPage extends React.Component {
 		const event = this.props.Event.toJS();
 		const user = this.props.User.toJS();
 
+        const ageWidgets = ageFactory(event);
+
 		//this is some unholy hack to get the thanks page to redirect back to the booking form if the user does not have a booking and will never actually come up in the real world.
 
 		if (this.props.Booking === undefined) {
@@ -38,7 +41,7 @@ class ThanksPage extends React.Component {
 		const booking = this.props.Booking.toJS();
 
         const participants = booking.participants.map(p => {
-            p.age = moment(event.startDate).diff(moment(p.age), 'years');
+            p.age = ageWidgets.displayAgeMoment(p.age, event);
             return p;
         }).map(p => <ParticipantRow key={p.id} {...p} />);
 

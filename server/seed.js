@@ -241,7 +241,8 @@ This event is configured with the options used for Ealing events:
             paymentTypes: ["Cash", "Cheque", "Bank Transfer"],
             paymentInfo: "Ho Ho Ho",
             organisationsEnabled: false,
-            bigCampMode: false
+            bigCampMode: false,
+            customQuestions: {ageWidgets: 'groupings'},
         }, {
             name: 'Large Event',
             description:

@@ -33,9 +33,8 @@ export default class KP extends React.Component {
         //const bookings = this.props.Bookings.toJS();
         const participants = this.props.participants;
 
-
         const groups = W.map(w => {
-            const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.name);
+            const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.singular);
             if (people.length === 0) return null;
             return (<tr key={w.name}>
                 <td>{w.name}</td>
@@ -52,7 +51,7 @@ export default class KP extends React.Component {
             <td><b>{participants.filter(p => p.diet === "vegetarian").length}</b></td>
             <td><b>{participants.filter(p => p.diet === "vegan").length}</b></td>
             <td><b>{participants.length}</b></td>
-        </tr>)
+        </tr>);
 
         const requirments = participants.filter(p => p.dietExtra !== null && p.dietExtra !== '').map(p => <tr
             key={p.id}>

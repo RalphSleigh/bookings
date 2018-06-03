@@ -20,6 +20,15 @@ export const manageWholeEventWrapper = connectedAuthWrapper({
     wrapperDisplayName: "manageWholeEventWrapper"
 });
 
+export const manageRolesWrapper = connectedAuthWrapper({
+    authenticatedSelector: (state, props) => {
+        const user = state.getIn(["User", "user"]).toJS();
+        const event = state.getIn(["Events", "events", parseInt(props.match.params.eventId)]).toJS();
+        return P.createRole(user, event);
+    },
+    wrapperDisplayName: "manageWholeEventWrapper"
+});
+
 export const manageWholeEventCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
         const user = state.getIn(["User", "user"]).toJS();

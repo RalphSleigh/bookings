@@ -98,7 +98,9 @@ export default class Money extends React.Component {
         this.totalOwed += owed;
         this.totalPaid += paid;
 
-        return <tr key={b.id} onClick={this.expand(b.id)} className={paid - owed >= 0 ? "table-success" : ''}>
+        const classNames = (paid - owed >= 0 ? "table-success" : '') + (this.state.expanded !== 0 && this.state.expanded !== b.id ? ' fadeOut' : '');
+
+        return <tr key={b.id} onClick={this.expand(b.id)} className={classNames}>
             <td>+</td>
             <td>{name}</td>
             <td><Currency
@@ -180,7 +182,23 @@ export default class Money extends React.Component {
                 <td style={{borderBottom: 'solid #888888 2px'}} colSpan={4}><b>Payments</b></td>
             </tr>
             {paymentRows}
-            <tr>
+            <tr style={{borderBottom: 'solid #888888 2px', borderTop: 'solid #888888 2px'}}>
+                <td></td>
+                <td><b>Total:</b></td>
+                <td><b><Currency
+                    quantity={owed}
+                    currency="GBP"
+                /></b></td>
+                <td><b><Currency
+                    quantity={paid}
+                    currency="GBP"
+                /></b></td>
+                <td><b><Currency
+                    quantity={owed - paid}
+                    currency="GBP"
+                /></b></td>
+            </tr>
+            <tr style={{borderBottom: 'solid black 3px'}}>
                 <td></td>
                 <td colSpan={4}>
                     <FormGroup row>
@@ -207,22 +225,6 @@ export default class Money extends React.Component {
                         </Col>
                     </FormGroup>
                 </td>
-            </tr>
-            <tr style={{borderBottom: 'solid black 3px'}}>
-                <td></td>
-                <td><b>Total:</b></td>
-                <td><b><Currency
-                    quantity={owed}
-                    currency="GBP"
-                /></b></td>
-                <td><b><Currency
-                    quantity={paid}
-                    currency="GBP"
-                /></b></td>
-                <td><b><Currency
-                    quantity={owed - paid}
-                    currency="GBP"
-                /></b></td>
             </tr>
         </React.Fragment>
     }

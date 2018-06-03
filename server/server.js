@@ -47,6 +47,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
             resave: false,
             saveUninitialized: true,
             store: new SQLiteStore
+            //cookie: {maxAge: 1000*60*60*24}
         }));
         server.use(bodyParser.json());
         server.use(bodyParser.urlencoded({extended: true}));

@@ -7,7 +7,7 @@ import {Route, Switch} from 'react-router-dom';
 
 import bookings from '../../bookings'
 import events from '../../events'
-import {manageEventCheck, manageWholeEventWrapper, manageMoneyWrapper} from '../permission.js'
+import {manageEventCheck, manageWholeEventWrapper, manageMoneyWrapper, manageRolesWrapper} from '../permission.js'
 import {
     togglePaid,
     approve,
@@ -43,6 +43,7 @@ import {
 
 const moment = require("moment");
 import classnames from 'classnames';
+import ageFactory from "../../age";
 
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
@@ -70,6 +71,8 @@ class ManageContainerPage extends React.Component {
 
         const event = Event.toJS();
 
+        const ageWidgets = ageFactory(event);
+
         const startDate = moment(event.startDate); //todo store this as a moment.
 
         const bookings = Bookings.valueSeq().toJS().filter(b => b.eventId === event.id);
@@ -77,7 +80,7 @@ class ManageContainerPage extends React.Component {
             b.participants.forEach(p => {
                 p.ageAtStart = startDate.diff(moment(p.age), 'years');
                 p.ageGroup = W.find(w => w.filter(p.ageAtStart)).singular;
-                p.displayAge = p.ageGroup + (p.ageAtStart < 21 ? ` (${p.ageAtStart})` : '');
+                p.displayAge = ageWidgets.displayAgeParticipant(p);
             })
         });
 

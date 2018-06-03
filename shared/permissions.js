@@ -135,7 +135,8 @@ permissions.getUserList = user => {
 permissions.createRole = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true;
     if (event === null) return false;
-    return permissions.manageEvent(user, event);
+    if (user.roles.find(role => role.eventId === event.id && role.name === "manage" && role.villageId === null && role.organisationId === null)) return true;
+    return false
 };
 
 permissions.viewMoney = (user, event) => {

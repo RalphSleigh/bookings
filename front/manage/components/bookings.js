@@ -18,6 +18,7 @@ import {
     CardTitle,
     Table
 } from 'reactstrap';
+import ageFactory from "../../age";
 
 
 //import W from '../../../shared/woodcraft.js'
@@ -27,6 +28,7 @@ export default class Bookings extends React.Component {
     constructor(props) {
         super(props);
 
+        this.ageWidgets = ageFactory(this.props.Event.toJS());
         this.state = {expanded: null};
 
         this.markPaid = this.markPaid.bind(this);
@@ -148,7 +150,7 @@ export default class Bookings extends React.Component {
                         }}
                         onSortedChange={this.updateExpanded(null)}
                         onPageChange={this.updateExpanded(null)}
-                        SubComponent={subRow}
+                        SubComponent={this.subRow}
                         data={data}
                         columns={columns}
                         showPagination={true}
@@ -157,56 +159,59 @@ export default class Bookings extends React.Component {
             </Row>
         </React.Fragment>);
     }
+
+    subRow = row => {
+
+        const event = row.original.E.toJS();
+
+        const village = event.villages.find(v => row.original.b.villageId === v.id);
+        const organisation = event.organisations.find(o => row.original.b.organisationId === o.id);
+
+        const participants = row.original.b.participants.map(p => <tr key={p.id}>
+            <td>{p.name}</td>
+            <td>{p.displayAge}</td>
+        </tr>);
+
+        return (
+            <Card>
+                <CardBody>
+                    <CardTitle>
+                        {row.original.b.district ? row.original.b.district + " - " : null}
+                        {row.original.b.userName}
+                    </CardTitle>
+
+                    <Row>
+                        <Col sm={4}>
+                            <p><b>Booking Contact E-mail:</b> <a
+                                href={"mailto:" + row.original.b.userEmail}>{row.original.b.userEmail}</a></p>
+                            <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
+                            {village ? <p><b>Village:</b> {village.name}</p> : null}
+                            {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
+                            <p><b>Participants:</b> {row.original.participants}</p>
+                            <p><b>Anything Else:</b></p><p>{row.original.b.note}</p>
+                            {event.bigCampMode ? <p><b>Camp With: </b>{row.original.b.campWith}</p> : null}
+                        </Col>
+                        <Col sm={8}>
+                            <Table>
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {participants}
+                                </tbody>
+                            </Table>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+        );
+    }
 }
 
-const subRow = row => {
 
-    const event = row.original.E.toJS();
-
-    const village = event.villages.find(v => row.original.b.villageId === v.id);
-    const organisation = event.organisations.find(o => row.original.b.organisationId === o.id);
-
-    const participants = row.original.b.participants.map(p => <tr key={p.id}>
-        <td>{p.name}</td>
-        <td>{p.ageAtStart}</td>
-    </tr>);
-
-    return (
-        <Card>
-            <CardBody>
-                <CardTitle>
-                    {row.original.b.district ? row.original.b.district + " - " : null}
-                    {row.original.b.userName}
-                </CardTitle>
-
-                <Row>
-                    <Col sm={4}>
-                        <p><b>Booking Contact E-mail:</b> {row.original.b.userEmail}</p>
-                        <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
-                        {village ? <p><b>Village:</b> {village.name}</p> : null}
-                        {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
-                        <p><b>Participants:</b> {row.original.participants}</p>
-                        <p><b>Anything Else:</b></p><p>{row.original.b.note}</p>
-                        {event.bigCampMode ? <p><b>Camp With: </b>{row.original.b.campWith}</p> : null}
-                    </Col>
-                    <Col sm={8}>
-                        <Table>
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Age</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {participants}
-                            </tbody>
-                        </Table>
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>
-    );
-};
 
 const nameSort = (a, b) => {
     var splitA = a.split(" ");

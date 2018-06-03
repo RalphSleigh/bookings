@@ -19,6 +19,7 @@ import {
 } from 'reactstrap';
 
 import W from '../../../shared/woodcraft.js'
+import ageFactory from "../../age";
 
 export default class Participants extends React.Component {
 
@@ -27,6 +28,7 @@ export default class Participants extends React.Component {
 
         this.state = {expanded: null};
 
+        this.ageWidgets = ageFactory(this.props.Event.toJS());
         this.exportCSV = this.exportCSV.bind(this);
         this.updateExpanded = this.updateExpanded.bind(this);
     }
@@ -43,11 +45,13 @@ export default class Participants extends React.Component {
     }
 
     exportCSV() {
+
         const exportedData = this.props.participants.map(p => {
             const b = this.props.bookings.find(b => b.id === p.bookingId);
 
             return [p.id,
                 p.name,
+                p.displayAge,
                 Moment(p.age).format("DD/MM/YYYY"),
                 p.diet,
                 p.dietExtra,
@@ -63,7 +67,7 @@ export default class Participants extends React.Component {
 
         });
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'Created At', 'Updated At'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'Created At', 'Updated At'], ...exportedData]);
     }
 
     updateExpanded(id) {
@@ -71,6 +75,45 @@ export default class Participants extends React.Component {
             if (id === this.state.expanded) this.setState(update(this.state, {expanded: {$set: null}}));
             else this.setState(update(this.state, {expanded: {$set: id}}));
         }
+    }
+
+    subRow = (row) => {
+
+        const event = row.original.E.toJS();
+
+        const village = event.villages.find(v => row.original.b.villageId === v.id);
+        const organisation = event.organisations.find(o => row.original.b.organisationId === o.id);
+        const attendance = event.partialDates === "presets" ? event.partialDatesData.find(d => d.mask === row.original.p.days) : null;
+
+
+        return (<Card>
+            <CardBody>
+                <CardTitle>
+                    {row.original.name}
+                </CardTitle>
+                <Row>
+                    <Col sm={4}>
+                        {this.ageWidgets.participantCardField(row.original)}
+                        {row.original.b.district ? <p><b>Group/District:</b> {row.original.b.district}</p> : null}
+                        <p><b>Booking Contact:</b> {row.original.b.userName}</p>
+                        <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
+                        {village ? <p><b>Village:</b> {village.name}</p> : null}
+                        {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
+                        {attendance ? <p><b>Attendance:</b> {attendance.name}</p> : null}
+                        {!event.bigCampMode ? <p><b>Emergency Contact:</b> {row.original.b.emergencyName}</p> : null}
+                        {!event.bigCampMode ? <p><b>Emergency Phone:</b> {row.original.b.emergencyPhone}</p> : null}
+                    </Col>
+                    <Col sm={4}>
+                        <p><b>Diet:</b> {row.original.diet} </p>
+                        <p><b>Diet Info:</b></p><p>{row.original.p.dietExtra}</p>
+                        <p><b>Anything Else:</b></p><p>{row.original.b.note}</p>
+                    </Col>
+                    <Col sm={4}>
+                        <p><b>Medical:</b></p><p>{row.original.p.medical}</p>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>);
     }
 
     render() {
@@ -93,6 +136,7 @@ export default class Participants extends React.Component {
             const b = bookings.find(b => b.id === p.bookingId);
             return {
                 name: p.name,
+                dob: p.age,
                 age: p.displayAge,
                 diet: p.diet,
                 booked: b.userName,
@@ -114,7 +158,14 @@ export default class Participants extends React.Component {
 
         if (event.bigCampMode) columns.push({accessor: "district", Header: "District", sortable: true});
 
-        columns.push({accessor: "age", Header: "Age", sortable: true},
+        columns.push({
+                id: 'age',
+                accessor: row => row,
+                Header: "Age",
+                sortable: true,
+                sortMethod: dobSort,
+                Cell: row => row.original.age
+            },
             {accessor: "diet", Header: "Diet", sortable: true, minWidth: 70},
             {accessor: "booked", Header: "Booked By", sortable: true, minWidth: 50});
 
@@ -138,55 +189,21 @@ export default class Participants extends React.Component {
                         }}
                         onSortedChange={this.updateExpanded(null)}
                         onPageChange={this.updateExpanded(null)}
-                        SubComponent={subRow}
+                        SubComponent={this.subRow}
                         data={data}
                         columns={columns}
                         showPageSizeOption={false}
-                        showPagination={true}/>
+                        showPagination={true}
+                        defaultPageSize={50}/>
                 </Col>
             </Row>
         </React.Fragment>);
     }
 }
 
-const subRow = row => {
-
-    const event = row.original.E.toJS();
-
-    const village = event.villages.find(v => row.original.b.villageId === v.id);
-    const organisation = event.organisations.find(o => row.original.b.organisationId === o.id);
-    const attendance = event.partialDates === "presets" ? event.partialDatesData.find(d => d.mask === row.original.p.days) : null;
-
-
-    return (<Card>
-        <CardBody>
-            <CardTitle>
-                {row.original.name}
-            </CardTitle>
-            <Row>
-                <Col sm={4}>
-                    <p><b>DOB: </b>{Moment(row.original.p.age).format("DD/MM/YYYY")}</p>
-                    {row.original.b.district ? <p><b>Group/District:</b> {row.original.b.district}</p> : null}
-                    <p><b>Booking Contact:</b> {row.original.b.userName}</p>
-                    <p><b>Booking Contact Phone:</b> {row.original.b.userContact}</p>
-                    {village ? <p><b>Village:</b> {village.name}</p> : null}
-                    {organisation ? <p><b>Organisation:</b> {organisation.name}</p> : null}
-                    {attendance ? <p><b>Attendance:</b> {attendance.name}</p> : null}
-                    {!event.bigCampMode ? <p><b>Emergency Contact:</b> {row.original.b.emergencyName}</p> : null}
-                    {!event.bigCampMode ? <p><b>Emergency Phone:</b> {row.original.b.emergencyPhone}</p> : null}
-                </Col>
-                <Col sm={4}>
-                    <p><b>Diet:</b> {row.original.diet} </p>
-                    <p><b>Diet Info:</b></p><p>{row.original.p.dietExtra}</p>
-                    <p><b>Anything Else:</b></p><p>{row.original.b.note}</p>
-                </Col>
-                <Col sm={4}>
-                    <p><b>Medical:</b></p><p>{row.original.p.medical}</p>
-                </Col>
-            </Row>
-        </CardBody>
-    </Card>);
-};
+const dobSort = (a, b) => {
+    return a.dob < b.dob ? 1 : -1;
+}
 
 
 const nameSort = (a, b) => {

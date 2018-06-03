@@ -211,6 +211,14 @@ export default class EditForm extends React.Component {
                     </FormGroup>
                     {attendanceFields}
                     <FormGroup>
+                        <Label>DoB Widget</Label>
+                        <Input type="select" value={this.state.event.customQuestions.ageWidgets}
+                               onChange={this.updateExtra('ageWidgets')}>
+                            <option value='dob'>Date of Birth</option>
+                            <option value='groupings'>Age group dropdown</option>
+                        </Input>
+                    </FormGroup>
+                    <FormGroup>
                         <Label>Fee Structure:</Label>
                         <Input type="select" value={this.state.event.feeModel} onChange={this.update('feeModel')}>
                             {feeOptions}
