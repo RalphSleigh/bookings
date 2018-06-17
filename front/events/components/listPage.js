@@ -44,7 +44,7 @@ class EventList extends React.Component {
 
     render() {
         const user = this.props.User.toJS();
-        let events = this.props.Events.toSeq().filter(e => manageEvent(user, e.toJS()) || new Date(e.get("startDate")) > new Date()).sort((a, b) => a.get("startDate") - b.get("startDate")).map((e) =>
+        let events = this.props.Events.toSet().filter(e => manageEvent(user, e.toJS()) || new Date(e.get("startDate")) > new Date()).sort((a, b) => a.get("startDate").localeCompare(b.get("startDate"))).map((e) =>
             <Event
             User={user} {...e.toJS()} key={e.get("id")}/>).toArray();
         return (<React.Fragment>
