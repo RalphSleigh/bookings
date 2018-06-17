@@ -249,6 +249,43 @@ export class BookingForm extends React.Component {
     }
 }
 
+export class ThanksRow extends React.Component {
+
+    render() {
+
+        //this.props.participants
+        //this.props.event.startDate
+
+        //this.props.feeData.amount
+        //
+        const feesOwed = getFeesOwed(this.props.event, this.props.booking.participants, this.props.booking);
+        const tableLines = feesOwed.map(l => <tr key={l.line}>
+            <td>{l.line}</td>
+            <td>£{l.total}</td>
+        </tr>);
+
+        return (<Row>
+            <Col sm={12}>
+                <h4>Money</h4>
+                <ReactMarkdown escapeHtml={true} source={this.props.event.feeData.desc}/>
+            </Col>
+            <Col>
+                <Table>
+                    <thead></thead>
+                    <tbody>{tableLines}
+                    <tr>
+                        <td><b>Total:</b></td>
+                        <td><b>£{feesOwed.reduce((a, c) => {
+                            return a + c.total
+                        }, 0)}</b></td>
+                    </tr>
+                    </tbody>
+                </Table>
+            </Col>
+        </Row>)
+    }
+}
+
 
 export function getFeesOwed(event, participants, booking) {
 

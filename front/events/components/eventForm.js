@@ -228,6 +228,7 @@ export default class EditForm extends React.Component {
                     {paymentFields}
                     {formField("text", "Extra Info Box Question", this.state.event.customQuestions.extraQuestion, this.updateExtra("extraQuestion"))}
                     {formField("textarea", "Extra Info Template:", this.state.event.customQuestions.extraTemplate, this.updateExtra("extraTemplate"))}
+                    {formField("text", "Email Reply-to:", this.state.event.customQuestions.emailReply, this.updateExtra("emailReply"))}
                     <Row>
                         <Col>
                             <Button color="success" onClick={this.clickSave}>Save</Button>

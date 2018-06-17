@@ -10,6 +10,13 @@
       {
         "spec": true
       }
+    ],
+    [
+      "transform-runtime",
+      {
+        "polyfill": false,
+        "regenerator": true
+      }
     ]
   ]
 }

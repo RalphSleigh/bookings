@@ -7,6 +7,7 @@ const log = require('../logging.js');
 const updateAssociation = require('./util.js').updateAssociation;
 const Op = db.Sequelize.Op;
 const wrapper = require('../errors');
+const feeFactory = require('../../shared/fee/feeFactory');
 
 const bookings = {};
 
@@ -102,8 +103,11 @@ bookings.createBooking = (req, res) => {
         data.bookings = [booking];
         res.json(data);
 
-        let emailData = booking.get({plain: true});
-        emailData.editURL = config.basePath + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
+
+        //send an e-mail
+        const fees = feeFactory(booking.event);
+        const emailData = booking.get({plain: true});
+        emailData.editURL = config.BASE_PATH + '/' + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
         email(booking.userEmail, 'confirmation', emailData);
         return null;//Don't want the request to wait on e-amil promise
     }).catch(e => {

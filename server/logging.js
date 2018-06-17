@@ -5,7 +5,6 @@ const WinstonCloudWatch = require('winston-cloudwatch');
 const config = require('../config');
 
 const alignedWithColorsAndTime = format.combine(
-    format.splat(),
     format.colorize(),
     format.timestamp(),
     format.align(),

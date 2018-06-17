@@ -12,7 +12,6 @@ module.exports = {
 			},
 			userEmail: {
 				type: DataTypes.TEXT,
-				unique: 'userEvent' //each booking must have a unique event/email combo
 			},
 			userContact: {
 				type: DataTypes.TEXT
@@ -58,7 +57,6 @@ module.exports = {
 					model: "events",
 					key: "id",
 				},
-				unique: 'userEvent',
 				onDelete: "CASCADE"
 			},
 			organisationId: {

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require("babel-register");
 require("../config.js")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
     .then(config => {
         const db = require('./orm.js');

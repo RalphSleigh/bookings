@@ -71,3 +71,22 @@ export class BookingForm extends React.Component {
 
     }
 }
+
+export class ThanksRow extends React.Component {
+
+    render() {
+
+        const participants = this.props.booking.participants ? this.props.booking.participants.length : 0
+        const total = this.props.feeData.amount * participants
+
+
+        return (<Row>
+            <Col>
+                <h4>Money</h4>
+                <p>This event costs £{this.props.event.feeData.amount} per person.</p>
+                <p>You have booked <b>{participants}</b> people for a total of <b>£{total}</b></p>
+            </Col>
+        </Row>);
+
+    }
+}

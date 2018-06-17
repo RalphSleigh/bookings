@@ -7,3 +7,5 @@ export const selection = "Free Event (don't manage fees)";
 export const Config = () => <p>Nothing to decide3</p>;
 
 export const BookingForm = (props) => <p>This is free event, no money involved</p>;
+
+export const ThanksRow = (props) => null;

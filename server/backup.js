@@ -10,11 +10,6 @@ var schedule = require('node-schedule');
 
 const dbURL = new url(config.DB_URL);
 
-if (dbURL.protocol !== 'postgres:') {
-    log.info("Not postgres, skipping backup");
-    return;
-}
-
 function doBackup() {
     try {
         const process = spawn('pg_dump', [config.DB_URL]);
@@ -53,5 +48,11 @@ function doBackup() {
     }
 }
 
-doBackup();
-var j = schedule.scheduleJob('0 1 * * *', doBackup);
+if (dbURL.protocol !== 'postgres:') {
+    log.info("Not postgres, skipping backup");
+} else {
+
+    doBackup();
+    var j = schedule.scheduleJob('0 1 * * *', doBackup);
+
+}

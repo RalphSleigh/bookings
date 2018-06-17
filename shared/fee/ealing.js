@@ -1,8 +1,4 @@
 import React from 'react'
-//this implements Ealing's camp pricing policy.
-
-export const name = "ealing";
-export const selection = "Ealing Pricing Policy";
 
 import {
     Row,
@@ -14,6 +10,12 @@ import {
 } from 'reactstrap';
 
 import moment from 'moment';
+
+
+//this implements Ealing's camp pricing policy.
+
+export const name = "ealing";
+export const selection = "Ealing Pricing Policy";
 
 export class Config extends React.Component {
 
@@ -125,6 +127,62 @@ export class BookingForm extends React.Component {
                 payable to Ealing District Woodcraft Folk.</p>
         </div>)
     }
+}
+
+export class ThanksRow extends React.Component {
+
+    render() {
+
+        const accompanied = this.props.booking.participants.find(p => moment(this.props.event.startDate).diff(moment(p.age), 'years') > 15) === undefined ? false : true;
+
+        const amount = this.props.event.feeData.amount;
+        const unaccompanied = amount === 35 ? 50 : amount * 1.5;
+        const unaccompaniedDiscount = amount === 35 ? 25 : amount * 0.75;
+        const discount = amount === 35 ? 20 : amount * 0.5;
+
+        const total = this.props.booking.participants.length * Math.round(accompanied ? amount : unaccompanied);
+        const totalDiscounted = this.props.booking.participants.length * Math.round(accompanied ? discount : unaccompaniedDiscount);
+
+        return (<Row>
+            <Col>
+                <h4>Money</h4>
+                <Table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Suggested Donation</th>
+                        <th>Discounted Donation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Unaccompanied Elfins, Pioneers &amp; Venturers</td>
+                        <td>£{Math.round(unaccompanied)}</td>
+                        <td>£{Math.round(unaccompaniedDiscount)}</td>
+                    </tr>
+                    <tr>
+                        <td>Elfins, Pioneers &amp; Venturers accompanied by a responsible adult, DFs and Adults</td>
+                        <td>£{Math.round(amount)}</td>
+                        <td>£{Math.round(discount)}</td>
+                    </tr>
+                    <tr>
+                        <td><b>My
+                            Booking</b> ({this.props.booking.participants.length} {this.props.booking.participants.length < 2 ? "person" : "people"}, {accompanied ? "Accompanied" : "Unaccompanied"})
+                        </td>
+                        <td><b>£{total}</b></td>
+                        <td><b>£{totalDiscounted}</b></td>
+                    </tr>
+                    </tbody>
+                </Table>
+            </Col>
+        </Row>)
+    }
+
+}
+
+export function emailHTML(event, booking) {
+
+    const rows = getFeesOwed(event, booking.participants, booking)
 }
 
 export function getFeesOwed(event, participants, booking) {

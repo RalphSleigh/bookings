@@ -11,7 +11,9 @@ import {
     Col,
     Table
 }                           from 'reactstrap';
+import ReactMarkdown        from 'react-markdown'
 import ageFactory           from "../../age";
+import feeFactory           from '../../../shared/fee/feeFactory.js'
 
 
 //confirmation page for bookings
@@ -26,6 +28,7 @@ class ThanksPage extends React.Component {
         this.booking = this.props.Booking.toJS();
 
         this.ageWidgets = ageFactory(this.event);
+        this.fees = feeFactory(this.event);
 
     }
 
@@ -47,7 +50,8 @@ class ThanksPage extends React.Component {
         }).map(p => <ParticipantRow key={p.id} {...p} />);
 
 
-        return (<Row>
+        return (<React.Fragment>
+            <Row>
             <Col>
                 <h3>Thanks for booking for {event.name}</h3>
                 <p>You can come back and <Link to={"/event/" + event.id + "/book"}>edit</Link> your booking at any time
@@ -66,7 +70,14 @@ class ThanksPage extends React.Component {
                     </tbody>
                 </Table>
             </Col>
-        </Row>);
+            </Row>
+            <this.fees.ThanksRow
+                event={this.event}
+                booking={booking}/>
+            <Row>
+                <ReactMarkdown escapeHtml={true} source={event.paymentInfo}/>
+            </Row>
+        </React.Fragment>);
     }
 }
 
