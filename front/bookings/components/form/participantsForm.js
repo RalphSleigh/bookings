@@ -179,7 +179,7 @@ const ParticipantRow = (props) => {
             <FormGroup row>
                 {attendance}
                 <Col sm={1}>
-                    <Button type="submit" onClick={props.delete} color="warning">
+                    <Button onClick={props.delete} color="warning">
                         <span style={{color: 'white'}}><FontAwesomeIcon icon={faTimes}/></span>
                     </Button>
                 </Col>

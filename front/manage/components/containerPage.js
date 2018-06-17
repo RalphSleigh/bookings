@@ -39,11 +39,12 @@ import {
     Nav,
     NavItem,
     NavLink
-} from 'reactstrap';
+}                 from 'reactstrap';
 
 const moment = require("moment");
 import classnames from 'classnames';
 import ageFactory from "../../age";
+import Moment     from "moment/moment";
 
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
@@ -81,6 +82,7 @@ class ManageContainerPage extends React.Component {
                 p.ageAtStart = startDate.diff(moment(p.age), 'years');
                 p.ageGroup = W.find(w => w.filter(p.ageAtStart)).singular;
                 p.displayAge = ageWidgets.displayAgeParticipant(p);
+                p.prettyUpdatedAt = moment(p.updatedAt).format('L');
             })
         });
 

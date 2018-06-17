@@ -115,15 +115,13 @@ export default class Participants extends React.Component {
                 </Row>
             </CardBody>
         </Card>);
-    }
+    };
 
     render() {
 
         const event = this.props.Event.toJS();
         const bookings = this.props.bookings;
         const participants = this.props.participants;
-
-
 
         const groups = W.reduce((a, w) => {
             const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.singular);
@@ -136,17 +134,18 @@ export default class Participants extends React.Component {
         const data = participants.map(p => {
             const b = bookings.find(b => b.id === p.bookingId);
             return {
-                name: p.name,
-                dob: p.age,
-                age: p.displayAge,
-                diet: p.diet,
-                booked: b.userName,
-                district: b.district,
-                p: p,
-                b: b,
-                E: this.props.Event
+                name:      p.name,
+                dob:       p.age,
+                age:       p.displayAge,
+                diet:      p.diet,
+                updatedAt: p.prettyUpdatedAt,
+                district:  b.district,
+                p:         p,
+                b:         b,
+                E:         this.props.Event
             };
         });
+
 
         const columns = [{
             id: "name",
@@ -167,8 +166,8 @@ export default class Participants extends React.Component {
                 sortMethod: dobSort,
                 Cell: row => row.original.age
             },
-            {accessor: "diet", Header: "Diet", sortable: true, minWidth: 70},
-            {accessor: "booked", Header: "Booked By", sortable: true, minWidth: 50});
+                     {accessor: "diet", Header: "Diet", sortable: true, minWidth: 70},
+                     {accessor: "updatedAt", Header: "Updated at", sortable: true, minWidth: 50});
 
         const expanded = {[this.state.expanded]: true};
 
