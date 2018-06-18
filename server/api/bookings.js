@@ -63,7 +63,7 @@ const getUserScopes = (user, event) => {
 
 bookings.getEventBookings = async function (req, res) {
     //need to loop over a users roles and assemble the data they are allowed to see
-    event = await db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}});
+    const event = await db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}});
 
     const scopes = getUserScopes(req.user, event);
     const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
