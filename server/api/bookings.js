@@ -110,7 +110,7 @@ bookings.createBooking = (req, res) => {
         emailData.editURL = config.BASE_PATH + '/' + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
 
         email.single(booking.userEmail, 'confirmation', emailData);
-        email.toManagers('confirmation', emailData);
+        email.toManagers('bookingCreated', emailData);
 
         return null;//Don't want the request to wait on e-amil promise
     }).catch(e => {

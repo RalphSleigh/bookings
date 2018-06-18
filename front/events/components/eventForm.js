@@ -51,6 +51,7 @@ export default class EditForm extends React.Component {
         this.clickDelete = this.clickDelete.bind(this);
         this.clickSave = this.clickSave.bind(this);
         this.updateExtra = this.updateExtra.bind(this);
+        this.updateCustomChecked = this.updateCustomChecked.bind(this);
     }
 
     update(item) {
@@ -74,6 +75,12 @@ export default class EditForm extends React.Component {
     updateChecked(item) {
         return e => {
             this.setState(update(this.state, {event: {[item]: {$set: e.target.checked}}}));
+        }
+    }
+
+    updateCustomChecked(item) {
+        return e => {
+            this.setState(update(this.state, {event: {customQuestions: {[item]: {$set: e.target.checked}}}}));
         }
     }
 
@@ -229,6 +236,9 @@ export default class EditForm extends React.Component {
                     {formField("text", "Extra Info Box Question", this.state.event.customQuestions.extraQuestion, this.updateExtra("extraQuestion"))}
                     {formField("textarea", "Extra Info Template:", this.state.event.customQuestions.extraTemplate, this.updateExtra("extraTemplate"))}
                     {formField("text", "Email Reply-to:", this.state.event.customQuestions.emailReply, this.updateExtra("emailReply"))}
+                    {formField("text", "Email Reply-to:", this.state.event.customQuestions.emailReply, this.updateExtra("emailReply"))}
+                    {switchGroup("Over 16 e-mail address", this.state.event.customQuestions.adultEmail, this.updateCustomChecked('adultEmail'))}
+                    {switchGroup("Over 16 First-Aid question", this.state.event.customQuestions.adultFirstAid, this.updateCustomChecked('adultFirstAid'))}
                     <Row>
                         <Col>
                             <Button color="success" onClick={this.clickSave}>Save</Button>
@@ -245,3 +255,13 @@ const formField = (type, label, value, update, placeholder = null) => (<FormGrou
     <Label for={label}>{label}</Label>
     <Input type={type} name={label} placeholder={placeholder} value={value || ''} onChange={update}/>
 </FormGroup>);
+
+const switchGroup = (label, value, update) => (
+    <FormGroup row>
+        <Label xs={2}>{label}:</Label>
+        <Col xs={10} className="mt-1">
+            <Switch checked={!!value}
+                    onChange={update}/>
+        </Col>
+    </FormGroup>
+)

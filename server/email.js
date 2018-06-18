@@ -92,8 +92,12 @@ class realEmailSender {
                                                    include: [{model: db.user}]
                                                });
 
+        values.emailUser = owner;
         this.single(owner.email, templateName, values);
-        managers.forEach(m => this.single(m.user.email, templateName, values));
+        managers.forEach(m => {
+            values.emailUser = m.user;
+            this.single(m.user.email, templateName, values);
+        });
     }
 }
 
