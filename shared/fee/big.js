@@ -21,6 +21,13 @@ import {
     Label
 } from 'reactstrap';
 
+import {
+    Item,
+    Span,
+    A,
+    Box
+} from 'react-html-email'
+
 let bucketKey = parseInt(Math.random() * 10000);
 
 import moment from 'moment';
@@ -284,6 +291,32 @@ export class ThanksRow extends React.Component {
             </Col>
         </Row>)
     }
+}
+
+export function emailHTML(event, booking) {
+
+    const rows = getFeesOwed(event, booking.participants, booking).map((r, i) => <tr key={i}>
+        <td>{r.line}</td>
+        <td><b>£{r.total}</b></td>
+    </tr>);
+
+    const total = rows.length > 1 ? <tr>
+        <td><b>Total</b></td>
+        <td><b>£{feesOwed.reduce((a, c) => {
+            return a + c.total
+        }, 0)}</b></td>
+    </tr> : null;
+
+    return (<Item>
+        <p><b>Money:</b></p>
+        <table>
+            <tbody>
+            {rows}
+            {total}
+            </tbody>
+        </table>
+    </Item>)
+
 }
 
 

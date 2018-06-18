@@ -1,35 +1,35 @@
-var google = require('googleapis');
-var gmail = google.gmail('v1');
-var config = require('../config.js');
-var log = require('./logging.js');
+const google = require('googleapis');
+const gmail = google.gmail('v1');
+const config = require('../config.js');
+const log = require('./logging.js');
+const db = require('./orm.js');
+const Op = db.Sequelize.Op;
 
-const Email = require('email-templates');
-var path = require('path');
-var mailcomposer = require("mailcomposer");
+const path = require('path');
+const mailcomposer = require("mailcomposer");
 const htmlToText = require('html-to-text');
 
-//var mimebuilder = require('mailbuild');
+class realEmailSender {
 
+    constructor() {
 
-if (config.EMAIL) {
+        this.jwtClient = new google.auth.JWT(
+            config.EMAIL_CLIENT_EMAIL,
+            null,
+            config.EMAIL_PRIVATE_KEY,
+            ['https://www.googleapis.com/auth/gmail.send'],
+            config.EMAIL_FROM
+        );
 
-    var jwtClient = new google.auth.JWT(
-        config.EMAIL_CLIENT_EMAIL,
-        null,
-        config.EMAIL_PRIVATE_KEY,
-        ['https://www.googleapis.com/auth/gmail.send'],
-        config.EMAIL_FROM
-    );
+        this.jwtClient.authorize(function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
 
-    jwtClient.authorize(function (err) {
-        if (err) {
-            console.log(err);
-        }
-    });
+    }
 
-    //const message = new mimebuilder("text/plain").setHeader("To", "ralph.sleigh@woodcraft.org.uk").setContent("Hello world!").build();
-
-    module.exports = (to, templateName, values) => {
+    single(to, templateName, values) {
         log.info({
                      message:      "Emailing {to} template {templateName}",
                      to:           to,
@@ -45,6 +45,7 @@ if (config.EMAIL) {
         const mail = mailcomposer({
                                       from:    "Woodcraft Folk Bookings <" + config.emailFrom + ">",
                                       sender:  config.emailFrom,
+                                      replyTo: values.event.customQuestions.emailReply ? values.event.customQuestions.emailReply : config.emailFrom,
                                       to:      to,
                                       subject: subject,
                                       text:    textEmail,
@@ -60,7 +61,7 @@ if (config.EMAIL) {
 
             gmail.users.messages.send(
                 {
-                    auth:   jwtClient,
+                    auth:   this.jwtClient,
                     userId: 'bookings-auto@woodcraft.org.uk',
                     media:  {
                         body:     message,
@@ -68,98 +69,59 @@ if (config.EMAIL) {
                     }
                 });
         })
-
-
-        /*
-        const templateDir = path.join(__dirname, 'templates');
-        const email = new Email({
-                                    views: {root: templateDir},
-                                    juice: true,
-                                    juiceResources: {
-                                        preserveImportant: true,
-                                        webResources:      {
-                                            //
-                                            // this is the relative directory to your CSS/image assets
-                                            // and its default path is `build/`:
-                                            //
-                                            // e.g. if you have the following in the `<head`> of your template:
-                                            // `<link rel="stylesheet" href="style.css" data-inline="data-inline">`
-                                            // then this assumes that the file `build/style.css` exists
-                                            //
-                                            relativeTo: path.join(__dirname, 'templates')
-                                            //
-                                            // but you might want to change it to something like:
-                                            // relativeTo: path.join(__dirname, '..', 'assets')
-                                            // (so that you can re-use CSS/images that are used in your web-app)
-                                            //
-                                        }
-                                    }
-                                });
-        email.renderAll(templateName, values)
-        .then(parts => {
-            const mail = mailcomposer({
-                                          from:    "Woodcraft Folk Bookings <" + config.emailFrom + ">",
-                                          sender:  config.emailFrom,
-                                          to:      to,
-                                          subject: parts.subject,
-                                          text:    parts.text,
-                                          html:    parts.html
-                                      });
-            mail.build((err, message) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                gmail.users.messages.send(
-                    {
-                        auth:   jwtClient,
-                        userId: 'bookings-auto@woodcraft.org.uk',
-                        media:  {
-                            body:     message,
-                            mimeType: "message/rfc822"
-                        }
-                    });
-            })
-        });
-    };
-    /*
-	gmail.users.messages.send(
-		{
-			auth: jwtClient,
-			userId: 'bookings-auto@woodcraft.org.uk',
-			media: {
-				body: message,
-				mimeType: "message/rfc822"
-			}
-		});
-    */
     }
-} else {
-    module.exports = (to, templateName, values) => {
-        /*
-        console.log(values);
-        log.log("info", "NOT Emailing %s template %s", to, templateName);
-        var templateDir = path.join(__dirname, 'templates', templateName);
-        var template = new emailTemplate(templateDir);
-        template.render(values)
-            .then(parts => {
-                var mail = mailcomposer({
-                    from: "Woodcraft Folk Bookings <" + config.emailFrom + ">",
-                    sender: config.emailFrom,
-                    to: to,
-                    subject: parts.subject,
-                    text: parts.text,
-                    html: parts.html
-                });
-                mail.build((err, message) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    console.log(message.toString());
-                })
-            });*/
-    };
 
+    async toManagers(templateName, values) {
+        log.info({
+                     message:      "Emailing managers of {event} template {templateName}",
+                     event:        values.event.name,
+                     templateName: templateName,
+                 });
+
+        const owner = await db.user.findOne({where: {id: {[Op.eq]: values.event.userId}}});
+
+        const managers = await db.role.findAll({
+                                                   where:   {
+                                                       [Op.and]: {
+                                                           eventId:        {[Op.eq]: values.event.id},
+                                                           name:           {[Op.eq]: 'Manage'},
+                                                           organisationId: {[Op.eq]: null},
+                                                           villageId:      {[Op.eq]: null}
+                                                       }
+                                                   },
+                                                   include: [{model: db.user}]
+                                               });
+
+        this.single(owner.email, templateName, values);
+        managers.forEach(m => this.single(m.user.email, templateName, values));
+    }
 }
-;
+
+class nullEmailSender {
+
+    constructor() {
+    }
+
+    single(to, templateName, values) {
+        log.info({
+                     message:      "NOT Emailing {to} template {templateName}",
+                     to:           to,
+                     templateName: templateName,
+                 });
+    }
+
+    toManagers(templateName, values) {
+        log.info({
+                     message:      "NOT Emailing managers of {event} template {templateName}",
+                     event:        values.event.name,
+                     templateName: templateName,
+                 });
+    }
+}
+
+
+if (config.EMAIL) {
+    module.exports = new realEmailSender();
+} else {
+    module.exports = new nullEmailSender();
+}

@@ -9,6 +9,13 @@ import {
     InputGroup
 } from 'reactstrap';
 
+import {
+    Item,
+    Span,
+    A,
+    Box
+} from 'react-html-email'
+
 import moment from 'moment';
 
 
@@ -182,7 +189,20 @@ export class ThanksRow extends React.Component {
 
 export function emailHTML(event, booking) {
 
-    const rows = getFeesOwed(event, booking.participants, booking)
+    const rows = getFeesOwed(event, booking.participants, booking).map((r, i) => <tr key={i}>
+        <td>{r.line}</td>
+        <td><b>£{r.total}</b></td>
+    </tr>);
+
+    return (<Item>
+        <p><b>Money:</b></p>
+        <table>
+            <tbody>
+            {rows}
+            </tbody>
+        </table>
+    </Item>)
+
 }
 
 export function getFeesOwed(event, participants, booking) {
@@ -196,7 +216,7 @@ export function getFeesOwed(event, participants, booking) {
     const total = participants.length * Math.round(accompanied ? amount : unaccompanied);
     const totalDiscounted = participants.length * Math.round(accompanied ? discount : unaccompaniedDiscount);
 
-    const line = `${participants.length} ${participants.length < 2 ? "person" : "people"}, ${accompanied ? "Accompanied" : "Unaccompanied"} (Discount: ${totalDiscounted})`;
+    const line = `${participants.length} ${participants.length < 2 ? "person" : "people"}, ${accompanied ? "Accompanied" : "Unaccompanied"} (Discount: £${totalDiscounted})`;
 
     return [{line: line, total: total}];
 }

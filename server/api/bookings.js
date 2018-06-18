@@ -108,7 +108,10 @@ bookings.createBooking = (req, res) => {
         const fees = feeFactory(booking.event);
         const emailData = booking.get({plain: true});
         emailData.editURL = config.BASE_PATH + '/' + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
-        email(booking.userEmail, 'confirmation', emailData);
+
+        email.single(booking.userEmail, 'confirmation', emailData);
+        email.toManagers('confirmation', emailData);
+
         return null;//Don't want the request to wait on e-amil promise
     }).catch(e => {
         console.log(e);
@@ -147,7 +150,7 @@ bookings.editBooking = (req, res) => {
 bookings.editBooking = (req, res) => {
     db.booking.findOne({where: {id: req.body.id}})
         .then(booking => {
-            req.body.maxParticipants = Math.max(booking.maxParticipants, req.body.participants.length);
+            req.body.maxParticipants = Math.max(booking.maxParticipants || 0, req.body.participants.length);
             return booking.update(req.body)//this ignores partitipants!
         })
         .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
