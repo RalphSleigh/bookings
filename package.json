@@ -120,6 +120,7 @@
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.1.0",
     "resolve-url-loader": "^2.3.0",
+    "rotation": "0.0.5",
     "sequelize": "^4.37.10",
     "sequelize-cli": "^3.2.0",
     "sequelize-json": "^2.1.2",

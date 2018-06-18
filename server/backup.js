@@ -3,10 +3,9 @@ const log = require("./logging.js");
 
 const url = require('url').URL;
 const {spawn} = require('child_process');
-const crypto = require('crypto');
-const fs = require('fs');
 const secureStreams = require('node-secure-stream');
-var schedule = require('node-schedule');
+const rotation = require('rotation');
+const schedule = require('node-schedule');
 
 const dbURL = new url(config.DB_URL);
 
@@ -30,7 +29,7 @@ function doBackup() {
         });
         const s3 = new AWS.S3();
 
-        const key = `${config.AWS_BACKUP_PATH}/${Math.floor(new Date() / 1000)}.sql.enc`;
+        const key = `${config.AWS_BACKUP_PATH}/${rotation()}.sql.enc`;
 
         const params = {
             Bucket: config.AWS_BACKUP_BUCKET,
@@ -53,6 +52,6 @@ if (dbURL.protocol !== 'postgres:') {
 } else {
 
     doBackup();
-    var j = schedule.scheduleJob('0 1 * * *', doBackup);
+    const j = schedule.scheduleJob('0 1 * * *', doBackup);
 
 }

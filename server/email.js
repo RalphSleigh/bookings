@@ -50,11 +50,14 @@ if (config.EMAIL) {
                                       text:    textEmail,
                                       html:    htmlEmail
                                   });
+
         mail.build((err, message) => {
+
             if (err) {
                 console.log(err);
                 return;
             }
+
             gmail.users.messages.send(
                 {
                     auth:   jwtClient,
