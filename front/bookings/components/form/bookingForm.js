@@ -269,13 +269,14 @@ let tempkey = 1000;
 
 function blankParticipant(event) {
     return {
-        id: 'Temp' + tempkey++, //need a key for react to render the participant array
-        name: '',
-        age: '',
-        diet: '',
-        dietExtra: '',
-        medical: '',
-        days: event.partialDates === 'whole' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask
+        id:            'Temp' + tempkey++, //need a key for react to render the participant array
+        name:          '',
+        age:           '',
+        diet:          '',
+        dietExtra:     '',
+        medical:       '',
+        days:          event.partialDates === 'whole' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
+        externalExtra: {}
     }
 }
 

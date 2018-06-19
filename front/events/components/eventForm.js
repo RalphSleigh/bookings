@@ -120,7 +120,7 @@ export default class EditForm extends React.Component {
 
         let attendanceFields = null;
 
-        if (this.state.event.partialDates !== 'whole') attendanceFields = (
+        if (this.state.event.partialDates !== 'whole' && this.state.event.partialDates !== 'free') attendanceFields = (
             <FormGroup row>
                 <Label sm={2}>Attendance Options:</Label>
                 <Col sm={10}>

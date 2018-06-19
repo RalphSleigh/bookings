@@ -344,7 +344,7 @@ const owedWholeEvent = (event, participants, booking) => {
         });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
-        if (p.updatedAt < c.date) return {
+        if (new Date(p.updatedAt) < new Date(c.date)) return {
             type: isWoodchip(event, p) ? 'woodchip' : 'normal',
             date: c.date,
             mask: p.days,
@@ -379,7 +379,7 @@ const owedPresetEvent = (event, participants, booking) => {
         });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
-        if (p.updatedAt < c.date) return {
+        if (new Date(p.updatedAt) < new Date(c.date)) return {
             type: isWoodchip(event, p) ? 'woodchip' : 'normal',
             date: c.date,
             mask: p.days,

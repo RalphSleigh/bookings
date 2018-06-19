@@ -94,6 +94,7 @@ export class ParticipantWidget extends React.Component {
 
     constructor() {
         super();
+
     }
 
     render() {

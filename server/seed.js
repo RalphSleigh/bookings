@@ -295,7 +295,8 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
                 id: 2,
                 name: 'Second Half',
                 mask: 120
-            }]
+            }],
+            customQuestions: {}
         }];
         const promises = events.map(e => {
             return db.event.create(e)

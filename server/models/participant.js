@@ -1,23 +1,29 @@
 module.exports = (sequelize, DataTypes) => {
 
     const participant = sequelize.define('participant', {
-        name: {
+        name:          {
             type: DataTypes.STRING
         },
-        age: {
+        age:           {
             type: DataTypes.DATE
         },
-        diet: {
+        diet:          {
             type: DataTypes.STRING
         },
-        dietExtra: {
+        dietExtra:     {
             type: DataTypes.TEXT
         },
-        medical: {
+        medical:       {
             type: DataTypes.TEXT
         },
-        days: {
+        days:          {
             type: DataTypes.INTEGER
+        },
+        externalExtra: {
+            type: DataTypes.JSON
+        },
+        internalExtra: {
+            type: DataTypes.JSON
         }
     });
 

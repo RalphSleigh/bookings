@@ -90,6 +90,9 @@ bookings.createBooking = (req, res) => {
     newBooking.guestUUID = req.cookies.guestUUID;
     newBooking.userId = newBooking.userId || req.user.id;
     newBooking.maxParticipants = newBooking.participants.length;
+    newBooking.participants.forEach(p => {
+        delete p.internalExtra
+    });
 
     db.booking.create(newBooking, {
         include: [{
@@ -148,6 +151,9 @@ bookings.editBooking = (req, res) => {
 */
 
 bookings.editBooking = (req, res) => {
+    req.body.participants.forEach(p => {
+        delete p.internalExtra
+    });
     db.booking.findOne({where: {id: req.body.id}})
         .then(booking => {
             req.body.maxParticipants = Math.max(booking.maxParticipants || 0, req.body.participants.length);
@@ -200,7 +206,7 @@ bookings.deleteBooking = (req, res) => {
 };
 
 bookings.assignVillage = async function (req, res) {
-    booking = await db.booking.findOne({where: {id: req.body.bookingId}, include: [{model: db.participant}]});
+    const booking = await db.booking.findOne({where: {id: req.body.bookingId}, include: [{model: db.participant}]});
     booking.villageId = req.body.villageId;
     await booking.save();
     const data = {};

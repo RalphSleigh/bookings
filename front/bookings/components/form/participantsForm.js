@@ -4,6 +4,8 @@ import Moment from 'moment'
 import attendance from '../../../attendance'
 import {ParticipantWidget} from "../../../attendance/presets";
 
+import update from 'immutability-helper';
+
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import 'react-widgets/dist/css/react-widgets.css'
@@ -54,6 +56,23 @@ export default class ParticipantsForm extends React.Component {
         }
     }
 
+    updateDirect(k) {
+        return item => value => {
+            this.props.update(k, item, value);
+        }
+    }
+
+    updateExtra(k) {
+        return item => e => {
+            this.props.updateValidation();
+            const value = e.target.value;
+            const participant = this.props.participants.find(p => p.id === k);
+            const newExtra = update(participant.externalExtra || {}, {[item]: {$set: value}});
+            this.props.update(k, 'externalExtra', newExtra);
+            e.preventDefault();
+        }
+    }
+
     updateAge(k) {
         return date => {
             this.props.updateValidation();
@@ -90,6 +109,8 @@ export default class ParticipantsForm extends React.Component {
                                                               {...p}
                                                               update={this.update(p.id)}
                                                               updateAge={this.updateAge(p.id)}
+                                                              updateExtra={this.updateExtra(p.id)}
+                                                              updateDirect={this.updateDirect(p.id)}
                                                               delete={this.delete(p.id)}
                                                               valid={this.valid}
                                                               event={this.props.event}
@@ -115,7 +136,8 @@ const ParticipantRow = (props) => {
 
     //{props.validating ? props.name === "" || props.age === "" || props.diet === "" ? invalid : valid : valid}
 
-    const attendance = <props.AttendanceWidget days={props.days} event={props.event} update={props.update("days")}/>;
+    const attendance = <props.AttendanceWidget days={props.days} event={props.event} update={props.update("days")}
+                                               updateDirect={props.updateDirect("days")}/>;
 
     return (<Card className="mb-3">
         <CardImg top src="/participant-header.jpg" alt="Card image cap"/>
@@ -176,6 +198,8 @@ const ParticipantRow = (props) => {
                            rows="3"/>
                 </Col>
             </FormGroup>
+            <Over16Section event={props.event} age={props.age} values={props.externalExtra || {}}
+                           update={props.updateExtra}/>
             <FormGroup row>
                 {attendance}
                 <Col sm={1}>
@@ -186,4 +210,39 @@ const ParticipantRow = (props) => {
             </FormGroup>
         </CardBody>
     </Card>)
+};
+
+const Over16Section = props => {
+
+    if (Moment(props.event.startDate).diff(Moment(props.age), 'years') > 15 && (props.event.customQuestions.adultEmail || props.event.customQuestions.adultFirstAid)) {
+        const emailForm = props.event.customQuestions.adultEmail ? <React.Fragment>
+            <Label sm={3}>Email address used for WCF membership:</Label>
+            <Col sm={4}>
+                <Input type="email"
+                       value={props.values.adultEmail || ''}
+                       onChange={props.update("adultEmail")}
+                       placeholder="e-mail address"/>
+            </Col>
+        </React.Fragment> : null;
+
+        const firstAidForm = props.event.customQuestions.adultFirstAid ? <React.Fragment>
+            <Label sm={3}>Up to date first aid:</Label>
+            <Col sm={2}>
+                <Input type="select" value={props.values.adultFirstAid || ''}
+                       onChange={props.update("adultFirstAid")}>
+                    <option value='no'>No</option>
+                    <option value="yes">Yes</option>
+                </Input>
+            </Col>
+        </React.Fragment> : null;
+
+        return (<FormGroup row>
+            {emailForm}
+            {firstAidForm}
+        </FormGroup>)
+
+    } else {
+        return null
+    }
+
 };

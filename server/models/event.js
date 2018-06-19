@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN
         },
         partialDates: {
-            type: DataTypes.ENUM,
-            values: ['whole', 'presets']
+            type:   DataTypes.ENUM,
+            values: ['whole', 'presets', 'free']
         },
         partialDatesData: {
             type: DataTypes.JSON
@@ -34,8 +34,8 @@ module.exports = (sequelize, DataTypes) => {
             values: ['guest', 'registered', 'approved']
         },
         feeModel: {
-            type: DataTypes.ENUM,
-            values: ['free', 'flat', 'ealing']
+            type:   DataTypes.ENUM,
+            values: ['free', 'flat', 'ealing', 'big', 'vcamp']
         },
         feeData: {
             type: DataTypes.JSON
