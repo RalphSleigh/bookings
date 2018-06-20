@@ -248,7 +248,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
         function newSessionLogger(req, res, next) {
             if (!req.session.logged) {
                 req.session.logged = true;
-                log.info({
+
+                if (req.headers["user-agent"] !== "ELB-HealthChecker/2.0") log.info({
                     message: "New Session: {ip} {userAgent} {session}",
                     ip: req.ip,
                     userAgent: req.headers["user-agent"],
