@@ -1,12 +1,12 @@
-import React from 'react'
-import Moment from 'moment'
-import Switch from 'react-toggle'
-import update from 'immutability-helper';
-import map from 'lodash/map'
-import fee from '../../../shared/fee'
-import attendance from '../../attendance'
+import React           from 'react'
+import Moment          from 'moment'
+import Switch          from 'react-toggle'
+import update          from 'immutability-helper';
+import map             from 'lodash/map'
+import attendance      from '../../attendance'
 import OrgansationForm from './organisationForm.js'
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep       from "lodash/cloneDeep";
+import feeFactory      from '../../../shared/fee/feeFactory'
 import {
     Button,
     Row,
@@ -20,7 +20,7 @@ import {
     CardTitle,
     CardImg,
     CardImgOverlay
-} from 'reactstrap';
+}                      from 'reactstrap';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faLockOpen from '@fortawesome/fontawesome-free-solid/faLockOpen'
@@ -110,11 +110,16 @@ export default class EditForm extends React.Component {
 
     render() {
 
-        const feeOptions = map(fee, f => <option value={f.name} key={f.name + "key"}>{f.selection}</option>);
+        const feeOptions = [<option key={1} value="free">Free</option>,
+            <option key={2} value="flat">Flat Fee</option>,
+            <option key={3} value="ealing">Ealing Pricing Policy</option>,
+            <option key={4} value="big">Big Camp Policy</option>,
+            <option key={5} value="vcamp">VCamp Policy</option>];
+
         const attendanceOptions = map(attendance, a => <option value={a.name}
                                                                key={a.name + "key"}>{a.selection}</option>);
 
-        const FeeConfig = fee[this.state.event.feeModel].Config;
+        const FeeConfig = feeFactory(this.state.event).Config;
 
         const AttendanceConfig = attendance[this.state.event.partialDates].Config;
 
@@ -235,7 +240,6 @@ export default class EditForm extends React.Component {
                     {paymentFields}
                     {formField("text", "Extra Info Box Question", this.state.event.customQuestions.extraQuestion, this.updateExtra("extraQuestion"))}
                     {formField("textarea", "Extra Info Template:", this.state.event.customQuestions.extraTemplate, this.updateExtra("extraTemplate"))}
-                    {formField("text", "Email Reply-to:", this.state.event.customQuestions.emailReply, this.updateExtra("emailReply"))}
                     {formField("text", "Email Reply-to:", this.state.event.customQuestions.emailReply, this.updateExtra("emailReply"))}
                     {switchGroup("Over 16 e-mail address", this.state.event.customQuestions.adultEmail, this.updateCustomChecked('adultEmail'))}
                     {switchGroup("Over 16 First-Aid question", this.state.event.customQuestions.adultFirstAid, this.updateCustomChecked('adultFirstAid'))}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import fee from '../../../../shared/fee'
+import feeFactory from '../../../../shared/fee/feeFactory.js'
 
 
 export default class FeeForm extends React.Component {
@@ -17,7 +17,7 @@ export default class FeeForm extends React.Component {
 
 	render() {
 
-		const BookingFeeForm = fee[this.props.event.feeModel].BookingForm;
+        const BookingFeeForm = feeFactory(this.props.event).BookingForm;
 
         return (
             <BookingFeeForm event={this.props.event} feeData={this.props.event.feeData}

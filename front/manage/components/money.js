@@ -1,11 +1,11 @@
-import React from 'react'
-import Currency from 'react-currency-formatter';
-import Moment from 'moment'
+import React      from 'react'
+import Currency   from 'react-currency-formatter';
+import Moment     from 'moment'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
-import fee from '../../../shared/fee'
-import update from 'immutability-helper';
+import feeFactory from '../../../shared/fee/feeFactory.js'
+import update     from 'immutability-helper';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
@@ -235,7 +235,7 @@ export default class Money extends React.Component {
         const bookings = this.props.bookings;
         const participants = this.props.bookings.reduce((r, b) => [...r, ...b.participants], []);
 
-        this.getFeesOwed = fee[event.feeModel].getFeesOwed;
+        this.getFeesOwed = feeFactory(event).getFeesOwed;
 
         this.totalOwed = 0;
         this.totalPaid = 0;

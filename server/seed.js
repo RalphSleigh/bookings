@@ -103,49 +103,26 @@ async function sync() {
     });
 
     console.log("syncing");
+    await migrations.down({to: 0});
     await migrations.up();
 
 
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    const question = q => {
-        return new Promise((resolve) => {
-            rl.question(q, answer => resolve(answer))
-        });
-    };
-
     data = {};
 
-    question("Admin account Username: ")
-        .then(a => {
-            data.username = a;
-            return question("Admin account e-mail: ")
-        }).then(a => {
-        data.email = a;
-        return question("Admin account password: ")
-    }).then(a => {
-        rl.close();
-        data.password = a;
-        return db
-    }).then(() => user.create({
+    db.user.create({
         userName: 'Guest',
         password: '',
         email: ''
-    })).then(
-        () => Promise.all([db.role.create({name: "admin"}), db.user.create({
-                userName: data.username,
-                password: bcrypt.hashSync(data.password, bcrypt.genSaltSync()),
-                email: data.email
+                   }).then(
+        () => db.user.create({
+                                 userName: 'Ralph',
+                                 password: bcrypt.hashSync('Hello', bcrypt.genSaltSync()),
+                                 email:    'ralph.sleigh@woodcraft.org.uk'
             }
-        )]))
-
-        .then(results => {
-            results[1].addrole(results[0]);
+        ))
+    .then(user => {
+        db.role.create({name: "admin", userId: user.id})
         });
-
 }
 
 async function seed() {

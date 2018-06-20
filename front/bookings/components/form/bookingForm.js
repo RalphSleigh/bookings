@@ -125,6 +125,7 @@ export default class BookingForm extends React.Component {
             }
             if (empty(p.age)) results.push("Please fill in the age for " + p.name);
             if (empty(p.diet)) results.push("Please select a diet for " + p.name);
+            if (Moment(this.props.event.startDate).diff(Moment(p.age), 'years') > 15 && this.props.event.customQuestions.adultEmail && empty(p.externalExtra.adultEmail)) results.push("Please fill an e-mail address for " + p.name);
         });
 
         if (this.props.event.feeModel !== "free" && (!this.props.booking.paymentType || this.props.booking.paymentType === "")) results.push("Please choose a payment option");
@@ -275,7 +276,7 @@ function blankParticipant(event) {
         diet:          '',
         dietExtra:     '',
         medical:       '',
-        days:          event.partialDates === 'whole' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
+        days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
         externalExtra: {}
     }
 }

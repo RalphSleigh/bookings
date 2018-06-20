@@ -1,14 +1,15 @@
-import React from 'react'
-import Moment from 'moment'
-import update from 'immutability-helper';
-import cloneDeep from "lodash/cloneDeep";
-import map from 'lodash/map';
-import reduce from 'lodash/reduce';
+import React         from 'react'
+import Moment        from 'moment'
+import update        from 'immutability-helper';
+import cloneDeep     from "lodash/cloneDeep";
+import map           from 'lodash/map';
+import reduce        from 'lodash/reduce';
 import ReactMarkdown from 'react-markdown'
+import popcount      from '@f/popcount';
 //this implements a pricing policy for large camps
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import faTimes         from '@fortawesome/fontawesome-free-solid/faTimes'
 
 import {
     Row,
@@ -45,16 +46,6 @@ export class Config extends React.Component {
         this.updateDate = this.updateDate.bind(this);
         this.update = this.update.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
-        this.updateAmountPartial = this.updateAmountPartial.bind(this);
-
-        if (!this.props.fee.woodchips) this.props.update({
-            buckets: [{
-                id: "bucket" + bucketKey,
-                date: new Date(),
-                amount: 0
-            }], woodchips: 0.5, cancel: 50, desc: ''
-        });
-        bucketKey++;
     }
 
     update(field) {
@@ -76,36 +67,19 @@ export class Config extends React.Component {
     }
 
     updateAmount(id) {
-        return e => {
+        return item => e => {
             const buckets = cloneDeep(this.props.fee.buckets);
             buckets.forEach(b => {
-                if (b.id === id) b.amount = e.target.value;
+                if (b.id === id) b[item] = e.target.value;
             });
             this.props.update(update(this.props.fee, {buckets: {$set: buckets}}));
             e.preventDefault();
         }
     }
 
-    updateAmountPartial(id) {
-        return o => {
-            return e => {
-                const buckets = cloneDeep(this.props.fee.buckets);
-                buckets.forEach(b => {
-                    if (b.id === id) {
-                        b.amount = typeof(b.amount) !== 'object' ? {} : b.amount;
-                        b.amount[o] = e.target.value;
-                    }
-                });
-
-                this.props.update(update(this.props.fee, {buckets: {$set: buckets}}));
-                e.preventDefault();
-            }
-        }
-    }
-
     addBucket(e) {
         const buckets = [...(this.props.fee.buckets || [])];
-        buckets.push({id: "bucket" + bucketKey, date: new Date(), amount: 0});
+        buckets.push({id: "bucket" + bucketKey, date: new Date()});
         bucketKey++;
         this.props.update(update(this.props.fee, {buckets: {$set: buckets}}));
         e.preventDefault();
@@ -125,31 +99,45 @@ export class Config extends React.Component {
 
         const bucketRows = dateBuckets.map(b => {
 
-            const feeBoxes = (this.props.event.partialDates === 'whole' || !this.props.event.partialDatesData) ?
-                <FormGroup>
-                    <InputGroup>
-                        <div className="input-group-prepend">
-                            <span className="input-group-text">£</span>
-                        </div>
-                        <Input type="number" className="form-control" placeholder="35" value={b.amount}
-                               onChange={this.updateAmount(b.id)}/>
-                    </InputGroup>
-                </FormGroup> :
-                <React.Fragment>
-                    {this.props.event.partialDatesData.map(o => <FormGroup key={o.id} row>
-                        <Label sm={6}>{o.name}</Label>
-                        <Col sm={6}>
-                            <InputGroup>
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text">£</span>
-                                </div>
-                                <Input type="number" className="form-control" placeholder="35"
-                                       value={b.amount[o.name] || 0}
-                                       onChange={this.updateAmountPartial(b.id)(o.name)}/>
-                            </InputGroup>
-                        </Col>
-                    </FormGroup>)}
-                </React.Fragment>;
+            const feeBoxes = <React.Fragment>
+                <FormGroup row>
+                    <Label sm={4}>Whole Event:</Label>
+                    <Col sm={8}>
+                        <InputGroup>
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">£</span>
+                            </div>
+                            <Input type="number" className="form-control" value={b.whole}
+                                   onChange={this.updateAmount(b.id)('whole')}/>
+                        </InputGroup>
+                    </Col>
+                </FormGroup>
+                <p>Partial attendance fee = A + B * (nights attending)</p>
+                <FormGroup row>
+                    <Label sm={2}>A:</Label>
+                    <Col sm={4}>
+                        <InputGroup>
+
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">£</span>
+                            </div>
+                            <Input type="number" className="form-control" placeholder="35" value={b.a}
+                                   onChange={this.updateAmount(b.id)('a')}/>
+                        </InputGroup>
+                    </Col>
+                    <Label sm={2}>B:</Label>
+                    <Col sm={4}>
+                        <InputGroup>
+
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">£</span>
+                            </div>
+                            <Input type="number" className="form-control" placeholder="35" value={b.b}
+                                   onChange={this.updateAmount(b.id)('b')}/>
+                        </InputGroup>
+                    </Col>
+                </FormGroup>
+            </React.Fragment>;
 
             return <tr key={b.id}>
                 <td><Input type="date" onChange={this.updateDate(b.id)} value={Moment(b.date).format("YYYY-MM-DD")}/>
@@ -194,14 +182,6 @@ export class Config extends React.Component {
             <Row>
                 <Col>
                     <FormGroup row>
-                        <Label sm={4}>Woodchip Multiplier</Label>
-                        <Col sm={2}>
-                            <InputGroup>
-                                <Input type="number" className="form-control" placeholder="0.5"
-                                       value={this.props.fee.woodchips}
-                                       onChange={this.update('woodchips')}/>
-                            </InputGroup>
-                        </Col>
                         <Label sm={4}>Cancellation Fee:</Label>
                         <Col sm={2}>
                             <InputGroup>
@@ -327,27 +307,70 @@ export function getFeesOwed(event, participants, booking) {
             return owedWholeEvent(event, participants, booking);
         case 'presets':
             return owedPresetEvent(event, participants, booking);
+        case 'free':
+            return owedFreeEvent(event, participants, booking);
         default:
             return [{line: "Unsupported attendance/fee combo", total: 0}]
     }
 }
+
+const owedFreeEvent = (event, participants, booking) => {
+
+    const wholeMask = 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1
+
+    const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
+
+    const filteredParticipants = cloneDeep(participants)
+    .filter(p => p.name && p.age && (p.days > 0))
+    .map(p => {
+        if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+        return p;
+    });
+
+    const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
+        if (new Date(p.updatedAt) < new Date(c.date)) return {
+            type: p.days === wholeMask ? 'whole' : 'partial',
+            days: popcount(p.days),
+            date: c.date,
+            fee:  p.days === wholeMask ? parseInt(c.whole) : parseInt(c.a) + (parseInt(c.b) * (popcount(p.days) - 1))
+        };
+        else return a;
+    }, {}));
+
+    const combinedCosts = rawCosts.reduce((a, c) => {
+
+        a[c.date] = a[c.date] || {};
+        a[c.date][c.days] = a[c.date][c.days] || {count: 0, fee: c.fee, type: c.type};
+        a[c.date][c.days].count++;
+        return a;
+    }, {});
+
+    const lines = reduce(combinedCosts, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, {
+        line:  `${c1.count} ${c1.count > 1 ? 'people' : 'person'} booked for ${c1.type === 'whole' ? 'whole event' : (i1 - 1) + ' nights'} before ${Moment(i).format('MMMM Do YYYY')} at £${c1.fee}`,
+        total: c1.count * c1.fee
+    }], [])], []);
+
+
+    return lines;
+
+};
 
 const owedWholeEvent = (event, participants, booking) => {
 
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
     const filteredParticipants = cloneDeep(participants)
-        .filter(p => p.name && p.age)
-        .map(p => {
-            if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
-            return p;
-        });
+    .filter(p => p.name && p.age)
+    .map(p => {
+        if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+        return p;
+    });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
         if (new Date(p.updatedAt) < new Date(c.date)) return {
-            type: isWoodchip(event, p) ? 'woodchip' : 'normal',
-            date: c.date,
-            mask: p.days,
+            type:   isWoodchip(event, p) ? 'woodchip' : 'normal',
+            date:   c.date,
+            mask:   p.days,
             amount: c.amount * (isWoodchip(event, p) ? event.feeData.woodchips : 1)
         };
         else return a;
@@ -370,19 +393,19 @@ const owedPresetEvent = (event, participants, booking) => {
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
     const filteredParticipants = cloneDeep(participants)
-        .filter(p => p.name && p.age)
-        .map(p => {
-            if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
-            p.days = event.partialDatesData.find(d => d.mask === p.days);
-            p.days = p.days ? p.days.name : event.partialDatesData[0].name;
-            return p;
-        });
+    .filter(p => p.name && p.age)
+    .map(p => {
+        if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+        p.days = event.partialDatesData.find(d => d.mask === p.days);
+        p.days = p.days ? p.days.name : event.partialDatesData[0].name;
+        return p;
+    });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
         if (new Date(p.updatedAt) < new Date(c.date)) return {
-            type: isWoodchip(event, p) ? 'woodchip' : 'normal',
-            date: c.date,
-            mask: p.days,
+            type:   isWoodchip(event, p) ? 'woodchip' : 'normal',
+            date:   c.date,
+            mask:   p.days,
             amount: c.amount[p.days] * (isWoodchip(event, p) ? event.feeData.woodchips : 1)
         };
         else return a;
@@ -403,22 +426,22 @@ const owedPresetEvent = (event, participants, booking) => {
 
 const linesWithoutPartial = combined => reduce(combined, (a, c, i) => [...a, ...map(c, (l, t) => {
     if (t === 'normal') return {
-        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
+        line:  `${l.count} ${l.count > 1 ? 'people' : 'person'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     };
     else return {
-        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
+        line:  `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     }
 })], []);
 
 const linesWithPartial = (combined, event) => reduce(combined, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, ...map(c1, (l, t) => {
     if (t === 'normal') return {
-        line: `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
+        line:  `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     };
     else return {
-        line: `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
+        line:  `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     }
 })], [])], []);
@@ -427,7 +450,7 @@ const cancelledFee = (event, participants, booking) => {
 
     if (!booking.maxParticipants || booking.maxParticipants <= participants.length || event.feeData.cancel === 0) return [];
     return [{
-        line: `${booking.maxParticipants - participants.length} cancelled bookings at £${event.feeData.cancel}`,
+        line:  `${booking.maxParticipants - participants.length} cancelled bookings at £${event.feeData.cancel}`,
         total: (booking.maxParticipants - participants.length) * event.feeData.cancel
     }]
 };
