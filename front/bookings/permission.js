@@ -6,8 +6,12 @@ import * as P from '../../shared/permissions.js'
 
 export const viewBookingCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
-        if (props.booking === undefined) return true;
-        return P.viewBooking(state.getIn(["User", "user"]).toJS(), state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]).toJS());
+        //if (props.booking === undefined) return true;
+        const user = state.getIn(["User", "user"]).toJS();
+        const booking = state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]).toJS();
+        const event = state.getIn(["Events", "events", booking.eventId]).toJS();
+        booking.event = event;
+        return P.viewBooking(user, booking);
     },
     redirectPath: "/user",
     wrapperDisplayName: "View Booking check"
