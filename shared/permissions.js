@@ -16,6 +16,7 @@ permissions.createEvent = user => {
 
 permissions.applyToBookEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return false; //admin does not need to apply
+    if (event.userId === user.id) return false; //owner can
     if (user.id === 1) return false; //guest can't apply
     if (user.roles.find(role => role.name === "book" && role.eventId === event.id)) return false; //are we approved?
     if (user.applications.find(a => a.eventId === event.id)) return false; //did we apply already?
@@ -25,6 +26,7 @@ permissions.applyToBookEvent = (user, event) => {
 
 permissions.bookEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
+    if (event.userId === user.id) return true; //owner can
     if (event.bookingPolicy === 'guest') return true; //anyone can book
     if (event.bookingPolicy === 'approved' && user.roles.find(role => role.name === "book" && role.eventId === event.id)) return true; //booking approved
     if (event.bookingPolicy === 'registered' && user.id !== 1) return true; //non guest can book registered events
@@ -125,7 +127,8 @@ permissions.addVillage = (user, event) => {
     return permissions.manageEvent(user, event); //for now the same as an event manager, this will change
 };
 
-permissions.getUserList = user => {
+permissions.getUserList = (user, event) => {
+    if (user.id === event.userId) return true; //event owner can
     if (user.roles.find(role => role.name === "admin")) return true;
     if (user.roles.find(role => role.name === "create")) return true;
     if (user.roles.find(role => role.name === "Manage" && role.organisationId === null && role.villageId === null)) return true;
@@ -135,6 +138,7 @@ permissions.getUserList = user => {
 permissions.createRole = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true;
     if (event === null) return false;
+    if (user.id === event.userId) return true; //event owner can
     if (user.roles.find(role => role.eventId === event.id && role.name === "manage" && role.villageId === null && role.organisationId === null)) return true;
     return false
 };

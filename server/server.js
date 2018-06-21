@@ -135,7 +135,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         server.get('/api/user', auth.getUser);   		//get current user info
         server.post('/api/user/logout', auth.doLogout); //logout
-        server.get('/api/users', P.getUserList, auth.getUserList);
+        server.get('/api/users/:eventId', P.getUserList, auth.getUserList);
 
         server.post('/api/role/create', P.createRole, roles.createRole);
         server.post('/api/role/delete', P.deleteRole, roles.deleteRole);
@@ -147,6 +147,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/api/event/delete', P.createEvent, events.deleteEvent);//delete event
         server.post('/api/event/:eventId/apply', P.applyToBookEvent, applications.addApplication); //apply to book for event
         server.get('/api/event/:eventId/details', P.getEventBookings, events.getDetails);
+        server.get('/api/event/:eventId/transfer/:userId', P.editEvent, events.transfer);
 
         server.post('/api/application/approve', P.decideApplication, applications.approveApplication);
         server.post('/api/application/decline', P.decideApplication, applications.declineApplication);

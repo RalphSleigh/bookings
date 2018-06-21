@@ -87,6 +87,13 @@ const db = require('../orm.js');
         res.json({events: [event], bookings: bookings});
     };
 
+event.transfer = async function (req, res) {
+    const event = await db.event.findOne({where: {id: req.params.eventId}});
+    event.userId = req.params.userId
+    event.save();
+    res.json(event);
+};
+
 
 module.exports = wrapper(event);
 

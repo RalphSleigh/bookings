@@ -161,7 +161,10 @@ permission.deleteVillage = async function (req, res, next) {
 };
 
 permission.getUserList = async function (req, res, next) {
-    if (P.getUserList(req.user)) next();
+    const event = await db.event.findOne({
+                                             where: {id: {[Op.eq]: req.params.eventId}}
+                                         });
+    if (P.getUserList(req.user, event)) next();
     else {
         res.status(401).end();
         logError(req);

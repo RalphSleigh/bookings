@@ -44,8 +44,8 @@ export const updateUser = user => {
     }
 };
 
-export const getUserList = () => dispatch => {
-    fetch('/api/users', 'GET')
+export const getUserList = (eventId) => dispatch => {
+    fetch('/api/users/' + eventId, 'GET')
         .then(u => dispatch(updateList(u.users)));
 };
 

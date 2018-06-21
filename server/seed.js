@@ -216,7 +216,7 @@ This event is configured with the options used for Ealing events:
             userId:               2,
             feeModel:             "ealing",
             feeData:              {amount: 35},
-            bookingPolicy:        'approved',
+            bookingPolicy:        'registered',
             paymentTypes:         ["Cash", "Cheque", "Bank Transfer"],
             paymentInfo:          "Ho Ho Ho",
             organisationsEnabled: false,

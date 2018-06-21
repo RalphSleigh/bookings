@@ -27,10 +27,12 @@ class Roles extends React.Component {
         this.updateUser = this.updateUser.bind(this);
         this.addRole = this.addRole.bind(this);
         this.deleteRole = this.deleteRole.bind(this);
+
+        this.event = this.props.Event.toJS();
     }
 
     componentWillMount() {
-        this.props.getUserList();
+        this.props.getUserList(this.event.id);
     }
 
     updateOption(section) {
