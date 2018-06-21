@@ -119,6 +119,7 @@ export default class BookingForm extends React.Component {
         if (this.props.event.bigCampMode && empty(this.props.booking.district)) results.push("Please fill in your group/district");
 
         if (this.props.booking.participants) this.props.booking.participants.forEach((p, k) => {
+            p.externalExtra = p.externalExtra || {};
             if (empty(p.name)) {
                 results.push("Participant #" + (k + 1) + " does not have a name");
                 return;

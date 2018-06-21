@@ -112,8 +112,9 @@ const emptyBooking = (User, Event) => {
         userName: User.get("id") === 1 ? '' : User.get("userName"),
         userEmail: User.get("id") === 1 ? '' : User.get("email") ? User.get("email") : '',
         participants: [{
-            id: "TEMP",
-            days: event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask
+            id:            "TEMP",
+            days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
+            externalExtra: {}
         }]
     };
     if (Event.get("organisationsEnabled")) booking.organisationId = Event.getIn(['organisations', 0, 'id']);
