@@ -49,6 +49,7 @@ permissions.deleteBooking = (user, event, booking) => {
 permissions.viewBooking = (user, booking) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (booking.userId === user.id) return true; //owner can
+    if (booking.event.userId === user.id) return true; //event owner can
     if (user.roles.find(role => role.eventId === booking.eventId
             && role.name === "Manage"
             && (role.villageId === null || role.villageId === booking.villageId)

@@ -90,7 +90,7 @@ permission.getEventBookings = (req, res, next) => {
 };
 
 permission.getBooking = (req, res, next) => {
-    db.booking.findOne({where: {id: req.params.bookingId}})
+    db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.event}]})
         .then(b => {
             if (P.viewBooking(req.user, b)) next();
             else {

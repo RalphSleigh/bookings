@@ -22,6 +22,7 @@ module.exports = {
             <Col sm={3}>
                 <DateTimePicker
                     value={props.age ? new Date(props.age) : null}
+                    placeholder={'DD/MM/YYYY'}
                     onChange={props.updateAge}
                     editFormat={'DD/MM/YYYY'}
                     format={'DD/MM/YYYY'}
