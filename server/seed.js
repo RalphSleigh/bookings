@@ -272,7 +272,8 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
                 id:   2,
                 name: 'Second Half',
                 mask: 120
-            }]
+            }],
+            customQuestions:      {}
         }, {
             name:                 'Venturer Camp 2019',
             description:          `Event with the venturer camp options`,

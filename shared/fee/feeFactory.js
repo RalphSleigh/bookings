@@ -10,27 +10,27 @@ const feeMatrix = {
     free:   {
         whole:   require('./free.js'),
         free:    require('./free.js'),
-        partial: require('./free.js')
+        presets: require('./free.js')
     },
     flat:   {
         whole:   require('./flat.js'),
         free:    require('./flat.js'),
-        partial: require('./flat.js')
+        presets: require('./flat.js')
     },
     ealing: {
         whole:   require('./ealing.js'),
         free:    require('./ealing.js'),
-        partial: require('./ealing.js')
+        presets: require('./ealing.js')
     },
     big:    {
         whole:   require('./big.js'),
         free:    require('./big.js'),
-        partial: require('./free.js')
+        presets: require('./free.js')
     },
     vcamp:  {
         whole:   require('./free.js'),
         free:    require('./vcamp-free.js'),
-        partial: require('./free.js')
+        presets: require('./free.js')
     }
 };
 

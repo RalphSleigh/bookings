@@ -1,12 +1,13 @@
-import React from 'react'
+import React              from 'react'
 import BookingUserDetails from './bookingUserDetails.js'
-import ParticipantForm from './participantsForm.js'
-import PermissionForm from './permissionForm.js'
-import FeeForm from './feeForm.js'
-import PaymentForm from './paymentForm.js'
-import cloneDeep from 'lodash/cloneDeep'
-import update from 'immutability-helper';
-import Moment from 'moment'
+import ParticipantForm    from './participantsForm.js'
+import PermissionForm     from './permissionForm.js'
+import FeeForm            from './feeForm.js'
+import PaymentForm        from './paymentForm.js'
+import cloneDeep          from 'lodash/cloneDeep'
+import update             from 'immutability-helper';
+import Moment             from 'moment'
+import uuid               from 'uuid/v4';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faLockOpen from '@fortawesome/fontawesome-free-solid/faLockOpen'
@@ -271,7 +272,7 @@ let tempkey = 1000;
 
 function blankParticipant(event) {
     return {
-        id:            'Temp' + tempkey++, //need a key for react to render the participant array
+        id:            uuid(),
         name:          '',
         age:           '',
         diet:          '',

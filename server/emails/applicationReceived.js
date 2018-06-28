@@ -12,24 +12,12 @@ import feeFactory    from '../../shared/fee/feeFactory.js'
 
 export function html(values) {
 
-    const participantsList = values.participants.map(p => <li key={p.id}>{p.name}</li>);
-
-    const fees = feeFactory(values.event).emailHTML(values.event, values);
-
     return renderEmail(
-        <Email title={`Booking Confirmation for ${values.event.name}`}>
+        <Email title={`Booking Confirmation for ${values.name}`}>
             <Item>
-                <p> Hi {values.userName}</p>
-                <p>Thanks for booking for {values.event.name}, You have
-                    booked {values.participants.length} {values.participants.length === 1 ? 'person' : 'people'}:</p>
-                <p>
-                    <ul>{participantsList}</ul>
-                </p>
-                <p>You can come back and edit your booking <A href={values.editURL}>here</A>.</p>
-            </Item>
-            {fees}
-            <Item>
-                <ReactMarkdown source={values.event.paymentInfo}/>
+                <p> Hi {values.user.userName}</p>
+                <p>Thanks for applying to book for {values.name}. One of our team will check you application as soon as
+                    possible and you will recieve another e-mail as soon as you are approved to book in.</p>
             </Item>
             <Item>
                 <p>Blue Skies</p>
@@ -40,5 +28,5 @@ export function html(values) {
 }
 
 export function subject(values) {
-    return `Booking Confirmation for ${values.event.name}`
+    return `Application Confirmation for ${values.name}`
 }

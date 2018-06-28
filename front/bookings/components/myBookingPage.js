@@ -13,9 +13,10 @@ import {
     updateCurrentBooking
 } from '../actions.js'
 
-import {bookEventCheck} from '../permission.js'
+import {bookEventCheck}       from '../permission.js'
 import {bookIntoOrganisation} from '../../../shared/permissions.js'
-import Moment from "moment/moment";
+import Moment                 from "moment/moment";
+import uuid                   from 'uuid/v4';
 
 import {
     Row,
@@ -87,11 +88,9 @@ const mapStateToProps = (state, props) => {
     const prevBooking = (Event, Bookings, User) => {
         let prevBooking = Event.get("bigCampMode") === false ? Bookings.get("bookings").filter(b => b.get("userId") === User.get("id")).toList().sort((a, b) => a.get('participants').size < b.get('participants').size).get(0) : null;
 
-        let i = 0;
-
         if (prevBooking) {
             prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note");
-            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", 'Tempcopy' + i++).delete("bookingId")));
+            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId")));
         }
 
         return prevBooking
@@ -112,7 +111,7 @@ const emptyBooking = (User, Event) => {
         userName: User.get("id") === 1 ? '' : User.get("userName"),
         userEmail: User.get("id") === 1 ? '' : User.get("email") ? User.get("email") : '',
         participants: [{
-            id:            "TEMP",
+            id:            uuid(),
             days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
             externalExtra: {}
         }]
