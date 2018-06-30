@@ -5,6 +5,7 @@ const Op = db.Sequelize.Op;
 const wrapper = require('../errors');
 const email = require('../email.js');
 
+
 const application = {};
 
 application.addApplication = (req, res) => {
@@ -22,7 +23,7 @@ application.addApplication = (req, res) => {
         emailData.user = req.user;
         emailData.event = emailData;//todo fix this
         email.single(req.user.email, 'applicationReceived', emailData);
-        //email.toManagers('bookingCreated', emailData);
+        email.toManagers('managerApplicationReceived', emailData);
     })
     .catch(e => {
         console.log(e);
@@ -44,8 +45,13 @@ application.approveApplication = async function (req, res) {
                              eventId:        application.event.id,
                              organisationId: req.body.org
                          });
+    const user = await db.user.scope('withData').findOne({where: {id: {[Op.eq]: application.userId}}});
     await application.destroy();
-    const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: application.eventId}}})
+    const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: application.eventId}}});
+
+    const values = {event: event, user: user};
+    email.single(user.email, 'applicationApproved', values);
+
     res.json({events: [event]});
 };
 

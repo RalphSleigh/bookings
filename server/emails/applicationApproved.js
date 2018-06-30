@@ -10,14 +10,16 @@ import React         from 'react'
 import ReactMarkdown from 'react-markdown'
 import feeFactory    from '../../shared/fee/feeFactory.js'
 
+const config = require('../../config');
+
 export function html(values) {
 
     return renderEmail(
-        <Email title={`Application Received for ${values.name}`}>
+        <Email title={`Application Approved for ${values.event.name}`}>
             <Item>
                 <p> Hi {values.user.userName}</p>
-                <p>Thanks for applying to book for {values.name}. One of our team will check you application as soon as
-                    possible and you will recieve another e-mail as soon as you are approved to book in.</p>
+                <p>You have been approved to book into {values.event.name} and can do so at any time here:</p>
+                <p><A href={config.BASE_PATH}>{config.BASE_PATH}</A></p>
             </Item>
             <Item>
                 <p>Blue Skies</p>
@@ -28,5 +30,5 @@ export function html(values) {
 }
 
 export function subject(values) {
-    return `Application Received for ${values.name}`
+    return `Application Approved for ${values.name}`
 }

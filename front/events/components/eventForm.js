@@ -241,6 +241,7 @@ export default class EditForm extends React.Component {
                     {formField("text", "Extra Info Box Question", this.state.event.customQuestions.extraQuestion, this.updateExtra("extraQuestion"))}
                     {formField("textarea", "Extra Info Template:", this.state.event.customQuestions.extraTemplate, this.updateExtra("extraTemplate"))}
                     {formField("text", "Email Reply-to:", this.state.event.customQuestions.emailReply, this.updateExtra("emailReply"))}
+                    {formField("text", "Managers Email Subject Tag:", this.state.event.customQuestions.emailSubjectTag, this.updateExtra("emailSubjectTag"))}
                     {switchGroup("Over 16 e-mail address", this.state.event.customQuestions.adultEmail, this.updateCustomChecked('adultEmail'))}
                     {switchGroup("Over 16 First-Aid question", this.state.event.customQuestions.adultFirstAid, this.updateCustomChecked('adultFirstAid'))}
                     <Row>

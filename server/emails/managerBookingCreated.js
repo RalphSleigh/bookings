@@ -15,7 +15,7 @@ export function html(values) {
     const participantsList = values.participants.map(p => <li key={p.id}>{p.name}</li>);
 
     return renderEmail(
-        <Email title={`${values.event.name} Booking Added`}>
+        <Email title={`${values.event.customQuestions.emailSubjectTag} Booking Added`}>
             <Item>
                 <p>Hi {values.emailUser.userName}</p>
                 <p>{values.userName} has added a new booking to {values.event.name}. They have
@@ -31,5 +31,5 @@ export function html(values) {
 }
 
 export function subject(values) {
-    return `${values.event.name} Booking Added`;
+    return `${values.event.customQuestions.emailSubjectTag} Booking Added`;
 }
