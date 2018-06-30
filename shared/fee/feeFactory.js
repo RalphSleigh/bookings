@@ -20,12 +20,12 @@ const feeMatrix = {
     ealing: {
         whole:   require('./ealing.js'),
         free:    require('./ealing.js'),
-        presets: require('./ealing.js')
+        presets: require('./ealing.js'),
     },
     big:    {
         whole:   require('./big.js'),
-        free:    require('./big.js'),
-        presets: require('./free.js')
+        free:    require('./free.js'),
+        presets: require('./big.js')
     },
     vcamp:  {
         whole:   require('./free.js'),
