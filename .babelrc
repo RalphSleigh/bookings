@@ -1,18 +1,22 @@
 {
   "presets": [
-    "env",
-    "react"
+    ["@babel/preset-env", {
+      "debug": true,
+      "useBuiltIns": "usage",
+      "forceAllTransforms": true,
+    }],
+    "@babel/react"
   ],
   "plugins": [
-    "transform-object-rest-spread",
+    "@babel/plugin-proposal-object-rest-spread",
     [
-      "transform-class-properties",
+      "@babel/plugin-proposal-class-properties",
       {
         "spec": true
       }
     ],
     [
-      "transform-runtime",
+      "@babel/plugin-transform-runtime",
       {
         "polyfill": false,
         "regenerator": true

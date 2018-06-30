@@ -36,7 +36,8 @@ module.exports = {
 
     resolve: {
         alias: {
-            '@fortawesome/fontawesome-free-solid$': '@fortawesome/fontawesome-free-solid/shakable.es.js'
+            '@fortawesome/fontawesome-free-solid$': '@fortawesome/fontawesome-free-solid/shakable.es.js',
+            "react-html-email":'react'
         }
     },
 
@@ -48,7 +49,7 @@ module.exports = {
     module: {
         rules: [{
             test:    /\.js$/,
-            exclude: /node_modules/,
+
             use:     ['babel-loader']
         }, {
             test: /\.css$/,
