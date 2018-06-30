@@ -30,6 +30,7 @@
     "@babel/plugin-transform-runtime": "^7.0.0-beta.51",
     "@babel/preset-env": "^7.0.0-beta.51",
     "@babel/preset-react": "^7.0.0-beta.51",
+    "@babel/register": "^7.0.0-beta.51",
     "@babel/runtime": "^7.0.0-beta.51",
     "@f/popcount": "^1.0.0",
     "@fortawesome/fontawesome": "^1.1.8",
