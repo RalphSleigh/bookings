@@ -37,6 +37,8 @@ class realEmailSender {
                  });
 
         const template = require(path.join(__dirname, 'emails', templateName));
+        values.event.customQuestions.emailSubjectTag = values.event.customQuestions.emailSubjectTag || '';
+
 
         const subject = template.subject(values);
         const htmlEmail = template.html(values);
