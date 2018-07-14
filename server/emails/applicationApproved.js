@@ -30,5 +30,5 @@ export function html(values) {
 }
 
 export function subject(values) {
-    return `Application Approved for ${values.name}`
+    return `Application Approved for ${values.event.name}`
 }
