@@ -79,7 +79,7 @@ class Roles extends React.Component {
             return u;
         }).sort((a, b) => nameSort(a.userName, b.userName));
 
-        const globalRoles = event.roles.filter(r => r.villageId === null && r.organisationId === null);
+        const globalRoles = event.roles.filter(r => r.villageId === null && r.organisationId === null && r.name !== 'book');
 
         globalRoles.unshift({id: 0, name: "Owner", user: event.user});
 
@@ -94,6 +94,21 @@ class Roles extends React.Component {
                         icon={faTimes}/></span>
                 </Button>
             }</td>
+        </tr>);
+
+        const bookRoles = event.roles.filter(r => r.name === 'book');
+
+        bookRoles.sort((a, b) => a.note > b.note);
+
+        const bookRows = bookRoles.map(r => <tr key={r.id}>
+            <td>{r.user.userName}</td>
+            <td>{r.note}</td>
+            <td><Button onClick={this.deleteRole(r.id)} color="warning" size="sm" className="float-right"
+                        aria-label="Delete">
+                    <span aria-hidden="true"><FontAwesomeIcon
+                        icon={faTimes}/></span>
+            </Button>
+            </td>
         </tr>);
 
         const orgRoles = event.roles.filter(r => r.organisationId !== null);
@@ -196,6 +211,20 @@ class Roles extends React.Component {
                     {globalRows}
                     </tbody>
                 </Table>
+                <h4>Book Roles</h4>
+                <p>These are users who can book into the event:</p>
+                <Table striped size="sm">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Note</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {bookRows}
+                    </tbody>
+                </Table>
                 <h4>Organisation Roles</h4>
                 <p>These grant access to bookings within the specified organisation only</p>
                 <Table striped size="sm">
@@ -218,7 +247,7 @@ class Roles extends React.Component {
                     <tr>
                         <th>User</th>
                         <th>Role</th>
-                        <th>Organisation</th>
+                        <th>Village</th>
                         <th></th>
                     </tr>
                     </thead>

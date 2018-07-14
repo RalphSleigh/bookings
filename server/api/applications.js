@@ -43,7 +43,8 @@ application.approveApplication = async function (req, res) {
                              name:           "book",
                              userId:         application.userId,
                              eventId:        application.event.id,
-                             organisationId: req.body.org
+                             organisationId: req.body.org,
+                             note:           req.body.note
                          });
     const user = await db.user.scope('withData').findOne({where: {id: {[Op.eq]: application.userId}}});
     await application.destroy();

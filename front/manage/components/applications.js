@@ -23,18 +23,19 @@ export default class Applications extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {organisations: {}};
+        this.state = {organisations: {}, notes: {}};
 
         this.approve = this.approve.bind(this);
         this.decline = this.decline.bind(this);
         this.setOrganisation = this.setOrganisation.bind(this);
+        this.updateNote = this.updateNote.bind(this);
     }
 
     approve(id) {
         return e => {
             let org = this.state.organisations[id];
             org = parseInt(org) ? parseInt(org) : null; //cast undefined/"any" to null, string from event to number
-            this.props.approve(id, org);
+            this.props.approve(id, org, this.state.notes[id]);
             e.preventDefault()
         }
     }
@@ -54,6 +55,13 @@ export default class Applications extends React.Component {
         }
     }
 
+    updateNote(id) {
+        return e => {
+            this.setState(update(this.state, {notes: {[id]: {$set: e.target.value}}}));
+            e.preventDefault()
+        }
+    }
+
     render() {
 
         const event = this.props.Event.toJS();
@@ -63,9 +71,11 @@ export default class Applications extends React.Component {
             application={a}
             event={event}
             organisation={this.state.organisations[a.id]}
+            note={this.state.notes[a.id]}
             approve={this.approve(a.id)}
             decline={this.decline(a.id)}
             setOrganisation={this.setOrganisation(a.id)}
+            updateNote={this.updateNote(a.id)}
         />);
 
         return (<div>
@@ -95,7 +105,7 @@ const ApplicationRow = props => {
         approveText = <p>Approve user to book into this event:</p>
     }
 
-    return (<Card>
+    return (<Card className="mb-1">
         <CardBody>
             <CardTitle>
                 <b>{props.application.user.userName}</b> ({props.application.user.email})
@@ -107,6 +117,18 @@ const ApplicationRow = props => {
                 </Col>
                 <Col sm={5}>
                     {approveText}
+                    <FormGroup row>
+                        <Label>
+                            Note:
+                        </Label>
+                        <Col>
+                            <Input
+                                type="text"
+                                value={props.note || ''}
+                                onChange={props.updateNote}
+                            />
+                        </Col>
+                    </FormGroup>
                     <FormGroup row>
                         <Col>
                             <Button type="submit" color="success" onClick={props.approve}>Approve

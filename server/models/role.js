@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
 		name: {
 			type: DataTypes.STRING
 		},
+        note: {
+            type: DataTypes.TEXT
+        },
 	});
 
 	role.associate = models => {

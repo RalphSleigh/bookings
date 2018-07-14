@@ -82,7 +82,7 @@ export default class ParticipantsForm extends React.Component {
 
     delete(k) {
         return (e) => {
-            this.props.delete(k);
+            if (confirm("Are you sure you wish to remove this participant?")) this.props.delete(k);
             e.preventDefault();
         }
     }
