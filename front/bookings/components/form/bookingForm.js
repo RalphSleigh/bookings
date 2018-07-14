@@ -54,6 +54,10 @@ export default class BookingForm extends React.Component {
     componentWillMount() {
     }
 
+    componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     updateItem(item, value) {
         //magic
         this.props.updateCurrentBooking(update(this.props.booking, {[item]: {$set: value}}))
@@ -63,6 +67,7 @@ export default class BookingForm extends React.Component {
         let participants = cloneDeep(this.props.booking.participants);
 
         const participant = participants.find(p => p.id === id);
+        delete participant.focus;
         participant[item] = value;
         this.props.updateCurrentBooking(update(this.props.booking, {participants: {$set: participants}}));
     }
@@ -279,7 +284,8 @@ function blankParticipant(event) {
         dietExtra:     '',
         medical:       '',
         days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
-        externalExtra: {}
+        externalExtra: {},
+        focus:         true
     }
 }
 

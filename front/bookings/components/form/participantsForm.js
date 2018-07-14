@@ -129,88 +129,104 @@ export default class ParticipantsForm extends React.Component {
     }
 }
 
-const ParticipantRow = (props) => {
+class ParticipantRow extends React.Component {
 
-    const debugInfo = props.env === 'dev' ? <span
-        style={{color: 'red'}}>{'id: ' + props.id + ' updated: ' + Moment(props.updatedAt).format('YYYY-MM-DD')}</span> : null;
+    constructor(props) {
+        super(props);
+        this.nameInput = React.createRef();
+    }
 
-    //{props.validating ? props.name === "" || props.age === "" || props.diet === "" ? invalid : valid : valid}
+    componentDidMount() {
+        if (this.props.focus) {
+            this.nameInput.current.focus();
+        }
+    }
 
-    const attendance = <props.AttendanceWidget days={props.days} event={props.event} update={props.update("days")}
-                                               updateDirect={props.updateDirect("days")}/>;
+    render() {
 
-    return (<Card className="mb-3">
-        <CardImg top src="/participant-header.jpg" alt="Card image cap"/>
-        <CardImgOverlay>
-            <CardTitle style={{
-                marginTop: "-0.85em",
-                marginLeft: "-0.60em"
-            }}>#{props.index + 1} {debugInfo}</CardTitle>
-        </CardImgOverlay>
-        <CardBody>
-            <FormGroup row>
-                <Label sm={2}>Name:</Label>
-                <Col sm={10}>
-                    <Input type="text"
-                           value={props.name || ''}
-                           onChange={props.update("name")}
-                           vaild={props.valid(props.name)}
-                           placeholder="Name"/>
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <props.ageWidgets.BookingFormWidget
-                    age={props.age}
-                    updateAge={props.updateAge}
-                    valid={props.valid(props.age)}
-                    event={props.event}
-                />
-                <Label sm={1}>Diet:</Label>
-                <Col sm={3}>
+        const debugInfo = this.props.env === 'dev' ? <span
+            style={{color: 'red'}}>{'id: ' + this.props.id + ' updated: ' + Moment(this.props.updatedAt).format('YYYY-MM-DD')}</span> : null;
 
-                    <Input type="select" value={props.diet || ''}
-                           onChange={props.update("diet")}
-                           vaild={props.valid(props.diet)}>
-                        <option>Please Select</option>
-                        <option value="omnivore">Omnivore</option>
-                        <option value="vegetarian">Vegetarian</option>
-                        <option value="vegan">Vegan</option>
-                    </Input>
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label sm={3}>Additional dietary requirement or food related allergies:</Label>
-                <Col sm={9}>
-                    <Input type="textarea"
-                           value={props.dietExtra || ''}
-                           onChange={props.update("dietExtra")}
-                           placeholder="N/A"
-                           rows="3"/>
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label sm={3}>Additional medical information &amp; medication taken:</Label>
-                <Col sm={9}>
-                    <Input type="textarea"
-                           value={props.medical || ''}
-                           onChange={props.update("medical")}
-                           placeholder="N/A"
-                           rows="3"/>
-                </Col>
-            </FormGroup>
-            <Over16Section event={props.event} age={props.age} values={props.externalExtra || {}}
-                           update={props.updateExtra}/>
-            <FormGroup row>
-                {attendance}
-                <Col sm={1}>
-                    <Button onClick={props.delete} color="warning">
-                        <span style={{color: 'white'}}><FontAwesomeIcon icon={faTimes}/></span>
-                    </Button>
-                </Col>
-            </FormGroup>
-        </CardBody>
-    </Card>)
-};
+        //{this.props.validating ? this.props.name === "" || this.props.age === "" || this.props.diet === "" ? invalid : valid : valid}
+
+        const attendance = <this.props.AttendanceWidget days={this.props.days} event={this.props.event}
+                                                        update={this.props.update("days")}
+                                                        updateDirect={this.props.updateDirect("days")}/>;
+
+        return (<Card className="mb-3">
+            <CardImg top src="/participant-header.jpg" alt="Card image cap"/>
+            <CardImgOverlay>
+                <CardTitle style={{
+                    marginTop:  "-0.85em",
+                    marginLeft: "-0.60em"
+                }}>#{this.props.index + 1} {debugInfo}</CardTitle>
+            </CardImgOverlay>
+            <CardBody>
+                <FormGroup row>
+                    <Label sm={2}>Name:</Label>
+                    <Col sm={10}>
+                        <Input type="text"
+                               value={this.props.name || ''}
+                               onChange={this.props.update("name")}
+                               vaild={this.props.valid(this.props.name)}
+                               placeholder="Name"
+                               innerRef={this.nameInput}/>
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <this.props.ageWidgets.BookingFormWidget
+                        age={this.props.age}
+                        updateAge={this.props.updateAge}
+                        valid={this.props.valid(this.props.age)}
+                        event={this.props.event}
+                    />
+                    <Label sm={1}>Diet:</Label>
+                    <Col sm={3}>
+
+                        <Input type="select" value={this.props.diet || ''}
+                               onChange={this.props.update("diet")}
+                               vaild={this.props.valid(this.props.diet)}>
+                            <option>Please Select</option>
+                            <option value="omnivore">Omnivore</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                        </Input>
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label sm={3}>Additional dietary requirement or food related allergies:</Label>
+                    <Col sm={9}>
+                        <Input type="textarea"
+                               value={this.props.dietExtra || ''}
+                               onChange={this.props.update("dietExtra")}
+                               placeholder="N/A"
+                               rows="3"/>
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label sm={3}>Additional medical information &amp; medication taken:</Label>
+                    <Col sm={9}>
+                        <Input type="textarea"
+                               value={this.props.medical || ''}
+                               onChange={this.props.update("medical")}
+                               placeholder="N/A"
+                               rows="3"/>
+                    </Col>
+                </FormGroup>
+                <Over16Section event={this.props.event} age={this.props.age} values={this.props.externalExtra || {}}
+                               update={this.props.updateExtra}/>
+                <FormGroup row>
+                    {attendance}
+                    <Col sm={1}>
+                        <Button onClick={this.props.delete} color="warning">
+                            <span style={{color: 'white'}}><FontAwesomeIcon icon={faTimes}/></span>
+                        </Button>
+                    </Col>
+                </FormGroup>
+            </CardBody>
+        </Card>)
+    }
+}
 
 const Over16Section = props => {
 

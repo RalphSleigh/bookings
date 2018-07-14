@@ -116,7 +116,7 @@
     "react-transition-group": "^1",
     "react-widgets": "^4.2.6",
     "react-widgets-moment": "^4.0.12",
-    "reactstrap": "^5.0.0",
+    "reactstrap": "^6.3.0",
     "redux": "^3.6.0",
     "redux-auth-wrapper": "^2.0.2",
     "redux-immutable": "^4.0.0",

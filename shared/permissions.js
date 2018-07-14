@@ -141,7 +141,7 @@ permissions.createRole = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true;
     if (event === null) return false;
     if (user.id === event.userId) return true; //event owner can
-    if (user.roles.find(role => role.eventId === event.id && role.name === "manage" && role.villageId === null && role.organisationId === null)) return true;
+    if (user.roles.find(role => role.eventId === event.id && role.name === "Manage" && role.villageId === null && role.organisationId === null)) return true;
     return false
 };
 
