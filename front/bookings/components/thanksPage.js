@@ -14,6 +14,7 @@ import {
 import ReactMarkdown        from 'react-markdown'
 import ageFactory           from "../../age";
 import feeFactory           from '../../../shared/fee/feeFactory.js'
+import W                    from "../../../shared/woodcraft";
 
 
 //confirmation page for bookings
@@ -43,11 +44,15 @@ class ThanksPage extends React.Component {
 
 
         const booking = this.props.Booking.toJS();
+        const startDate = moment(event.startDate);
 
-        const participants = booking.participants.map(p => {
-            p.age = ageWidgets.displayAgeMoment(p.age, event);
-            return p;
-        }).map(p => <ParticipantRow key={p.id} {...p} />);
+        booking.participants.forEach(p => {
+            p.ageAtStart = startDate.diff(moment(p.age), 'years');
+            p.ageGroup = W.find(w => w.filter(p.ageAtStart)).singular;
+            p.displayAge = ageWidgets.displayAgeParticipant(p);
+        });
+
+        const participants = booking.participants.map(p => <ParticipantRow key={p.id} {...p} />);
 
 
         return (<React.Fragment>
@@ -83,7 +88,7 @@ class ThanksPage extends React.Component {
 
 const ParticipantRow = props => <tr>
     <td>{props.name}</td>
-    <td>{props.age}</td>
+    <td>{props.displayAge}</td>
     <td>{props.diet}</td>
 </tr>;
 
