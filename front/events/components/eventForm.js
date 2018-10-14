@@ -244,6 +244,7 @@ export default class EditForm extends React.Component {
                     {formField("text", "Managers Email Subject Tag:", this.state.event.customQuestions.emailSubjectTag, this.updateExtra("emailSubjectTag"))}
                     {switchGroup("Over 16 e-mail address", this.state.event.customQuestions.adultEmail, this.updateCustomChecked('adultEmail'))}
                     {switchGroup("Over 16 First-Aid question", this.state.event.customQuestions.adultFirstAid, this.updateCustomChecked('adultFirstAid'))}
+                    {switchGroup("Central Food Opt Out", this.state.event.customQuestions.foodOptOut, this.updateCustomChecked('foodOptOut'))}
                     <Row>
                         <Col>
                             <Button color="success" onClick={this.clickSave}>Save</Button>
