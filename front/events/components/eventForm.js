@@ -114,7 +114,8 @@ export default class EditForm extends React.Component {
             <option key={2} value="flat">Flat Fee</option>,
             <option key={3} value="ealing">Ealing Pricing Policy</option>,
             <option key={4} value="big">Big Camp Policy</option>,
-            <option key={5} value="vcamp">VCamp Policy</option>];
+            <option key={5} value="vcamp">VCamp Policy</option>,
+            <option key={6} value="commonground">Common Ground Policy</option>];
 
         const attendanceOptions = map(attendance, a => <option value={a.name}
                                                                key={a.name + "key"}>{a.selection}</option>);
