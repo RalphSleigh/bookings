@@ -225,7 +225,7 @@ This event is configured with the options used for Ealing events:
         }, {
             name:                 'Common Ground Style',
             description:
-                                  `
+                             `
  This event is configured to represent a much larger event:
 
 * Assumed one person will book a whole group of people in.
@@ -234,12 +234,12 @@ This event is configured with the options used for Ealing events:
 * Three attendance options available
 * Large camp fee structure, early, normal and late rates, cancellation fee and woodchip discount. 
 * Should have ~300 people booked in already`,
-            startDate:            new Date("2019-10-08T00:00:00Z"),
-            endDate:              new Date("2019-10-14T00:00:00Z"),
-            bookingDeadline:      new Date("2019-06-01T00:00:00Z"),
-            userId:               2,
-            feeModel:             "big",
-            feeData:              {
+            startDate:       new Date("2019-10-08T00:00:00Z"),
+            endDate:         new Date("2019-10-14T00:00:00Z"),
+            bookingDeadline: new Date("2019-06-01T00:00:00Z"),
+            userId:          2,
+            feeModel:        "commonground",
+            feeData:         {
                 buckets:   [{
                     id:     'early',
                     date:   new Date('2018-04-01T00:00:00Z'),
