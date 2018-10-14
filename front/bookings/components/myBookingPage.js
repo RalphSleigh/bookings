@@ -40,6 +40,7 @@ class MyBookingPage extends React.Component {
         const booking = this.props.Booking.toJS ? this.props.Booking.toJS() : this.props.Booking;
         const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, booking, o));
 
+        booking.externalExtra = booking.externalExtra || {};
 
         const form =
             <BookingForm user={user}
@@ -114,7 +115,9 @@ const emptyBooking = (User, Event) => {
             id:            uuid(),
             days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
             externalExtra: {}
-        }]
+        }],
+        externalExtra: {},
+        internalExtra: {}
     };
     if (Event.get("organisationsEnabled")) booking.organisationId = Event.getIn(['organisations', 0, 'id']);
     return booking;

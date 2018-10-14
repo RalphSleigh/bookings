@@ -223,7 +223,7 @@ This event is configured with the options used for Ealing events:
             bigCampMode:          false,
             customQuestions:      {ageWidgets: 'groupings'},
         }, {
-            name:                 'Large Event',
+            name:                 'Common Ground Style',
             description:
                                   `
  This event is configured to represent a much larger event:
@@ -273,7 +273,9 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
                 name: 'Second Half',
                 mask: 120
             }],
-            customQuestions:      {}
+            customQuestions:      {
+                foodOptOut: true
+            }
         }, {
             name:                 'Venturer Camp 2019',
             description:          `Event with the venturer camp options`,

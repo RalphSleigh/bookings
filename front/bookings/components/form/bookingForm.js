@@ -4,6 +4,7 @@ import ParticipantForm    from './participantsForm.js'
 import PermissionForm     from './permissionForm.js'
 import FeeForm            from './feeForm.js'
 import PaymentForm        from './paymentForm.js'
+import FoodForm           from './foodForm.js'
 import cloneDeep          from 'lodash/cloneDeep'
 import update             from 'immutability-helper';
 import Moment             from 'moment'
@@ -35,20 +36,23 @@ export default class BookingForm extends React.Component {
         this.guest = props.user && props.user.id === 1;
 
         this.state = {
-            permission: false,
-            new: !this.props.booking.id,
-            deleteLock: true,
-            validation: this.props.booking.id ? 4 : 0
+            permission:  false,
+            new:         !this.props.booking.id,
+            deleteLock:  true,
+            validation:  this.props.booking.id ? 4 : 0,
+            foodCounter: 0
         };
 
         this.updateItem = this.updateItem.bind(this);
         this.updateParticipantDetails = this.updateParticipantDetails.bind(this);
+        this.updateExternalExtra = this.updateExternalExtra.bind(this);
         this.addParticipant = this.addParticipant.bind(this);
         this.deleteParticipant = this.deleteParticipant.bind(this);
         this.clickDeleteLock = this.clickDeleteLock.bind(this);
         this.clickDelete = this.clickDelete.bind(this);
         this.submit = this.submit.bind(this);
         this.updateValidation = this.updateValidation.bind(this);
+        this.foodCounter = this.foodCounter.bind(this);
     }
 
     componentWillMount() {
@@ -70,6 +74,10 @@ export default class BookingForm extends React.Component {
         delete participant.focus;
         participant[item] = value;
         this.props.updateCurrentBooking(update(this.props.booking, {participants: {$set: participants}}));
+    }
+
+    updateExternalExtra(item, value) {
+        this.props.updateCurrentBooking(update(this.props.booking, {externalExtra: {[item]: {$set: value}}}));
     }
 
     addParticipant() {
@@ -145,6 +153,12 @@ export default class BookingForm extends React.Component {
         return results;
     }
 
+    foodCounter(e) {
+        const newLevel = ++this.state.foodCounter;
+        this.setState(update(this.state, {foodCounter: {$set: newLevel}}));
+        e.preventDefault();
+    }
+
     render() {
 
         const validationMessages = this.validateBooking();
@@ -182,7 +196,7 @@ export default class BookingForm extends React.Component {
         return (<Form>
             <Row>
                 <Col>
-                    <h3>Your Details</h3>
+                    <h3 onClick={this.foodCounter}>Your Details</h3>
                     <p>We will use these if we need to get in touch</p>
                 </Col>
             </Row>
@@ -193,6 +207,9 @@ export default class BookingForm extends React.Component {
                 update={this.updateItem}
                 guest={this.guest}
                 validating={this.state.validation > 0} {...userDetails}/>
+            {this.state.foodCounter > 9 && this.props.event.customQuestions.foodOptOut ? <FoodForm
+                booking={this.props.booking}
+                update={this.updateExternalExtra}/> : null}
             <Row>
                 <Col>
                     <h3>Participants</h3>
