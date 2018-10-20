@@ -87,9 +87,12 @@ export default class Money extends React.Component {
 
     closedRow(b, event) {
 
+        let org = {name: ''};
+        if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
+
         b.payments = b.payments || [];
 
-        const name = event.bigCampMode ? b.district : b.userName;
+        const name = event.bigCampMode ? b.district + ' - ' + org.name : b.userName;
         let owed = this.getFeesOwed(event, b.participants, b).reduce((a, c) => parseFloat(c.total) + a, 0);
         const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
 
@@ -122,7 +125,10 @@ export default class Money extends React.Component {
 
         b.payments = b.payments || [];
 
-        const name = event.bigCampMode ? b.district : b.userName;
+        let org = {name: ''};
+        if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
+
+        const name = event.bigCampMode ? b.district + org.name : b.userName;
         let owed = this.getFeesOwed(event, b.participants, b).reduce((a, c) => parseFloat(c.total) + a, 0);
         const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
 

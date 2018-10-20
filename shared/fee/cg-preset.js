@@ -47,7 +47,7 @@ export class Config extends React.Component {
         this.updateAmount = this.updateAmount.bind(this);
         this.updateAmountPartial = this.updateAmountPartial.bind(this);
 
-        if (!this.props.fee.woodchips) this.props.update({
+        if (!this.props.fee.desc) this.props.update({
                                                              buckets:       [{
                                                                  id:     "bucket" + bucketKey,
                                                                  date:   new Date(),
