@@ -203,6 +203,19 @@ export class Config extends React.Component {
             <Row>
                 <Col>
                     <FormGroup row>
+                        <Label sm={4}>Food Opt Out Discount:</Label>
+                        <Col sm={2}>
+                            <InputGroup>
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text">£</span>
+                                </div>
+                                <Input type="number" className="form-control" placeholder="30"
+                                       value={this.props.fee.foodOptOut}
+                                       onChange={this.update('foodOptOut')}/>
+                            </InputGroup>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
                         <Label sm={4}>Cancellation Fee:</Label>
                         <Col sm={2}>
                             <InputGroup>
@@ -346,7 +359,7 @@ const owedPresetEvent = (event, participants, booking) => {
         if (new Date(p.updatedAt) < new Date(c.date)) return {
             date:   c.date,
             mask:   p.days,
-            amount: c.amount[p.days]
+            amount: c.amount[p.days] - (bookimg.externalExtra.foodOptOut ? event.feeData.foodOptOut : 0)
         };
         else return a;
     }, {}));

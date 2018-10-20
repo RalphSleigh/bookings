@@ -240,7 +240,7 @@ This event is configured with the options used for Ealing events:
             userId:          2,
             feeModel:        "commonground",
             feeData:         {
-                buckets:   [{
+                buckets:    [{
                     id:     'early',
                     date:   new Date('2018-04-01T00:00:00Z'),
                     amount: {'Whole Event': 90, 'First Half': 50, 'Second Half': 50}
@@ -256,10 +256,11 @@ This event is configured with the options used for Ealing events:
                         amount: {'Whole Event': 150, 'First Half': 100, 'Second Half': 100}
                     }],
                 orgs:
-                           `70:4
+                            `70:4
 50:5`,
-                cancel:    50,
-                desc:      `This camp costs £100 for the whole time, or £55 for half the camp.
+                foodOptOut: 30,
+                cancel:     50,
+                desc:       `This camp costs £100 for the whole time, or £55 for half the camp.
 There is a £10/5 discount for booking before the 1st of April, and it costs a lot more if you book in 2019.
 
 Woodchips are half price, and there is a £50 charge for cancelled bookings.`
