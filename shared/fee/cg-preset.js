@@ -52,7 +52,7 @@ export class Config extends React.Component {
                                                                  id:     "bucket" + bucketKey,
                                                                  date:   new Date(),
                                                                  amount: 0
-                                                             }], woodchips: 0.5, cancel: 50, desc: ''
+                                                             }], woodchips: 0.5, cancel: 50, desc: '', orgs: ''
                                                          });
         bucketKey++;
     }
@@ -175,6 +175,15 @@ export class Config extends React.Component {
             </Row>
             <Row>
                 <Col>
+                    <FormGroup>
+                        <Label>Organisation level fees:</Label>
+                        <Input type="textarea" name="orgs" value={this.props.fee.orgs}
+                               onChange={this.update('orgs')}/>
+                    </FormGroup>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
                     <h4>Date buckets</h4>
                     <Table>
                         <thead>
@@ -194,14 +203,6 @@ export class Config extends React.Component {
             <Row>
                 <Col>
                     <FormGroup row>
-                        <Label sm={4}>Woodchip Multiplier</Label>
-                        <Col sm={2}>
-                            <InputGroup>
-                                <Input type="number" className="form-control" placeholder="0.5"
-                                       value={this.props.fee.woodchips}
-                                       onChange={this.update('woodchips')}/>
-                            </InputGroup>
-                        </Col>
                         <Label sm={4}>Cancellation Fee:</Label>
                         <Col sm={2}>
                             <InputGroup>
@@ -319,58 +320,21 @@ export function emailHTML(event, booking) {
 
 }
 
-
 export function getFeesOwed(event, participants, booking) {
-
-    switch (event.partialDates) {
-        case 'whole':
-            return owedWholeEvent(event, participants, booking);
-        case 'presets':
             return owedPresetEvent(event, participants, booking);
-        default:
-            return [{line: "Unsupported attendance/fee combo", total: 0}]
-    }
 }
-
-const owedWholeEvent = (event, participants, booking) => {
-
-    const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
-
-    const filteredParticipants = cloneDeep(participants)
-    .filter(p => p.name && p.age)
-    .map(p => {
-        if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
-        return p;
-    });
-
-    const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
-        if (new Date(p.updatedAt) < new Date(c.date)) return {
-            type:   isWoodchip(event, p) ? 'woodchip' : 'normal',
-            date:   c.date,
-            mask:   p.days,
-            amount: c.amount * (isWoodchip(event, p) ? event.feeData.woodchips : 1)
-        };
-        else return a;
-    }, {}));
-
-    const combinedCosts = rawCosts.reduce((a, c) => {
-        if (a[c.date] && a[c.date][c.type]) a[c.date][c.type].count++;
-        else {
-            a[c.date] = a[c.date] || {};
-            a[c.date][c.type] = {count: 1, amount: c.amount};
-        }
-        return a;
-    }, {});
-
-    return [...linesWithoutPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
-};
 
 const owedPresetEvent = (event, participants, booking) => {
 
+    const orgFees = parseOrgFees(event);
+
+    if (orgFees[booking.organisationId]) return [...underFives(event, participants), ...orgFeesLines(participants, orgFees, booking, event), ...cancelledFee(event, participants, booking)]
+
     const sortedBuckets = event.feeData.buckets.sort((a, b) => a.date < b.date ? 1 : a.date === b.date ? 0 : -1);
 
     const filteredParticipants = cloneDeep(participants)
     .filter(p => p.name && p.age)
+    .filter(p => !isUnderFive(event, p))
     .map(p => {
         if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
         p.days = event.partialDatesData.find(d => d.mask === p.days);
@@ -380,10 +344,9 @@ const owedPresetEvent = (event, participants, booking) => {
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
         if (new Date(p.updatedAt) < new Date(c.date)) return {
-            type:   isWoodchip(event, p) ? 'woodchip' : 'normal',
             date:   c.date,
             mask:   p.days,
-            amount: c.amount[p.days] * (isWoodchip(event, p) ? event.feeData.woodchips : 1)
+            amount: c.amount[p.days]
         };
         else return a;
     }, {}));
@@ -398,27 +361,46 @@ const owedPresetEvent = (event, participants, booking) => {
         return a;
     }, {});
 
-    return [...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
+    return [...underFives(event, participants), ...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
 };
 
-const linesWithoutPartial = combined => reduce(combined, (a, c, i) => [...a, ...map(c, (l, t) => {
-    if (t === 'normal') return {
-        line:  `${l.count} ${l.count > 1 ? 'people' : 'person'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
-        total: l.count * l.amount
-    };
-    else return {
-        line:  `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
-        total: l.count * l.amount
-    }
-})], []);
+const orgFeesLines = (participants, orgFees, booking, event) => {
+    const filteredParticipants = cloneDeep(participants)
+    .filter(p => p.name && p.age)
+    .filter(p => !isUnderFive(event, p));
+    if (filteredParticipants.length > 0) return [{
+        line:  `${filteredParticipants.length} ${filteredParticipants.length > 1 ? 'people' : 'person'} for £${orgFees[booking.organisationId]}`,
+        total: filteredParticipants.length * orgFees[booking.organisationId]
+    }];
+    else return [];
+};
+
+const parseOrgFees = event => {
+
+    const lines = event.feeData.orgs.split("\n");
+    return lines.reduce((a, l) => {
+        const parts = l.split(':');
+        parts[1].split(',').forEach(p => {
+            a[parseInt(p)] = parseInt(parts[0]);
+        });
+        return a;
+    }, {})
+};
+
+const underFives = (event, participants) => {
+    const filteredParticipants = cloneDeep(participants)
+    .filter(p => p.name && p.age)
+    .filter(p => isUnderFive(event, p));
+    if (filteredParticipants.length > 0) return [{
+        line:  `${filteredParticipants.length} ${filteredParticipants.length > 1 ? 'people' : 'person'} under five for free`,
+        total: 0
+    }];
+    else return [];
+};
 
 const linesWithPartial = (combined, event) => reduce(combined, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, ...map(c1, (l, t) => {
-    if (t === 'normal') return {
+    return {
         line:  `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
-        total: l.count * l.amount
-    };
-    else return {
-        line:  `${l.count} ${l.count > 1 ? 'woodchips' : 'woodchip'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     }
 })], [])], []);
@@ -432,6 +414,6 @@ const cancelledFee = (event, participants, booking) => {
     }]
 };
 
-const isWoodchip = (e, p) => {
-    return Date.parse(e.startDate) - Date.parse(p.age) < 189216000000
+const isUnderFive = (e, p) => {
+    return Date.parse(e.startDate) - Date.parse(p.age) < 157784630000
 };

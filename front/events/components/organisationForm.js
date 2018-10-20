@@ -79,10 +79,13 @@ export default class OrganisationForm extends React.Component {
 
 const OrgRow = props =>
     <FormGroup row>
-        <Col sm={11}>
+        <Col sm={10}>
             <Input type="text" value={props.org.name || ''}
                    onChange={props.update(props.org.id)}
                    placeholder="Organisation Name"/>
+        </Col>
+        <Col>
+            {typeof props.org.id === 'string' ? 'Save to view' : props.org.id}
         </Col>
         <Col>
             <Button type="submit" onClick={props.delete(props.org.id)} color="warning">
