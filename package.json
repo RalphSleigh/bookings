@@ -131,7 +131,6 @@
     "uuid": "^3.3.0",
     "whatwg-fetch": "^2.0.4",
     "winston": "^3.0.0-rc5",
-    "winston-aws-cloudwatch": "^2.0.0",
-    "winston-cloudwatch": "github:patrickrgaffney/winston-cloudwatch#winston3"
+    "winston-cloudwatch": "^2.0.3"
   }
 }
