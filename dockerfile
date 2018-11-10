@@ -11,7 +11,11 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 COPY package-lock.json /usr/src/app/
 
-RUN apk --no-cache add --virtual builds-deps build-base python git postgresql-client@10.4-r0
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.8/main' >> /etc/apk/repositories
+
+RUN apk update
+
+RUN apk --no-cache add --virtual builds-deps build-base python git postgresql-client=10.5-r0
 RUN npm install npm install -g npm@latest
 RUN npm install
 
