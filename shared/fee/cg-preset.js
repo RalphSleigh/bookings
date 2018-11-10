@@ -359,7 +359,7 @@ const owedPresetEvent = (event, participants, booking) => {
         if (new Date(p.updatedAt) < new Date(c.date)) return {
             date:   c.date,
             mask:   p.days,
-            amount: c.amount[p.days] - (bookimg.externalExtra.foodOptOut ? event.feeData.foodOptOut : 0)
+            amount: c.amount[p.days] - (booking.externalExtra.foodOptOut ? event.feeData.foodOptOut : 0)
         };
         else return a;
     }, {}));
