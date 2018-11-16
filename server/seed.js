@@ -31,11 +31,11 @@ require("../config.js")()//config returns a promise the first time then overwrit
         update()
     }
     else if (process.argv && process.argv[2] === "sync") {
-        if (config.ENV !== 'dev') throw new error("Can't sync production instance!!");
+        if (config.ENV !== 'dev') throw new Error("Can't sync production instance!!");
         sync()
 
     } else if (process.argv && process.argv[2] === "seed") {
-        if (config.ENV !== 'dev') throw new error("Can't sync production instance!!");
+        if (config.ENV !== 'dev') throw new Error("Can't sync production instance!!");
         seed()
     } else {
         console.log("please specify up, sync or seed");

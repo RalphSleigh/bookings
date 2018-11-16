@@ -40,7 +40,6 @@ export default class BookingForm extends React.Component {
             new:         !this.props.booking.id,
             deleteLock:  true,
             validation:  this.props.booking.id ? 4 : 0,
-            foodCounter: 0
         };
 
         this.updateItem = this.updateItem.bind(this);
@@ -52,7 +51,6 @@ export default class BookingForm extends React.Component {
         this.clickDelete = this.clickDelete.bind(this);
         this.submit = this.submit.bind(this);
         this.updateValidation = this.updateValidation.bind(this);
-        this.foodCounter = this.foodCounter.bind(this);
     }
 
     componentWillMount() {
@@ -153,12 +151,6 @@ export default class BookingForm extends React.Component {
         return results;
     }
 
-    foodCounter(e) {
-        const newLevel = ++this.state.foodCounter;
-        this.setState(update(this.state, {foodCounter: {$set: newLevel}}));
-        e.preventDefault();
-    }
-
     render() {
 
         const validationMessages = this.validateBooking();
@@ -207,7 +199,7 @@ export default class BookingForm extends React.Component {
                 update={this.updateItem}
                 guest={this.guest}
                 validating={this.state.validation > 0} {...userDetails}/>
-            {this.state.foodCounter > 9 && this.props.event.customQuestions.foodOptOut ? <FoodForm
+            {this.props.event.customQuestions.foodOptOut ? <FoodForm
                 booking={this.props.booking}
                 update={this.updateExternalExtra}/> : null}
             <Row>
