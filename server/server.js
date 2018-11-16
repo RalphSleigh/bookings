@@ -174,6 +174,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
             server.get('/api/setdate/:participantId/:date', bookings.updateParticipantDate);
 
+            server.get('/api/setadmin/:userId', P.isAdmin, roles.setAdmin);
+
             server.get('/debug', (req, res) => { //this is a debug method
                 console.log("User");
                 console.log(req.user);

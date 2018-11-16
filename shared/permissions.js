@@ -4,6 +4,11 @@
 
 let permissions = {};
 
+permissions.isAdmin = (user) => {
+    if (user.roles.find(role => role.name === "admin")) return true //admin can always
+    return false;
+};
+
 permissions.editEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true //admin can always
     return user.id === event.userId
