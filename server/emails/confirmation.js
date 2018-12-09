@@ -32,7 +32,7 @@ export function html(values) {
                 <ReactMarkdown source={values.event.paymentInfo}/>
             </Item>
             <Item>
-                <p>Blue Skies</p>
+                <p>Blue Skies and Friendship,</p>
                 <p>Woodcraft Folk</p>
             </Item>
         </Email>

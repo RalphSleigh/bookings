@@ -21,7 +21,7 @@ export function html(values) {
                     with info and links you can just click to approve.</p>
             </Item>
             <Item>
-                <p>Blue Skies</p>
+                <p>Blue Skies and Friendship,</p>
                 <p>Woodcraft Folk</p>
             </Item>
         </Email>

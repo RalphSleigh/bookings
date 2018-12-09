@@ -23,7 +23,7 @@ export function html(values) {
                 <p>
                     <ul>{participantsList}</ul>
                 </p>
-                <p>Blue Skies</p>
+                <p>Blue Skies and Friendship,</p>
                 <p>Woodcraft Folk</p>
             </Item>
         </Email>

@@ -20,7 +20,7 @@ export function html(values) {
                     possible and you will recieve another e-mail as soon as you are approved to book in.</p>
             </Item>
             <Item>
-                <p>Blue Skies</p>
+                <p>Blue Skies and Friendship,</p>
                 <p>Woodcraft Folk</p>
             </Item>
         </Email>

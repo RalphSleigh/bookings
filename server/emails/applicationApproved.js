@@ -22,7 +22,7 @@ export function html(values) {
                 <p><A href={config.BASE_PATH}>{config.BASE_PATH}</A></p>
             </Item>
             <Item>
-                <p>Blue Skies</p>
+                <p>Blue Skies and Friendship,</p>
                 <p>Woodcraft Folk</p>
             </Item>
         </Email>
