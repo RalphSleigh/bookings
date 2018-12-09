@@ -96,11 +96,12 @@ export default class PermissionForm extends React.Component {
         const campWith = this.props.event.bigCampMode ?
 
             <FormGroup row>
-                <Label sm={2}>
-                    Are there any Groups/Districts you would like to camp
-                    with?:
+                <Label sm={12}>
+                    Are there are any other IFM-SEI organisations or Woodcraft Folk districts you would like to camp
+                    with? We will do our best to accommodate this, and if you don’t know, then don’t worry! We will
+                    match international groups with a lovely Woodcraft Folk group and vice versa:
                 </Label>
-                <Col sm={10}>
+                <Col sm={{size: 10, offset: 2}}>
                     <Input type="textarea"
                            value={this.props.campWith || ''}
                            onChange={this.updateEmergency("campWith")}/>
