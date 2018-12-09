@@ -389,6 +389,7 @@ const orgFeesLines = (participants, orgFees, booking, event) => {
 };
 
 const parseOrgFees = event => {
+    if (event.feeData.orgs.length < 2) return {};
 
     const lines = event.feeData.orgs.split("\n");
     return lines.reduce((a, l) => {

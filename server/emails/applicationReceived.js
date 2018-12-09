@@ -16,7 +16,7 @@ export function html(values) {
         <Email title={`Application Received for ${values.name}`}>
             <Item>
                 <p> Hi {values.user.userName}</p>
-                <p>Thanks for applying to book for {values.name}. One of our team will check you application as soon as
+                <p>Thanks for applying to book for {values.name}. One of our team will check your application as soon as
                     possible and you will recieve another e-mail as soon as you are approved to book in.</p>
             </Item>
             <Item>
