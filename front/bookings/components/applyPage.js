@@ -50,7 +50,8 @@ class ApplyPage extends React.Component {
                     <h3>Apply to book for <b>{event.name}</b></h3>
                     <Form>
                         <FormGroup>
-                            <Label>Hi {user.userName}, Please let us know below who you are booking for below: </Label>
+                            <Label>Hi {user.userName}, Please fill in your name and which IFM-SEI organisation or
+                                Woodcraft Folk district are you from below: </Label>
                             <Input type="textarea" value={this.state.message || ''}
                                    onChange={this.updateMessage}/>
                         </FormGroup>
