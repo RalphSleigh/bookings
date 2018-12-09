@@ -17,7 +17,7 @@ export function html(values) {
     return renderEmail(
         <Email title={`${values.event.customQuestions.emailSubjectTag} Booking Added`}>
             <Item>
-                <p>Hi {values.emailUser.userName}</p>
+                <p>Hi {values.emailUser.userName},</p>
                 <p>{values.userName} has added a new booking to {values.event.name}. They have
                     booked {values.participants.length} {values.participants.length === 1 ? 'person' : 'people'}:</p>
                 <p>
