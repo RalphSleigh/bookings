@@ -57,7 +57,7 @@ export default class FoodForm extends React.Component {
 const foodWarning = () => {
 
     return <div>
-        <Alert color="warning">By selecting this option your village will not receive any food from the central Common
+        <Alert color="danger">By selecting this option your village will not receive any food from the central Common
             Ground food store and you will need to source your own ingredients.</Alert>
         <h4>Opting out of central food provision</h4><p>
         Our aims as Central KP for Common Ground are to create a menu as directed by the young people in
