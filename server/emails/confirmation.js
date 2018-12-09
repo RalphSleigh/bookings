@@ -19,7 +19,7 @@ export function html(values) {
     return renderEmail(
         <Email title={`Booking Confirmation for ${values.event.name}`}>
             <Item>
-                <p> Hi {values.userName}</p>
+                <p> Hi {values.userName},</p>
                 <p>Thanks for booking for {values.event.name}, You have
                     booked {values.participants.length} {values.participants.length === 1 ? 'person' : 'people'}:</p>
                 <p>
