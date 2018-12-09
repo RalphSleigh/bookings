@@ -204,7 +204,7 @@ class ParticipantRow extends React.Component {
                     </Col>
                 </FormGroup>
                 <FormGroup row>
-                    <Label sm={3}>Additional medical information &amp; medication taken:</Label>
+                    <Label sm={3}>Additional medical information including medication taken or any access needs:</Label>
                     <Col sm={9}>
                         <Input type="textarea"
                                value={this.props.medical || ''}
