@@ -50,9 +50,13 @@ class ApplyPage extends React.Component {
                     <h3>Apply to book for <b>{event.name}</b></h3>
                     <Form>
                         <FormGroup>
-                            <Label>Hi {user.userName}, Please fill in your name and which IFM-SEI organisation or
-                                Woodcraft Folk district are you from below: </Label>
-                            <Input type="textarea" value={this.state.message || ''}
+                            <Label>Hi {user.userName}, Please fill in your name, which IFM-SEI organisation or
+                                Woodcraft Folk district are you from and approximately how many people are you planning to bring below: </Label>
+                            <Input rows={10} type="textarea" value={this.state.message || `Name:
+
+Which Woodcraft District/IFM organisation are you booking:
+
+Approximately how many people are you planning to bring:`}
                                    onChange={this.updateMessage}/>
                         </FormGroup>
                         <Button color="primary"

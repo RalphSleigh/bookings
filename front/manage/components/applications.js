@@ -1,6 +1,7 @@
 import React from 'react'
 import Moment from 'moment'
 import update from 'immutability-helper';
+import ReactMarkdown from 'react-markdown'
 
 import {
     Row,
@@ -113,21 +114,22 @@ const ApplicationRow = props => {
             </CardTitle>
             <Row>
                 <Col sm={7}>
-                    <p>{props.application.message}</p>
+                    <ReactMarkdown escapeHtml={true} source={props.application.message}/>
                 </Col>
                 <Col sm={5}>
                     {approveText}
-                    <FormGroup row>
+                    <FormGroup>
                         <Label>
                             Note:
                         </Label>
-                        <Col>
+
                             <Input
-                                type="text"
-                                value={props.note || ''}
+                                type="textarea"
+                                rows={7}
+                                value={props.note || props.application.message}
                                 onChange={props.updateNote}
                             />
-                        </Col>
+
                     </FormGroup>
                     <FormGroup row>
                         <Col>
