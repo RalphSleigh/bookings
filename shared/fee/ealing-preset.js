@@ -299,7 +299,11 @@ export function getFeesOwed(event, participants, booking) {
 
     });
 
-    return [{line: line, total: total}, ...otherLines];
+    const results = [];
+
+    if (total > 0) results.push({line: line, total: total});
+
+    return [...results, ...otherLines];
 }
 
 const parsePartFees = event => {
