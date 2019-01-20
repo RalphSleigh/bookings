@@ -183,7 +183,13 @@ export class BookingForm extends React.Component {
 
         return (<Row>
             <Col sm={12}>
-                <ReactMarkdown escapeHtml={true} source={this.props.event.feeData.desc}/>
+                <ReactMarkdown escapeHtml={true} source={this.props.event.feeData.desc}
+                               renderers={{
+                                   table: props => {
+                                       return <table className="table">{props.children}</table>
+                                   }
+                               }}
+                />
             </Col>
             <Col>
                 <Table>
