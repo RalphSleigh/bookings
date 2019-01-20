@@ -26,6 +26,13 @@ export default class Applications extends React.Component {
         super(props);
         this.state = {organisations: {}, notes: {}};
 
+        const event = this.props.Event.toJS();
+
+        (event.applications || []).map(a => {
+            this.state.notes[a.id] = a.message;
+            console.log(a.messsage)
+        });
+
         this.approve = this.approve.bind(this);
         this.decline = this.decline.bind(this);
         this.setOrganisation = this.setOrganisation.bind(this);
@@ -126,7 +133,7 @@ const ApplicationRow = props => {
                             <Input
                                 type="textarea"
                                 rows={7}
-                                value={props.note || props.application.message}
+                                value={props.note || ''}
                                 onChange={props.updateNote}
                             />
 

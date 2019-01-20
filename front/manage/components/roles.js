@@ -1,6 +1,7 @@
-import React from 'react'
-import update from 'immutability-helper';
-import {Typeahead} from 'react-bootstrap-typeahead';
+import React         from 'react'
+import update        from 'immutability-helper';
+import {Typeahead}   from 'react-bootstrap-typeahead';
+import ReactMarkdown from 'react-markdown'
 
 import {manageWholeEventCheck} from '../permission.js'
 
@@ -102,7 +103,8 @@ class Roles extends React.Component {
 
         const bookRows = bookRoles.map(r => <tr key={r.id}>
             <td>{r.user.userName}</td>
-            <td>{r.note}</td>
+            <td>
+                <ReactMarkdown escapeHtml={true} source={r.note}/></td>
             <td><Button onClick={this.deleteRole(r.id)} color="warning" size="sm" className="float-right"
                         aria-label="Delete">
                     <span aria-hidden="true"><FontAwesomeIcon
