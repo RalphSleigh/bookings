@@ -323,12 +323,12 @@ const owedFreeEvent = (event, participants, booking) => {
     const filteredParticipants = cloneDeep(participants)
     .filter(p => p.name && p.age && (p.days > 0))
     .map(p => {
-        if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+        if (!p.createdAt) p.createdAt = Moment().format("YYYY-MM-DD");
         return p;
     });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
-        if (new Date(p.updatedAt) < new Date(c.date)) return {
+        if (new Date(p.createdAt) < new Date(c.date)) return {
             type: p.days === wholeMask ? 'whole' : 'partial',
             days: popcount(p.days),
             date: c.date,
