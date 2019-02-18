@@ -234,7 +234,7 @@ export default class Bookings extends React.Component {
 }
 
 const updatedSort = (a, b) => {
-    return a.b.updatedAt > a.b.updatedAt ? 1 : -1;
+    return a.b.updatedAt > b.b.updatedAt ? 1 : -1;
 };
 
 
