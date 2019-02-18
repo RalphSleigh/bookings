@@ -8,7 +8,7 @@ Regardless of the method chosen, we store it as a date (which may not be an exac
 import dob from './dob.js';
 import grouping from './groups.js';
 
-module.exports = event => {
+export default event => {
     try {
         switch (event.customQuestions.ageWidgets) {
             case 'dob':

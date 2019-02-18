@@ -16,7 +16,7 @@ const moment = require("moment");
 indvidual age widgets
  */
 
-module.exports = {
+export default {
     BookingFormWidget: props => {
 
         const options = W.map((w, i) => <option key={i} value={w.singular}>{w.singular}</option>);
