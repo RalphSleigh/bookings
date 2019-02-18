@@ -1,9 +1,9 @@
-import React from 'react'
-import {MultiSelect, SimpleSelect} from '../../lib/react-selectize'; //Local version to fix bootstrap dropdowns.
-import update from 'immutability-helper';
-import * as P from '../../../shared/permissions.js'
-import debounce from 'debounce'
-import moment from 'moment'
+import React                       from 'react'
+import {MultiSelect, SimpleSelect} from 'react-selectize'; //Local version to fix bootstrap dropdowns. REMOVE
+import update                      from 'immutability-helper';
+import * as P                      from '../../../shared/permissions.js'
+import debounce                    from 'debounce'
+import moment                      from 'moment'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
