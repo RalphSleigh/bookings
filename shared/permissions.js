@@ -2,24 +2,22 @@
 //these functions are then wrapped by the client and server ready for use
 
 
-let permissions = {};
-
-permissions.isAdmin = (user) => {
+export const isAdmin = (user) => {
     if (user.roles.find(role => role.name === "admin")) return true //admin can always
     return false;
 };
 
-permissions.editEvent = (user, event) => {
+export const editEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true //admin can always
     return user.id === event.userId
 };
 
-permissions.createEvent = user => {
+export const createEvent = user => {
     if (user.roles.find(role => role.name === "admin")) return true //admin can always
     return false;
 };
 
-permissions.applyToBookEvent = (user, event) => {
+export const applyToBookEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return false; //admin does not need to apply
     if (event.userId === user.id) return false; //owner can
     if (user.id === 1) return false; //guest can't apply
@@ -29,7 +27,7 @@ permissions.applyToBookEvent = (user, event) => {
     return false;
 };
 
-permissions.bookEvent = (user, event) => {
+export const bookEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (event.userId === user.id) return true; //owner can
     if (event.bookingPolicy === 'guest') return true; //anyone can book
@@ -42,7 +40,7 @@ permissions.bookEvent = (user, event) => {
     return false;
 };
 
-permissions.deleteBooking = (user, event, booking) => {
+export const deleteBooking = (user, event, booking) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (booking.userId === user.id) return true; //owner can
     if (event.userId === user.id) return true; //event owner can
@@ -52,7 +50,7 @@ permissions.deleteBooking = (user, event, booking) => {
             && (role.organisationId === null || role.organisationId === booking.organisationId))) return true; //event manager
 };
 
-permissions.viewBooking = (user, booking) => {
+export const viewBooking = (user, booking) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (booking.userId === user.id) return true; //owner can
     if (booking.event.userId === user.id) return true; //event owner can
@@ -63,7 +61,7 @@ permissions.viewBooking = (user, booking) => {
     return false;
 };
 
-permissions.viewOrganisation = (user, event, organisation) => {
+export const viewOrganisation = (user, event, organisation) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (event.userId === user.id) return true; //owner can
     if (user.roles.find(role => role.eventId === event.id
@@ -71,7 +69,7 @@ permissions.viewOrganisation = (user, event, organisation) => {
     return false;
 };
 
-permissions.viewVillage = (user, event, village) => {
+export const viewVillage = (user, event, village) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can
     if (event.userId === user.id) return true; //owner can
     if (user.roles.find(role => role.eventId === event.id
@@ -79,21 +77,21 @@ permissions.viewVillage = (user, event, village) => {
     return false;
 };
 
-permissions.manageEvent = (user, event) => {
+export const manageEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage
     if (user.roles.find(role => role.eventId === event.id && role.name !== "book")) return true; //do we have an event management role?
     return false;
 };
 
-permissions.manageWholeEvent = (user, event) => {
+export const manageWholeEvent = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage
     if (user.roles.find(role => role.eventId === event.id && role.name !== "book" && role.villageId === null && role.organisationId === null)) return true; //do we have a whole event management role?
     return false;
 };
 
-permissions.decideApplication = (user, event) => {
+export const decideApplication = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true; //admin can always
     if (event.userId === user.id) return true;  //event owner can manage
     if (user.roles.find(role => role.eventId === event.id
@@ -103,7 +101,7 @@ permissions.decideApplication = (user, event) => {
     return false;
 };
 
-permissions.editBooking = (user, event, booking) => {
+export const editBooking = (user, event, booking) => {
     if (user.roles.find(role => role.name === "admin")) return true; //naturally...
     if (booking.eventId !== event.id) return false; //do the booking/event match?
     if (user.id === booking.userId) return true; //booking owner can edit
@@ -117,7 +115,7 @@ permissions.editBooking = (user, event, booking) => {
     return false;
 };
 
-permissions.bookIntoOrganisation = (user, event, booking, organisation) => {
+export const bookIntoOrganisation = (user, event, booking, organisation) => {
     if (booking !== null && booking.organisationId === organisation.id) return true; //always allow previous org
     if (user.roles.find(r => r.name === "book"
             && r.eventId === event.id
@@ -126,15 +124,15 @@ permissions.bookIntoOrganisation = (user, event, booking, organisation) => {
     return true;
 };
 
-permissions.assignVillage = (user, event) => {
-    return permissions.manageEvent(user, event); //for now the same as an event manager, this will change
+export const assignVillage = (user, event) => {
+    return manageEvent(user, event); //for now the same as an event manager, this will change
 };
 
-permissions.addVillage = (user, event) => {
-    return permissions.manageEvent(user, event); //for now the same as an event manager, this will change
+export const addVillage = (user, event) => {
+    return manageEvent(user, event); //for now the same as an event manager, this will change
 };
 
-permissions.getUserList = (user, event) => {
+export const getUserList = (user, event) => {
     if (user.id === event.userId) return true; //event owner can
     if (user.roles.find(role => role.name === "admin")) return true;
     if (user.roles.find(role => role.name === "create")) return true;
@@ -142,7 +140,7 @@ permissions.getUserList = (user, event) => {
     return false;
 };
 
-permissions.createRole = (user, event) => {
+export const createRole = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true;
     if (event === null) return false;
     if (user.id === event.userId) return true; //event owner can
@@ -150,14 +148,14 @@ permissions.createRole = (user, event) => {
     return false
 };
 
-permissions.viewMoney = (user, event) => {
+export const viewMoney = (user, event) => {
     if (user.roles.find(role => role.name === "admin")) return true;
     if (user.id === event.userId) return true; //event owner
     if (user.roles.find(role => role.name === "Money" && role.eventId === event.id)) return true;
     return false
 };
 
-permissions.addPayment = (user, booking) => {
+export const addPayment = (user, booking) => {
     if (user.roles.find(role => role.name === "admin")) return true;
     if (user.id === booking.event.userId) return true; //event owner can
     if (user.roles.find(role => role.name === "Money" && role.eventId === booking.event.id && role.organisationId === null)) return true; //global money role
@@ -165,5 +163,3 @@ permissions.addPayment = (user, booking) => {
     return false;
 };
 
-
-module.exports = permissions;
