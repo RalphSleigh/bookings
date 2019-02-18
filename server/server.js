@@ -4,9 +4,10 @@ require("@babel/register");
 
 require("../config.js")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
     .then(config => {
+        const log = require("./logging.js");
+
         const db = require('./orm.js');
 
-        const log = require("./logging.js");
         const backup = require("./backup");
 
         const express = require('express');
@@ -173,6 +174,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
             server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
 
             server.get('/api/setdate/:participantId/:date', bookings.updateParticipantDate);
+
+            server.get('/api/setadmin/:userId', P.isAdmin, roles.setAdmin);
 
             server.get('/debug', (req, res) => { //this is a debug method
                 console.log("User");

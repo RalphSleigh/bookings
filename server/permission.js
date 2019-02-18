@@ -220,6 +220,17 @@ permission.addPayment = async function (req, res, next) {
     }
 };
 
+permission.isAdmin = async function (req, res, next) {
+
+
+    if (P.isAdmin(req.user)) next();
+    else {
+        res.status(401).end();
+        logError(req);
+    }
+};
+
+
 module.exports = wrapper(permission);
 
 const logError = (req) => {

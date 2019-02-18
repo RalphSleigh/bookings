@@ -78,11 +78,13 @@ class ManageContainerPage extends React.Component {
 
         const bookings = Bookings.valueSeq().toJS().filter(b => b.eventId === event.id);
         bookings.forEach(b => {
+            b.externalExtra = b.externalExtra || {};
             b.participants.forEach(p => {
                 p.ageAtStart = startDate.diff(moment(p.age), 'years');
                 p.ageGroup = W.find(w => w.filter(p.ageAtStart)).singular;
                 p.displayAge = ageWidgets.displayAgeParticipant(p);
                 p.prettyUpdatedAt = moment(p.updatedAt).format('L');
+                p.prettyCreatedAt = moment(p.createdAt).format('L');
             })
         });
 

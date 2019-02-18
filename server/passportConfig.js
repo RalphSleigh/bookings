@@ -24,35 +24,6 @@ passport.use(new FacebookStrategy({
         return getUser(profile.id, profile.displayName, email, 'facebook')
             .then(u => cb(null, u.get({plain: true})))
             .catch(e => cb(e, null));
-        if (profile.emails) {
-            db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
-                .spread((user, created) => {
-                    if (created) {
-                        log.info("Created User from Facebook %s %s", profile.displayName, user.email);
-                        user.userName = profile.displayName;
-                        user.source = "Facebook";
-                        //calling save will remove the assosiated Role data, lets get it again..
-                        return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
-                    }
-                    return user;
-                })
-                .then(u => cb(null, u.get({plain: true})))
-                .catch(e => cb(e, null));
-        } else {
-            db.user.scope('withData').findOrCreate({where: {facebookProfileId: profile.id}})
-                .spread((user, created) => {
-                    if (created) {
-                        log.info("Created User from Facebook with profile ID %s %s (no e-mail)", profile.displayName, profile.id);
-                        user.userName = profile.displayName;
-                        user.source = "Facebook";
-                        //calling save will remove the assosiated Role data, lets get it again..
-                        return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
-                    }
-                    return user;
-                })
-                .then(u => cb(null, u.get({plain: true})))
-                .catch(e => cb(e, null));
-        }
     }));
 
 
@@ -63,19 +34,6 @@ passport.use(new GoogleStrategy({
     },
     function (accessToken, refreshToken, profile, cb) {
         return getUser(profile.id, profile.displayName, profile.emails[0].value, 'google')
-            .then(u => cb(null, u.get({plain: true})))
-            .catch(e => cb(e, null));
-        db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
-            .spread((user, created) => {
-                if (created) {
-                    user.userName = profile.displayName;
-                    user.source = "Google";
-                    //calling save will remove the assosiated Role data, lets get it again..
-                    log.info("Created User from Google %s %s", profile.displayName, profile.emails[0].value);
-                    return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
-                }
-                return user;
-            })
             .then(u => cb(null, u.get({plain: true})))
             .catch(e => cb(e, null));
     }
@@ -89,19 +47,6 @@ passport.use(new YahooStrategy({
     },
     function (accessToken, refreshToken, token, profile, cb) {
         return getUser(profile.id, profile.displayName, profile.emails[0].value, 'yahoo')
-            .then(u => cb(null, u.get({plain: true})))
-            .catch(e => cb(e, null));
-        db.user.scope('withData').findOrCreate({where: {email: profile.emails[0].value}})
-            .spread((user, created) => {
-                if (created) {
-                    user.userName = profile.displayName;
-                    user.source = "Yahoo";
-                    //calling save will remove the assosiated Role data, lets get it again..
-                    log.info("Created User from Yahoo %s %s", profile.displayName, profile.emails[0].value);
-                    return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
-                }
-                return user;
-            })
             .then(u => cb(null, u.get({plain: true})))
             .catch(e => cb(e, null));
     }
@@ -124,20 +69,8 @@ passport.use(new OIDCStrategy({
     },
     function (iss, sub, profile, accessToken, refreshToken, cb) {
         const email = profile._json.email || profile._json.preferred_username;
+        const displayName = profile.displayName || email || null;
         return getUser(profile.oid, profile.displayName, email, 'microsoft')
-            .then(u => cb(null, u.get({plain: true})))
-            .catch(e => cb(e, null));
-        db.user.scope('withData').findOrCreate({where: {email: email}})
-            .spread((user, created) => {
-                if (created) {
-                    user.userName = profile.displayName;
-                    user.source = "Microsoft";
-                    //calling save will remove the assosiated Role data, lets get it again..
-                    log.info("Created User from Microsoft %s %s", profile.displayName, email);
-                    return user.save({include: [{model: db.role}]}).then(u => db.user.scope('withData').findOne({where: {id: u.id}}))
-                }
-                return user;
-            })
             .then(u => cb(null, u.get({plain: true})))
             .catch(e => cb(e, null));
     }

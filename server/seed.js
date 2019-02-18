@@ -31,11 +31,11 @@ require("../config.js")()//config returns a promise the first time then overwrit
         update()
     }
     else if (process.argv && process.argv[2] === "sync") {
-        if (config.ENV !== 'dev') throw new error("Can't sync production instance!!");
+        if (config.ENV !== 'dev') throw new Error("Can't sync production instance!!");
         sync()
 
     } else if (process.argv && process.argv[2] === "seed") {
-        if (config.ENV !== 'dev') throw new error("Can't sync production instance!!");
+        if (config.ENV !== 'dev') throw new Error("Can't sync production instance!!");
         seed()
     } else {
         console.log("please specify up, sync or seed");
@@ -223,9 +223,9 @@ This event is configured with the options used for Ealing events:
             bigCampMode:          false,
             customQuestions:      {ageWidgets: 'groupings'},
         }, {
-            name:                 'Large Event',
+            name:                 'Common Ground Style',
             description:
-                                  `
+                             `
  This event is configured to represent a much larger event:
 
 * Assumed one person will book a whole group of people in.
@@ -234,13 +234,13 @@ This event is configured with the options used for Ealing events:
 * Three attendance options available
 * Large camp fee structure, early, normal and late rates, cancellation fee and woodchip discount. 
 * Should have ~300 people booked in already`,
-            startDate:            new Date("2019-10-08T00:00:00Z"),
-            endDate:              new Date("2019-10-14T00:00:00Z"),
-            bookingDeadline:      new Date("2019-06-01T00:00:00Z"),
-            userId:               2,
-            feeModel:             "big",
-            feeData:              {
-                buckets:   [{
+            startDate:       new Date("2019-10-08T00:00:00Z"),
+            endDate:         new Date("2019-10-14T00:00:00Z"),
+            bookingDeadline: new Date("2019-06-01T00:00:00Z"),
+            userId:          2,
+            feeModel:        "commonground",
+            feeData:         {
+                buckets:    [{
                     id:     'early',
                     date:   new Date('2018-04-01T00:00:00Z'),
                     amount: {'Whole Event': 90, 'First Half': 50, 'Second Half': 50}
@@ -255,9 +255,12 @@ This event is configured with the options used for Ealing events:
                         date:   new Date('2019-01-01T00:00:00Z'),
                         amount: {'Whole Event': 150, 'First Half': 100, 'Second Half': 100}
                     }],
-                woodchips: 0.5,
-                cancel:    50,
-                desc:      `This camp costs £100 for the whole time, or £55 for half the camp.
+                orgs:
+                            `70:4
+50:5`,
+                foodOptOut: 30,
+                cancel:     50,
+                desc:       `This camp costs £100 for the whole time, or £55 for half the camp.
 There is a £10/5 discount for booking before the 1st of April, and it costs a lot more if you book in 2019.
 
 Woodchips are half price, and there is a £50 charge for cancelled bookings.`
@@ -273,7 +276,9 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
                 name: 'Second Half',
                 mask: 120
             }],
-            customQuestions:      {}
+            customQuestions:      {
+                foodOptOut: true
+            }
         }, {
             name:                 'Venturer Camp 2019',
             description:          `Event with the venturer camp options`,
@@ -339,6 +344,12 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
             eventId: models.events[1].id
         }, {
             name:    "Big Jim's Big Gang",
+            eventId: models.events[1].id
+        }, {
+            name:    "Slightly discounted Org",
+            eventId: models.events[1].id
+        }, {
+            name:    "More Discounted Org",
             eventId: models.events[1].id
         }].map(o => db.organisation.create(o));
         return Promise.all(promises).then(o => {

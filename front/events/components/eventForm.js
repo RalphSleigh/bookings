@@ -114,7 +114,8 @@ export default class EditForm extends React.Component {
             <option key={2} value="flat">Flat Fee</option>,
             <option key={3} value="ealing">Ealing Pricing Policy</option>,
             <option key={4} value="big">Big Camp Policy</option>,
-            <option key={5} value="vcamp">VCamp Policy</option>];
+            <option key={5} value="vcamp">VCamp Policy</option>,
+            <option key={6} value="commonground">Common Ground Policy</option>];
 
         const attendanceOptions = map(attendance, a => <option value={a.name}
                                                                key={a.name + "key"}>{a.selection}</option>);
@@ -244,6 +245,7 @@ export default class EditForm extends React.Component {
                     {formField("text", "Managers Email Subject Tag:", this.state.event.customQuestions.emailSubjectTag, this.updateExtra("emailSubjectTag"))}
                     {switchGroup("Over 16 e-mail address", this.state.event.customQuestions.adultEmail, this.updateCustomChecked('adultEmail'))}
                     {switchGroup("Over 16 First-Aid question", this.state.event.customQuestions.adultFirstAid, this.updateCustomChecked('adultFirstAid'))}
+                    {switchGroup("Central Food Opt Out", this.state.event.customQuestions.foodOptOut, this.updateCustomChecked('foodOptOut'))}
                     <Row>
                         <Col>
                             <Button color="success" onClick={this.clickSave}>Save</Button>

@@ -1,9 +1,10 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React      from 'react'
+import {Link}     from 'react-router-dom'
 import ReactTable from 'react-table'
-import Moment from 'moment'
-import csv from 'csv-file-creator'
-import update from "immutability-helper";
+import Moment     from 'moment'
+import 'moment/locale/en-gb';
+import csv        from 'csv-file-creator'
+import update     from "immutability-helper";
 //import Switch from 'react-toggle'
 
 //import bookings from '../bookings'
@@ -17,9 +18,10 @@ import {
     CardBody,
     CardTitle,
     Table
-} from 'reactstrap';
+}                 from 'reactstrap';
 import ageFactory from "../../age";
 
+Moment.locale('en-gb');
 
 //import W from '../../../shared/woodcraft.js'
 
@@ -78,7 +80,7 @@ export default class Bookings extends React.Component {
 
     render() {
 
-        //const event = this.props.Event.toJS();
+        const event = this.props.Event.toJS();
         const bookings = this.props.bookings;
         const user = this.props.User.toJS();
         //const participants = this.props.Participants.toJS();
@@ -93,14 +95,15 @@ export default class Bookings extends React.Component {
     */
         const data = bookings.map(b => {
             let result = {
-                userName: b.userName,
-                userEmail: b.userEmail,
+                district:    b.district,
+                userName:    b.userName,
+                userEmail:   b.userEmail,
                 userContact: b.userContact,
                 paymentType: b.paymentType,
-                paid: b.paid,
-                id: b.id,
-                b: b,
-                E: this.props.Event
+                paid:        b.paid,
+                id:          b.id,
+                b:           b,
+                E:           this.props.Event
 
             };
 
@@ -116,20 +119,39 @@ export default class Bookings extends React.Component {
         });
 
 
-        const columns = [{accessor: "userName", Header: "Name", sortable: true},
-            {accessor: "userEmail", Header: "e-mail", sortable: true},
-            {accessor: "userContact", Header: "Contact", sortable: true, minWidth: 70},
+        const columns = [];
+
+        if (event.bigCampMode) columns.push({accessor: "district", Header: "District", sortable: true});
+
+        columns.push(...[{accessor: "userName", Header: "Name", sortable: true},
+            {
+                accessor: "userEmail", Header: "e-mail", sortable: true,
+                Cell:     row => <a href={`mailto:${row.original.userEmail}`}
+                                    target="_blank">{row.original.userEmail}</a>
+            },
+            {
+                accessor: "userContact", Header: "Contact", sortable: true, minWidth: 70,
+                Cell:     row => <a href={`tel:${row.original.userContact}`}
+                                    target="_blank">{row.original.userContact}</a>
+            },
             {accessor: "participants", Header: "Booked", sortable: true, minWidth: 50},
             {accessor: "paymentType", Header: "Payment Method", sortable: true, minWidth: 50},
-            {accessor: "updatedAt", Header: "Updated", sortable: true, minWidth: 40},
+            {id:            'updatedAt',
+                accessor:   row => row,
+                Cell:       row => row.original.updatedAt,
+                sortMethod: updatedSort,
+                Header:     "Updated",
+                sortable:   true,
+                minWidth:   40
+            },
             {
-                id: "edit",
+                id:       "edit",
                 accessor: "id",
-                Header: "Edit",
-                Cell: row => <BookingEditLink event={row.original.E.toJS()} booking={row.original.b}/>,
+                Header:   "Edit",
+                Cell:     row => <BookingEditLink event={row.original.E.toJS()} booking={row.original.b}/>,
                 minWidth: 18
             }
-        ];
+        ]);
         //const sortables=[{column:"userName", sortFunction:nameSort},"userEmail","userContact","participants","paymentType","updatedAt"];
         const expanded = {[this.state.expanded]: true};
 
@@ -211,6 +233,9 @@ export default class Bookings extends React.Component {
     }
 }
 
+const updatedSort = (a, b) => {
+    return a.b.updatedAt > a.b.updatedAt ? 1 : -1;
+};
 
 
 const nameSort = (a, b) => {

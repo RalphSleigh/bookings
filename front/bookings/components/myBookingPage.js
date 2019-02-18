@@ -40,6 +40,7 @@ class MyBookingPage extends React.Component {
         const booking = this.props.Booking.toJS ? this.props.Booking.toJS() : this.props.Booking;
         const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, booking, o));
 
+        booking.externalExtra = booking.externalExtra || {};
 
         const form =
             <BookingForm user={user}
@@ -64,6 +65,8 @@ const mapStateToProps = (state, props) => {
     const eventId = parseInt(props.match.params.eventId)
     let User = state.getIn(["User", "user"]);
     let Event = state.getIn(["Events", "events", eventId]);
+
+    const event = Event.toJS();
 
     //find the booking, sources:
     //1) currentBooking if set and for this user/event,
@@ -90,7 +93,8 @@ const mapStateToProps = (state, props) => {
 
         if (prevBooking) {
             prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note");
-            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId")));
+            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId").set('days', event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
+            )));
         }
 
         return prevBooking
@@ -114,7 +118,9 @@ const emptyBooking = (User, Event) => {
             id:            uuid(),
             days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
             externalExtra: {}
-        }]
+        }],
+        externalExtra: {},
+        internalExtra: {}
     };
     if (Event.get("organisationsEnabled")) booking.organisationId = Event.getIn(['organisations', 0, 'id']);
     return booking;

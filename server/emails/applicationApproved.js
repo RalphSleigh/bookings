@@ -17,7 +17,7 @@ export function html(values) {
     return renderEmail(
         <Email title={`Application Approved for ${values.event.name}`}>
             <Item>
-                <p> Hi {values.user.userName}</p>
+                <p> Hi {values.user.userName},</p>
                 <p>You have been approved to book into {values.event.name} and can do so at any time here:</p>
                 <p><A href={config.BASE_PATH}>{config.BASE_PATH}</A></p>
             </Item>

@@ -40,11 +40,12 @@ export default class Filter extends React.Component {
 
 
         this.state = {
-            orgs: [],
+            orgs:     [],
             villages: [],
-            day: null,
-            search: '',
-            data: {bookings: this.props.bookings, participants: participants}
+            day:      null,
+            search:   '',
+            food:     'all',
+            data:     {bookings: this.props.bookings, participants: participants}
         };
         this.updateOrgs = this.updateOrgs.bind(this);
         this.updateVillages = this.updateVillages.bind(this);
@@ -52,6 +53,7 @@ export default class Filter extends React.Component {
         this.updateDay = this.updateDay.bind(this);
         this.searchBooking = this.searchBooking.bind(this);
         this.updateData = this.updateData.bind(this);
+        this.updateFood = this.updateFood.bind(this);
         this.bounceUpdate = debounce(() => this.updateData(this.props), 500);
     }
 
@@ -74,6 +76,11 @@ export default class Filter extends React.Component {
         this.bounceUpdate();
     }
 
+    updateFood(e) {
+        this.setState(update(this.state, {food: {$set: e.target.value}}));
+        this.bounceUpdate();
+    }
+
     updateSearch(e) {
         this.setState(update(this.state, {search: {$set: e.target.value}}));
         this.bounceUpdate();
@@ -81,6 +88,11 @@ export default class Filter extends React.Component {
 
     updateData(source) {
         let filteredBookings = source.bookings.filter(b => {
+            if (this.state.food === 'all') return true;
+            if (this.state.food === 'out' && b.externalExtra.foodOptOut) return true;
+            if (this.state.food === 'central' && !b.externalExtra.foodOptOut) return true;
+            return false;
+        }).filter(b => {
             if (b.totalParticipants) b.participants = b.totalParticipants;
             if (this.state.orgs.length === 0) return true;
             return this.state.orgs.find(o => o.value === b.organisationId)
@@ -169,6 +181,7 @@ export default class Filter extends React.Component {
         const {Bookings, Participants, bookings, ...rest} = this.props;
 
 
+
         return (
             <React.Fragment>
                 <Form>
@@ -211,6 +224,17 @@ export default class Filter extends React.Component {
                                    onChange={this.updateSearch}
                                    placeholder="Search"/>
                         </Col>
+                        {event.customQuestions.foodOptOut ?
+                            <Col sm={3}>
+                                <Label className="control-label">Food:</Label>
+                                <Input type="select"
+                                       value={this.state.food}
+                                       onChange={this.updateFood}>
+                                    <option value="all">All</option>
+                                    <option value="central">Central Only</option>
+                                    <option value="out">Opt-out Only</option>
+                                </Input>
+                            </Col> : null}
                     </FormGroup>
                 </Form>
                 {React.cloneElement(this.props.children, {...this.state.data, ...rest})}

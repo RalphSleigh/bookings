@@ -18,30 +18,36 @@ module.exports = (sequelize, DataTypes) => {
         district: {
             type: DataTypes.TEXT
         },
-        paymentType: {
+        paymentType:     {
             type: DataTypes.STRING
         },
-        paid: {
+        paid:            {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
-        note: {
+        note:            {
             type: DataTypes.TEXT
         },
-        emergencyName: {
+        emergencyName:   {
             type: DataTypes.TEXT
         },
-        emergencyPhone: {
+        emergencyPhone:  {
             type: DataTypes.TEXT
         },
-        campWith: {
+        campWith:        {
             type: DataTypes.TEXT
         },
-        guestUUID: {
+        guestUUID:       {
             type: DataTypes.UUID
         },
         maxParticipants: {
             type: DataTypes.INTEGER
+        },
+        externalExtra:   {
+            type: DataTypes.JSON
+        },
+        internalExtra:   {
+            type: DataTypes.JSON
         }
     });
 

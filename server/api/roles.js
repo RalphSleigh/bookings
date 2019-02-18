@@ -26,6 +26,16 @@ const db = require('../orm.js');
         res.json({events: [event]});
     };
 
+role.setAdmin = async function (req, res) {
+
+    const role = await db.role.create({
+                                          userId: req.params.userId,
+                                          name:   'admin'
+                                      });
+
+    res.json(role);
+};
+
 module.exports = wrapper(role);
 
 

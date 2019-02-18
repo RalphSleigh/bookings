@@ -25,6 +25,8 @@ class EditPage extends React.Component {
         const booking = this.props.Booking.toJS();
         const user = this.props.User.toJS();
 
+        booking.externalExtra = booking.externalExtra || {};
+
         const organisations = event.organisations.filter(o => bookIntoOrganisation(user, event, booking, o));
 
 

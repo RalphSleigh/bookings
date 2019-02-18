@@ -77,7 +77,7 @@ class Roles extends React.Component {
         const userList = this.props.UserList.toJS().map(u => {
             u.search = u.userName + ' <' + (u.email || '') + '>';
             return u;
-        }).sort((a, b) => nameSort(a.userName, b.userName));
+        }).sort((a, b) => nameSort(a.search, b.search));
 
         const globalRoles = event.roles.filter(r => r.villageId === null && r.organisationId === null && r.name !== 'book');
 

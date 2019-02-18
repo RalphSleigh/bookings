@@ -151,6 +151,8 @@ bookings.editBooking = (req, res) => {
 */
 
 bookings.editBooking = (req, res) => {
+
+    delete req.body.internalExtra; //delete the internal extra so user can't update.
     req.body.participants.forEach(p => {
         delete p.internalExtra
     });
