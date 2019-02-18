@@ -57,7 +57,7 @@ permissions.viewBooking = (user, booking) => {
     if (booking.userId === user.id) return true; //owner can
     if (booking.event.userId === user.id) return true; //event owner can
     if (user.roles.find(role => role.eventId === booking.eventId
-            && role.name === "Manage"
+            && (role.name === "Manage" || role.name === 'View')
             && (role.villageId === null || role.villageId === booking.villageId)
             && (role.organisationId === null || role.organisationId === booking.organisationId))) return true; //event manager
     return false;
@@ -138,7 +138,7 @@ permissions.getUserList = (user, event) => {
     if (user.id === event.userId) return true; //event owner can
     if (user.roles.find(role => role.name === "admin")) return true;
     if (user.roles.find(role => role.name === "create")) return true;
-    if (user.roles.find(role => role.name === "Manage" && role.organisationId === null && role.villageId === null)) return true;
+    if (user.roles.find(role => (role.name === "Manage" || role.name === "View") && role.organisationId === null && role.villageId === null)) return true;
     return false;
 };
 

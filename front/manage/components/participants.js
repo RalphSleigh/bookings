@@ -138,7 +138,7 @@ export default class Participants extends React.Component {
                 dob:       p.age,
                 age:       p.displayAge,
                 diet:      p.diet,
-                updatedAt: p.prettyUpdatedAt,
+                createdAt: p.prettyCreatedAt,
                 district:  b.district,
                 p:         p,
                 b:         b,
@@ -167,7 +167,14 @@ export default class Participants extends React.Component {
                 Cell: row => row.original.age
             },
                      {accessor: "diet", Header: "Diet", sortable: true, minWidth: 70},
-                     {accessor: "updatedAt", Header: "Updated at", sortable: true, minWidth: 50});
+                     {id:            'createdAt',
+                         accessor:   row => row,
+                         Cell:       row => row.original.createdAt,
+                         sortMethod: createdSort,
+                         Header:     "Created At",
+                         sortable:   true,
+                         minWidth:   50
+                     });
 
         const expanded = {[this.state.expanded]: true};
 
@@ -203,7 +210,11 @@ export default class Participants extends React.Component {
 
 const dobSort = (a, b) => {
     return a.dob < b.dob ? 1 : -1;
-}
+};
+
+const createdSort = (a, b) => {
+    return a.p.createdAt > b.p.createdAt ? 1 : -1;
+};
 
 
 const nameSort = (a, b) => {

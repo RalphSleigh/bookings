@@ -4,9 +4,10 @@ require("@babel/register");
 
 require("../config.js")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
     .then(config => {
+        const log = require("./logging.js");
+
         const db = require('./orm.js');
 
-        const log = require("./logging.js");
         const backup = require("./backup");
 
         const express = require('express');

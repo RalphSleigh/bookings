@@ -84,6 +84,7 @@ class ManageContainerPage extends React.Component {
                 p.ageGroup = W.find(w => w.filter(p.ageAtStart)).singular;
                 p.displayAge = ageWidgets.displayAgeParticipant(p);
                 p.prettyUpdatedAt = moment(p.updatedAt).format('L');
+                p.prettyCreatedAt = moment(p.createdAt).format('L');
             })
         });
 
