@@ -1,4 +1,4 @@
 module.exports = {
     up:   (queryInterface, DataTypes) => queryInterface.addConstraint('bookings', ['userId', 'eventId'], {type: 'UNIQUE'}),
-    down: (queryInterface, DataTypes) => true
+    down: (queryInterface, DataTypes) => Promise.resolve()
 };

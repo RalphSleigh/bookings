@@ -1,11 +1,11 @@
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        if (queryInterface.sequelize.connectionManager.dialectName === 'sqlite') return true;
+        if (queryInterface.sequelize.connectionManager.dialectName === 'sqlite') return Promise.resolve();
         return queryInterface.sequelize.query(`ALTER TYPE "enum_events_partialDates" ADD VALUE 'free'`);
     },
 
     down: (queryInterface, Sequelize) => {
-        if (queryInterface.sequelize.connectionManager.dialectName === 'sqlite') return true;
+        if (queryInterface.sequelize.connectionManager.dialectName === 'sqlite') return Promise.resolve();
         return queryInterface.sequelize.query(`
         DELETE 
         FROM

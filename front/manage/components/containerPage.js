@@ -22,14 +22,15 @@ import {
 } from '../actions.js'
 import {getUserList} from "../../user/actions";
 
-import Filter from './filter'
-import BookingsPage from './bookings.js'
+import Filter           from './filter'
+import BookingsPage     from './bookings.js'
 import ParticipantsPage from './participants.js'
-import KpPage from './kp.js'
-import ApplicationPage from './applications.js'
-import VillagePage from './villages.js'
-import RolesPage from './roles.js'
-import MoneyPage from './money.js'
+import KpPage           from './kp.js'
+import ApplicationPage  from './applications.js'
+import VillagePage      from './villages.js'
+import RolesPage        from './roles.js'
+import MoneyPage        from './money.js'
+import BirthdaysPage    from './birthdays.js'
 
 import W from '../../../shared/woodcraft'
 
@@ -128,6 +129,8 @@ class ManageContainerPage extends React.Component {
                             <RolesTab {...this.props}/>
                             <ApplicationsTab {...this.props}/>
                             <MoneyTab {...this.props} />
+                            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/birthdays"}
+                                       label="🎂"/>
                         </Nav>
                     </Col>
                 </Row>
@@ -150,6 +153,11 @@ class ManageContainerPage extends React.Component {
                     <Route path="/event/:eventId(\d+)/manage/kp">
                         <Filter bookings={this.state.bookings} {...props} >
                             <KpPage/>
+                        </Filter>
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/birthdays">
+                        <Filter bookings={this.state.bookings} {...props} >
+                            <BirthdaysPage/>
                         </Filter>
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/applications">
