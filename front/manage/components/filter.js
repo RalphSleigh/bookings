@@ -187,16 +187,17 @@ export default class Filter extends React.Component {
                 <Form>
                     <FormGroup row className="mt-3">
                         {event.bigCampMode ? <React.Fragment>
-                            <Col sm={3}>
-                                <Label>Filter by Organisation:</Label>
-                                <MultiSelect
-                                    values={this.state.orgs}
-                                    onValuesChange={this.updateOrgs}
-                                    placeholder={wholeEvent ? "All Organisations" : "All Permissible Organisations"}
-                                    options={orgOptions}
-                                    theme="bootstrap3"
-                                />
-                            </Col>
+                            {event.organisationsEnabled ?
+                                <Col sm={3}>
+                                    <Label>Filter by Organisation:</Label>
+                                    <MultiSelect
+                                        values={this.state.orgs}
+                                        onValuesChange={this.updateOrgs}
+                                        placeholder={wholeEvent ? "All Organisations" : "All Permissible Organisations"}
+                                        options={orgOptions}
+                                        theme="bootstrap3"
+                                    />
+                                </Col> : null}
                             <Col sm={3}>
                                 <Label>Filter by Village:</Label>
                                 <MultiSelect
