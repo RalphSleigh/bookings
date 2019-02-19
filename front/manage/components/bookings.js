@@ -2,9 +2,9 @@ import React      from 'react'
 import {Link}     from 'react-router-dom'
 import ReactTable from 'react-table'
 import Moment     from 'moment'
-import 'moment/locale/en-gb';
+import 'moment/locale/en-gb'
 import csv        from 'csv-file-creator'
-import update     from "immutability-helper";
+import update     from "immutability-helper"
 //import Switch from 'react-toggle'
 
 //import bookings from '../bookings'
@@ -20,6 +20,7 @@ import {
     Table
 }                 from 'reactstrap';
 import ageFactory from "../../age";
+import feeFactory from "../../../shared/fee/feeFactory";
 
 Moment.locale('en-gb');
 
@@ -57,8 +58,22 @@ export default class Bookings extends React.Component {
     }
 
     exportCSV() {
-        const exportedData = this.props.bookings.map(b => [b.id,
+
+        const event = this.props.Event.toJS();
+
+        this.getFeesOwed = feeFactory(event).getFeesOwed;
+
+        const exportedData = this.props.bookings.map(b => {
+
+            let owed = this.getFeesOwed(event, b.participants, b).reduce((a, c) => parseFloat(c.total) + a, 0);
+            const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
+
+            owed = b.payments.filter(p => p.type === 'adjustment').reduce((a, c) => a + parseFloat(c.amount), owed);
+
+
+            return [b.id,
             b.userName,
+                b.district,
             b.userEmail,
             b.userContact,
             b.participants.length,
@@ -66,10 +81,14 @@ export default class Bookings extends React.Component {
             b.emergencyName,
             b.emergencyPhone,
             b.note,
+                '£' + owed,
+                '£' + paid,
+                '£' + (owed - paid),
             b.createdAt,
-            b.updatedAt]);
+                b.updatedAt]
+        });
         const fileName = this.props.Event.get('name') + "-Bookings-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'e-mail', 'Phone', 'Participants', 'Payment type', 'Emergency name', 'Emergency Contact', 'Note', 'Created', 'Updated'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'District', 'e-mail', 'Phone', 'Participants', 'Payment type', 'Emergency name', 'Emergency Contact', 'Note', 'Money Owed', 'Money Paid', 'Outstanding Balance', 'Created', 'Updated'], ...exportedData]);
     }
 
     markPaid(id) {
