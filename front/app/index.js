@@ -8,6 +8,7 @@ import events from '../events'
 import bookings from '../bookings'
 
 import {withRouter} from 'react-router-dom';
+import {matchPath}  from 'react-router'
 
 import {
     Container,
@@ -43,10 +44,16 @@ class App extends React.Component {
 
         const envMarker = this.props.Env === 'dev' ? <div className="envMarker"><p>TEST</p></div> : null;
 
+        const inManage = !!matchPath(location.pathname, {
+            path:   "/event/:eventId/manage",
+            exact:  false,
+            strict: false
+        });
+
         return (
             <React.Fragment>
                 {envMarker}
-                <Container>
+                <Container fluid={inManage}>
                     <Row className="align-items-center">
                         <Col>
                             <h2 className="align-middle">{window.location.hostname}</h2>

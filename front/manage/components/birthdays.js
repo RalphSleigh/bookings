@@ -69,7 +69,7 @@ export default class Birthdays extends React.Component {
             });
 
             days.push(<React.Fragment id={m}>
-                <h4>{m.format('dddd Do')}</h4>
+                <h5>{m.format('dddd Do')}</h5>
                 {rows}
             </React.Fragment>)
         }
