@@ -57,7 +57,7 @@ export default class Birthdays extends React.Component {
             let rows = []
             participants.forEach(p => {
 
-                const bday = Moment.utc(p.age)
+                const bday = Moment.utc(p.age).add(2, 'hours');
                 if (m.date() === bday.date() && m.month() === bday.month()) {
 
                     const age = moment(m).add(1, 'days').diff(bday, 'years');
@@ -68,7 +68,7 @@ export default class Birthdays extends React.Component {
 
             });
 
-            days.push(<React.Fragment id={m}>
+            days.push(<React.Fragment key={m}>
                 <h5>{m.format('dddd Do')}</h5>
                 {rows}
             </React.Fragment>)
