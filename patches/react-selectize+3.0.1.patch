@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-selectize/src/DropdownMenu.js b/node_modules/react-selectize/src/DropdownMenu.js
+index 6f108b9..011cdc2 100644
+--- a/node_modules/react-selectize/src/DropdownMenu.js
++++ b/node_modules/react-selectize/src/DropdownMenu.js
+@@ -166,7 +166,7 @@
+       dynamicClassName = arg$.dynamicClassName;
+       if (this.props.open) {
+         return DivWrapper({
+-          className: "dropdown-menu " + dynamicClassName,
++                                      className:      "rs-dropdown-menu " + dynamicClassName,
+           ref: function(element){
+             !!element && (this$.dropdownMenu = element);
+           },

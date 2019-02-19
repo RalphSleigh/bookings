@@ -11,7 +11,8 @@
     "start": "node ./server/server.js",
     "build": "node ./node_modules/webpack/bin/webpack.js -w",
     "seed": "node ./server/seed.js seed",
-    "seedDebug": "node %NODE_DEBUG_OPTION% ./server/seed.js seed"
+    "seedDebug": "node %NODE_DEBUG_OPTION% ./server/seed.js seed",
+    "postinstall": "patch-package"
   },
   "author": "",
   "license": "ISC",
@@ -90,6 +91,7 @@
     "passport-yahoo": "^0.3.0",
     "passport-yahoo-oauth2": "https://github.com/francisalvinbarretto/passport-yahoo-oauth/tarball/master",
     "passport-yahoo-token": "^2.1.0",
+    "patch-package": "^6.0.2",
     "pg": "6.4.1",
     "prelude-extension": "^0.1.0",
     "prelude-ls": "^1.1.2",
