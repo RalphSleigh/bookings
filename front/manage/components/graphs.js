@@ -178,7 +178,7 @@ const ageColour = age => {
     }
 }
 
-class CustomizedAxisTick extends PureComponent {
+class CustomizedAxisTick extends React.Component {
     render() {
         const {
                   x, y, stroke, payload,
