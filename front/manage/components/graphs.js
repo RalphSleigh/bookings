@@ -101,11 +101,11 @@ export default class Graphs extends React.Component {
                         <LineChart
                             data={participantsData}
                             margin={{
-                                top: 5, right: 30, left: 20, bottom: 5,
+                                top: 5, right: 30, left: 20, bottom: 40,
                             }}
                         >
                             <CartesianGrid strokeDasharray="3 3"/>
-                            <XAxis dataKey="name" tick={<CustomizedAxisTick/>} interval={7}/>
+                            <XAxis dataKey="name" tick={<CustomizedAxisTick/>} interval={6}/>
                             <YAxis label={{value: 'Participants', angle: -90, position: 'insideLeft'}}/>
                             <Line dot={false} type="stepAfter" dataKey="tot" stroke="#8884d8"/>
                         </LineChart>
