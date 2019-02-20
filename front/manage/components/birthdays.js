@@ -57,7 +57,7 @@ export default class Birthdays extends React.Component {
             let rows = []
             participants.forEach(p => {
 
-                const bday = Moment.utc(p.age).add(2, 'hours');
+                const bday = Moment(p.age);
                 if (m.date() === bday.date() && m.month() === bday.month()) {
 
                     const age = moment(m).add(1, 'days').diff(bday, 'years');
