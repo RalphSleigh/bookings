@@ -105,9 +105,9 @@ export default class Graphs extends React.Component {
                             }}
                         >
                             <CartesianGrid strokeDasharray="3 3"/>
-                            <XAxis dataKey="name" interval={6}/>
+                            <XAxis dataKey="name" tick={<CustomizedAxisTick/>} interval={7}/>
                             <YAxis label={{value: 'Participants', angle: -90, position: 'insideLeft'}}/>
-                            <Line type="stepAfter" dataKey="tot" stroke="#8884d8"/>
+                            <Line dot={false} type="stepAfter" dataKey="tot" stroke="#8884d8"/>
                         </LineChart>
                     </ResponsiveContainer>
                     <h4>Age Breakdown</h4>
@@ -175,5 +175,19 @@ const ageColour = age => {
             return '#E7A0FF'
         default:
             return '#FF817A'
+    }
+}
+
+class CustomizedAxisTick extends PureComponent {
+    render() {
+        const {
+                  x, y, stroke, payload,
+              } = this.props;
+
+        return (
+            <g transform={`translate(${x},${y})`}>
+                <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-45)">{payload.value}</text>
+            </g>
+        );
     }
 }
