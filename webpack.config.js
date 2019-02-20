@@ -30,7 +30,8 @@ module.exports = {
             'react-bootstrap-typeahead',
             'react-widgets',
             'reactstrap',
-            'bootstrap/dist/css/bootstrap.css'
+            'bootstrap/dist/css/bootstrap.css',
+            'recharts'
         ]
     },
 

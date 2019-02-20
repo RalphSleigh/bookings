@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom'
 import Immutable from 'immutable'
 import {Route, Switch} from 'react-router-dom';
 
-
 import bookings from '../../bookings'
 import events from '../../events'
 import {manageEventCheck, manageWholeEventWrapper, manageMoneyWrapper, manageRolesWrapper} from '../permission.js'
@@ -31,6 +30,7 @@ import VillagePage      from './villages.js'
 import RolesPage        from './roles.js'
 import MoneyPage        from './money.js'
 import BirthdaysPage    from './birthdays.js'
+import GraphsPage       from './graphs.js'
 
 import W from '../../../shared/woodcraft'
 
@@ -131,6 +131,8 @@ class ManageContainerPage extends React.Component {
                             <MoneyTab {...this.props} />
                             <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/birthdays"}
                                        label="🎂"/>
+                            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/graphs"}
+                                       label="📈"/>
                         </Nav>
                     </Col>
                 </Row>
@@ -171,6 +173,11 @@ class ManageContainerPage extends React.Component {
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/money">
                         <MoneyPage bookings={this.state.bookings} {...props} />
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/graphs">
+                        <Filter bookings={this.state.bookings} {...props} >
+                            <GraphsPage/>
+                        </Filter>
                     </Route>
                 </Switch>
             </React.Fragment>
