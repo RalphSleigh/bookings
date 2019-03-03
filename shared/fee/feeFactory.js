@@ -39,6 +39,9 @@ const feeMatrix = {
     }
 };
 
-export default event => {
+function getFeeModel(event) {
     return feeMatrix[event.feeModel][event.partialDates];
 };
+
+
+export default getFeeModel
