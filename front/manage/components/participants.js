@@ -63,12 +63,13 @@ export default class Participants extends React.Component {
                 b.emergencyName,
                 b.emergencyPhone,
                 eol.crlf(b.note || ''),
+                p.externalExtra.adultFirstAid,
                 p.createdAt,
                 p.updatedAt]
 
         });
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'Created At', 'Updated At'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Created At', 'Updated At'], ...exportedData]);
     }
 
     updateExpanded(id) {
@@ -176,6 +177,16 @@ export default class Participants extends React.Component {
                          minWidth:   50
                      });
 
+        if (event.customQuestions.adultFirstAid) columns.push({
+                                                                  id:         'firstaid',
+                                                                  accessor:   row => row,
+                                                                  Cell:       row => row.original.p.externalExtra.adultFirstAid === 'yes' ? '✅' : '',
+                                                                  Header:     "⚕️",
+                                                                  sortMethod: firstAidSort,
+                                                                  width:      40,
+                                                                  sortable:   true
+                                                              });
+
         const expanded = {[this.state.expanded]: true};
 
         return (<React.Fragment>
@@ -216,6 +227,9 @@ const createdSort = (a, b) => {
     return a.p.createdAt > b.p.createdAt ? 1 : -1;
 };
 
+const firstAidSort = (a, b) => {
+    return !!a.p.externalExtra.adultFirstAid - !!b.p.externalExtra.adultFirstAid;
+}
 
 const nameSort = (a, b) => {
     var splitA = a.name.split(" ");
