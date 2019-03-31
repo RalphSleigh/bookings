@@ -45,7 +45,11 @@ export default class Filter extends React.Component {
             day:      null,
             search:   '',
             food:     'all',
-            data:     {bookings: this.props.bookings, participants: participants}
+            data:     {bookings:      this.props.bookings,
+                participants:         participants,
+                filteredBookings:     this.props.bookings,
+                filteredParticipants: participants
+            }
         };
         this.updateOrgs = this.updateOrgs.bind(this);
         this.updateVillages = this.updateVillages.bind(this);
@@ -107,15 +111,20 @@ export default class Filter extends React.Component {
             return b;
         });
 
-        if (this.state.search.length > 2) filteredBookings = filteredBookings.reduce(this.searchBooking, []);
+        let searchedBookings = filteredBookings;
 
-        const participants = filteredBookings === this.state.data.bookings ? this.state.data.participants : filteredBookings.reduce((r, b) => [...r, ...b.participants], []);//just easier to do this here than find a plain javascript object map function
+        if (this.state.search.length > 2) searchedBookings = filteredBookings.reduce(this.searchBooking, []);
+
+        const participants = searchedBookings === this.state.data.bookings ? this.state.data.participants : searchedBookings.reduce((r, b) => [...r, ...b.participants], []);//just easier to do this here than find a plain javascript object map function
+        const filteredParticipants = filteredBookings.reduce((r, b) => [...r, ...b.participants], []).filter(p => p.name.toLowerCase().includes(this.state.search.toLowerCase()));
 
         this.setState(update(this.state, {
             data: {
                 $set: {
-                    participants: participants,
-                    bookings: filteredBookings
+                    participants:         participants,
+                    bookings:             searchedBookings,
+                    filteredParticipants: filteredParticipants,
+                    filteredBookings:     filteredBookings
                 }
             }
         }));
@@ -124,21 +133,22 @@ export default class Filter extends React.Component {
 
 //TODO: Proper server side database searching
     searchBooking(R, booking) {
-        const term = this.state.search;
+        const term = this.state.search.toLowerCase();
 
         booking.totalParticipants = booking.participants;
 
-        const newParticipants = booking.participants.filter(p => p.name.includes(term));
+        // const newParticipants = booking.participants.filter(p => p.name.includes(term));
 
         const bookingFound = (
-            booking.userName.includes(term)
-            || booking.userEmail.includes(term)
-            || booking.userContact.includes(term)
-            || booking.district.includes(term)
-            || booking.userContact.includes(term));
+            booking.userName.toLowerCase().includes(term)
+            || booking.userEmail.toLowerCase().includes(term)
+            || booking.userContact.toLowerCase().includes(term)
+            || booking.district.toLowerCase().includes(term)
+            || booking.userContact.toLowerCase().includes(term));
 
-        if (bookingFound || newParticipants.length > 0) {
-            booking.participants = newParticipants;
+        //if (bookingFound || newParticipants.length > 0) {
+        if (bookingFound) {
+            //booking.participants = newParticipants;
             R.push(booking);
             return R
         }

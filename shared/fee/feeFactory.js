@@ -1,10 +1,3 @@
-/*
-
-Fee Factory, return the correct implementation based on event.
-
- */
-
-import fees from './index';
 
 const feeMatrix = {
     free:   {
