@@ -15,7 +15,7 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.8/main' >> /etc/apk/repositori
 
 RUN apk update
 
-RUN apk --no-cache add --virtual builds-deps build-base python git postgresql-client=10.5-r0
+RUN apk --no-cache add build-base python git postgresql-client=10.8-r0
 RUN npm install npm install -g npm@latest
 RUN npm install
 
