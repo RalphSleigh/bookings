@@ -59,4 +59,25 @@ window.dispatch = store.dispatch;
 
 render(provider, document.getElementById('root'));
 
+let hidden, visibilityChange;
+if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+    hidden = "hidden";
+    visibilityChange = "visibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+    hidden = "msHidden";
+    visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+    hidden = "webkitHidden";
+    visibilityChange = "webkitvisibilitychange";
+}
+
+if (!(typeof document.addEventListener === "undefined" || hidden === undefined)) {
+    document.addEventListener(visibilityChange, () => {
+        console.log(`Visibility change ${document[hidden]} ${document.visibilityState}`);
+        if (!document[hidden]) {
+            dispatch(user.actions.getUser())
+        }
+    }, false);
+}
+
 fetch('/api/env', "GET").then(j => dispatch({type: 'APP_UPDATE_ENV', env: j.env}));

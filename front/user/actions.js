@@ -5,9 +5,12 @@ import m from '../messages'
 export const UPDATE_USER = 'USER_UPDATE_USER';
 
 export const getUser = () => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         fetch('/api/user', "GET")
-            .then(j => dispatch(updateUser(j)));
+            .then(j => {
+                const user = getState().get('User').toJS();
+                if (!user.user || user.user.id !== j.id) dispatch(updateUser(j))
+            });
     }
 };
 
