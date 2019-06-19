@@ -18,6 +18,7 @@ export const doLogin = (credentials) => {
     return (dispatch) => {
         fetch('/api/user/login', "POST", credentials)
             .then(j => {
+                    localStorage.userId = j.remoteId.substr(0, 4);
                     dispatch(updateUser(j));
                     dispatch(m.actions.setSuccess("Logged in"));
                     dispatch(push('/'));
