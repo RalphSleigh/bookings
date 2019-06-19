@@ -110,7 +110,7 @@ bookings.createBooking = (req, res) => {
         const fees = feeFactory(booking.event);
         const emailData = booking.get({plain: true});
         emailData.editURL = config.BASE_PATH + '/' + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
-
+        emailData.user = req.user;
         email.single(booking.userEmail, 'confirmation', emailData);
         email.toManagers('managerBookingCreated', emailData);
 
