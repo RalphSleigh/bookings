@@ -14,7 +14,24 @@ export function html(values) {
 
     const participantsList = values.participants.map(p => <li key={p.id}>{p.name}</li>);
 
-    const fees = feeFactory(values.event).emailHTML(values.event, values);
+    const fees = feeFactory(values.event).emailHTML(values.event, values)
+
+    let button = '';
+
+    switch(values.user.remoteId.substr(0,4)) {
+        case 'goog':
+            button = 'Google';
+            break;
+        case 'face':
+            button = 'Facebook';
+            break;
+        case 'micr':
+            button = 'Microsoft';
+            break;
+        case 'yaho':
+            button = 'Yahoo';
+            break;
+    }
 
     return renderEmail(
         <Email title={`Booking Confirmation for ${values.event.name}`}>
@@ -34,6 +51,9 @@ export function html(values) {
             <Item>
                 <p>Blue Skies</p>
                 <p>Woodcraft Folk</p>
+            </Item>
+            <Item>
+                <small>When logging in again make sure to log in as {values.user.email} using the {button} button</small>
             </Item>
         </Email>
     )

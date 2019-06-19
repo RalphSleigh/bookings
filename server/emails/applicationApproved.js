@@ -14,6 +14,23 @@ const config = require('../../config');
 
 export function html(values) {
 
+    let button = '';
+
+    switch(values.user.remoteId.substr(0,4)) {
+        case 'goog':
+            button = 'Google';
+            break;
+        case 'face':
+            button = 'Facebook';
+            break;
+        case 'micr':
+            button = 'Microsoft';
+            break;
+        case 'yaho':
+            button = 'Yahoo';
+            break;
+    }
+
     return renderEmail(
         <Email title={`Application Approved for ${values.event.name}`}>
             <Item>
@@ -24,6 +41,9 @@ export function html(values) {
             <Item>
                 <p>Blue Skies</p>
                 <p>Woodcraft Folk</p>
+            </Item>
+            <Item>
+                <small>When logging in again make sure to log in as {values.user.email} using the {button} button</small>
             </Item>
         </Email>
     )

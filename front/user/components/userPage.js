@@ -87,16 +87,16 @@ class LoginForm extends React.Component {
                             <Col sm={this.props.env === 'dev' ? 6 : 5}>
                                 <GoogleLoginButton onClick={() => {
                                     window.location = '/auth/google'
-                                }}/>
+                                }} style={localStorage.userId && localStorage.userId !== 'goog' ? {filter: 'grayscale(50%)', opacity: 0.5} : {}} />
                                 <FacebookLoginButton text="Login with Facebook" onClick={() => {
                                     window.location = '/auth/facebook'
-                                }}/>
+                                }} style={localStorage.userId && localStorage.userId !== 'face' ? {filter: 'grayscale(50%)', opacity: 0.5} : {}} />
                                 <MicrosoftLoginButton onClick={() => {
                                     window.location = '/auth/microsoft'
-                                }}/>
+                                }} style={localStorage.userId && localStorage.userId !== 'micr' ? {filter: 'grayscale(50%)', opacity: 0.5} : {}} />
                                 <MyYahooLoginButton onClick={() => {
                                     window.location = '/auth/yahoo'
-                                }}/>
+                                }} style={localStorage.userId && localStorage.userId !== 'yaho' ? {filter: 'grayscale(50%)', opacity: 0.5} : {}} />
                             </Col>
                         </Row>
                     </CardBody>
@@ -165,14 +165,16 @@ class UserProfile extends React.Component {
 
 const MyYahooLoginButton = (props) => {
 
+    const {style, ...buttonProps} = props;
+
     const customProps = {
-        style: {background: "#2f2268"},
+        style: {background: "#2f2268", ...style},
         activeStyle: {background: "#16094F"}
 
     };
 
 
-    return <SocialLoginButton{...{...customProps, ...props}}>
+    return <SocialLoginButton{...{...customProps, ...buttonProps}}>
         <FontAwesomeIcon style={{verticalAlign: 'middle', width: "1em", marginLeft: "0.6em", marginRight: "0.6em"}}
                          icon={faYahoo}/>
         <span style={{verticalAlign: 'middle'}}>Log on with Yahoo!</span>
