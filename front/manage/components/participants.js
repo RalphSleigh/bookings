@@ -57,6 +57,7 @@ export default class Participants extends React.Component {
                 p.diet,
                 p.dietExtra,
                 p.medical,
+                p.days,
                 b.userName,
                 b.userEmail,
                 b.userContact,
@@ -69,7 +70,7 @@ export default class Participants extends React.Component {
 
         });
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Created At', 'Updated At'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Created At', 'Updated At'], ...exportedData]);
     }
 
     updateExpanded(id) {
