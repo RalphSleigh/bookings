@@ -92,7 +92,7 @@ const getUser = async function (id, displayName, email, source) {
     if (typeof email === 'string') {
         user = await db.user.scope('withData').findOne({where: {email: email}});
         if (user) {
-            if (user.remoteId) throw new Error("Login from wrong provider, please use your original provider");
+            if (user.remoteId) throw new WrongProviderError(user.source);
             user.remoteId = combinedId;
             user.source = source;
             await user.save();
@@ -166,6 +166,13 @@ passport.use(new LocalStrategy({
             .then(user => done(null, user.get({plain: true})));
     }
 ));
+
+class WrongProviderError extends Error {
+    constructor(originalProvidor) {
+        super()
+        this.original = originalProvidor
+    }
+}
 
 
 module.exports = passport;
