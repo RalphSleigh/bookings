@@ -400,7 +400,8 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
                                                                                                     medical:   getRandomMedical(),
                                                                                                     bookingId: models.bookings.random().id,
                                                                                                     days:      getDays(),
-                                                                                                    externalExtra: {}
+                                                                                                    externalExtra: {adultEmail: faker.internet.exampleEmail()},
+                                                                                                    internalExtra: {}
                                                                                                 }));
         return Promise.all(promises).then(p => {
             models.participants = p;

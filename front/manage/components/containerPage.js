@@ -17,7 +17,9 @@ import {
     addRole,
     deleteRole,
     addPayment,
-    deletePayment
+    deletePayment,
+    approveMembership,
+    unapproveMembership
 } from '../actions.js'
 import {getUserList} from "../../user/actions";
 
@@ -31,6 +33,7 @@ import RolesPage        from './roles.js'
 import MoneyPage        from './money.js'
 import BirthdaysPage    from './birthdays.js'
 import GraphsPage       from './graphs.js'
+import MembershipsPage  from './membership.js'
 
 import W from '../../../shared/woodcraft'
 
@@ -46,6 +49,7 @@ const moment = require("moment");
 import classnames from 'classnames';
 import ageFactory from "../../age";
 import Moment     from "moment/moment";
+import Memberships from "./membership";
 
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
@@ -115,6 +119,9 @@ class ManageContainerPage extends React.Component {
         const MoneyTab = manageMoneyWrapper(() => <CustomTab
             to={"/event/" + this.props.match.params.eventId + "/manage/money"} label="Money"/>);
 
+        const MembershipsTab = manageWholeEventWrapper(() => event.customQuestions.adultEmail ? <CustomTab
+            to={"/event/" + this.props.match.params.eventId + "/manage/memberships"} label="Memberships"/> : null);
+
         const {Bookings, ...props} = this.props;
         return (<React.Fragment>
                 <Row>
@@ -133,6 +140,7 @@ class ManageContainerPage extends React.Component {
                                        label="🎂"/>
                             <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/graphs"}
                                        label="📈"/>
+                            <MembershipsTab {...this.props} />
                         </Nav>
                     </Col>
                 </Row>
@@ -179,6 +187,11 @@ class ManageContainerPage extends React.Component {
                             <GraphsPage/>
                         </Filter>
                     </Route>
+                    <Route path="/event/:eventId(\d+)/manage/memberships">
+                        <Filter bookings={this.state.bookings} {...props} >
+                            <MembershipsPage/>
+                        </Filter>
+                    </Route>
                 </Switch>
             </React.Fragment>
 
@@ -211,7 +224,9 @@ const mapDispatchToProps = {
     addRole: addRole,
     deleteRole: deleteRole,
     addPayment: addPayment,
-    deletePayment: deletePayment
+    deletePayment: deletePayment,
+    approveMembership: approveMembership,
+    unapproveMembership: unapproveMembership
 };
 
 const VisibleManageContainerPage = connect(

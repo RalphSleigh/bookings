@@ -14,8 +14,11 @@ import {
     Form,
     FormGroup,
     Label,
-    Input
+    Input,
+    UncontrolledAlert
 } from 'reactstrap';
+
+import {Route} from 'react-router-dom';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faYahoo from '@fortawesome/fontawesome-free-brands/faYahoo'
@@ -78,6 +81,27 @@ class LoginForm extends React.Component {
 
     render() {
         return (<Row>
+
+            <Route path='/user/facebook' render={() =>
+            <Col sm={12}>
+                <UncontrolledAlert color="warning">The supplied e-mail address was previously used with Facebook, please log in using Facebook to access your bookings</UncontrolledAlert>
+            </Col>
+            } />
+            <Route path='/user/microsoft' render={() =>
+                <Col sm={12}>
+                    <UncontrolledAlert color="warning">The supplied e-mail address was previously used with Microsoft, please log in using Microsoft to access your bookings</UncontrolledAlert>
+                </Col>
+            } />
+            <Route path='/user/google' render={() =>
+                <Col sm={12}>
+                    <UncontrolledAlert color="warning">The supplied e-mail address was previously used with Google, please log in using Google to access your bookings</UncontrolledAlert>
+                </Col>
+            } />
+            <Route path='/user/yahoo' render={() =>
+                <Col sm={12}>
+                    <UncontrolledAlert color="warning">The supplied e-mail address was previously used with Yahoo, please log in using Yahoo to access your bookings</UncontrolledAlert>
+                </Col>
+            } />
             <Col sm={this.props.env === 'dev' ? 7 : 12}>
                 <Card>
                     <CardBody>

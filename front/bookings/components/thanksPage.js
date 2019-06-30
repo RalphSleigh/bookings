@@ -82,6 +82,11 @@ class ThanksPage extends React.Component {
             <Row>
                 <ReactMarkdown escapeHtml={true} source={event.paymentInfo}/>
             </Row>
+            <Row>
+                <Col>
+                    <p>If you have any questions, or need to get in touch for any reason please contact <a href={`mailto:${event.customQuestions.emailReply}`}>{event.customQuestions.emailReply}</a></p>
+                </Col>
+            </Row>
         </React.Fragment>);
     }
 }
