@@ -88,7 +88,10 @@ export default class Memberships extends React.Component {
 
         const adults = participants.filter(p => p.ageAtStart > 15);
 
-        adults.forEach(p => p.district = bookings.find(b => b.id === p.bookingId).district);
+        adults.forEach(p => {
+            p.district = bookings.find(b => b.id === p.bookingId).district;
+            p.internalExtra = p.internalExtra || {};
+        });
 
         adults.sort(propSort('district'));
 
