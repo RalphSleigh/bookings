@@ -69,27 +69,27 @@ require("../config.js")()//config returns a promise the first time then overwrit
             passport.authenticate('facebook', {scope: ['email']}));
 
         server.get('/auth/facebook/callback', function(req, res, next) {
-            passport.authenticate('facebook', authenticateCallback('Facebook'))(req, res, next);
+            passport.authenticate('facebook', authenticateCallback('Facebook', req, res, next))(req, res, next);
         });
 
         server.get('/auth/google',
             passport.authenticate('google', {scope: ['email', 'profile']})); //google OAuth redirect
 
         server.get('/auth/google/callback', function(req, res, next) {
-            passport.authenticate('google', authenticateCallback('Google'))(req, res, next);
+            passport.authenticate('google', authenticateCallback('Google', req, res, next))(req, res, next);
         });
 
         server.get('/auth/yahoo',
             passport.authenticate('yahoo')); //google OAuth redirect
 
         server.get('/auth/yahoo/callback', function(req, res, next) {
-            passport.authenticate('yahoo', authenticateCallback('Yahoo'))(req, res, next);
+            passport.authenticate('yahoo', authenticateCallback('Yahoo', req, res, next))(req, res, next);
         });
 
         server.get('/auth/microsoft', passport.authenticate('azuread-openidconnect', {failureRedirect: '/'}));
 
         server.post('/auth/microsoft/callback', function(req, res, next) {
-            passport.authenticate('azuread-openidconnect', authenticateCallback('Microsoft'))(req, res, next);
+            passport.authenticate('azuread-openidconnect', authenticateCallback('Microsoft', req, res, next))(req, res, next);
         });
 
         server.get('/api/env', (req, res) => res.json({env: config.ENV}));
@@ -129,6 +129,9 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         server.post('/api/payment/add', P.addPayment, bookings.addPayment);
         server.post('/api/payment/delete', P.addPayment, bookings.deletePayment);
+
+        server.post('/api/membership/approve', P.updateMembership, bookings.approveMembership);
+        server.post('/api/membership/unapprove', P.updateMembership, bookings.unapproveMembership);
 
         if (config.ENV === 'dev') {
 
@@ -224,15 +227,16 @@ require("../config.js")()//config returns a promise the first time then overwrit
             next();
         }
 
-        function authenticateCallback(source) {
+        function authenticateCallback(source, req, res, next) {
             return function (err, user, info) {
                 if (err && err.constructor.name === 'WrongProviderError') {
                     log.info({
-                        message: "Wrong provider login {ip} {session} {user} {email}",
+                        message: "Wrong provider login {ip} {session} used {original} expected {used}",
                         ip: req.ip,
                         session: req.session.id,
                         user: req.user.userName,
-                        email: req.user.email
+                        original:err.original,
+                        used: err.used
                     });
                     return res.redirect('/user/' + err.original)
                 }
@@ -247,8 +251,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
                     message: `User logged in from ${source} {ip} {session} {user} {email}`,
                     ip: req.ip,
                     session: req.session.id,
-                    user: req.user.userName,
-                    email: req.user.email
+                    user: user.userName,
+                    email: user.email
                 });
                 req.logIn(user, function (err) {
                     if (err) {

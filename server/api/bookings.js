@@ -246,6 +246,34 @@ bookings.deletePayment = async function (req, res, next) {
     res.json({bookings: bookings});
 };
 
+bookings.approveMembership = async function (req, res, next) {
+
+
+    const participant = await db.participant.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    const booking = await db.booking.findOne({where: {id: {[Op.eq]: participant.bookingId}}, include: [{model: db.event}]});
+
+    participant.internalExtra = {... participant.internalExtra, member: true};
+
+    await participant.save();
+
+    const bookings = await getBookingAndCombineScopes(req.user, booking);
+
+    res.json({bookings: bookings});
+};
+
+bookings.unapproveMembership = async function (req, res, next) {
+    const participant = await db.participant.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    const booking = await db.booking.findOne({where: {id: {[Op.eq]: participant.bookingId}}, include: [{model: db.event}]});
+
+    participant.internalExtra = {... participant.internalExtra, member: false};
+
+    await participant.save();
+
+    const bookings = await getBookingAndCombineScopes(req.user, booking);
+
+    res.json({bookings: bookings});
+};
+
 /**
  *  Test function to update a paricipants updatedAt, disabled in production enviroments.
  *
