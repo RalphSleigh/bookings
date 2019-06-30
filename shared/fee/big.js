@@ -339,12 +339,12 @@ const owedWholeEvent = (event, participants, booking) => {
     const filteredParticipants = cloneDeep(participants)
         .filter(p => p.name && p.age)
         .map(p => {
-            if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+            if (!p.createdAt) p.createdAt = Moment().format("YYYY-MM-DD");
             return p;
         });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
-        if (new Date(p.updatedAt) < new Date(c.date)) return {
+        if (new Date(p.createdAt) < new Date(c.date)) return {
             type: isWoodchip(event, p) ? 'woodchip' : 'normal',
             date: c.date,
             mask: p.days,
@@ -372,14 +372,14 @@ const owedPresetEvent = (event, participants, booking) => {
     const filteredParticipants = cloneDeep(participants)
         .filter(p => p.name && p.age)
         .map(p => {
-            if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+            if (!p.createdAt) p.createdAt = Moment().format("YYYY-MM-DD");
             p.days = event.partialDatesData.find(d => d.mask === p.days);
             p.days = p.days ? p.days.name : event.partialDatesData[0].name;
             return p;
         });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
-        if (new Date(p.updatedAt) < new Date(c.date)) return {
+        if (new Date(p.createdAt) < new Date(c.date)) return {
             type: isWoodchip(event, p) ? 'woodchip' : 'normal',
             date: c.date,
             mask: p.days,
