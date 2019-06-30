@@ -30,4 +30,5 @@ services:
      - ./Caddyfile:/etc/Caddyfile
 volumes:
      pgdata:
+     caddy:
 
