@@ -228,11 +228,12 @@ require("../config.js")()//config returns a promise the first time then overwrit
             return function (err, user, info) {
                 if (err && err.constructor.name === 'WrongProviderError') {
                     log.info({
-                        message: "Wrong provider login {ip} {session} {user} {email}",
+                        message: "Wrong provider login {ip} {session} used {original} expected {used}",
                         ip: req.ip,
                         session: req.session.id,
                         user: req.user.userName,
-                        email: req.user.email
+                        original:err.original,
+                        used: err.used
                     });
                     return res.redirect('/user/' + err.original)
                 }
