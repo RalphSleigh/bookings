@@ -220,6 +220,19 @@ permission.addPayment = async function (req, res, next) {
     }
 };
 
+permission.updateMembership = async function (req, res, next) {
+
+    const participant = await db.participant.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    const booking = await db.booking.findOne({where: {id: {[Op.eq]: participant.bookingId}}});
+    const event = await db.event.findOne({where: {id: {[Op.eq]: booking.eventId}}});
+
+    if (P.createRole(req.user, event)) next();
+    else {
+        res.status(401).end();
+        logError(req);
+    }
+};
+
 permission.isAdmin = async function (req, res, next) {
 
 

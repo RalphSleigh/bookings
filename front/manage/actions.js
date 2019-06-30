@@ -76,10 +76,20 @@ export const deleteRole = id => dispatch => {
 
 export const addPayment = payment => dispatch => {
     fetch('/api/payment/add', 'POST', payment)
-    .then(j => dispatch(updateBookings(j)))
+        .then(j => dispatch(updateBookings(j)))
 };
 
 export const deletePayment = payment => dispatch => {
     fetch('/api/payment/delete', 'POST', payment)
-    .then(j => dispatch(updateBookings(j)))
+        .then(j => dispatch(updateBookings(j)))
+}
+
+export const approveMembership = id => dispatch => {
+    fetch('/api/membership/approve', 'POST', id)
+        .then(j => dispatch(updateBookings(j)))
+};
+
+export const unapproveMembership = id => dispatch => {
+    fetch('/api/membership/unapprove', 'POST', id)
+        .then(j => dispatch(updateBookings(j)))
 };

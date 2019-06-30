@@ -130,6 +130,9 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/api/payment/add', P.addPayment, bookings.addPayment);
         server.post('/api/payment/delete', P.addPayment, bookings.deletePayment);
 
+        server.post('/api/membership/approve', P.updateMembership, bookings.approveMembership);
+        server.post('/api/membership/unapprove', P.updateMembership, bookings.unapproveMembership);
+
         if (config.ENV === 'dev') {
 
             server.post('/api/user/login', passport.authenticate('local'), auth.getUser);//local login
