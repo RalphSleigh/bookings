@@ -57,18 +57,20 @@ export default class Participants extends React.Component {
                 p.diet,
                 p.dietExtra,
                 p.medical,
+                p.days,
                 b.userName,
                 b.userEmail,
                 b.userContact,
                 b.emergencyName,
                 b.emergencyPhone,
                 eol.crlf(b.note || ''),
+                p.externalExtra.adultFirstAid,
                 p.createdAt,
                 p.updatedAt]
 
         });
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'Created At', 'Updated At'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Created At', 'Updated At'], ...exportedData]);
     }
 
     updateExpanded(id) {
@@ -120,8 +122,8 @@ export default class Participants extends React.Component {
     render() {
 
         const event = this.props.Event.toJS();
-        const bookings = this.props.bookings;
-        const participants = this.props.participants;
+        const bookings = this.props.filteredBookings;
+        const participants = this.props.filteredParticipants;
 
         const groups = W.reduce((a, w) => {
             const people = participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.singular);
@@ -138,7 +140,7 @@ export default class Participants extends React.Component {
                 dob:       p.age,
                 age:       p.displayAge,
                 diet:      p.diet,
-                updatedAt: p.prettyUpdatedAt,
+                createdAt: p.prettyCreatedAt,
                 district:  b.district,
                 p:         p,
                 b:         b,
@@ -167,7 +169,24 @@ export default class Participants extends React.Component {
                 Cell: row => row.original.age
             },
                      {accessor: "diet", Header: "Diet", sortable: true, minWidth: 70},
-                     {accessor: "updatedAt", Header: "Updated at", sortable: true, minWidth: 50});
+                     {id:            'createdAt',
+                         accessor:   row => row,
+                         Cell:       row => row.original.createdAt,
+                         sortMethod: createdSort,
+                         Header:     "Created At",
+                         sortable:   true,
+                         minWidth:   50
+                     });
+
+        if (event.customQuestions.adultFirstAid) columns.push({
+                                                                  id:         'firstaid',
+                                                                  accessor:   row => row,
+                                                                  Cell:       row => row.original.p.externalExtra.adultFirstAid === 'yes' ? '✅' : '',
+                                                                  Header:     "⚕️",
+                                                                  sortMethod: firstAidSort,
+                                                                  width:      40,
+                                                                  sortable:   true
+                                                              });
 
         const expanded = {[this.state.expanded]: true};
 
@@ -203,8 +222,15 @@ export default class Participants extends React.Component {
 
 const dobSort = (a, b) => {
     return a.dob < b.dob ? 1 : -1;
-}
+};
 
+const createdSort = (a, b) => {
+    return a.p.createdAt > b.p.createdAt ? 1 : -1;
+};
+
+const firstAidSort = (a, b) => {
+    return !!a.p.externalExtra.adultFirstAid - !!b.p.externalExtra.adultFirstAid;
+}
 
 const nameSort = (a, b) => {
     var splitA = a.name.split(" ");

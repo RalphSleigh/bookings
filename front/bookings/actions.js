@@ -58,8 +58,8 @@ export const cancelBooking = id => {
     return dispatch => {
         fetch('/api/booking/delete', "POST", {id: id})
             .then(j => {
-                dispatch(deleteBooking(id));
                 dispatch(push('/cancel'));
+                dispatch(deleteBooking(id));
             });
     }
 };

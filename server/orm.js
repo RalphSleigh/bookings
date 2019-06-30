@@ -2,10 +2,11 @@ const config = require("../config");
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+const log = require('./logging.js');
 
 const sequelize = new Sequelize(config.DB_URL, {
     operatorsAliases: Sequelize.Op.Aliases,
-    logging: false
+    logging:          false
 });
 
 const db = {};

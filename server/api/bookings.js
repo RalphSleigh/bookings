@@ -7,29 +7,31 @@ const log = require('../logging.js');
 const updateAssociation = require('./util.js').updateAssociation;
 const Op = db.Sequelize.Op;
 const wrapper = require('../errors');
-const feeFactory = require('../../shared/fee/feeFactory');
+const _ = require('lodash');
+
+import feeFactory from '../../shared/fee/feeFactory';
 
 const bookings = {};
 
 bookings.getUserBookings = (req, res) => {
 
     db.booking.findAll({
-        where:
-            {
-                $or:
-                    [{guestUUID: req.cookies.guestUUID},
-                        {
-                            $and:
-                                [{userId: req.user.id},
-                                    {userId: {$not: 1}}
-                                ]
-                        }]
-            }, include: [{model: db.participant}]
-    })
-        .then(bookings => {
-            let data = {bookings};
-            res.json(data);
-        });
+                           where:
+                               {
+                                   $or:
+                                       [{guestUUID: req.cookies.guestUUID},
+                                           {
+                                               $and:
+                                                   [{userId: req.user.id},
+                                                       {userId: {$not: 1}}
+                                                   ]
+                                           }]
+                               }, include: [{model: db.participant}]
+                       })
+    .then(bookings => {
+        let data = {bookings};
+        res.json(data);
+    });
 };
 
 const getUserScopes = (user, event) => {
@@ -65,10 +67,7 @@ bookings.getEventBookings = async function (req, res) {
     //need to loop over a users roles and assemble the data they are allowed to see
     const event = await db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}});
 
-    const scopes = getUserScopes(req.user, event);
-    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
-
-    const flat = results.reduce((a, b) => a.concat(b), []);
+    const flat = await getBookingsAndCombineScopes(req.user, event)
 
     res.json({bookings: flat});
 
@@ -76,11 +75,11 @@ bookings.getEventBookings = async function (req, res) {
 
 bookings.getBooking = (req, res) => {
     db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.participant}, {model: db.event}]})
-        .then(booking => {
-            let data = {};
-            data.bookings = [booking];
-            res.json(data);
-        });
+    .then(booking => {
+        let data = {};
+        data.bookings = [booking];
+        res.json(data);
+    });
 };
 
 
@@ -111,7 +110,7 @@ bookings.createBooking = (req, res) => {
         const fees = feeFactory(booking.event);
         const emailData = booking.get({plain: true});
         emailData.editURL = config.BASE_PATH + '/' + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
-
+        emailData.user = req.user;
         email.single(booking.userEmail, 'confirmation', emailData);
         email.toManagers('managerBookingCreated', emailData);
 
@@ -157,54 +156,54 @@ bookings.editBooking = (req, res) => {
         delete p.internalExtra
     });
     db.booking.findOne({where: {id: req.body.id}})
-        .then(booking => {
-            req.body.maxParticipants = Math.max(booking.maxParticipants || 0, req.body.participants.length);
-            return booking.update(req.body)//this ignores partitipants!
-        })
-        .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
-        .then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
-        .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]}))
-        .then(booking => {
-            log.log("debug", "User %s Editing Booking id %s", req.user.userName, booking.id);
-            let data = {};
-            data.bookings = [booking];
-            res.json(data);
-        });
+    .then(booking => {
+        req.body.maxParticipants = Math.max(booking.maxParticipants || 0, req.body.participants.length);
+        return booking.update(req.body)//this ignores partitipants!
+    })
+    .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
+    .then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
+    .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]}))
+    .then(booking => {
+        log.log("debug", "User %s Editing Booking id %s", req.user.userName, booking.id);
+        let data = {};
+        data.bookings = [booking];
+        res.json(data);
+    });
 };
 
 bookings.togglePaid = (req, res) => {
     db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]})
-        .then(booking => {
-            booking.paid = !booking.paid;
-            return booking.save()
-        })
-        .then((booking) => {
-            let data = {};
-            data.bookings = [booking];
-            res.json(data);
-        });
+    .then(booking => {
+        booking.paid = !booking.paid;
+        return booking.save()
+    })
+    .then((booking) => {
+        let data = {};
+        data.bookings = [booking];
+        res.json(data);
+    });
 };
 
 bookings.deleteBooking = (req, res) => {
     db.booking.findOne({where: {id: req.body.id}})
-        .then(booking => booking.destroy())
-        .then(() => db.booking.findAll({
-            where:
-                {
-                    $or:
-                        [{guestUUID: req.cookies.guestUUID},
-                            {
-                                $and:
-                                    [{userId: req.user.id},
-                                        {userId: {$not: 1}}
-                                    ]
-                            }]
-                }, include: [{model: db.participant}]
-        }))
-        .then(bookings => {
-            let data = {bookings};
-            res.json(data);
-        });
+    .then(booking => booking.destroy())
+    .then(() => db.booking.findAll({
+                                       where:
+                                           {
+                                               $or:
+                                                   [{guestUUID: req.cookies.guestUUID},
+                                                       {
+                                                           $and:
+                                                               [{userId: req.user.id},
+                                                                   {userId: {$not: 1}}
+                                                               ]
+                                                       }]
+                                           }, include: [{model: db.participant}]
+                                   }))
+    .then(bookings => {
+        let data = {bookings};
+        res.json(data);
+    });
 };
 
 bookings.assignVillage = async function (req, res) {
@@ -221,16 +220,13 @@ bookings.addPayment = async function (req, res, next) {
     await db.payment.create(req.body);
 
     const booking = await db.booking.findOne({
-        where: {id: {[Op.eq]: req.body.bookingId}},
-        include: [{model: db.event}]
-    }); //get the booking, but we can't send this as dangerous scope.
+                                                 where:   {id: {[Op.eq]: req.body.bookingId}},
+                                                 include: [{model: db.event}]
+                                             }); //get the booking, but we can't send this as dangerous scope.
 
-    const scopes = getUserScopes(req.user, booking.event);
-    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findOne({where: {id: booking.id}})));
+    const bookings = await getBookingAndCombineScopes(req.user, booking)
 
-    const flat = results.reduce((a, b) => a.concat(b), []);
-
-    res.json({bookings: flat});
+    res.json({bookings: bookings});
 };
 
 bookings.deletePayment = async function (req, res, next) {
@@ -239,18 +235,43 @@ bookings.deletePayment = async function (req, res, next) {
     const payment = await db.payment.findOne({where: {id: {[Op.eq]: req.body.id}}});
 
     const booking = await db.booking.findOne({
-        where: {id: {[Op.eq]: payment.bookingId}},
-        include: [{model: db.event}]
-    }); //get the booking, but we can't send this as dangerous scope.
+                                                 where:   {id: {[Op.eq]: payment.bookingId}},
+                                                 include: [{model: db.event}]
+                                             }); //get the booking, but we can't send this as dangerous scope.
 
     await payment.destroy();
 
-    const scopes = getUserScopes(req.user, booking.event);
-    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findOne({where: {id: booking.id}})));
+    const bookings = await getBookingAndCombineScopes(req.user, booking)
 
-    const flat = results.reduce((a, b) => a.concat(b), []);
+    res.json({bookings: bookings});
+};
 
-    res.json({bookings: flat});
+bookings.approveMembership = async function (req, res, next) {
+
+
+    const participant = await db.participant.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    const booking = await db.booking.findOne({where: {id: {[Op.eq]: participant.bookingId}}, include: [{model: db.event}]});
+
+    participant.internalExtra = {... participant.internalExtra, member: true};
+
+    await participant.save();
+
+    const bookings = await getBookingAndCombineScopes(req.user, booking);
+
+    res.json({bookings: bookings});
+};
+
+bookings.unapproveMembership = async function (req, res, next) {
+    const participant = await db.participant.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    const booking = await db.booking.findOne({where: {id: {[Op.eq]: participant.bookingId}}, include: [{model: db.event}]});
+
+    participant.internalExtra = {... participant.internalExtra, member: false};
+
+    await participant.save();
+
+    const bookings = await getBookingAndCombineScopes(req.user, booking);
+
+    res.json({bookings: bookings});
 };
 
 /**
@@ -261,16 +282,63 @@ bookings.deletePayment = async function (req, res, next) {
 bookings.updateParticipantDate = async function (req, res) {
 
     const results = await db.sequelize.query('UPDATE participants SET "updatedAt" = $date WHERE id = $id',
-        {
-            bind: {id: req.params.participantId, date: moment(req.params.date).format('YYYY-MM-DD HH:mm:ss.SSS')},
-            type: db.sequelize.QueryTypes.UPDATE
-        });
+                                             {
+                                                 bind: {
+                                                     id:   req.params.participantId,
+                                                     date: moment(req.params.date).format('YYYY-MM-DD HH:mm:ss.SSS')
+                                                 },
+                                                 type: db.sequelize.QueryTypes.UPDATE
+                                             });
 
     const paricipant = await db.participant.findOne({where: {id: req.params.participantId}});
 
     res.json(paricipant);
 
 };
+
+const getBookingAndCombineScopes = async function (user, booking) {
+
+    const scopes = getUserScopes(user, booking.event);
+    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findOne({where: {id: booking.id}})));
+
+    const obj = results.filter(r => r).reduce((a, c) => {
+
+        _.merge(a, c.get({plain: true}))
+        return a
+
+    }, {});
+
+    return [obj]
+}
+
+const getBookingsAndCombineScopes = async function (user, event) {
+
+    const scopes = getUserScopes(user, event);
+    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
+
+    const obj = results.filter(r => r).reduce((a, c) => {
+
+        c.forEach(b => {
+
+            a[b.id] = a[b.id] || {}
+
+            _.merge(a[b.id], b.get({plain: true}))
+
+        });
+
+        return a
+
+    }, {});
+
+    const flat = []
+
+    for (let key in obj) flat.push(obj[key])
+
+    return flat
+
+}
+
+
 
 module.exports = wrapper(bookings);
 

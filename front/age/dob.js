@@ -15,7 +15,7 @@ const moment = require("moment");
 indvidual age widgets
  */
 
-module.exports = {
+export default {
     BookingFormWidget: props => {
         return <React.Fragment>
             <Label sm={2}>Date of Birth:</Label>

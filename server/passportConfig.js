@@ -12,6 +12,7 @@ const log = require("./logging.js");
 
 const db = require('./orm.js');
 const Op = db.Sequelize.Op;
+const sequelize = db.Sequelize;
 
 passport.use(new FacebookStrategy({
         clientID: config.FACEBOOK_APP_ID,
@@ -90,9 +91,9 @@ const getUser = async function (id, displayName, email, source) {
     }
     //Do we have a user with the right email but no remote id?
     if (typeof email === 'string') {
-        user = await db.user.scope('withData').findOne({where: {email: email}});
+        user = await db.user.scope('withData').findOne({where: { email: sequelize.where(sequelize.fn('LOWER', sequelize.col('email')), 'LIKE', '%' + email.toLowerCase() + '%')}});
         if (user) {
-            if (user.remoteId) throw new Error("Login from wrong provider, please use your original provider");
+            if (user.remoteId) throw new WrongProviderError(user.source, source);
             user.remoteId = combinedId;
             user.source = source;
             await user.save();
@@ -166,6 +167,14 @@ passport.use(new LocalStrategy({
             .then(user => done(null, user.get({plain: true})));
     }
 ));
+
+class WrongProviderError extends Error {
+    constructor(originalProvidor, used) {
+        super();
+        this.original = originalProvidor;
+        this.used = used;
+    }
+}
 
 
 module.exports = passport;

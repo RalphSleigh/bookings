@@ -92,7 +92,7 @@ export default class Money extends React.Component {
 
         b.payments = b.payments || [];
 
-        const name = event.bigCampMode ? b.district + ' - ' + org.name : b.userName;
+        const name = event.bigCampMode ? b.district + (org.name ? ' - ' + org.name : '') : b.userName;
         let owed = this.getFeesOwed(event, b.participants, b).reduce((a, c) => parseFloat(c.total) + a, 0);
         const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
 
@@ -246,7 +246,9 @@ export default class Money extends React.Component {
         this.totalOwed = 0;
         this.totalPaid = 0;
 
-        const bookingRows = bookings.map(b => {
+        const bookingRows = bookings
+            .sort(propSort(event.bigCampMode ? 'district' : 'userName'))
+            .map(b => {
             return b.id === this.state.expanded ? this.openRow(b, event) : this.closedRow(b, event);
         });
 
@@ -296,6 +298,11 @@ export default class Money extends React.Component {
     }
 }
 
+const propSort = prop => (a,b) => {
+    const x = a[prop].toLowerCase();
+    const y = b[prop].toLowerCase();
+    return x < y ? -1 : x > y ? 1 : 0;
+};
 
 const nameSort = (a, b) => {
     var splitA = a.name.split(" ");

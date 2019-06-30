@@ -66,6 +66,8 @@ const mapStateToProps = (state, props) => {
     let User = state.getIn(["User", "user"]);
     let Event = state.getIn(["Events", "events", eventId]);
 
+    const event = Event.toJS();
+
     //find the booking, sources:
     //1) currentBooking if set and for this user/event,
     //2) Pre-existing booking in the bookings map
@@ -91,7 +93,8 @@ const mapStateToProps = (state, props) => {
 
         if (prevBooking) {
             prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note");
-            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId")));
+            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId").set('days', event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
+            )));
         }
 
         return prevBooking

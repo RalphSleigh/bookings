@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom'
 import Immutable from 'immutable'
 import {Route, Switch} from 'react-router-dom';
 
-
 import bookings from '../../bookings'
 import events from '../../events'
 import {manageEventCheck, manageWholeEventWrapper, manageMoneyWrapper, manageRolesWrapper} from '../permission.js'
@@ -18,18 +17,23 @@ import {
     addRole,
     deleteRole,
     addPayment,
-    deletePayment
+    deletePayment,
+    approveMembership,
+    unapproveMembership
 } from '../actions.js'
 import {getUserList} from "../../user/actions";
 
-import Filter from './filter'
-import BookingsPage from './bookings.js'
+import Filter           from './filter'
+import BookingsPage     from './bookings.js'
 import ParticipantsPage from './participants.js'
-import KpPage from './kp.js'
-import ApplicationPage from './applications.js'
-import VillagePage from './villages.js'
-import RolesPage from './roles.js'
-import MoneyPage from './money.js'
+import KpPage           from './kp.js'
+import ApplicationPage  from './applications.js'
+import VillagePage      from './villages.js'
+import RolesPage        from './roles.js'
+import MoneyPage        from './money.js'
+import BirthdaysPage    from './birthdays.js'
+import GraphsPage       from './graphs.js'
+import MembershipsPage  from './membership.js'
 
 import W from '../../../shared/woodcraft'
 
@@ -45,6 +49,7 @@ const moment = require("moment");
 import classnames from 'classnames';
 import ageFactory from "../../age";
 import Moment     from "moment/moment";
+import Memberships from "./membership";
 
 
 //this component sits at the root of our management pages and ensures all the booking information for the event is loaded. This will include other peoples bookings so  we need to check we have permission to view them.
@@ -84,6 +89,7 @@ class ManageContainerPage extends React.Component {
                 p.ageGroup = W.find(w => w.filter(p.ageAtStart)).singular;
                 p.displayAge = ageWidgets.displayAgeParticipant(p);
                 p.prettyUpdatedAt = moment(p.updatedAt).format('L');
+                p.prettyCreatedAt = moment(p.createdAt).format('L');
             })
         });
 
@@ -113,6 +119,9 @@ class ManageContainerPage extends React.Component {
         const MoneyTab = manageMoneyWrapper(() => <CustomTab
             to={"/event/" + this.props.match.params.eventId + "/manage/money"} label="Money"/>);
 
+        const MembershipsTab = manageWholeEventWrapper(() => event.customQuestions.adultEmail ? <CustomTab
+            to={"/event/" + this.props.match.params.eventId + "/manage/memberships"} label="Memberships"/> : null);
+
         const {Bookings, ...props} = this.props;
         return (<React.Fragment>
                 <Row>
@@ -127,6 +136,11 @@ class ManageContainerPage extends React.Component {
                             <RolesTab {...this.props}/>
                             <ApplicationsTab {...this.props}/>
                             <MoneyTab {...this.props} />
+                            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/birthdays"}
+                                       label="🎂"/>
+                            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/graphs"}
+                                       label="📈"/>
+                            <MembershipsTab {...this.props} />
                         </Nav>
                     </Col>
                 </Row>
@@ -151,6 +165,11 @@ class ManageContainerPage extends React.Component {
                             <KpPage/>
                         </Filter>
                     </Route>
+                    <Route path="/event/:eventId(\d+)/manage/birthdays">
+                        <Filter bookings={this.state.bookings} {...props} >
+                            <BirthdaysPage/>
+                        </Filter>
+                    </Route>
                     <Route path="/event/:eventId(\d+)/manage/applications">
                         <ApplicationPage bookings={this.state.bookings} {...props} />
                     </Route>
@@ -162,6 +181,16 @@ class ManageContainerPage extends React.Component {
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/money">
                         <MoneyPage bookings={this.state.bookings} {...props} />
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/graphs">
+                        <Filter bookings={this.state.bookings} {...props} >
+                            <GraphsPage/>
+                        </Filter>
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/memberships">
+                        <Filter bookings={this.state.bookings} {...props} >
+                            <MembershipsPage/>
+                        </Filter>
                     </Route>
                 </Switch>
             </React.Fragment>
@@ -195,7 +224,9 @@ const mapDispatchToProps = {
     addRole: addRole,
     deleteRole: deleteRole,
     addPayment: addPayment,
-    deletePayment: deletePayment
+    deletePayment: deletePayment,
+    approveMembership: approveMembership,
+    unapproveMembership: unapproveMembership
 };
 
 const VisibleManageContainerPage = connect(

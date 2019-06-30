@@ -1,0 +1,3 @@
+booktest.ealingwoodcraft.org.uk {
+    proxy / http://bookings:8080
+}

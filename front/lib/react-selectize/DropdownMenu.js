@@ -1,3 +1,5 @@
+let DropdownMenu = null
+
 (function () {
     var ref$, filter, id, map, isEqualToObject, React, createFactory, div, input, span, findDOMNode,
         ReactCSSTransitionGroup, ReactTether, DivWrapper, OptionWrapper, cancelEvent, classNameFromObject, DropdownMenu;
@@ -11,77 +13,77 @@
     DivWrapper = createFactory(require('./DivWrapper'));
     OptionWrapper = createFactory(require('./OptionWrapper'));
     ref$ = require('./utils'), cancelEvent = ref$.cancelEvent, classNameFromObject = ref$.classNameFromObject;
-    module.exports = DropdownMenu = (function (superclass) {
+    DropdownMenu = (function (superclass) {
         var prototype = extend$((import$(DropdownMenu, superclass).displayName = 'DropdownMenu', DropdownMenu), superclass).prototype,
             constructor = DropdownMenu;
         DropdownMenu.defaultProps = {
-            className: "",
-            dropdownDirection: 1,
-            groupId: function (it) {
+            className:              "",
+            dropdownDirection:      1,
+            groupId:                function (it) {
                 return it.groupId;
             },
-            groupsAsColumns: false,
-            highlightedUid: undefined,
+            groupsAsColumns:        false,
+            highlightedUid:         undefined,
             onHighlightedUidChange: function (uid, callback) {
             },
-            onOptionClick: function (uid) {
+            onOptionClick:          function (uid) {
             },
-            onScrollLockChange: function (scrollLock) {
+            onScrollLockChange:     function (scrollLock) {
             },
             options: [],
-            renderNoResultsFound: function () {
+            renderNoResultsFound:   function () {
                 return div({
-                    className: 'no-results-found'
-                }, "No results found");
+                               className: 'no-results-found'
+                           }, "No results found");
             },
-            renderGroupTitle: function (index, arg$) {
+            renderGroupTitle:       function (index, arg$) {
                 var groupId, title;
                 if (arg$ != null) {
                     groupId = arg$.groupId, title = arg$.title;
                 }
                 return div({
-                    className: 'simple-group-title',
-                    key: groupId
-                }, title);
+                               className: 'simple-group-title',
+                               key:       groupId
+                           }, title);
             },
-            renderOption: function (arg$) {
+            renderOption:           function (arg$) {
                 var label, newOption, selectable, isSelectable;
                 if (arg$ != null) {
                     label = arg$.label, newOption = arg$.newOption, selectable = arg$.selectable;
                 }
                 isSelectable = typeof selectable === 'undefined' || selectable;
                 return div({
-                    className: "simple-option " + (isSelectable ? '' : 'not-selectable')
-                }, span(null, !!newOption ? "Add " + label + " ..." : label));
+                               className: "simple-option " + (isSelectable ? '' : 'not-selectable')
+                           }, span(null, !!newOption ? "Add " + label + " ..." : label));
             },
-            scrollLock: false,
+            scrollLock:             false,
             style: {},
-            tether: false,
+            tether:                 false,
             tetherProps: {},
-            theme: 'default',
-            transitionEnter: false,
-            transitionLeave: false,
+            theme:                  'default',
+            transitionEnter:        false,
+            transitionLeave:        false,
             transitionEnterTimeout: 200,
             transitionLeaveTimeout: 200,
-            uid: id
+            uid:                    id
         };
         DropdownMenu.prototype.render = function () {
             var dynamicClassName, ref$;
             dynamicClassName = classNameFromObject((ref$ = {}, ref$[this.props.theme + ""] = 1, ref$[this.props.className + ""] = 1, ref$.flipped = this.props.dropdownDirection === -1, ref$.tethered = this.props.tether, ref$));
             if (this.props.tether) {
                 return ReactTether((ref$ = import$({}, this.props.tetherProps), ref$.options = {
-                    attachment: "top left",
+                    attachment:       "top left",
                     targetAttachment: "bottom left",
-                    constraints: [{
+                    constraints:      [{
                         to: 'scrollParent'
                     }]
                 }, ref$), this.renderAnimatedDropdown({
-                    dynamicClassName: dynamicClassName
-                }));
+                                                          dynamicClassName: dynamicClassName
+                                                      }));
             } else {
                 return this.renderAnimatedDropdown({
-                    dynamicClassName: dynamicClassName
-                });
+                                                       dynamicClassName: dynamicClassName
+                                                   });
             }
         };
         DropdownMenu.prototype.renderAnimatedDropdown = function (computedState) {
@@ -89,15 +91,15 @@
             dynamicClassName = computedState.dynamicClassName;
             if (!!this.props.transitionEnter || !!this.props.transitionLeave) {
                 return ReactCSSTransitionGroup({
-                    ref: 'dropdownMenuWrapper',
-                    component: 'div',
-                    transitionName: 'custom',
-                    transitionEnter: this.props.transitionEnter,
-                    transitionLeave: this.props.transitionLeave,
-                    transitionEnterTimeout: this.props.transitionEnterTimeout,
-                    transitionLeaveTimeout: this.props.transitionLeaveTimeout,
-                    className: "dropdown-menu-wrapper " + dynamicClassName
-                }, this.renderDropdown(computedState));
+                                                   ref:                    'dropdownMenuWrapper',
+                                                   component:              'div',
+                                                   transitionName:         'custom',
+                                                   transitionEnter:        this.props.transitionEnter,
+                                                   transitionLeave:        this.props.transitionLeave,
+                                                   transitionEnterTimeout: this.props.transitionEnterTimeout,
+                                                   transitionLeaveTimeout: this.props.transitionLeaveTimeout,
+                                                   className:              "dropdown-menu-wrapper " + dynamicClassName
+                                               }, this.renderDropdown(computedState));
             } else {
                 return this.renderDropdown(computedState);
             }
@@ -109,29 +111,29 @@
                 option = options[index];
                 uid = this$.props.uid(option);
                 return OptionWrapper(import$({
-                    uid: uid,
-                    ref: function (element) {
-                        this$["option-" + this$.uidToString(uid)] = element;
-                    },
-                    key: this$.uidToString(uid),
-                    item: option,
-                    highlight: isEqualToObject(this$.props.highlightedUid, uid),
-                    selectable: option != null ? option.selectable : void 8,
-                    onMouseMove: function (arg$) {
-                        var currentTarget;
-                        currentTarget = arg$.currentTarget;
-                        if (this$.props.scrollLock) {
-                            this$.props.onScrollLockChange(false);
-                        }
-                    },
-                    onMouseOut: function () {
-                        if (!this$.props.scrollLock) {
-                            this$.props.onHighlightedUidChange(undefined, function () {
-                            });
-                        }
-                    },
-                    renderItem: this$.props.renderOption
-                }, (function () {
+                                                 uid:         uid,
+                                                 ref:         function (element) {
+                                                     this$["option-" + this$.uidToString(uid)] = element;
+                                                 },
+                                                 key:         this$.uidToString(uid),
+                                                 item:        option,
+                                                 highlight:   isEqualToObject(this$.props.highlightedUid, uid),
+                                                 selectable:  option != null ? option.selectable : void 8,
+                                                 onMouseMove: function (arg$) {
+                                                     var currentTarget;
+                                                     currentTarget = arg$.currentTarget;
+                                                     if (this$.props.scrollLock) {
+                                                         this$.props.onScrollLockChange(false);
+                                                     }
+                                                 },
+                                                 onMouseOut:  function () {
+                                                     if (!this$.props.scrollLock) {
+                                                         this$.props.onHighlightedUidChange(undefined, function () {
+                                                         });
+                                                     }
+                                                 },
+                                                 renderItem:  this$.props.renderOption
+                                             }, (function () {
                     switch (false) {
                         case !(typeof (option != null ? option.selectable : void 8) === 'boolean' && !option.selectable):
                             return {
@@ -139,7 +141,7 @@
                             };
                         default:
                             return {
-                                onClick: function () {
+                                onClick:     function () {
                                     if (!this$.props.scrollLock) {
                                         this$.props.onHighlightedUidChange(uid, function () {
                                         });
@@ -174,18 +176,18 @@
             dynamicClassName = arg$.dynamicClassName;
             if (this.props.open) {
                 return DivWrapper({
-                    className: "rs-dropdown-menu " + dynamicClassName,
-                    ref: function (element) {
-                        !!element && (this$.dropdownMenu = element);
-                    },
-                    onHeightChange: function (height) {
-                        if (this$.refs.dropdownMenuWrapper) {
-                            findDOMNode(this$.refs.dropdownMenuWrapper).style.height = height + "px";
-                        }
-                    }
-                }, this.props.options.length === 0
-                    ? this.props.renderNoResultsFound()
-                    : ((ref$ = this.props) != null ? (ref1$ = ref$.groups) != null ? ref1$.length : void 8 : void 8) > 0
+                                      className:      "rs-dropdown-menu " + dynamicClassName,
+                                      ref:            function (element) {
+                                          !!element && (this$.dropdownMenu = element);
+                                      },
+                                      onHeightChange: function (height) {
+                                          if (this$.refs.dropdownMenuWrapper) {
+                                              findDOMNode(this$.refs.dropdownMenuWrapper).style.height = height + "px";
+                                          }
+                                      }
+                                  }, this.props.options.length === 0
+                                      ? this.props.renderNoResultsFound()
+                                      : ((ref$ = this.props) != null ? (ref1$ = ref$.groups) != null ? ref1$.length : void 8 : void 8) > 0
                         ? (groups = map(function (index) {
                             var group, groupId, options;
                             group = this$.props.groups[index], groupId = group.groupId;
@@ -194,8 +196,8 @@
                             })(
                                 this$.props.options);
                             return {
-                                index: index,
-                                group: group,
+                                index:   index,
+                                group:   group,
                                 options: options
                             };
                         })(
@@ -206,15 +208,15 @@
                                 }
                                 return results$;
                             }.call(this))), div({
-                            className: "groups " + (!!this.props.groupsAsColumns ? 'as-columns' : '')
-                        }, map(function (arg$) {
+                                                    className: "groups " + (!!this.props.groupsAsColumns ? 'as-columns' : '')
+                                                }, map(function (arg$) {
                             var index, group, groupId, options;
                             index = arg$.index, group = arg$.group, groupId = group.groupId, options = arg$.options;
                             return div({
-                                key: groupId
-                            }, this$.props.renderGroupTitle(index, group, options), div({
-                                className: 'options'
-                            }, this$.renderOptions(options)));
+                                           key: groupId
+                                       }, this$.props.renderGroupTitle(index, group, options), div({
+                                                                                                       className: 'options'
+                                                                                                   }, this$.renderOptions(options)));
                         })(
                             filter(function (it) {
                                 return it.options.length > 0;
@@ -229,8 +231,8 @@
             var x$, dropdownMenu, ref$;
             if (!deepEq$(prevProps.dropdownDirection, this.props.dropdownDirection, '===') && this.props.open) {
                 x$ = dropdownMenu = findDOMNode((ref$ = this.refs.dropdownMenuWrapper) != null
-                    ? ref$
-                    : this.dropdownMenu);
+                                                    ? ref$
+                                                    : this.dropdownMenu);
                 if (x$ != null) {
                     x$.style.bottom = (function () {
                         switch (false) {
@@ -425,4 +427,8 @@
             return result;
         }
     }
+
+
 }).call(this);
+
+export default DropdownMenu

@@ -5,9 +5,13 @@ import m from '../messages'
 export const UPDATE_USER = 'USER_UPDATE_USER';
 
 export const getUser = () => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         fetch('/api/user', "GET")
-            .then(j => dispatch(updateUser(j)));
+            .then(j => {
+                if(j.remoteId)localStorage.userId = j.remoteId.substr(0, 4);
+                const user = getState().get('User').toJS();
+                if (!user.user || user.user.id !== j.id) dispatch(updateUser(j))
+            });
     }
 };
 
@@ -15,6 +19,7 @@ export const doLogin = (credentials) => {
     return (dispatch) => {
         fetch('/api/user/login', "POST", credentials)
             .then(j => {
+                    if(j.remoteId)localStorage.userId = j.remoteId.substr(0, 4);
                     dispatch(updateUser(j));
                     dispatch(m.actions.setSuccess("Logged in"));
                     dispatch(push('/'));

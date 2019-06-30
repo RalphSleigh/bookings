@@ -12,6 +12,23 @@ import feeFactory    from '../../shared/fee/feeFactory.js'
 
 export function html(values) {
 
+    let button = '';
+
+    switch(values.user.remoteId.substr(0,4)) {
+        case 'goog':
+            button = 'Google';
+            break;
+        case 'face':
+            button = 'Facebook';
+            break;
+        case 'micr':
+            button = 'Microsoft';
+            break;
+        case 'yaho':
+            button = 'Yahoo';
+            break;
+    }
+
     return renderEmail(
         <Email title={`Application Received for ${values.name}`}>
             <Item>
@@ -22,6 +39,9 @@ export function html(values) {
             <Item>
                 <p>Blue Skies and Friendship,</p>
                 <p>Woodcraft Folk</p>
+            </Item>
+            <Item>
+                <small>When logging in again make sure to log in as {values.user.email} using the {button} button</small>
             </Item>
         </Email>
     )

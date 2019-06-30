@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
             {});
 
         models.user.addScope('withData', {
-            attributes: ['id', 'userName', 'email', 'remoteId'],
+            attributes: ['id', 'userName', 'email', 'remoteId', 'source'],
             include: [{model: models.role}, {model: models.application}]
         });
     };

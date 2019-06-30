@@ -1,10 +1,3 @@
-/*
-
-Fee Factory, return the correct implementation based on event.
-
- */
-
-import fees from './index';
 
 const feeMatrix = {
     free:   {
@@ -20,7 +13,7 @@ const feeMatrix = {
     ealing:       {
         whole:   require('./ealing.js'),
         free:    require('./ealing.js'),
-        presets: require('./ealing.js'),
+        presets: require('./ealing-preset.js'),
     },
     big:          {
         whole:   require('./big.js'),
@@ -39,6 +32,9 @@ const feeMatrix = {
     }
 };
 
-module.exports = (event) => {
+function getFeeModel(event) {
     return feeMatrix[event.feeModel][event.partialDates];
 };
+
+
+export default getFeeModel

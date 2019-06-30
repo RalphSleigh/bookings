@@ -186,7 +186,7 @@ class ParticipantRow extends React.Component {
                         <Input type="select" value={this.props.diet || ''}
                                onChange={this.props.update("diet")}
                                vaild={this.props.valid(this.props.diet)}>
-                            <option>Please Select</option>
+                            <option value="">Please Select</option>
                             <option value="omnivore">Omnivore</option>
                             <option value="vegetarian">Vegetarian</option>
                             <option value="vegan">Vegan</option>

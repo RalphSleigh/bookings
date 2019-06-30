@@ -30,7 +30,8 @@ module.exports = {
             'react-bootstrap-typeahead',
             'react-widgets',
             'reactstrap',
-            'bootstrap/dist/css/bootstrap.css'
+            'bootstrap/dist/css/bootstrap.css',
+            'recharts'
         ]
     },
 
@@ -85,4 +86,4 @@ else module.exports.plugins.push(new webpack.SourceMapDevToolPlugin({
     exclude: "vendor"
 }));
 
-if (!PROD) module.exports.plugins.push(new BundleAnalyzerPlugin());
+module.exports.plugins.push(new BundleAnalyzerPlugin());
