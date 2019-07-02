@@ -39,8 +39,21 @@ class App extends React.Component {
     render() {
 
         //prevent render until we have the basic data available, this makes child components much simpler.
-        if (this.props.User === null || this.props.Events === null || this.props.Bookings === null) return <div>Loading
-            Data</div>;
+        if (this.props.User === null || this.props.Events === null || this.props.Bookings === null) return (
+            <div className="lds-default">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>);
 
         const envMarker = this.props.Env === 'dev' ? <div className="envMarker"><p>TEST</p></div> : null;
 
