@@ -132,6 +132,7 @@
     "sequelize": "^4.37.10",
     "sequelize-cli": "^3.2.0",
     "sequelize-json": "^2.1.2",
+    "source-map": "^0.7.3",
     "sqlite3": "^4.0.4",
     "tether": "^1.4.4",
     "uuid": "^3.3.0",
