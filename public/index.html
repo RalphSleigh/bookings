@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        window.addEventListener('error', (message) => {
+            try {
+                const jsonMessage = {
+                    message: message.message,
+                    file: message.filename,
+                    line: message.lineno,
+                    column: message.colno,
+                    stack: message.error ? message.error.stack : ''
+                };
+
+                const jsonString = JSON.stringify(jsonMessage);
+
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    },
+                    credentials: "same-origin",
+                    body: jsonString
+                };
+                fetch('/api/error', options)
+            } catch (e) {
+                console.error(e)
+                // ah well we tried
+            }
+
+        });
+    </script>
     <style type="text/css">
         .lds-default {
             display: inline-block;
