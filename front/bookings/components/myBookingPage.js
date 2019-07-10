@@ -117,7 +117,8 @@ const emptyBooking = (User, Event) => {
         participants: [{
             id:            uuid(),
             days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
-            externalExtra: {}
+            externalExtra: {},
+            internalExtra: {}
         }],
         externalExtra: {},
         internalExtra: {}
