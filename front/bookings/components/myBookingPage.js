@@ -92,9 +92,9 @@ const mapStateToProps = (state, props) => {
         let prevBooking = Event.get("bigCampMode") === false ? Bookings.get("bookings").filter(b => b.get("userId") === User.get("id")).toList().sort((a, b) => a.get('participants').size < b.get('participants').size).get(0) : null;
 
         if (prevBooking) {
-            prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note");
+            prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note").delete('createdAt').delete('updatedAt');
             prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId").set('days', event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
-            )));
+            )).delete('createdAt').delete('updatedAt'));
         }
 
         return prevBooking
