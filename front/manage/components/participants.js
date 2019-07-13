@@ -271,7 +271,7 @@ const createdSort = (a, b) => {
 };
 
 const firstAidSort = (a, b) => {
-    return !!a.p.externalExtra.adultFirstAid - !!b.p.externalExtra.adultFirstAid;
+    return !!(a.p.externalExtra.adultFirstAid === 'yes') - !!(b.p.externalExtra.adultFirstAid === 'yes');
 }
 
 const daysSort = (a, b) => {
