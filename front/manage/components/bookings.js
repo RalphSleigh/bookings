@@ -66,14 +66,13 @@ export default class Bookings extends React.Component {
         const exportedData = this.props.bookings.map(b => {
 
             let owed = this.getFeesOwed(event, b.participants, b).reduce((a, c) => parseFloat(c.total) + a, 0);
-            const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
+            const paid = b.payments ? b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0) : 0;
 
-            owed = b.payments.filter(p => p.type === 'adjustment').reduce((a, c) => a + parseFloat(c.amount), owed);
-
+            owed = b.payments ? b.payments.filter(p => p.type === 'adjustment').reduce((a, c) => a + parseFloat(c.amount), owed) : owed;
 
             return [b.id,
             b.userName,
-                b.district,
+            b.district,
             b.userEmail,
             b.userContact,
             b.participants.length,
