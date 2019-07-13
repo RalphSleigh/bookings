@@ -66,7 +66,7 @@ export default class Graphs extends React.Component {
 
         participants.forEach(p => p.createdAt = moment(p.createdAt));
 
-        const sortedParticipants = participants.sort((a, b) => a - b);
+        const sortedParticipants = participants.sort((a, b) => a.createdAt - b.createdAt);
 
         const startDate = moment.utc(sortedParticipants[0].createdAt).endOf('day');
         const endDate = moment().endOf('day').add(1, 'hour');
