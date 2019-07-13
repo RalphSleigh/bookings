@@ -139,12 +139,13 @@ export default class Filter extends React.Component {
 
         // const newParticipants = booking.participants.filter(p => p.name.includes(term));
 
+        booking.district = booking.district || '';
+
         const bookingFound = (
             booking.userName.toLowerCase().includes(term)
             || booking.userEmail.toLowerCase().includes(term)
             || booking.userContact.toLowerCase().includes(term)
-            || booking.district.toLowerCase().includes(term)
-            || booking.userContact.toLowerCase().includes(term));
+            || booking.district.toLowerCase().includes(term));
 
         //if (bookingFound || newParticipants.length > 0) {
         if (bookingFound) {
