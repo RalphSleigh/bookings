@@ -40,7 +40,7 @@ const getUserScopes = (user, event) => {
 
     if (user.roles.find(role => role.name === "admin") || user.id === event.userId) scopes.push({method: ['Limited', event.id, null, null, 'defaultScope', true]});
 
-    user.roles.filter(r => r.eventId === event.id).forEach(r => {
+    user.roles.filter(r => r.eventId === event.id && r.name !== 'book').forEach(r => {
 
         let participantScope = null;
         let includePayments = false;
