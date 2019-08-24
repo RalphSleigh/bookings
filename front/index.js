@@ -27,6 +27,54 @@ import * as a from "./user/actions";
 const history = createHistory();
 const middleware = routerMiddleware(history);
 
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, info) {
+        // You can also log the error to an error reporting service
+        try {
+            const jsonMessage = {
+                message: error.message,
+                file: '',
+                line: 0,
+                column: 0,
+                stack: info.componentStack
+            };
+
+            const jsonString = JSON.stringify(jsonMessage);
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                credentials: "same-origin",
+                body: jsonString
+            };
+            window.fetch('/api/error', options)
+        } catch (e) {
+            console.error(e)
+            // ah well we tried
+        }
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return <p>Something went wrong, refreshing the page may help.</p>;
+        }
+
+        return this.props.children;
+    }
+}
+
 const appReducer = (state = 'dev', action) => {
     switch (action.type) {
         case 'APP_UPDATE_ENV':
@@ -57,7 +105,7 @@ const provider = <Provider store={store}><ConnectedRouter history={history}>{Rou
 
 window.dispatch = store.dispatch;
 
-render(provider, document.getElementById('root'));
+render(<ErrorBoundary>{provider}</ErrorBoundary>, document.getElementById('root'));
 
 let hidden, visibilityChange;
 if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support

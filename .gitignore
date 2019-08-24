@@ -1,6 +1,7 @@
 /node_modules
 database.sqlite
 database.sqlite-journal
+bookings.sqlite
 config.js
 server/googlejwt.json
 npm-debug.log
@@ -14,4 +15,3 @@ public/bundle.js.map
 public/vendor.bundle.js
 public/vendor.bundle.js.map
 .idea*
-
