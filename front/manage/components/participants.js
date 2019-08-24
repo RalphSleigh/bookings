@@ -47,10 +47,24 @@ export default class Participants extends React.Component {
 
     exportCSV() {
 
+        const event = this.props.Event.toJS();
+
+        const startDate = Moment.utc(event.startDate).startOf('day');
+        const endDate = Moment.utc(event.endDate).startOf('day').add(1, 'days');
+        const days = [];
+        let mask = 0;
+
+
+
+        for (let m = startDate; m.isBefore(endDate); m.add(1, 'days')) {
+            days.push({label: m.format("dddd Do"), value: Math.pow(2, mask)});
+            mask++;
+        }
+
         const exportedData = this.props.participants.map(p => {
             const b = this.props.bookings.find(b => b.id === p.bookingId);
 
-            return [p.id,
+            const fields = [p.id,
                 p.name,
                 p.displayAge,
                 Moment(p.age).format("DD/MM/YYYY"),
@@ -66,11 +80,29 @@ export default class Participants extends React.Component {
                 eol.crlf(b.note || ''),
                 p.externalExtra.adultFirstAid,
                 p.createdAt,
-                p.updatedAt]
+                p.updatedAt];
 
+            if(event.partialDates === 'free') {
+
+                days.forEach(d => {
+                    fields.push(p.days & d.value ? 1 : 0)
+                })
+
+            }
+
+            return fields
         });
+
+        const headers = ['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Created At', 'Updated At']
+
+        if(event.partialDates === 'free') {
+
+            days.forEach(d => {
+                headers.push(d.label)
+            })
+        }
         const fileName = this.props.Event.get('name') + "-Participants-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Created At', 'Updated At'], ...exportedData]);
+        csv(fileName, [headers, ...exportedData]);
     }
 
     updateExpanded(id) {
@@ -178,6 +210,16 @@ export default class Participants extends React.Component {
                          minWidth:   50
                      });
 
+        if(event.partialDates === 'free')columns.push({
+            id:         'popcount',
+            accessor:   row => row,
+            Cell:       row => bitCount(row.original.p.days),
+            Header:     "Days",
+            sortMethod: daysSort,
+            width:      60,
+            sortable:   true
+        });
+
         if (event.customQuestions.adultFirstAid) columns.push({
                                                                   id:         'firstaid',
                                                                   accessor:   row => row,
@@ -229,7 +271,11 @@ const createdSort = (a, b) => {
 };
 
 const firstAidSort = (a, b) => {
-    return !!a.p.externalExtra.adultFirstAid - !!b.p.externalExtra.adultFirstAid;
+    return !!(a.p.externalExtra.adultFirstAid === 'yes') - !!(b.p.externalExtra.adultFirstAid === 'yes');
+}
+
+const daysSort = (a, b) => {
+    return bitCount(a.p.days) - bitCount(b.p.days);
 }
 
 const nameSort = (a, b) => {
@@ -243,3 +289,9 @@ const nameSort = (a, b) => {
     return 0;
 };
 
+// https://stackoverflow.com/questions/43122082/efficiently-count-the-number-of-bits-in-an-integer-in-javascript/43122214
+function bitCount (n) {
+    n = n - ((n >> 1) & 0x55555555);
+    n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
+    return ((n + (n >> 4) & 0xF0F0F0F) * 0x1010101) >> 24
+}

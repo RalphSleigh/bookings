@@ -294,6 +294,7 @@ function blankParticipant(event) {
         medical:       '',
         days:          event.partialDates !== 'presets' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
         externalExtra: {},
+        internalExtra: {},
         focus:         true
     }
 }

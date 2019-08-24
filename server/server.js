@@ -4,6 +4,8 @@ require("@babel/register");
 
 require("../config.js")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
     .then(config => {
+
+        const fs = require('fs');
         const log = require("./logging.js");
 
         const db = require('./orm.js');
@@ -30,6 +32,8 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         const expressSession = require('express-session');
         const SQLiteStore = require('connect-sqlite3')(expressSession);
+
+        var sourceMap = require('source-map');
 
         /************************************
          This file sets up the HTTP server
@@ -68,27 +72,27 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.get('/auth/facebook',
             passport.authenticate('facebook', {scope: ['email']}));
 
-        server.get('/auth/facebook/callback', function(req, res, next) {
+        server.get('/auth/facebook/callback', function (req, res, next) {
             passport.authenticate('facebook', authenticateCallback('Facebook', req, res, next))(req, res, next);
         });
 
         server.get('/auth/google',
             passport.authenticate('google', {scope: ['email', 'profile']})); //google OAuth redirect
 
-        server.get('/auth/google/callback', function(req, res, next) {
+        server.get('/auth/google/callback', function (req, res, next) {
             passport.authenticate('google', authenticateCallback('Google', req, res, next))(req, res, next);
         });
 
         server.get('/auth/yahoo',
             passport.authenticate('yahoo')); //google OAuth redirect
 
-        server.get('/auth/yahoo/callback', function(req, res, next) {
+        server.get('/auth/yahoo/callback', function (req, res, next) {
             passport.authenticate('yahoo', authenticateCallback('Yahoo', req, res, next))(req, res, next);
         });
 
         server.get('/auth/microsoft', passport.authenticate('azuread-openidconnect', {failureRedirect: '/'}));
 
-        server.post('/auth/microsoft/callback', function(req, res, next) {
+        server.post('/auth/microsoft/callback', function (req, res, next) {
             passport.authenticate('azuread-openidconnect', authenticateCallback('Microsoft', req, res, next))(req, res, next);
         });
 
@@ -132,6 +136,51 @@ require("../config.js")()//config returns a promise the first time then overwrit
 
         server.post('/api/membership/approve', P.updateMembership, bookings.approveMembership);
         server.post('/api/membership/unapprove', P.updateMembership, bookings.unapproveMembership);
+
+        let mapFile = null;
+
+        if (fs.existsSync(path.join(__dirname, '../public/bundle.js.map'))) {
+            mapFile = fs.readFileSync(path.join(__dirname, '../public/bundle.js.map'))
+        } else if (fs.existsSync(path.join(__dirname, '../bundle.js.map'))) {
+            mapFile = fs.readFileSync(path.join(__dirname, '../bundle.js.map'))
+        }
+
+        server.post('/api/error', (req, res, next) => {
+
+            if (mapFile) {
+                   sourceMap.SourceMapConsumer.with(
+                        mapFile.toString(),
+                        null,
+                        async function (mapper) {
+
+                    const lines = req.body.stack.split("\n")
+
+                    const results = lines.map(l => {
+                        if(l.includes('vendor')) return l;
+                        const results = l.match(/js\:([0-9]+)\:([0-9]+)\)/)
+                        if (results && results[1] && results[2])
+                            return mapper.originalPositionFor({
+                                line: parseInt(results[1], 10),
+                                column: parseInt(results[2],10)
+                            });
+                        else return l;
+                    });
+                    req.body.stack = results;
+                    log.error({
+                        message: "CLIENT ERROR {errorMessage}",
+                        errorMessage: req.body.message,
+                        json: req.body
+                    });
+                })
+            } else {
+                log.error({
+                    message: "CLIENT ERROR {errorMessage}",
+                    errorMessage: req.body.message,
+                    json: req.body
+                });
+            }
+            res.status(200).end();
+        });
 
         if (config.ENV === 'dev') {
 
@@ -235,7 +284,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
                         ip: req.ip,
                         session: req.session.id,
                         user: req.user.userName,
-                        original:err.original,
+                        original: err.original,
                         used: err.used
                     });
                     return res.redirect('/user/' + err.original)
