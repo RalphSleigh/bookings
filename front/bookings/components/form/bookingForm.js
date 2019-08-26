@@ -143,10 +143,15 @@ export default class BookingForm extends React.Component {
             if(this.props.event.customQuestions.photoConsent && empty(p.externalExtra.photoConsent)) results.push("Please answer the photo consent for " + p.name)
         });
 
+        const lonePerson = this.props.booking.participants.filter(p => {
+                return Moment(this.props.event.startDate).diff(Moment(p.age), 'years') > 15
+            }
+        ).length < 2;
+
         if (this.props.event.feeModel !== "free" && (!this.props.booking.paymentType || this.props.booking.paymentType === "")) results.push("Please choose a payment option");
 
-        if (!this.props.event.bigCampMode && empty(this.props.booking.emergencyName)) results.push("Please provide an emergency contact name");
-        if (!this.props.event.bigCampMode && empty(this.props.booking.emergencyPhone)) results.push("Please provide an emergency contact phone number");
+        if ((!this.props.event.bigCampMode || lonePerson) && empty(this.props.booking.emergencyName)) results.push("Please provide an emergency contact name");
+        if ((!this.props.event.bigCampMode || lonePerson) && empty(this.props.booking.emergencyPhone)) results.push("Please provide an emergency contact phone number");
 
         if (!this.props.booking.permission) results.push("Please tick the permission and data protection statement checkbox");
 
@@ -241,6 +246,7 @@ export default class BookingForm extends React.Component {
                 </Col>
             </Row>
             <PermissionForm event={this.props.event}
+                            booking={this.props.booking}
                             update={this.updateItem}
                             validating={this.state.validation > 3}
                             {...permissionDetails}

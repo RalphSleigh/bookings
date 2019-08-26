@@ -7,6 +7,7 @@ import {
     Label,
     Input
 } from 'reactstrap';
+import moment from "moment";
 
 export default class PermissionForm extends React.Component {
 
@@ -56,14 +57,20 @@ export default class PermissionForm extends React.Component {
 
         const customQuestions = this.props.event.customQuestions || {};
 
-        const emergency = this.props.event.bigCampMode ? null :
+        const lonePerson = this.props.booking.participants.filter(p => {
+                return moment(this.props.event.startDate).diff(moment(p.age), 'years') > 15
+            }
+        ).length < 2;
+
+
+        const emergency = !this.props.event.bigCampMode || lonePerson ?
             <React.Fragment>
                 <Row>
                     <Col>
                         <h4>Emergency Contact</h4>
-                        <p>Please provide details of someone we can contact in case of an emergency during the event (a
+                        {lonePerson ? <p>As you have only booked in one adult, please provide some emergency contact details of someone not attending the event</p> : <p>Please provide details of someone we can contact in case of an emergency during the event (a
                             second
-                            person is better even if you are not attending yourself)</p>
+                            person is better even if you are not attending yourself)</p>}
                     </Col>
                 </Row>
                 <FormGroup row>
@@ -90,7 +97,7 @@ export default class PermissionForm extends React.Component {
                                onChange={this.updateEmergency("emergencyPhone")}/>
                     </Col>
                 </FormGroup>
-            </React.Fragment>;
+            </React.Fragment> : null;
 
 
         const campWith = this.props.event.bigCampMode ?
