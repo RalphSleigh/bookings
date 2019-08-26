@@ -73,6 +73,16 @@ export default class ParticipantsForm extends React.Component {
         }
     }
 
+    updateExtraNoPrevent(k) {
+        return item => e => {
+            this.props.updateValidation();
+            const value = e.target.value;
+            const participant = this.props.participants.find(p => p.id === k);
+            const newExtra = update(participant.externalExtra || {}, {[item]: {$set: value}});
+            this.props.update(k, 'externalExtra', newExtra);
+        }
+    }
+
     updateAge(k) {
         return date => {
             this.props.updateValidation();
@@ -110,6 +120,7 @@ export default class ParticipantsForm extends React.Component {
                                                               update={this.update(p.id)}
                                                               updateAge={this.updateAge(p.id)}
                                                               updateExtra={this.updateExtra(p.id)}
+                                                              updateExtraNoPrevent={this.updateExtraNoPrevent(p.id)}
                                                               updateDirect={this.updateDirect(p.id)}
                                                               delete={this.delete(p.id)}
                                                               valid={this.valid}
@@ -215,6 +226,7 @@ class ParticipantRow extends React.Component {
                 </FormGroup>
                 <Over16Section event={this.props.event} age={this.props.age} values={this.props.externalExtra || {}}
                                update={this.props.updateExtra}/>
+                <PhotoConsent event={this.props.event} update={this.props.updateExtraNoPrevent}  values={this.props.externalExtra || {}} id={this.props.id}/>
                 <FormGroup row>
                     {attendance}
                     <Col sm={1}>
@@ -227,6 +239,37 @@ class ParticipantRow extends React.Component {
         </Card>)
     }
 }
+
+const PhotoConsent = props => {
+  if(!props.event.customQuestions.photoConsent) return null;
+
+    return <FormGroup row>
+        <Label sm={10}>I have permission for photographs, video and other media of this person to feature or be referred to on Woodcraft Folk social media, website and other publicity materials.</Label>
+        <Col sm={2} className="pt-2">
+            <FormGroup check inline key='yes'>
+                <Label check>
+                    <Input type="radio"
+                           value='yes'
+                           name={props.id}
+                           onChange={props.update('photoConsent')}
+                           checked={props.values.photoConsent === 'yes'}/>
+                    Yes
+                </Label>
+            </FormGroup>
+            <FormGroup check inline key='no'>
+                <Label check>
+                    <Input type="radio"
+                           value='no'
+                           name={props.id}
+                           onChange={props.update('photoConsent')}
+                           checked={props.values.photoConsent === 'no'}/>
+                    No
+                </Label>
+            </FormGroup>
+        </Col>
+    </FormGroup>
+
+};
 
 const Over16Section = props => {
 
