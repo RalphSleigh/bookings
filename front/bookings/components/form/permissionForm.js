@@ -151,6 +151,8 @@ export default class PermissionForm extends React.Component {
                             I acknowledge it is my responsibility to ensure everyone over 16 attending is a member of an
                             IFM-SEI organisation including Woodcraft Folk.
                             <br/><br/>
+                            I agree my contact details may be shared with other groups in my village.
+                            <br /><br />
                             I agree this information will be stored electronically and shared only with individuals who need this information to
                             engage each participant safely in Woodcraft Folk activities. Based on the needs of each
                             participant we may also share any relevant
