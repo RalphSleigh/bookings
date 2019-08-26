@@ -5,6 +5,7 @@ import PermissionForm     from './permissionForm.js'
 import FeeForm            from './feeForm.js'
 import PaymentForm        from './paymentForm.js'
 import FoodForm           from './foodForm.js'
+import AdditionalForm     from './additionalContacts.js'
 import cloneDeep          from 'lodash/cloneDeep'
 import update             from 'immutability-helper';
 import Moment             from 'moment'
@@ -200,6 +201,9 @@ export default class BookingForm extends React.Component {
                 update={this.updateItem}
                 guest={this.guest}
                 validating={this.state.validation > 0} {...userDetails}/>
+            {this.props.event.bigCampMode ? <AdditionalForm
+                booking={this.props.booking}
+                update={this.updateExternalExtra}/> : null}
             {this.props.event.customQuestions.foodOptOut ? <FoodForm
                 booking={this.props.booking}
                 update={this.updateExternalExtra}/> : null}
