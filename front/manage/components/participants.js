@@ -230,6 +230,16 @@ export default class Participants extends React.Component {
                                                                   sortable:   true
                                                               });
 
+        if (event.customQuestions.photoConsent) columns.push({
+            id:         'photo',
+            accessor:   row => row,
+            Cell:       row => row.original.p.externalExtra.photoConsent === 'yes' ? '✅' : '',
+            Header:     "📷 ",
+            sortMethod: photoSort,
+            width:      40,
+            sortable:   true
+        });
+
         const expanded = {[this.state.expanded]: true};
 
         return (<React.Fragment>
@@ -274,6 +284,9 @@ const firstAidSort = (a, b) => {
     return !!(a.p.externalExtra.adultFirstAid === 'yes') - !!(b.p.externalExtra.adultFirstAid === 'yes');
 }
 
+const photoSort = (a, b) => {
+    return !!(a.p.externalExtra.photoConsent === 'yes') - !!(b.p.externalExtra.photoConsent === 'yes');
+}
 const daysSort = (a, b) => {
     return bitCount(a.p.days) - bitCount(b.p.days);
 }
