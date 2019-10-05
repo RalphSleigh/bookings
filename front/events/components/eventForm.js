@@ -153,6 +153,7 @@ export default class EditForm extends React.Component {
             paymentFields = (<React.Fragment>
                 {formField("textarea", "Payment Options:", options, this.updatePaymentOptions)}
                 {formField("textarea", "Payment Instructions:", this.state.event.paymentInfo, this.update("paymentInfo"))}
+                {formField("textarea", "Payment Instructions (Annon):",  this.state.event.customQuestions.annonPayment, this.updateExtra("annonPayment"))}
             </React.Fragment>);
         }
 
