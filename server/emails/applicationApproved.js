@@ -35,8 +35,9 @@ export function html(values) {
         <Email title={`Application Approved for ${values.event.name}`}>
             <Item>
                 <p> Hi {values.user.userName},</p>
-                <p>You have been approved to book into {values.event.name} and can do so at any time here:</p>
+                <p>You have been approved to book into Common Ground. We are so excited to have you join us! Please now complete your booking here:</p>
                 <p><A href={config.BASE_PATH}>{config.BASE_PATH}</A></p>
+                <p><b>Remember: booking and paying a deposit before 1st December 2019 will mean an Early Bird discount of £5 per person.</b></p>
             </Item>
             <Item>
                 <p>Blue Skies and Friendship,</p>
