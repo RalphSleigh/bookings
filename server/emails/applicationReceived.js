@@ -33,8 +33,7 @@ export function html(values) {
         <Email title={`Application Received for ${values.name}`}>
             <Item>
                 <p> Hi {values.user.userName},</p>
-                <p>Thanks for applying to book for {values.name}. One of our team will check your application as soon as
-                    possible and you will recieve another e-mail as soon as you are approved to book in.</p>
+                <p>Thanks for applying to book for Common Ground 2020! One of our team will now check your application and you will receive another email as soon as you are approved to book in. This is to ensure that all applications are genuine and not created by robots.</p>
             </Item>
             <Item>
                 <p>Blue Skies and Friendship,</p>
