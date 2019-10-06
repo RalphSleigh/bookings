@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 
+import paymentReference from '../../../../shared/paymentReference.js'
+
 import {
     Button,
     Row,
@@ -44,6 +46,7 @@ export default class PaymentForm extends React.Component {
                 </Label>
             </FormGroup>);
 
+        const paymentText = this.props.event.customQuestions.annonPayment && !this.props.booking.id ? this.props.event.customQuestions.annonPayment : this.props.event.paymentInfo.replace(/(%%%%)/g, paymentReference(this.props.booking.id));
 
         return (<React.Fragment>
             <FormGroup row>
@@ -54,7 +57,7 @@ export default class PaymentForm extends React.Component {
             </FormGroup>
             <Row>
                 <Col>
-                    <ReactMarkdown escapeHtml={true} source={this.props.event.paymentInfo}/>
+                    <ReactMarkdown escapeHtml={true} source={paymentText}/>
                 </Col>
             </Row>
         </React.Fragment>);

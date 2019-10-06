@@ -22,6 +22,7 @@ import {
 } from 'reactstrap';
 
 import W from '../../../shared/woodcraft.js'
+import paymentReference from "../../../shared/paymentReference";
 
 
 const RedCurrency = props => props.quantity < 0 ? <span style={{color: 'red'}}><Currency {...props} /></span> :
@@ -187,8 +188,7 @@ export default class Money extends React.Component {
         return <React.Fragment key={b.id}>
             <tr onClick={this.expand(0)} style={{borderTop: 'solid black 3px'}}>
                 <td></td><td></td>
-                <td colSpan={3}><b>{name}</b></td>
-                <td><Button color="success" onClick={this.syncMax}>Remove Cancellation Fees</Button></td>
+                <td colSpan={4}><b>{name}</b></td>
             </tr>
             <tr>
                 <td></td><td></td>
