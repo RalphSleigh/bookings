@@ -9,6 +9,7 @@ import {
 import React         from 'react'
 import ReactMarkdown from 'react-markdown'
 import feeFactory    from '../../shared/fee/feeFactory.js'
+import paymentReference from "../../shared/paymentReference";
 
 export function html(values) {
 
@@ -17,6 +18,8 @@ export function html(values) {
     const fees = feeFactory(values.event).emailHTML(values.event, values)
 
     let button = '';
+
+    const payRef = paymentReference(values.id);
 
     switch(values.user.remoteId.substr(0,4)) {
         case 'goog':
@@ -44,17 +47,26 @@ export function html(values) {
                 </p>
                 <p>You can come back and edit your booking <A href={values.editURL}>here</A>.</p>
             </Item>
-            {fees}
             <Item>
-                <ReactMarkdown source={values.event.paymentInfo}/>
+                <small>When logging in again make sure to log in as {values.user.email} using the {button} button</small>
             </Item>
             <Item>
                 <p>Blue Skies and Friendship,</p>
                 <p>Woodcraft Folk</p>
             </Item>
             <Item>
-                <small>When logging in again make sure to log in as {values.user.email} using the {button} button</small>
+                <p>THIS IS YOUR </p>
+
+                <p>DATE OF ISSUE: {new Date().toDateString()}</p>
+                Detail of product:
+
             </Item>
+            {fees}
+            <Item>
+                <ReactMarkdown source={values.event.paymentInfo.replace(/(%%%%)/g, paymentReference(payRef))}/>
+            </Item>
+
+
         </Email>
     )
 }

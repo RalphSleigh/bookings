@@ -315,7 +315,7 @@ export function emailHTML(event, booking) {
     </tr>);
 
     const total = rows.length > 1 ? <tr>
-        <td><b>Total</b></td>
+        <td><b>Total Fee:</b></td>
         <td><b>£{getFeesOwed(event, booking.participants, booking).reduce((a, c) => {
             return a + c.total
         }, 0)}</b></td>
