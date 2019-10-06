@@ -63,7 +63,7 @@ export function html(values) {
             </Item>
             {fees}
             <Item>
-                <ReactMarkdown source={values.event.paymentInfo.replace(/(%%%%)/g, paymentReference(payRef))}/>
+                <ReactMarkdown source={values.event.paymentInfo.replace(/(%%%%)/g, payRef)}/>
             </Item>
 
 

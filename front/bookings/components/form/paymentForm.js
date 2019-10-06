@@ -46,7 +46,7 @@ export default class PaymentForm extends React.Component {
                 </Label>
             </FormGroup>);
 
-        const paymentText = this.props.event.customQuestions.annonPayment && !this.props.booking.id ? this.props.event.customQuestions.annonPayment : this.props.event.paymentInfo.replace(/(%%%%)/g, paymentReference(this.props.booking.id));
+        const paymentText = this.props.booking.id ? this.props.event.paymentInfo.replace(/(%%%%)/g, paymentReference(this.props.booking.id)) : this.props.event.customQuestions.annonPayment || this.props.event.paymentInfo;
 
         return (<React.Fragment>
             <FormGroup row>

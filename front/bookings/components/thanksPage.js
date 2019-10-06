@@ -55,7 +55,7 @@ class ThanksPage extends React.Component {
 
         const participants = booking.participants.map(p => <ParticipantRow key={p.id} {...p} />);
 
-        const paymentText = event.customQuestions.annonPayment && !booking.id ? event.customQuestions.annonPayment : event.paymentInfo.replace(/(%%%%)/g, paymentReference(booking.id));
+        const paymentText = event.paymentInfo.replace(/(%%%%)/g, paymentReference(booking.id));
 
         return (<React.Fragment>
             <Row>
