@@ -15,6 +15,7 @@ import ReactMarkdown        from 'react-markdown'
 import ageFactory           from "../../age";
 import feeFactory           from '../../../shared/fee/feeFactory.js'
 import W                    from "../../../shared/woodcraft";
+import paymentReference from "../../../shared/paymentReference";
 
 
 //confirmation page for bookings
@@ -54,6 +55,7 @@ class ThanksPage extends React.Component {
 
         const participants = booking.participants.map(p => <ParticipantRow key={p.id} {...p} />);
 
+        const paymentText = event.customQuestions.annonPayment && !booking.id ? event.customQuestions.annonPayment : event.paymentInfo.replace(/(%%%%)/g, paymentReference(booking.id));
 
         return (<React.Fragment>
             <Row>
@@ -80,7 +82,7 @@ class ThanksPage extends React.Component {
                 event={this.event}
                 booking={booking}/>
             <Row>
-                <ReactMarkdown escapeHtml={true} source={event.paymentInfo}/>
+                <ReactMarkdown escapeHtml={true} source={paymentText}/>
             </Row>
             <Row>
                 <Col>

@@ -237,6 +237,7 @@ export default class BookingForm extends React.Component {
             {this.props.event.feeModel === "free" ? null :
                 <PaymentForm update={this.updateItem}
                              event={this.props.event}
+                             booking={this.props.booking}
                              chosen={this.props.booking.paymentType}
                              validating={this.state.validation > 2}
                              updateValidation={this.updateValidation(2)}/>}
