@@ -322,7 +322,6 @@ export function emailHTML(event, booking) {
     </tr> : null;
 
     return (<Item>
-        <p><b>Money:</b></p>
         <table>
             <tbody>
             {rows}

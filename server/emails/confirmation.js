@@ -55,7 +55,7 @@ export function html(values) {
                 <p>Woodcraft Folk</p>
             </Item>
             <Item>
-                <p>THIS IS YOUR </p>
+                <p>THIS IS YOUR INVOICE</p>
 
                 <p>DATE OF ISSUE: {new Date().toDateString()}</p>
                 Detail of product:
