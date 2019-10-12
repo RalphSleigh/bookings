@@ -28,6 +28,8 @@ import {
     CardImg
 } from 'reactstrap';
 
+import feeFactory           from '../../../shared/fee/feeFactory.js'
+
 //Event listing
 
 class EventList extends React.Component {
@@ -103,6 +105,8 @@ const Event = (props) => {
             <EditApplyButton event={props} booking={props.booking}/>
             <CardTitle>{props.name}</CardTitle>
             <CardSubtitle>{Moment(props.startDate).format('Do')} - {Moment(props.endDate).format('Do MMMM YYYY')}</CardSubtitle>
+            <br />
+            {props.booking ? <MyBookingDisplay event={props} booking={props.booking} /> : null }
             <ReactMarkdown escapeHtml={true} source={props.description}/>
             <div className="float-right">
                 <EditLink event={props}/>
@@ -111,6 +115,18 @@ const Event = (props) => {
             </div>
         </CardBody>
     </Card>);
+};
+
+const MyBookingDisplay = props => {
+
+    const fees = feeFactory(props.event);
+    return <React.Fragment>
+        <h5>My booking</h5>
+        <p>You have booked {props.booking.participants.length} participant{props.booking.participants.length > 1 ? 's' :''} into this event.</p>
+        <fees.ThanksRow
+            event={props.event}
+            booking={props.booking}/>
+    </React.Fragment>
 };
 
 const getEditApplyButton = (user, event) => {
