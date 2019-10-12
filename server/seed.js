@@ -210,9 +210,9 @@ This event is configured with the options used for Ealing events:
 * Users must be registered to book, but approval is not required.
 * No organisations, villages, or partial attendance.
 * Ealing's fee structure based on our pricing policy (including the weird defaults on £35)`,
-            startDate:            new Date("2019-08-06T00:00:00Z"),
-            endDate:              new Date("2019-08-10T00:00:00Z"),
-            bookingDeadline:      new Date("2019-08-01T00:00:00Z"),
+            startDate:            new Date("2020-08-06T00:00:00Z"),
+            endDate:              new Date("2020-08-10T00:00:00Z"),
+            bookingDeadline:      new Date("2020-08-01T00:00:00Z"),
             userId:               2,
             feeModel:             "ealing",
             feeData:              {amount: 35},
@@ -234,25 +234,25 @@ This event is configured with the options used for Ealing events:
 * Three attendance options available
 * Large camp fee structure, early, normal and late rates, cancellation fee and woodchip discount. 
 * Should have ~300 people booked in already`,
-            startDate:       new Date("2019-10-08T00:00:00Z"),
-            endDate:         new Date("2019-10-14T00:00:00Z"),
-            bookingDeadline: new Date("2019-06-01T00:00:00Z"),
+            startDate:       new Date("2020-10-08T00:00:00Z"),
+            endDate:         new Date("2020-10-14T00:00:00Z"),
+            bookingDeadline: new Date("2020-06-01T00:00:00Z"),
             userId:          2,
             feeModel:        "commonground",
             feeData:         {
                 buckets:    [{
                     id:     'early',
-                    date:   new Date('2018-04-01T00:00:00Z'),
+                    date:   new Date('2019-04-01T00:00:00Z'),
                     amount: {'Whole Event': 90, 'First Half': 50, 'Second Half': 50}
                 },
                     {
                         id:     'normal',
-                        date:   new Date('2018-06-01T00:00:00Z'),
+                        date:   new Date('2019-06-01T00:00:00Z'),
                         amount: {'Whole Event': 100, 'First Half': 55, 'Second Half': 55}
                     },
                     {
                         id:     'late',
-                        date:   new Date('2019-01-01T00:00:00Z'),
+                        date:   new Date('2020-01-01T00:00:00Z'),
                         amount: {'Whole Event': 150, 'First Half': 100, 'Second Half': 100}
                     }],
                 orgs:
@@ -277,34 +277,37 @@ Woodchips are half price, and there is a £50 charge for cancelled bookings.`
                 mask: 120
             }],
             customQuestions:      {
-                foodOptOut: true
+                adultFirstAid: true,
+                adultEmail:    true,
+                foodOptOut: true,
+                photoConsent: true
             }
         }, {
             name:                 'Venturer Camp 2019',
             description:          `Event with the venturer camp options`,
-            startDate:            new Date("2019-08-03T00:00:00Z"),
-            endDate:              new Date("2019-08-10T00:00:00Z"),
-            bookingDeadline:      new Date("2019-06-14T00:00:00Z"),
+            startDate:            new Date("2020-08-03T00:00:00Z"),
+            endDate:              new Date("2020-08-10T00:00:00Z"),
+            bookingDeadline:      new Date("2020-06-14T00:00:00Z"),
             userId:               2,
             feeModel:             "vcamp",
             feeData:              {
                 buckets: [{
                     id:    'early',
-                    date:  new Date('2019-01-18T00:00:00Z'),
+                    date:  new Date('2020-01-18T00:00:00Z'),
                     whole: 125,
                     a:     20,
                     b:     17
                 },
                     {
                         id:    'normal',
-                        date:  new Date('2019-06-14T00:00:00Z'),
+                        date:  new Date('2020-06-14T00:00:00Z'),
                         whole: 135,
                         a:     20,
                         b:     17
                     },
                     {
                         id:    'late',
-                        date:  new Date('2019-08-10T00:00:00Z'),
+                        date:  new Date('2020-08-10T00:00:00Z'),
                         whole: 150,
                         a:     35,
                         b:     17

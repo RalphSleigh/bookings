@@ -78,6 +78,12 @@ class ThanksPage extends React.Component {
                 </Table>
             </Col>
             </Row>
+            <Row>
+            <Col sm={12}>
+                <h4>Money</h4>
+                <ReactMarkdown escapeHtml={true} source={event.feeData.desc}/>
+            </Col>
+            </Row>
             <this.fees.ThanksRow
                 event={this.event}
                 booking={booking}/>

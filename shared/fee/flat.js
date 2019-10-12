@@ -82,7 +82,6 @@ export class ThanksRow extends React.Component {
 
         return (<Row>
             <Col>
-                <h4>Money</h4>
                 <p>This event costs £{this.props.event.feeData.amount} per person.</p>
                 <p>You have booked <b>{participants}</b> people for a total of <b>£{total}</b></p>
             </Col>

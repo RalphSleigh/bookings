@@ -26,7 +26,7 @@ bookings.getUserBookings = (req, res) => {
                                                        {userId: {$not: 1}}
                                                    ]
                                            }]
-                               }, include: [{model: db.participant}]
+                               }, include: [{model: db.participant}, {model: db.payment}]
                        })
     .then(bookings => {
         let data = {bookings};
@@ -74,7 +74,7 @@ bookings.getEventBookings = async function (req, res) {
 };
 
 bookings.getBooking = (req, res) => {
-    db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.participant}, {model: db.event}]})
+    db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.participant}, {model: db.event}, {model: db.payment}]})
     .then(booking => {
         let data = {};
         data.bookings = [booking];
@@ -152,6 +152,7 @@ bookings.editBooking = (req, res) => {
 bookings.editBooking = (req, res) => {
 
     delete req.body.internalExtra; //delete the internal extra so user can't update.
+    delete req.body.payments
     req.body.participants.forEach(p => {
         delete p.internalExtra
     });
@@ -162,7 +163,7 @@ bookings.editBooking = (req, res) => {
     })
     .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
     .then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
-    .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]}))
+    .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}, {model: db.payment}]}))
     .then(booking => {
         log.log("debug", "User %s Editing Booking id %s", req.user.userName, booking.id);
         let data = {};
