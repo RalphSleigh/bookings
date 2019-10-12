@@ -123,6 +123,7 @@ const MyBookingDisplay = props => {
     return <React.Fragment>
         <h5>My booking</h5>
         <p>You have booked {props.booking.participants.length} participant{props.booking.participants.length > 1 ? 's' :''} into this event.</p>
+        <ReactMarkdown escapeHtml={true} source={props.event.feeData.desc}/>
         <fees.ThanksRow
             event={props.event}
             booking={props.booking}/>
