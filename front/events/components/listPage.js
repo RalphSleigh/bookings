@@ -29,6 +29,7 @@ import {
 } from 'reactstrap';
 
 import feeFactory           from '../../../shared/fee/feeFactory.js'
+import paymentReference from "../../../shared/paymentReference";
 
 //Event listing
 
@@ -120,13 +121,14 @@ const Event = (props) => {
 const MyBookingDisplay = props => {
 
     const fees = feeFactory(props.event);
+    const paymentText = event.paymentInfo.replace(/(%%%%)/g, paymentReference(booking.id));
     return <React.Fragment>
         <h5>My booking</h5>
         <p>You have booked {props.booking.participants.length} participant{props.booking.participants.length > 1 ? 's' :''} into this event.</p>
         <fees.ThanksRow
             event={props.event}
             booking={props.booking}/>
-        <ReactMarkdown escapeHtml={true} source={event.paymentInfo}/>
+        <ReactMarkdown escapeHtml={true} source={paymentText}/>
     </React.Fragment>
 };
 
