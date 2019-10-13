@@ -163,12 +163,21 @@ bookings.editBooking = (req, res) => {
     })
     .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
     .then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
-    .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}, {model: db.payment}]}))
+    .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}, {model: db.payment}, {model:db.event}]}))
     .then(booking => {
         log.log("debug", "User %s Editing Booking id %s", req.user.userName, booking.id);
         let data = {};
         data.bookings = [booking];
         res.json(data);
+
+        if(req.user.id === booking.userId) {
+            const fees = feeFactory(booking.event);
+            const emailData = booking.get({plain: true});
+            emailData.editURL = config.BASE_PATH + '/' + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
+            emailData.user = req.user;
+            email.single(booking.userEmail, 'updated', emailData);
+            email.toManagers('managerBookingUpdated', emailData);
+        }
     });
 };
 
