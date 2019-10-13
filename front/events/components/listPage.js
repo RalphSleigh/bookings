@@ -121,7 +121,7 @@ const Event = (props) => {
 const MyBookingDisplay = props => {
 
     const fees = feeFactory(props.event);
-    const paymentText = props.event.paymentInfo.replace(/(%%%%)/g, paymentReference(booking.id));
+    const paymentText = props.event.paymentInfo.replace(/(%%%%)/g, paymentReference(props.booking.id));
     return <React.Fragment>
         <h5>My booking</h5>
         <p>You have booked {props.booking.participants.length} participant{props.booking.participants.length > 1 ? 's' :''} into this event.</p>
