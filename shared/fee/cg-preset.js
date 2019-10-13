@@ -319,7 +319,7 @@ export class ThanksRow extends React.Component {
 
 export function emailHTML(event, booking) {
 
-    const feesOwed = getFeesOwed(this.props.event, this.props.booking.participants, this.props.booking);
+    const feesOwed = getFeesOwed(event, booking.participants, booking);
 
     const rows = feesOwed.map((r, i) => <tr key={i}>
         <td>{r.line}</td>
