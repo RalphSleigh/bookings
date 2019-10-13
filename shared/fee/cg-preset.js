@@ -322,7 +322,7 @@ export function emailHTML(event, booking) {
     const rows = getFeesOwed(event, booking.participants, booking).map((r, i) => <tr key={i}>
         <td>{r.line}</td>
         <td><b><Currency
-            quantity={l.total}
+            quantity={r.total}
             currency="GBP"
         /></b></td>
     </tr>);
@@ -349,11 +349,11 @@ export function emailHTML(event, booking) {
 
 }
 
-export function getFeesOwed(event, participants, booking) {
-            return owedPresetEvent(event, participants, booking);
+export function getFeesOwed(event, participants, booking, payments=true) {
+            return owedPresetEvent(event, participants, booking, payments);
 }
 
-const owedPresetEvent = (event, participants, booking) => {
+const owedPresetEvent = (event, participants, booking, payments) => {
 
     const orgFees = parseOrgFees(event);
 
@@ -390,7 +390,7 @@ const owedPresetEvent = (event, participants, booking) => {
         return a;
     }, {});
 
-    return [...underFives(event, participants), ...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking), ...paymentLines(event, participants, booking)];
+    return [...underFives(event, participants), ...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking), ...(payments ? paymentLines(event, participants, booking) : [])];
 };
 
 const orgFeesLines = (participants, orgFees, booking, event) => {

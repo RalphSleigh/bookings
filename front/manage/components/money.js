@@ -129,7 +129,7 @@ export default class Money extends React.Component {
         if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
 
         const name = event.bigCampMode ? b.district + org.name : b.userName;
-        let owed = this.getFeesOwed(event, b.participants, b).reduce((a, c) => parseFloat(c.total) + a, 0);
+        let owed = this.getFeesOwed(event, b.participants, b, false).reduce((a, c) => parseFloat(c.total) + a, 0);
         const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
 
         owed = b.payments.filter(p => p.type === 'adjustment').reduce((a, c) => a + parseFloat(c.amount), owed);
@@ -161,7 +161,7 @@ export default class Money extends React.Component {
             <td></td>
         </tr>);
 
-        const feeRows = this.getFeesOwed(event, b.participants, b).map((r, i) => <tr key={`owed` + b.id + i}>
+        const feeRows = this.getFeesOwed(event, b.participants, b, false).map((r, i) => <tr key={`owed` + b.id + i}>
             <td></td>
             <td>{r.line}</td>
             <td><Currency
