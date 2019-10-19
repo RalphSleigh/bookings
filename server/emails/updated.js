@@ -58,15 +58,15 @@ export function html(values) {
                 <p>UPDATE TO YOUR INVOICE</p>
 
                 <p>DATE OF ISSUE: {new Date().toDateString()}</p>
-                Detail of product:
+
+                <p>Detail of product:</p>
 
             </Item>
             {fees}
             <Item>
+                <p>Please pay by bank transfer or post your cheque upon receipt</p>
                 <ReactMarkdown source={values.event.paymentInfo.replace(/(%%%%)/g, payRef)}/>
             </Item>
-
-
         </Email>
     )
 }

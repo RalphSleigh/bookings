@@ -63,10 +63,9 @@ export function html(values) {
             </Item>
             {fees}
             <Item>
+                <p>Please pay by bank transfer or post your cheque upon receipt</p>
                 <ReactMarkdown source={values.event.paymentInfo.replace(/(%%%%)/g, payRef)}/>
             </Item>
-
-
         </Email>
     )
 }
