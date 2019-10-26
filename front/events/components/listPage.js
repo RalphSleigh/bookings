@@ -12,10 +12,10 @@ import {
     showBookLink,
     showManageLink,
     showApplyToBookLink,
-    showBookingEditLink
+    showBookingEditLink,
 } from '../permission.js'
 import {getUserBookings} from '../../bookings/actions.js' //deep import, bad cause circular..
-import {applyToBookEvent, manageEvent} from '../../../shared/permissions.js'
+import {applyToBookEvent, manageEvent, bookEvent} from '../../../shared/permissions.js'
 
 import {
     Button,
@@ -126,7 +126,7 @@ const MyBookingDisplay = props => {
         <fees.ThanksRow
             event={props.event}
             booking={props.booking}/>
-        <ReactMarkdown escapeHtml={true} source={event.paymentInfo}/>
+        <ReactMarkdown escapeHtml={true} source={props.event.paymentInfo}/>
     </React.Fragment>
 };
 
@@ -147,8 +147,13 @@ const getEditApplyButton = (user, event) => {
     if (event.application !== undefined) {
         return () => <button className="btn btn-primary float-right disabled" disabled>Applied</button>;
     }
-    return showBookLink(() => <Link to={"/event/" + event.id + "/book"}
-                                    className="btn btn-primary float-right">Book</Link>)
+
+    if(bookEvent(user, event)) {
+        return showBookLink(() => <Link to={"/event/" + event.id + "/book"}
+                                        className="btn btn-primary float-right">Book</Link>)
+    }
+
+    return () => <button className="btn btn-primary float-right disabled" disabled>Booking Closed</button>;
 };
 
 

@@ -166,6 +166,7 @@ class Roles extends React.Component {
                         <option value="View">View</option>
                         <option value="KP">KP</option>
                         <option value="Money">Money</option>
+                        <option value="book">Book</option>
                     </Input>
                 </FormGroup>
             </Col>
