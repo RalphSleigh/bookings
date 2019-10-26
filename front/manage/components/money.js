@@ -94,7 +94,7 @@ export default class Money extends React.Component {
         b.payments = b.payments || [];
 
         const name = event.bigCampMode ? b.district + (org.name ? ' - ' + org.name : '') : b.userName;
-        let owed = this.getFeesOwed(event, b.participants, b).reduce((a, c) => parseFloat(c.total) + a, 0);
+        let owed = this.getFeesOwed(event, b.participants, b, false).reduce((a, c) => parseFloat(c.total) + a, 0);
         const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
 
         owed = b.payments.filter(p => p.type === 'adjustment').reduce((a, c) => a + parseFloat(c.amount), owed);

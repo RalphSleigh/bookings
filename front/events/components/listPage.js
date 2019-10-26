@@ -15,7 +15,7 @@ import {
     showBookingEditLink
 } from '../permission.js'
 import {getUserBookings} from '../../bookings/actions.js' //deep import, bad cause circular..
-import {applyToBookEvent, manageEvent} from '../../../shared/permissions.js'
+import {applyToBookEvent, manageEvent, bookEvent} from '../../../shared/permissions.js'
 
 import {
     Button,
@@ -149,8 +149,13 @@ const getEditApplyButton = (user, event) => {
     if (event.application !== undefined) {
         return () => <button className="btn btn-primary float-right disabled" disabled>Applied</button>;
     }
-    return showBookLink(() => <Link to={"/event/" + event.id + "/book"}
-                                    className="btn btn-primary float-right">Book</Link>)
+
+    if(bookEvent(user, event)) {
+        return showBookLink(() => <Link to={"/event/" + event.id + "/book"}
+                                        className="btn btn-primary float-right">Book</Link>)
+    }
+
+    return () => <button className="btn btn-primary float-right disabled" disabled>Booking Closed</button>;
 };
 
 
