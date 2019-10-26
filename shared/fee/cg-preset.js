@@ -329,7 +329,7 @@ export function emailHTML(event, booking) {
         /></b></td>
     </tr>);
 
-    const total = rows.length > 1 ? <tr>
+    const total = <tr>
         <td><b>Total</b></td>
         <td><b><Currency
             quantity={feesOwed.reduce((a, c) => {
@@ -337,7 +337,7 @@ export function emailHTML(event, booking) {
             }, 0)}
             currency="GBP"
         /></b></td>
-    </tr> : null;
+    </tr>;
 
     return (<Item>
         <table>
