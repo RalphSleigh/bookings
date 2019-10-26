@@ -272,10 +272,6 @@ export class ThanksRow extends React.Component {
         </tr>);
 
         return (<Row>
-            <Col sm={12}>
-                <h4>Money</h4>
-                <ReactMarkdown escapeHtml={true} source={this.props.event.feeData.desc}/>
-            </Col>
             <Col>
                 <Table>
                     <thead></thead>

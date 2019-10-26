@@ -5,6 +5,7 @@ import PermissionForm     from './permissionForm.js'
 import FeeForm            from './feeForm.js'
 import PaymentForm        from './paymentForm.js'
 import FoodForm           from './foodForm.js'
+import AdditionalForm     from './additionalContacts.js'
 import cloneDeep          from 'lodash/cloneDeep'
 import update             from 'immutability-helper';
 import Moment             from 'moment'
@@ -139,12 +140,18 @@ export default class BookingForm extends React.Component {
             if (empty(p.age)) results.push("Please fill in the age for " + p.name);
             if (empty(p.diet)) results.push("Please select a diet for " + p.name);
             if (Moment(this.props.event.startDate).diff(Moment(p.age), 'years') > 15 && this.props.event.customQuestions.adultEmail && empty(p.externalExtra.adultEmail)) results.push("Please fill an e-mail address for " + p.name);
+            if(this.props.event.customQuestions.photoConsent && empty(p.externalExtra.photoConsent)) results.push("Please answer the photo consent for " + p.name)
         });
+
+        const lonePerson = this.props.booking.participants.filter(p => {
+                return Moment(this.props.event.startDate).diff(Moment(p.age), 'years') > 15
+            }
+        ).length < 2;
 
         if (this.props.event.feeModel !== "free" && (!this.props.booking.paymentType || this.props.booking.paymentType === "")) results.push("Please choose a payment option");
 
-        if (!this.props.event.bigCampMode && empty(this.props.booking.emergencyName)) results.push("Please provide an emergency contact name");
-        if (!this.props.event.bigCampMode && empty(this.props.booking.emergencyPhone)) results.push("Please provide an emergency contact phone number");
+        if ((!this.props.event.bigCampMode || lonePerson) && empty(this.props.booking.emergencyName)) results.push("Please provide an emergency contact name");
+        if ((!this.props.event.bigCampMode || lonePerson) && empty(this.props.booking.emergencyPhone)) results.push("Please provide an emergency contact phone number");
 
         if (!this.props.booking.permission) results.push("Please tick the permission and data protection statement checkbox");
 
@@ -199,6 +206,9 @@ export default class BookingForm extends React.Component {
                 update={this.updateItem}
                 guest={this.guest}
                 validating={this.state.validation > 0} {...userDetails}/>
+            {this.props.event.bigCampMode ? <AdditionalForm
+                booking={this.props.booking}
+                update={this.updateExternalExtra}/> : null}
             {this.props.event.customQuestions.foodOptOut ? <FoodForm
                 booking={this.props.booking}
                 update={this.updateExternalExtra}/> : null}
@@ -236,6 +246,7 @@ export default class BookingForm extends React.Component {
                 </Col>
             </Row>
             <PermissionForm event={this.props.event}
+                            booking={this.props.booking}
                             update={this.updateItem}
                             validating={this.state.validation > 3}
                             {...permissionDetails}

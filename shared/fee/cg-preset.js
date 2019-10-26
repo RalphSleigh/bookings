@@ -4,7 +4,9 @@ import update        from 'immutability-helper';
 import cloneDeep     from "lodash/cloneDeep";
 import map           from 'lodash/map';
 import reduce        from 'lodash/reduce';
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown from 'react-markdown';
+import paymentLines  from './payment-lines';
+import Currency   from 'react-currency-formatter';
 //this implements a pricing policy for large camps
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
@@ -246,7 +248,10 @@ export class BookingForm extends React.Component {
         const feesOwed = getFeesOwed(this.props.event, this.props.participants, this.props.booking);
         const tableLines = feesOwed.map(l => <tr key={l.line}>
             <td>{l.line}</td>
-            <td>£{l.total}</td>
+            <td><Currency
+                quantity={l.total}
+                currency="GBP"
+            /></td>
         </tr>);
 
         return (<Row>
@@ -259,9 +264,12 @@ export class BookingForm extends React.Component {
                     <tbody>{tableLines}
                     <tr>
                         <td><b>Total:</b></td>
-                        <td><b>£{feesOwed.reduce((a, c) => {
-                            return a + c.total
-                        }, 0)}</b></td>
+                        <td><b><Currency
+                            quantity={feesOwed.reduce((a, c) => {
+                                return a + c.total
+                            }, 0)}
+                            currency="GBP"
+                        /></b></td>
                     </tr>
                     </tbody>
                 </Table>
@@ -282,23 +290,25 @@ export class ThanksRow extends React.Component {
         const feesOwed = getFeesOwed(this.props.event, this.props.booking.participants, this.props.booking);
         const tableLines = feesOwed.map(l => <tr key={l.line}>
             <td>{l.line}</td>
-            <td>£{l.total}</td>
+            <td><Currency
+                quantity={l.total}
+                currency="GBP"
+            /></td>
         </tr>);
 
         return (<Row>
-            <Col sm={12}>
-                <h4>Money</h4>
-                <ReactMarkdown escapeHtml={true} source={this.props.event.feeData.desc}/>
-            </Col>
             <Col>
                 <Table>
                     <thead></thead>
                     <tbody>{tableLines}
                     <tr>
                         <td><b>Total:</b></td>
-                        <td><b>£{feesOwed.reduce((a, c) => {
-                            return a + c.total
-                        }, 0)}</b></td>
+                        <td><b><Currency
+                            quantity={feesOwed.reduce((a, c) => {
+                                return a + c.total
+                            }, 0)}
+                            currency="GBP"
+                        /></b></td>
                     </tr>
                     </tbody>
                 </Table>
@@ -311,14 +321,20 @@ export function emailHTML(event, booking) {
 
     const rows = getFeesOwed(event, booking.participants, booking).map((r, i) => <tr key={i}>
         <td>{r.line}</td>
-        <td><b>£{r.total}</b></td>
+        <td><b><Currency
+            quantity={r.total}
+            currency="GBP"
+        /></b></td>
     </tr>);
 
     const total = rows.length > 1 ? <tr>
         <td><b>Total</b></td>
-        <td><b>£{getFeesOwed(event, booking.participants, booking).reduce((a, c) => {
-            return a + c.total
-        }, 0)}</b></td>
+        <td><b><Currency
+            quantity={feesOwed.reduce((a, c) => {
+                return a + c.total
+            }, 0)}
+            currency="GBP"
+        /></b></td>
     </tr> : null;
 
     return (<Item>
@@ -333,11 +349,11 @@ export function emailHTML(event, booking) {
 
 }
 
-export function getFeesOwed(event, participants, booking) {
-            return owedPresetEvent(event, participants, booking);
+export function getFeesOwed(event, participants, booking, payments=true) {
+            return owedPresetEvent(event, participants, booking, payments);
 }
 
-const owedPresetEvent = (event, participants, booking) => {
+const owedPresetEvent = (event, participants, booking, payments) => {
 
     const orgFees = parseOrgFees(event);
 
@@ -374,7 +390,7 @@ const owedPresetEvent = (event, participants, booking) => {
         return a;
     }, {});
 
-    return [...underFives(event, participants), ...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking)];
+    return [...underFives(event, participants), ...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking), ...(payments ? paymentLines(event, participants, booking) : [])];
 };
 
 const orgFeesLines = (participants, orgFees, booking, event) => {

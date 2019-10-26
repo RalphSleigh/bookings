@@ -192,7 +192,6 @@ export class ThanksRow extends React.Component {
 
         return (<Row>
             <Col>
-                <h4>Money</h4>
                 <Table>
                     <thead>
                     <tr>
