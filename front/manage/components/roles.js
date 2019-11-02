@@ -81,7 +81,7 @@ class Roles extends React.Component {
         const event = this.props.Event.toJS();
         const bookings = this.props.bookings
 
-        const headers = ['id', 'name', 'email', 'role', 'organisation', 'village', 'createdAt', 'booked', 'participants'];
+        const headers = ['id', 'name', 'email', 'role', 'note', 'organisation', 'village', 'createdAt', 'booked', 'participants'];
 
         const exportedData = event.roles.map(r => {
 
@@ -89,6 +89,7 @@ class Roles extends React.Component {
                     r.user.userName,
                     r.user.email,
                     r.name,
+                    r.note,
                     r.organisation ? r.organisation.name : '',
                     r.village ? r.village.name : '',
                     r.createdAt,
