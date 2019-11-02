@@ -279,6 +279,7 @@ export default class Money extends React.Component {
                         <td>
                             <b>Total</b>
                         </td>
+                        <td></td>
                         <td>
                             <b><Currency
                                 quantity={this.totalOwed}
