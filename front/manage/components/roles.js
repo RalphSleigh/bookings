@@ -4,6 +4,7 @@ import {Typeahead}   from 'react-bootstrap-typeahead';
 import ReactMarkdown from 'react-markdown'
 
 import {manageWholeEventCheck} from '../permission.js'
+import csv from 'csv-file-creator'
 
 import {
     Row,
@@ -17,6 +18,8 @@ import {
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import Moment from 'moment'
+import eol from "eol";
 
 class Roles extends React.Component {
 
@@ -28,6 +31,7 @@ class Roles extends React.Component {
         this.updateUser = this.updateUser.bind(this);
         this.addRole = this.addRole.bind(this);
         this.deleteRole = this.deleteRole.bind(this);
+        this.exportCSV = this.exportCSV.bind(this);
 
         this.event = this.props.Event.toJS();
     }
@@ -70,6 +74,30 @@ class Roles extends React.Component {
             this.props.deleteRole(id);
             e.preventDefault()
         }
+    }
+
+    exportCSV() {
+
+        const event = this.props.Event.toJS();
+        const bookings = this.props.bookings
+
+        const headers = ['id', 'name', 'email', 'role', 'organisation', 'village', 'createdAt', 'booked', 'participants'];
+
+        const exportedData = event.roles.map(r => {
+
+            return [r.id,
+                    r.user.userName,
+                    r.user.email,
+                    r.name,
+                    r.organisation ? r.organisation.name : '',
+                    r.village ? r.village.name : '',
+                    r.createdAt,
+                    bookings.find(b => b.userId === r.user.id) ? 'yes': 'no',
+                    bookings.find(b => b.userId === r.user.id) ? bookings.find(b => b.userId === r.user.id).participants.length : '']
+        });
+
+        const fileName = this.props.Event.get('name') + "-Roles-" + Moment().format('YYYY-MM-DD') + ".csv";
+        csv(fileName, [headers, ...exportedData]);
     }
 
     render() {
@@ -144,10 +172,14 @@ class Roles extends React.Component {
         const orgOptions = event.organisations.map(o => <option key={o.id} value={o.id}>{o.name}</option>);
         const villageOptions = event.villages.map(v => <option key={v.id} value={v.id}>{v.name}</option>);
 
-        return (<Row>
+        return (<React.Fragment>
+            <Row>
             <Col sm={12}>
-                <h6>Here you can assign roles to other users so they can help you administer the event</h6>
+                <Button className="float-right top5" onClick={this.exportCSV}>Export CSV</Button>
+                <h6 className="top5">Here you can assign roles to other users so they can help you administer the event</h6>
             </Col>
+            </Row>
+            <Row>
             <Col sm={5}>
                 <FormGroup>
                     <Label>User:</Label>
@@ -194,9 +226,8 @@ class Roles extends React.Component {
             </Col>
             <Col sm={1}>
                 <Label className="control-label">&nbsp;</Label>
-                <Button disabled={this.state.user.length !== 1} type="submit" onClick={this.addRole}
-                        color="success"><span
-                    className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                <Button className="form-control" disabled={this.state.user.length !== 1} type="submit" onClick={this.addRole}
+                        color="success">Add
                 </Button>
             </Col>
             <Col sm={12}>
@@ -259,7 +290,8 @@ class Roles extends React.Component {
                     </tbody>
                 </Table>
             </Col>
-        </Row>);
+        </Row>
+        </React.Fragment>);
 
     }
 }
