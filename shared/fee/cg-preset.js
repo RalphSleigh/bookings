@@ -391,7 +391,7 @@ const owedPresetEvent = (event, participants, booking, payments) => {
         return a;
     }, {});
 
-    return [...underFives(event, participants), ...linesWithPartial(combinedCosts), ...cancelledFee(event, participants, booking), ...(payments ? paymentLines(event, participants, booking) : [])];
+    return [...underFives(event, participants), ...linesWithPartial(combinedCosts, booking), ...cancelledFee(event, participants, booking), ...(payments ? paymentLines(event, participants, booking) : [])];
 };
 
 const orgFeesLines = (participants, orgFees, booking, event) => {
@@ -429,9 +429,9 @@ const underFives = (event, participants) => {
     else return [];
 };
 
-const linesWithPartial = (combined, event) => reduce(combined, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, ...map(c1, (l, t) => {
+const linesWithPartial = (combined, booking) => reduce(combined, (a, c, i) => [...a, ...reduce(c, (a1, c1, i1) => [...a1, ...map(c1, (l, t) => {
     return {
-        line:  `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
+        line:  `${l.count} ${l.count > 1 ? 'people' : 'person'} booked for ${i1}${booking.externalExtra.foodOptOut ? ' with food opt-out' : ''} before ${Moment(i).format('MMMM Do YYYY')} at £${l.amount}`,
         total: l.count * l.amount
     }
 })], [])], []);

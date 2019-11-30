@@ -117,6 +117,7 @@ class ThanksPageWrapper extends React.Component {
         else {
             //this is some unholy hack to get the thanks page to redirect back to the booking form if the user does not have a booking and will never actually come up in the real world.
             setImmediate(this.props.redirectFromThanks, this.props.Event.get('id'));
+            return null;
         }
     }
 }

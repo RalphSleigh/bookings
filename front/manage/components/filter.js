@@ -116,7 +116,7 @@ export default class Filter extends React.Component {
         if (this.state.search.length > 2) searchedBookings = filteredBookings.reduce(this.searchBooking, []);
 
         const participants = searchedBookings === this.state.data.bookings ? this.state.data.participants : searchedBookings.reduce((r, b) => [...r, ...b.participants], []);//just easier to do this here than find a plain javascript object map function
-        const filteredParticipants = filteredBookings.reduce((r, b) => [...r, ...b.participants], []).filter(p => p.name.toLowerCase().includes(this.state.search.toLowerCase()));
+        const filteredParticipants = filteredBookings.reduce((r, b) => [...r, ...b.participants], []).filter(p => p.name.toLowerCase().includes(this.state.search.toLowerCase().trim()));
 
         this.setState(update(this.state, {
             data: {
@@ -133,7 +133,7 @@ export default class Filter extends React.Component {
 
 //TODO: Proper server side database searching
     searchBooking(R, booking) {
-        const term = this.state.search.toLowerCase();
+        const term = this.state.search.toLowerCase().trim();
 
         booking.totalParticipants = booking.participants;
 

@@ -18,7 +18,7 @@ export function html(values) {
         <Email title={`${values.event.customQuestions.emailSubjectTag} Booking Updated`}>
             <Item>
                 <p>Hi {values.emailUser.userName},</p>
-                <p>{values.userName} has updated booking to {values.event.name}. They have
+                <p>{values.userName} has updated their booking {values.district ? `for ${values.district}` : ''} to {values.event.name}. They have
                     booked {values.participants.length} {values.participants.length === 1 ? 'person' : 'people'}:</p>
                 <p>
                     <ul>{participantsList}</ul>
