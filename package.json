@@ -133,7 +133,7 @@
     "sequelize-cli": "^3.2.0",
     "sequelize-json": "^2.1.2",
     "source-map": "^0.7.3",
-    "sqlite3": "^4.0.4",
+    "sqlite3": "^4.1.0",
     "tether": "^1.4.4",
     "uuid": "^3.3.0",
     "whatwg-fetch": "^2.0.4",

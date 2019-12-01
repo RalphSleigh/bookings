@@ -126,7 +126,7 @@ const emptyBooking = (User, Event) => {
 
     if (Event.get("organisationsEnabled")){
         const bookRole = User.get('roles').toJS().find(r => r.name === 'book' && r.eventId === Event.get("id"));
-        const orgId = bookRole ? bookRole.organisationId : Event.getIn(['organisations', orgId, 'id']);
+        const orgId = (bookRole && bookRole.organisationId) ? bookRole.organisationId : Event.getIn(['organisations', 0, 'id']);
         booking.organisationId = orgId;
     }
 
