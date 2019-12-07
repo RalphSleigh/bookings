@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import {Route, Switch} from 'react-router-dom';
-import {viewBookingCheck} from '../permission.js'
+import {viewBookingCheck, loggedInCheck} from '../permission.js'
 import {getBooking} from '../actions.js'
 import bookings from "../index";
 
@@ -43,7 +43,7 @@ const mapDispatchToProps = {
 const VisibleBookingLoader = connect(
     mapStateToProps,
     mapDispatchToProps
-)(BookingLoader);
+)(loggedInCheck(BookingLoader));
 
 export default VisibleBookingLoader;
 

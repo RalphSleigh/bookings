@@ -3,6 +3,14 @@ import {withRouter} from 'react-router'
 
 import * as P from '../../shared/permissions.js'
 
+export const loggedInCheck = connectedRouterRedirect({
+    authenticatedSelector: (state, props) => {
+        const user = state.getIn(["User", "user"]).toJS();
+        return user.id !== 1;
+        },
+    redirectPath: "/user",
+    wrapperDisplayName: "View Booking check"
+});
 
 export const viewBookingCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
