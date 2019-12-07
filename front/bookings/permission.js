@@ -3,14 +3,23 @@ import {withRouter} from 'react-router'
 
 import * as P from '../../shared/permissions.js'
 
+export const loggedInCheck = connectedRouterRedirect({
+    authenticatedSelector: (state, props) => {
+        const user = state.getIn(["User", "user"]).toJS();
+        return user.id !== 1;
+        },
+    redirectPath: "/user",
+    wrapperDisplayName: "View Booking check"
+});
 
 export const viewBookingCheck = connectedRouterRedirect({
     authenticatedSelector: (state, props) => {
         //if (props.booking === undefined) return true;
         const user = state.getIn(["User", "user"]).toJS();
-        const booking = state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]).toJS();
-        const event = state.getIn(["Events", "events", booking.eventId]).toJS();
-        booking.event = event;
+        const Booking = state.getIn(["Bookings", "bookings", parseInt(props.match.params.bookingId)]);
+        if(!Booking) return false;
+        const booking = Booking.toJS();
+        booking.event = state.getIn(["Events", "events", booking.eventId]).toJS();
         return P.viewBooking(user, booking);
     },
     redirectPath: "/user",

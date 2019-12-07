@@ -46,7 +46,8 @@ class ErrorBoundary extends React.Component {
                 file: '',
                 line: 0,
                 column: 0,
-                stack: info.componentStack
+                stack: info.componentStack,
+                location: window.location.href
             };
 
             const jsonString = JSON.stringify(jsonMessage);
