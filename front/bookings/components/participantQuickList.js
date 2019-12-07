@@ -18,10 +18,10 @@ export default class ParticipantsList extends React.Component {
         const groups = W.map(w => {
             const people = list.filter((p) => p.age === '' ? false : w.filter(moment(this.props.event.startDate).diff(moment(p.age), 'years'))).map((p, k) =>
                 <p
-                key={k}>{p.name}</p>);
+                    key={k}><a href={`#participant-${p.id}`}>{p.name}</a></p>);
             if (people.length === 0) return null;
             return (<div className="participantQuickList" key={w.name}>
-                <h4>{w.name}: {people.length}</h4>
+                <h8>{w.name}: {people.length}</h8>
                 {people}
             </div>);
         });
@@ -29,7 +29,7 @@ export default class ParticipantsList extends React.Component {
 
         return (<Col md={2}>
             <div className="sticky-top">
-                <h3>Participants Added: {list.length}</h3>
+                <h7>Participants: {list.length}</h7>
                 {groups}
             </div>
         </Col>);
