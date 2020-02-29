@@ -22,7 +22,7 @@ jobs:
             NODE_ENV: dev
       - run: npm run build-prod --if-present
       - name: Upload bundle
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@8b3eebcc8da91664c95f0975fdf8348b16ac15a5
         with:
           host: ${{ secrets.TEST_HOSTNAME }}
           username: ${{ secrets.TEST_SSH_USERNAME }}
