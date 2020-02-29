@@ -10,6 +10,7 @@
     "startDebug": "node %NODE_DEBUG_OPTION% ./server/server.js",
     "start": "node ./server/server.js",
     "build": "node ./node_modules/webpack/bin/webpack.js -w",
+    "build-prod": "node ./node_modules/webpack/bin/webpack.js",
     "seed": "node ./server/seed.js seed",
     "seedDebug": "node %NODE_DEBUG_OPTION% ./server/seed.js seed",
     "postinstall": "patch-package"
