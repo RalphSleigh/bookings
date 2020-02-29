@@ -29,7 +29,7 @@ jobs:
           key: ${{ secrets.TEST_SSH_KEY }}
           source: public/bundle.js, public/vendor.bundle.js
           target: bookings
-      - name: Update repo and build docker
+      - name: Update repo and rebuild docker container
         uses: appleboy/ssh-action@73767290ca0fd123c19a35598c66b657bd72999b
         with:
           host: ${{ secrets.TEST_HOSTNAME }}
