@@ -1,0 +1,23 @@
+name: Test Deployment
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  build:
+    name: Build and Upload Webpack Bundle
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install node
+        uses: actions/setup-node@v1
+      - run: npm install
+        env:
+            NODE_ENV: dev
+      - run: npm run build-prod --if-present
+
