@@ -10,6 +10,7 @@
     "startDebug": "node %NODE_DEBUG_OPTION% ./server/server.js",
     "start": "node ./server/server.js",
     "build": "node ./node_modules/webpack/bin/webpack.js -w",
+    "build-prod": "node ./node_modules/webpack/bin/webpack.js",
     "seed": "node ./server/seed.js seed",
     "seedDebug": "node %NODE_DEBUG_OPTION% ./server/seed.js seed",
     "postinstall": "patch-package"
@@ -134,6 +135,7 @@
     "sequelize-json": "^2.1.2",
     "source-map": "^0.7.3",
     "sqlite3": "^4.1.0",
+    "storage-factory": "^0.1.0",
     "tether": "^1.4.4",
     "uuid": "^3.3.0",
     "whatwg-fetch": "^2.0.4",

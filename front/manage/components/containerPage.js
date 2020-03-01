@@ -31,6 +31,7 @@ import ApplicationPage  from './applications.js'
 import VillagePage      from './villages.js'
 import RolesPage        from './roles.js'
 import MoneyPage        from './money.js'
+import EmailsPage       from './emails.js'
 import BirthdaysPage    from './birthdays.js'
 import GraphsPage       from './graphs.js'
 import MembershipsPage  from './membership.js'
@@ -138,6 +139,8 @@ class ManageContainerPage extends React.Component {
                             <RolesTab {...this.props}/>
                             <ApplicationsTab {...this.props}/>
                             <MoneyTab {...this.props} />
+                            <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/emails"}
+                                       label="Emails"/>
                             <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/birthdays"}
                                        label="🎂"/>
                             <CustomTab to={"/event/" + this.props.match.params.eventId + "/manage/graphs"}
@@ -165,6 +168,11 @@ class ManageContainerPage extends React.Component {
                     <Route path="/event/:eventId(\d+)/manage/kp">
                         <Filter bookings={this.state.bookings} {...props} >
                             <KpPage/>
+                        </Filter>
+                    </Route>
+                    <Route path="/event/:eventId(\d+)/manage/emails">
+                        <Filter bookings={this.state.bookings} {...props} >
+                            <EmailsPage/>
                         </Filter>
                     </Route>
                     <Route path="/event/:eventId(\d+)/manage/birthdays">

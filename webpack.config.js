@@ -84,6 +84,4 @@ if (PROD) module.exports.plugins.push(new webpack.DefinePlugin({
 else module.exports.plugins.push(new webpack.SourceMapDevToolPlugin({
     filename: "[file].map",
     exclude: "vendor"
-}));
-
-module.exports.plugins.push(new BundleAnalyzerPlugin());
+}), new BundleAnalyzerPlugin());
