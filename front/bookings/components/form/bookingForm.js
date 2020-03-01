@@ -41,6 +41,7 @@ export default class BookingForm extends React.Component {
             new:         !this.props.booking.id,
             deleteLock:  true,
             validation:  this.props.booking.id ? 4 : 0,
+            deleteInProgress: false
         };
 
         this.updateItem = this.updateItem.bind(this);
@@ -108,8 +109,11 @@ export default class BookingForm extends React.Component {
     }
 
     clickDelete(e) {
-        this.props.cancel(this.props.booking.id);
-        e.preventDefault();
+        if(confirm('Are you sure you wish to delete this booking?')) {
+            this.props.cancel(this.props.booking.id);
+            this.setState({deleteInProgress: true});
+            e.preventDefault();
+        }
     }
 
     //for a new booking we only trigger inline validations when the user has interacted with a subsequent section of the form.
@@ -164,7 +168,7 @@ export default class BookingForm extends React.Component {
 
         const deleteButtons = this.state.new ? null : [<Button key="deletelock"
                                                                className="float-right ml-1"
-                                                               disabled={this.state.deleteLock}
+                                                               disabled={this.state.deleteLock || this.state.deleteInProgress}
                                                                onClick={this.clickDelete}
                                                                color="danger">Cancel
             Booking</Button>,
