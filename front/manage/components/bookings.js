@@ -207,7 +207,9 @@ export default class Bookings extends React.Component {
         const village = event.villages.find(v => row.original.b.villageId === v.id);
         const organisation = event.organisations.find(o => row.original.b.organisationId === o.id);
 
-        const participants = row.original.b.participants.map(p => <tr key={p.id}>
+        const participants = row.original.b.participants
+            .sort((a, b) => nameSort(a.name, b.name))
+            .map(p => <tr key={p.id}>
             <td>{p.name}</td>
             <td>{p.displayAge}</td>
         </tr>);
