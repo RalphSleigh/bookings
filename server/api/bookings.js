@@ -195,8 +195,14 @@ bookings.togglePaid = (req, res) => {
 };
 
 bookings.deleteBooking = (req, res) => {
-    db.booking.findOne({where: {id: req.body.id}})
-    .then(booking => booking.destroy())
+    db.booking.findOne({where: {id: req.body.id},include: [{model:db.event}, {model: db.participant}]})
+    .then(booking => {
+        const emailData = booking.get({plain: true});
+        emailData.user = req.user;
+        //email.single(booking.userEmail, 'updated', emailData);
+        email.toManagers('managerBookingDeleted', emailData);
+        return booking.destroy()
+    })
     .then(() => db.booking.findAll({
                                        where:
                                            {
