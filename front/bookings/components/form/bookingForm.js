@@ -196,7 +196,7 @@ export default class BookingForm extends React.Component {
             campWith: this.props.booking.campWith
         };
 
-        return (<Form autocomplete="off">
+        return (<Form autoComplete="off">
             <Row>
                 <Col>
                     <h3 onClick={this.foodCounter}>Your Details</h3>
