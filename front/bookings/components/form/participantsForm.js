@@ -9,6 +9,7 @@ import update from 'immutability-helper';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import 'react-widgets/dist/css/react-widgets.css'
+import cloneDeep       from "lodash/cloneDeep";
 
 import ageFactory from '../../../age'
 
@@ -229,6 +230,19 @@ class ParticipantRow extends React.Component {
                 <PhotoConsent event={this.props.event} update={this.props.updateExtraNoPrevent}  values={this.props.externalExtra || {}} id={this.props.id}/>
                 <FormGroup row>
                     {attendance}
+                    <Col sm={6}>
+                        <FormGroup check>
+                            <Label check>
+                                <Input type="checkbox" checked={!!this.props.externalExtra.solidarity}
+                                       onChange={() => {
+                                           const externalExtra = cloneDeep(this.props.externalExtra)
+                                           externalExtra.solidarity = !externalExtra.solidarity
+                                           this.props.updateDirect('externalExtra')(externalExtra)
+                                       }}/>
+                                Solidarity Booking
+                            </Label>
+                        </FormGroup>
+                    </Col>
                     <Col sm={1}>
                         <Button onClick={this.props.delete} color="warning">
                             <span style={{color: 'white'}}><FontAwesomeIcon icon={faTimes}/></span>

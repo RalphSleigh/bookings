@@ -110,7 +110,6 @@ export class ParticipantWidget extends React.Component {
                     {options}
                 </Input>
             </Col>
-            <Col sm={6}/>
         </React.Fragment>);
     }
 }
