@@ -248,6 +248,7 @@ export default class EditForm extends React.Component {
                     {switchGroup("Over 16 First-Aid question", this.state.event.customQuestions.adultFirstAid, this.updateCustomChecked('adultFirstAid'))}
                     {switchGroup("Central Food Opt Out", this.state.event.customQuestions.foodOptOut, this.updateCustomChecked('foodOptOut'))}
                     {switchGroup("Photo consent question", this.state.event.customQuestions.photoConsent, this.updateCustomChecked('photoConsent'))}
+                    {formField("date", "Data invalid before:", Moment(this.state.event.customQuestions.invalidDate).format("YYYY-MM-DD"), this.updateExtra("invalidDate"))}
                     <Row>
                         <Col>
                             <Button color="success" onClick={this.clickSave}>Save</Button>
