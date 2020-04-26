@@ -139,7 +139,10 @@ export default class Bookings extends React.Component {
 
         const columns = [];
 
-        if (event.bigCampMode) columns.push({accessor: "district", Header: "District", sortable: true});
+        if (event.bigCampMode) columns.push({accessor: "district", Header: "District", sortable: true,
+            Cell:     row => <React.Fragment>{row.original.b.externalExtra.agreedDateChange? '✅': ''}{row.original.district}</React.Fragment>
+
+        })
 
         columns.push(...[{accessor: "userName", Header: "Name", sortable: true},
             {
