@@ -9,6 +9,7 @@ const Op = db.Sequelize.Op;
 const wrapper = require('../errors');
 const _ = require('lodash');
 
+
 import feeFactory from '../../shared/fee/feeFactory';
 
 const bookings = {};
@@ -156,9 +157,13 @@ bookings.editBooking = (req, res) => {
     req.body.participants.forEach(p => {
         delete p.internalExtra
     });
-    db.booking.findOne({where: {id: req.body.id}})
+    db.booking.findOne({where: {id: req.body.id}, include: [{model:db.event}]})
     .then(booking => {
-        req.body.maxParticipants = Math.max(booking.maxParticipants || 0, req.body.participants.length);
+        if(moment().isBefore(booking.event.bookingDeadline)) {
+            req.body.maxParticipants = req.body.participants.length
+        } else {
+            req.body.maxParticipants = Math.max(booking.maxParticipants || 0, req.body.participants.length);
+        }
         return booking.update(req.body)//this ignores partitipants!
     })
     .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
