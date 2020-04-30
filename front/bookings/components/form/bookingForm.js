@@ -25,6 +25,7 @@ import {
     FormGroup,
 } from 'reactstrap';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import moment from "moment";
 
 
 //this is a massive component that handles the state of the booking form.
@@ -159,6 +160,7 @@ export default class BookingForm extends React.Component {
 
         if (!this.props.booking.permission) results.push("Please tick the permission and data protection statement checkbox");
 
+        if(needToAgreeDateChange(this.props.event, this.props.booking, this.props.user))results.push("Please accept the date change notice")
         return results;
     }
 
@@ -251,6 +253,7 @@ export default class BookingForm extends React.Component {
             </Row>
             <PermissionForm event={this.props.event}
                             booking={this.props.booking}
+                            user={this.props.user}
                             update={this.updateItem}
                             validating={this.state.validation > 3}
                             {...permissionDetails}
@@ -264,6 +267,9 @@ export default class BookingForm extends React.Component {
             </Row>
             <Row>
                 <Col>
+                    {needToAgreeDateChange(this.props.event, this.props.booking, this.props.user) ? <DateChangePanel
+                        updateExternalExtra={this.updateExternalExtra}/> : null}
+                    <br />
                     <ValidationList errors={validationMessages}/>
                 </Col>
             </Row>
@@ -312,6 +318,30 @@ function blankParticipant(event) {
         internalExtra: {},
         focus:         true
     }
+}
+
+const needToAgreeDateChange = (event, booking, user) =>{
+    if(!event.customQuestions.invalidDate) return false
+    if(user.id !== booking.userId) return false
+    if(moment().isBefore(event.customQuestions.invalidDate)) return false
+    return !booking.externalExtra.agreedDateChange
+}
+
+const DateChangePanel = (props) => {
+
+    return <Card body outline color="danger" className="mb-3">
+            <CardTitle>
+                Common Ground Date Change Scary Warning Box
+            </CardTitle>
+            <CardBody>
+
+                <p>I agree this booking is now for Common Ground in 2022 and totally promise to get it up to date at some point.</p>
+            <Button color="primary" onClick={() =>{
+                props.updateExternalExtra('agreedDateChange', true);
+            }}>Accept</Button>
+            </CardBody>
+    </Card>
+
 }
 
 
