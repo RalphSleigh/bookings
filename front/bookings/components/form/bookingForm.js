@@ -327,12 +327,42 @@ const needToAgreeDateChange = (event, booking, user) =>{
 const DateChangePanel = (props) => {
 
     return <Card body outline color="danger" className="mb-3">
-            <CardTitle>
-                Common Ground Date Change Scary Warning Box
-            </CardTitle>
-            <CardBody>
+        <CardBody>
 
-                <p>I agree this booking is now for Common Ground in 2022 and totally promise to get it up to date at some point.</p>
+            <p><b>Common Ground has been postponed until the summer of 2022, please see the statement on <a target="_blank" href="https://www.commonground.camp/updates/statement-common-ground-moved-to-2022/">our website.</a></b>
+</p>
+            <p>        To understand how this will affect your booking please see the <a target="_blank" href="https://www.commonground.camp/about/faqs/">FAQs on our website.</a></p>
+
+
+        <h4>Prices and Deadlines for Common Ground now in 2022</h4>
+
+        <table className="table"><thead><tr><th>Ticket type</th><th>Price - 10 Day Tickets</th><th>Price - 5 Day Tickets</th><th>Deadline for booking</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>2020 Price tickets</td><td>£205</td><td>£125</td><td>30 June 2020</td>
+        </tr>
+        <tr>
+            <td>Early Bird</td><td>£210</td><td>£130</td><td>1st December 2021</td>
+        </tr>
+        <tr>
+            <td>Standard Ticket</td><td>£215</td><td>£135</td><td>1st May 2022</td>
+        </tr>
+        <tr>
+            <td>Late Booking</td><td>£230</td><td>£150</td><td>15th June 2022</td>
+        </tr>
+        <tr>
+            <td>Very Late price</td><td>£300</td><td>£200</td><td>Before camp begins</td>
+        </tr>
+        <tr>
+            <td>Ticket on the door</td><td>£400</td><td>£250</td><td>On Camp</td>
+        </tr>
+        </tbody>
+        </table>
+
+        <p>The staggered prices for participants outside of Western Europe will remain at their 2020 prices.</p>
+
+        <p>For more detail on the prices of Common Ground tickets see the <a target="_blank" href="https://www.commonground.camp/about/faqs/">FAQs on our website.</a></p>
             <Button color="primary" onClick={() =>{
                 props.updateExternalExtra('agreedDateChange', true);
             }}>Accept</Button>
