@@ -65,7 +65,7 @@
     "faker": "^4.1.0",
     "file-loader": "^1.1.11",
     "googleapis": "^23.0.0",
-    "handlebars": "^4.0.0",
+    "handlebars": "^4.5.3",
     "history": "^4.7.2",
     "html-to-text": "^4.0.0",
     "immutability-helper": "^2.7.0",
