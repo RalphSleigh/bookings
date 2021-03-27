@@ -32,7 +32,9 @@ export const bookEvent = (user, event) => {
     if (event.userId === user.id) return true; //owner can
     if (event.bookingPolicy === 'guest') return true; //anyone can book
     if (event.bookingPolicy === 'approved' && user.roles.find(role => role.name === "book" && role.eventId === event.id)) return true; //booking approved
-    if (event.bookingPolicy === 'registered' && user.id !== 1) return true; //non guest can book registered events
+    if (event.bookingPolicy === 'registered'
+        && user.roles.find(role => role.name === "book" && role.eventId === event.id)) return true; //book role can book after deadline
+    if (event.bookingPolicy === 'registered' && user.id !== 1 && new Date(event.bookingDeadline) > new Date()) return true; //non guest can book registered events
 
     if (user.roles.find(role => role.eventId === event.id
             && role.name === "Manage")) return true; //anyone with event management permissions can.

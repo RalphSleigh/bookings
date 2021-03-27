@@ -26,7 +26,7 @@ bookings.getUserBookings = (req, res) => {
                                                        {userId: {$not: 1}}
                                                    ]
                                            }]
-                               }, include: [{model: db.participant}]
+                               }, include: [{model: db.participant}, {model: db.payment}]
                        })
     .then(bookings => {
         let data = {bookings};
@@ -74,7 +74,7 @@ bookings.getEventBookings = async function (req, res) {
 };
 
 bookings.getBooking = (req, res) => {
-    db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.participant}, {model: db.event}]})
+    db.booking.findOne({where: {id: req.params.bookingId}, include: [{model: db.participant}, {model: db.event}, {model: db.payment}]})
     .then(booking => {
         let data = {};
         data.bookings = [booking];
@@ -152,6 +152,7 @@ bookings.editBooking = (req, res) => {
 bookings.editBooking = (req, res) => {
 
     delete req.body.internalExtra; //delete the internal extra so user can't update.
+    delete req.body.payments
     req.body.participants.forEach(p => {
         delete p.internalExtra
     });
@@ -162,12 +163,21 @@ bookings.editBooking = (req, res) => {
     })
     .then(booking => db.booking.findOne({where: {id: booking.id}, include: [{model: db.participant}]}))
     .then(booking => updateAssociation(booking, 'participants', db.participant, req.body.participants))
-    .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}]}))
+    .then(() => db.booking.findOne({where: {id: req.body.id}, include: [{model: db.participant}, {model: db.payment}, {model:db.event}]}))
     .then(booking => {
         log.log("debug", "User %s Editing Booking id %s", req.user.userName, booking.id);
         let data = {};
         data.bookings = [booking];
         res.json(data);
+
+        if(req.user.id === booking.userId) {
+            const fees = feeFactory(booking.event);
+            const emailData = booking.get({plain: true});
+            emailData.editURL = config.BASE_PATH + '/' + (emailData.userId === 1 ? "guestUUID/" + emailData.eventId + "/" + emailData.guestUUID : "event/" + emailData.eventId + "/book");
+            emailData.user = req.user;
+            email.single(booking.userEmail, 'updated', emailData);
+            email.toManagers('managerBookingUpdated', emailData);
+        }
     });
 };
 
@@ -185,8 +195,14 @@ bookings.togglePaid = (req, res) => {
 };
 
 bookings.deleteBooking = (req, res) => {
-    db.booking.findOne({where: {id: req.body.id}})
-    .then(booking => booking.destroy())
+    db.booking.findOne({where: {id: req.body.id},include: [{model:db.event}, {model: db.participant}]})
+    .then(booking => {
+        const emailData = booking.get({plain: true});
+        emailData.user = req.user;
+        //email.single(booking.userEmail, 'updated', emailData);
+        email.toManagers('managerBookingDeleted', emailData);
+        return booking.destroy()
+    })
     .then(() => db.booking.findAll({
                                        where:
                                            {

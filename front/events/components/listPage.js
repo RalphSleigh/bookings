@@ -12,10 +12,10 @@ import {
     showBookLink,
     showManageLink,
     showApplyToBookLink,
-    showBookingEditLink
+    showBookingEditLink,
 } from '../permission.js'
 import {getUserBookings} from '../../bookings/actions.js' //deep import, bad cause circular..
-import {applyToBookEvent, manageEvent} from '../../../shared/permissions.js'
+import {applyToBookEvent, manageEvent, bookEvent} from '../../../shared/permissions.js'
 
 import {
     Button,
@@ -27,6 +27,8 @@ import {
     CardSubtitle,
     CardImg
 } from 'reactstrap';
+
+import feeFactory           from '../../../shared/fee/feeFactory.js'
 
 //Event listing
 
@@ -103,6 +105,8 @@ const Event = (props) => {
             <EditApplyButton event={props} booking={props.booking}/>
             <CardTitle>{props.name}</CardTitle>
             <CardSubtitle>{Moment(props.startDate).format('Do')} - {Moment(props.endDate).format('Do MMMM YYYY')}</CardSubtitle>
+            <br />
+            {props.booking ? <MyBookingDisplay event={props} booking={props.booking} /> : null }
             <ReactMarkdown escapeHtml={true} source={props.description}/>
             <div className="float-right">
                 <EditLink event={props}/>
@@ -111,6 +115,19 @@ const Event = (props) => {
             </div>
         </CardBody>
     </Card>);
+};
+
+const MyBookingDisplay = props => {
+
+    const fees = feeFactory(props.event);
+    return <React.Fragment>
+        <h5>My booking</h5>
+        <p>You have booked {props.booking.participants.length} participant{props.booking.participants.length > 1 ? 's' :''} into this event.</p>
+        <fees.ThanksRow
+            event={props.event}
+            booking={props.booking}/>
+        <ReactMarkdown escapeHtml={true} source={props.event.paymentInfo}/>
+    </React.Fragment>
 };
 
 const getEditApplyButton = (user, event) => {
@@ -130,8 +147,13 @@ const getEditApplyButton = (user, event) => {
     if (event.application !== undefined) {
         return () => <button className="btn btn-primary float-right disabled" disabled>Applied</button>;
     }
-    return showBookLink(() => <Link to={"/event/" + event.id + "/book"}
-                                    className="btn btn-primary float-right">Book</Link>)
+
+    if(bookEvent(user, event)) {
+        return showBookLink(() => <Link to={"/event/" + event.id + "/book"}
+                                        className="btn btn-primary float-right">Book</Link>)
+    }
+
+    return () => <button className="btn btn-primary float-right disabled" disabled>Booking Closed</button>;
 };
 
 

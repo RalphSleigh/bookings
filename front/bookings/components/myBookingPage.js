@@ -23,6 +23,10 @@ import {
     Col,
 } from 'reactstrap';
 
+import { storageFactory } from "storage-factory";
+const local = storageFactory(() => localStorage);
+
+
 //this is the special case where we are doing the sessions own booking for the event. If we have previously booked then edit that instead of letting them create a new one.  
 
 //TODO: do we have permission?
@@ -82,11 +86,11 @@ const mapStateToProps = (state, props) => {
 
     const existingBooking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"))
 
-    const localStorageData = localStorage.currentBooking ? JSON.parse(localStorage.currentBooking) : false;
+    const localData = local.getItem('currentBooking') ? JSON.parse(local.getItem('currentBooking')) : false;
 
-    const localBooking = (localStorageData &&
-        (localStorageData.eventId === Event.get("id")) &&
-        (localStorageData.userId === User.get("id"))) ? localStorageData : false;
+    const localBooking = (localData &&
+        (localData.eventId === Event.get("id")) &&
+        (localData.userId === User.get("id"))) ? localData : false;
 
     const prevBooking = (Event, Bookings, User) => {
         let prevBooking = Event.get("bigCampMode") === false ? Bookings.get("bookings").filter(b => b.get("userId") === User.get("id")).toList().sort((a, b) => a.get('participants').size < b.get('participants').size).get(0) : null;
@@ -123,7 +127,13 @@ const emptyBooking = (User, Event) => {
         externalExtra: {},
         internalExtra: {}
     };
-    if (Event.get("organisationsEnabled")) booking.organisationId = Event.getIn(['organisations', 0, 'id']);
+
+    if (Event.get("organisationsEnabled")){
+        const bookRole = User.get('roles').toJS().find(r => r.name === 'book' && r.eventId === Event.get("id"));
+        const orgId = (bookRole && bookRole.organisationId) ? bookRole.organisationId : Event.getIn(['organisations', 0, 'id']);
+        booking.organisationId = orgId;
+    }
+
     return booking;
 };
 

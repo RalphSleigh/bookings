@@ -76,6 +76,12 @@ class ThanksPage extends React.Component {
                 </Table>
             </Col>
             </Row>
+            <Row>
+            <Col sm={12}>
+                <h4>Money</h4>
+                <ReactMarkdown escapeHtml={true} source={event.feeData.desc}/>
+            </Col>
+            </Row>
             <this.fees.ThanksRow
                 event={this.event}
                 booking={booking}/>
@@ -109,6 +115,7 @@ class ThanksPageWrapper extends React.Component {
         else {
             //this is some unholy hack to get the thanks page to redirect back to the booking form if the user does not have a booking and will never actually come up in the real world.
             setImmediate(this.props.redirectFromThanks, this.props.Event.get('id'));
+            return null;
         }
     }
 }

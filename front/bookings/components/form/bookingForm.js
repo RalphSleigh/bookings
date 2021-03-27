@@ -5,6 +5,7 @@ import PermissionForm     from './permissionForm.js'
 import FeeForm            from './feeForm.js'
 import PaymentForm        from './paymentForm.js'
 import FoodForm           from './foodForm.js'
+import AdditionalForm     from './additionalContacts.js'
 import cloneDeep          from 'lodash/cloneDeep'
 import update             from 'immutability-helper';
 import Moment             from 'moment'
@@ -40,6 +41,7 @@ export default class BookingForm extends React.Component {
             new:         !this.props.booking.id,
             deleteLock:  true,
             validation:  this.props.booking.id ? 4 : 0,
+            deleteInProgress: false
         };
 
         this.updateItem = this.updateItem.bind(this);
@@ -107,8 +109,11 @@ export default class BookingForm extends React.Component {
     }
 
     clickDelete(e) {
-        this.props.cancel(this.props.booking.id);
-        e.preventDefault();
+        if(confirm('Are you sure you wish to delete this booking?')) {
+            this.props.cancel(this.props.booking.id);
+            this.setState({deleteInProgress: true});
+            e.preventDefault();
+        }
     }
 
     //for a new booking we only trigger inline validations when the user has interacted with a subsequent section of the form.
@@ -139,12 +144,18 @@ export default class BookingForm extends React.Component {
             if (empty(p.age)) results.push("Please fill in the age for " + p.name);
             if (empty(p.diet)) results.push("Please select a diet for " + p.name);
             if (Moment(this.props.event.startDate).diff(Moment(p.age), 'years') > 15 && this.props.event.customQuestions.adultEmail && empty(p.externalExtra.adultEmail)) results.push("Please fill an e-mail address for " + p.name);
+            if(this.props.event.customQuestions.photoConsent && empty(p.externalExtra.photoConsent)) results.push("Please answer the photo consent for " + p.name)
         });
+
+        const lonePerson = this.props.booking.participants.filter(p => {
+                return Moment(this.props.event.startDate).diff(Moment(p.age), 'years') > 15
+            }
+        ).length < 2;
 
         if (this.props.event.feeModel !== "free" && (!this.props.booking.paymentType || this.props.booking.paymentType === "")) results.push("Please choose a payment option");
 
-        if (!this.props.event.bigCampMode && empty(this.props.booking.emergencyName)) results.push("Please provide an emergency contact name");
-        if (!this.props.event.bigCampMode && empty(this.props.booking.emergencyPhone)) results.push("Please provide an emergency contact phone number");
+        if ((!this.props.event.bigCampMode || lonePerson) && empty(this.props.booking.emergencyName)) results.push("Please provide an emergency contact name");
+        if ((!this.props.event.bigCampMode || lonePerson) && empty(this.props.booking.emergencyPhone)) results.push("Please provide an emergency contact phone number");
 
         if (!this.props.booking.permission) results.push("Please tick the permission and data protection statement checkbox");
 
@@ -157,7 +168,7 @@ export default class BookingForm extends React.Component {
 
         const deleteButtons = this.state.new ? null : [<Button key="deletelock"
                                                                className="float-right ml-1"
-                                                               disabled={this.state.deleteLock}
+                                                               disabled={this.state.deleteLock || this.state.deleteInProgress}
                                                                onClick={this.clickDelete}
                                                                color="danger">Cancel
             Booking</Button>,
@@ -185,7 +196,7 @@ export default class BookingForm extends React.Component {
             campWith: this.props.booking.campWith
         };
 
-        return (<Form>
+        return (<Form autoComplete="off">
             <Row>
                 <Col>
                     <h3 onClick={this.foodCounter}>Your Details</h3>
@@ -199,6 +210,9 @@ export default class BookingForm extends React.Component {
                 update={this.updateItem}
                 guest={this.guest}
                 validating={this.state.validation > 0} {...userDetails}/>
+            {this.props.event.bigCampMode ? <AdditionalForm
+                booking={this.props.booking}
+                update={this.updateExternalExtra}/> : null}
             {this.props.event.customQuestions.foodOptOut ? <FoodForm
                 booking={this.props.booking}
                 update={this.updateExternalExtra}/> : null}
@@ -236,6 +250,7 @@ export default class BookingForm extends React.Component {
                 </Col>
             </Row>
             <PermissionForm event={this.props.event}
+                            booking={this.props.booking}
                             update={this.updateItem}
                             validating={this.state.validation > 3}
                             {...permissionDetails}

@@ -206,7 +206,7 @@
 }
 
 .participantQuickList p {
-    margin: 5px 0px;
+    margin: 2px 0px;
 }
 
 /*
@@ -514,3 +514,9 @@ td.rdtYear:hover {
 .fadeOut {
     opacity: 0.5;
 }
+
+.sticky-top {
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+ }

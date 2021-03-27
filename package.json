@@ -10,6 +10,7 @@
     "startDebug": "node %NODE_DEBUG_OPTION% ./server/server.js",
     "start": "node ./server/server.js",
     "build": "node ./node_modules/webpack/bin/webpack.js -w",
+    "build-prod": "node ./node_modules/webpack/bin/webpack.js",
     "seed": "node ./server/seed.js seed",
     "seedDebug": "node %NODE_DEBUG_OPTION% ./server/seed.js seed",
     "postinstall": "patch-package"
@@ -22,7 +23,7 @@
     "style-loader": "^0.19.1",
     "url-loader": "^1.0.1",
     "webpack": "^3.12.0",
-    "webpack-bundle-analyzer": "^2.13.1"
+    "webpack-bundle-analyzer": "^3.3.2"
   },
   "dependencies": {
     "@babel/core": "^7.0.0-beta.51",
@@ -58,6 +59,7 @@
     "debounce": "^1.1.0",
     "email-templates": "^3",
     "eol": "^0.9.1",
+    "exponential-backoff": "^2.2.0",
     "express": "^4.16.3",
     "express-session": "^1.14.2",
     "faker": "^4.1.0",
@@ -92,7 +94,7 @@
     "passport-yahoo-oauth2": "https://github.com/francisalvinbarretto/passport-yahoo-oauth/tarball/master",
     "passport-yahoo-token": "^2.1.0",
     "patch-package": "^6.0.2",
-    "pg": "6.4.1",
+    "pg": "6.4.2",
     "prelude-extension": "^0.1.0",
     "prelude-ls": "^1.1.2",
     "react": "^16.8.6",
@@ -133,7 +135,8 @@
     "sequelize-cli": "^3.2.0",
     "sequelize-json": "^2.1.2",
     "source-map": "^0.7.3",
-    "sqlite3": "^4.0.4",
+    "sqlite3": "^4.1.0",
+    "storage-factory": "^0.1.0",
     "tether": "^1.4.4",
     "uuid": "^3.3.0",
     "whatwg-fetch": "^2.0.4",
