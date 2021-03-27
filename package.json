@@ -94,7 +94,7 @@
     "passport-yahoo-oauth2": "https://github.com/auth0/passport-yahoo-oauth2/tarball/master",
     "passport-yahoo-token": "^2.1.0",
     "patch-package": "^6.0.2",
-    "pg": "6.4.2",
+    "pg": "8.5.1",
     "prelude-extension": "^0.1.0",
     "prelude-ls": "^1.1.2",
     "react": "^16.8.6",
