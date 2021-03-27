@@ -91,7 +91,7 @@
     "passport-local": "^1.0.0",
     "passport-microsoft": "0.0.5",
     "passport-yahoo": "^0.3.0",
-    "passport-yahoo-oauth2": "https://github.com/francisalvinbarretto/passport-yahoo-oauth/tarball/master",
+    "passport-yahoo-oauth2": "https://github.com/auth0/passport-yahoo-oauth2/tarball/master",
     "passport-yahoo-token": "^2.1.0",
     "patch-package": "^6.0.2",
     "pg": "6.4.2",

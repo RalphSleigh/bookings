@@ -3,7 +3,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const YahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy;
+const YahooStrategy = require('passport-yahoo-oauth2').Strategy;
 //const MicrosoftStrategy = require('passport-microsoft').Strategy;
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 const bcrypt = require('bcrypt-nodejs');
@@ -47,7 +47,7 @@ passport.use(new YahooStrategy({
 
     },
     function (accessToken, refreshToken, token, profile, cb) {
-        return getUser(profile.id, profile.displayName, profile.emails[0].value, 'yahoo')
+        return getUser(profile.id, profile._json.email, profile._json.email, 'yahoo')
             .then(u => cb(null, u.get({plain: true})))
             .catch(e => cb(e, null));
     }
