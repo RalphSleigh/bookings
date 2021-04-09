@@ -18,6 +18,11 @@ import {
     CardImgOverlay,
     Table
 } from 'reactstrap';
+import Currency from "react-currency-formatter";
+import {Item} from "react-html-email";
+import cloneDeep from "lodash/cloneDeep";
+import Moment from "moment";
+import paymentLines from "./payment-lines";
 
 export const name = "flat";
 export const selection = "Flat fee per participant";
@@ -61,11 +66,10 @@ export class BookingForm extends React.Component {
         const participants = this.props.participants ? this.props.participants.length : 0
         const total = this.props.feeData.amount * participants
 
-
         return (<Row>
             <Col>
                 <p>This event costs £{this.props.feeData.amount} per person.</p>
-                <p>You have booked <b>{participants}</b> people for a total of <b>£{total}</b></p>
+                <p>You have booked <b>{participants}</b> {`${participants > 1 ? 'people' : 'person'}`} for a total of <b>£{total}</b></p>
             </Col>
         </Row>);
 
@@ -77,15 +81,57 @@ export class ThanksRow extends React.Component {
     render() {
 
         const participants = this.props.booking.participants ? this.props.booking.participants.length : 0
-        const total = this.props.feeData.amount * participants
+        const total = this.props.event.feeData.amount * participants
 
 
         return (<Row>
             <Col>
                 <p>This event costs £{this.props.event.feeData.amount} per person.</p>
-                <p>You have booked <b>{participants}</b> people for a total of <b>£{total}</b></p>
+                <p>You have booked <b>{participants}</b> {`${participants > 1 ? 'people' : 'person'}`} for a total of <b>£{total}</b></p>
             </Col>
         </Row>);
 
     }
+}
+
+export function emailHTML(event, booking) {
+
+    const rows = getFeesOwed(event, booking.participants, booking).map((r, i) => <tr key={i}>
+        <td>{r.line}</td>
+        <td><b><Currency
+            quantity={r.total}
+            currency="GBP"
+        /></b></td>
+    </tr>);
+
+    const total = rows.length > 1 ? <tr>
+        <td><b>Total</b></td>
+        <td><b><Currency
+            quantity={feesOwed.reduce((a, c) => {
+                return a + c.total
+            }, 0)}
+            currency="GBP"
+        /></b></td>
+    </tr> : null;
+
+    return (<Item>
+        <p><b>Money:</b></p>
+        <table>
+            <tbody>
+            {rows}
+            {total}
+            </tbody>
+        </table>
+    </Item>)
+
+}
+
+export function getFeesOwed(event, participants, booking, payments=true) {
+    const people = participants.length
+    const result = {
+        line:  `${people} ${people > 1 ? 'people' : 'person'} at £${event.feeData.amount}`,
+            total: event.feeData.amount * people
+    }
+
+    return [result, ...(payments ? paymentLines(event, participants, booking) : [])];
 }
