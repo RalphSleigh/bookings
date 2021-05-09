@@ -15,10 +15,10 @@ export function html(values) {
     const participantsList = values.participants.map(p => <li key={p.id}>{p.name}</li>);
 
     return renderEmail(
-        <Email title={`${values.event.customQuestions.emailSubjectTag} Booking Updated`}>
+        <Email title={`${values.event.customQuestions.emailSubjectTag} Booking DELETED`}>
             <Item>
                 <p>Hi {values.emailUser.userName},</p>
-                <p>{values.userName} has updated their booking {values.district ? `for ${values.district}` : ''} to {values.event.name}. They have
+                <p>{values.userName} has deleted their booking {values.district ? `for ${values.district}` : ''} to {values.event.name}. They had previously
                     booked {values.participants.length} {values.participants.length === 1 ? 'person' : 'people'}:</p>
                 <p>
                     <ul>{participantsList}</ul>
@@ -31,5 +31,5 @@ export function html(values) {
 }
 
 export function subject(values) {
-    return `${values.event.customQuestions.emailSubjectTag} Booking Updated`;
+    return `${values.event.customQuestions.emailSubjectTag} Booking DELETED`;
 }

@@ -1,0 +1,44 @@
+name: Test Deployment
+
+on:
+  push:
+    branches:
+      - ealing
+
+jobs:
+  build:
+    name: Build and Upload Webpack Bundle
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install node
+        uses: actions/setup-node@v1
+      - name: Build bundle
+        run: npm install
+        env:
+            NODE_ENV: dev
+      - run: npm run build-prod --if-present
+      - name: Upload bundle
+        uses: appleboy/scp-action@8b3eebcc8da91664c95f0975fdf8348b16ac15a5
+        with:
+          host: ${{ secrets.EALING_HOSTNAME }}
+          username: ${{ secrets.EALING_SSH_USERNAME }}
+          key: ${{ secrets.EALING_SSH_KEY }}
+          source: public/bundle.js, public/vendor.bundle.js
+          target: bookings
+      - name: Update repo and rebuild docker container
+        uses: appleboy/ssh-action@73767290ca0fd123c19a35598c66b657bd72999b
+        with:
+          host: ${{ secrets.EALING_HOSTNAME }}
+          username: ${{ secrets.EALING_SSH_USERNAME }}
+          key: ${{ secrets.EALING_SSH_KEY }}
+          script: |
+            cd bookings
+            git pull
+            docker-compose build
+
+
+

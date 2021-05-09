@@ -4,6 +4,7 @@ const config = require('../config.js');
 const log = require('./logging.js');
 const db = require('./orm.js');
 const Op = db.Sequelize.Op;
+const { backOff } = require('exponential-backoff');
 
 const path = require('path');
 const mailcomposer = require("mailcomposer");
@@ -61,7 +62,7 @@ class realEmailSender {
                 return;
             }
 
-            gmail.users.messages.send(
+            backOff(() => gmail.users.messages.send(
                 {
                     auth:   this.jwtClient,
                     userId: 'bookings-auto@woodcraft.org.uk',
@@ -69,7 +70,8 @@ class realEmailSender {
                         body:     message,
                         mimeType: "message/rfc822"
                     }
-                });
+                }), {startingDelay: 2000})
+                .catch (e => console.log);
         })
     }
 

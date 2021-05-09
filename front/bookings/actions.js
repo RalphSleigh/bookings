@@ -3,6 +3,10 @@ import fetch from '../fetch.js'
 import {push} from 'react-router-redux'
 import {updateUser} from '../user/actions'
 
+import { storageFactory } from "storage-factory";
+const local = storageFactory(() => localStorage);
+
+
 import events from '../events'
 //import m from '../messages'
 
@@ -118,7 +122,7 @@ export const redirectFromThanks = eventId => dispatch => {
 export const UPDATE_CURRENT_BOOKING = "BOOKING_UPDATE_CURRENT_BOOKING"
 
 export const updateCurrentBooking = booking => {
-    if (booking && !booking.id) localStorage.currentBooking = JSON.stringify(booking);
+    if (booking && !booking.id) local.setItem('currentBooking', JSON.stringify(booking));
     return {
         type: UPDATE_CURRENT_BOOKING,
         booking: booking

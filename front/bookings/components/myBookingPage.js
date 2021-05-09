@@ -23,6 +23,10 @@ import {
     Col,
 } from 'reactstrap';
 
+import { storageFactory } from "storage-factory";
+const local = storageFactory(() => localStorage);
+
+
 //this is the special case where we are doing the sessions own booking for the event. If we have previously booked then edit that instead of letting them create a new one.  
 
 //TODO: do we have permission?
@@ -82,22 +86,38 @@ const mapStateToProps = (state, props) => {
 
     const existingBooking = state.getIn(["Bookings", "bookings"]).find(b => b.get("userId") === User.get("id") && b.get("eventId") === Event.get("id"))
 
-    const localStorageData = localStorage.currentBooking ? JSON.parse(localStorage.currentBooking) : false;
+    const localData = local.getItem('currentBooking') ? JSON.parse(local.getItem('currentBooking')) : false;
 
-    const localBooking = (localStorageData &&
-        (localStorageData.eventId === Event.get("id")) &&
-        (localStorageData.userId === User.get("id"))) ? localStorageData : false;
+    const localBooking = (localData &&
+        (localData.eventId === Event.get("id")) &&
+        (localData.userId === User.get("id"))) ? localData : false;
 
     const prevBooking = (Event, Bookings, User) => {
-        let prevBooking = Event.get("bigCampMode") === false ? Bookings.get("bookings").filter(b => b.get("userId") === User.get("id")).toList().sort((a, b) => a.get('participants').size < b.get('participants').size).get(0) : null;
+
+        if(Event.get("bigCampMode") === false) return null
+
+        let prevBooking = Bookings.get("bookings")
+            .filter(b => b.get("userId") === User.get("id"))
+            .filter(b => Moment(b.get('createdAt')).year() === Moment().year())
+            .toList()
+            .sort((a, b) => a.get('participants').size < b.get('participants').size)
+            .get(0)
 
         if (prevBooking) {
-            prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note").delete('createdAt').delete('updatedAt');
-            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId").set('days', event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
-            )).delete('createdAt').delete('updatedAt'));
-        }
+            prevBooking = prevBooking.set("eventId", Event.get("id"))
+                .delete("id")
+                .delete("note")
+                .delete('createdAt')
+                .delete('updatedAt')
+                .set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId").set('days', event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
+            ))
+                .delete('createdAt')
+                .delete('updatedAt'));
 
-        return prevBooking
+            return prevBooking
+        } else {
+            return null
+        }
     };
 
     let Booking = currentBooking || existingBooking || localBooking || prevBooking(Event, Bookings, User) || emptyBooking(User, Event);
@@ -116,6 +136,9 @@ const emptyBooking = (User, Event) => {
         userEmail: User.get("id") === 1 ? '' : User.get("email") ? User.get("email") : '',
         participants: [{
             id:            uuid(),
+            name:          '',
+            age:           '',
+            diet:          '',
             days:          event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
             externalExtra: {},
             internalExtra: {}
@@ -123,7 +146,13 @@ const emptyBooking = (User, Event) => {
         externalExtra: {},
         internalExtra: {}
     };
-    if (Event.get("organisationsEnabled")) booking.organisationId = Event.getIn(['organisations', 0, 'id']);
+
+    if (Event.get("organisationsEnabled")){
+        const bookRole = User.get('roles').toJS().find(r => r.name === 'book' && r.eventId === Event.get("id"));
+        const orgId = (bookRole && bookRole.organisationId) ? bookRole.organisationId : Event.getIn(['organisations', 0, 'id']);
+        booking.organisationId = orgId;
+    }
+
     return booking;
 };
 
