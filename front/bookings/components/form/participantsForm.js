@@ -164,7 +164,7 @@ class ParticipantRow extends React.Component {
                                                         update={this.props.update("days")}
                                                         updateDirect={this.props.updateDirect("days")}/>;
 
-        return (<Card className="mb-3">
+        return (<Card id={`participant-${this.props.id}`} className="mb-3">
             <CardImg top src="/participant-header.jpg" alt="Card image cap"/>
             <CardImgOverlay>
                 <CardTitle style={{
