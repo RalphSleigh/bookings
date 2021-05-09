@@ -93,15 +93,31 @@ const mapStateToProps = (state, props) => {
         (localData.userId === User.get("id"))) ? localData : false;
 
     const prevBooking = (Event, Bookings, User) => {
-        let prevBooking = Event.get("bigCampMode") === false ? Bookings.get("bookings").filter(b => b.get("userId") === User.get("id")).toList().sort((a, b) => a.get('participants').size < b.get('participants').size).get(0) : null;
+
+        if(Event.get("bigCampMode") === false) return null
+
+        let prevBooking = Bookings.get("bookings")
+            .filter(b => b.get("userId") === User.get("id"))
+            .filter(b => Moment(b.get('createdAt')).year() === Moment().year())
+            .toList()
+            .sort((a, b) => a.get('participants').size < b.get('participants').size)
+            .get(0)
 
         if (prevBooking) {
-            prevBooking = prevBooking.set("eventId", Event.get("id")).delete("id").delete("note").delete('createdAt').delete('updatedAt');
-            prevBooking = prevBooking.set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId").set('days', event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
-            )).delete('createdAt').delete('updatedAt'));
-        }
+            prevBooking = prevBooking.set("eventId", Event.get("id"))
+                .delete("id")
+                .delete("note")
+                .delete('createdAt')
+                .delete('updatedAt')
+                .set('participants', prevBooking.get("participants").map(p => p.set("id", uuid()).delete("bookingId").set('days', event.partialDates !== 'partial' ? 2 ** (Moment(event.endDate).diff(Moment(event.startDate), 'days') + 1) - 1 : event.partialDatesData[0].mask,
+            ))
+                .delete('createdAt')
+                .delete('updatedAt'));
 
-        return prevBooking
+            return prevBooking
+        } else {
+            return null
+        }
     };
 
     let Booking = currentBooking || existingBooking || localBooking || prevBooking(Event, Bookings, User) || emptyBooking(User, Event);
