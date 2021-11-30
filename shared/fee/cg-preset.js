@@ -366,14 +366,14 @@ const owedPresetEvent = (event, participants, booking, payments) => {
     .filter(p => p.name && p.age)
     .filter(p => !isUnderFive(event, p))
     .map(p => {
-        if (!p.updatedAt) p.updatedAt = Moment().format("YYYY-MM-DD");
+        if (!p.createdAt) p.createdAt = Moment().format("YYYY-MM-DD");
         p.days = event.partialDatesData.find(d => d.mask === p.days);
         p.days = p.days ? p.days.name : event.partialDatesData[0].name;
         return p;
     });
 
     const rawCosts = filteredParticipants.map(p => sortedBuckets.reduce((a, c) => {
-        if (new Date(p.updatedAt) < new Date(c.date)) return {
+        if (new Date(p.createdAt) < new Date(c.date)) return {
             date:   c.date,
             mask:   p.days,
             amount: c.amount[p.days] - (booking.externalExtra.foodOptOut ? event.feeData.foodOptOut : 0)
