@@ -137,6 +137,10 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/api/membership/approve', P.updateMembership, bookings.approveMembership);
         server.post('/api/membership/unapprove', P.updateMembership, bookings.unapproveMembership);
 
+        server.post('/api/dbs/approve', P.updateMembership, bookings.approveDBS);
+        server.post('/api/dbs/unapprove', P.updateMembership, bookings.unapproveDBS);
+
+
         let mapFile = null;
 
         if (fs.existsSync(path.join(__dirname, '../public/bundle.js.map'))) {

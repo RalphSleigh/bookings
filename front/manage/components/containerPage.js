@@ -19,7 +19,9 @@ import {
     addPayment,
     deletePayment,
     approveMembership,
-    unapproveMembership
+    unapproveMembership,
+    approveDBS,
+    unapproveDBS
 } from '../actions.js'
 import {getUserList} from "../../user/actions";
 
@@ -236,7 +238,9 @@ const mapDispatchToProps = {
     addPayment: addPayment,
     deletePayment: deletePayment,
     approveMembership: approveMembership,
-    unapproveMembership: unapproveMembership
+    unapproveMembership: unapproveMembership,
+    approveDBS: approveDBS,
+    unapproveDBS: unapproveDBS
 };
 
 const VisibleManageContainerPage = connect(
