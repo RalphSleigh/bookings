@@ -13,7 +13,7 @@ const feeMatrix = {
     ealing:       {
         whole:   require('./ealing.js'),
         free:    require('./ealing.js'),
-        presets: require('./ealing-preset.js'),
+        presets: require('./ealing-cg.js'),
     },
     big:          {
         whole:   require('./big.js'),

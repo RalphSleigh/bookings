@@ -93,3 +93,13 @@ export const unapproveMembership = id => dispatch => {
     fetch('/api/membership/unapprove', 'POST', id)
         .then(j => dispatch(updateBookings(j)))
 };
+
+export const approveDBS = id => dispatch => {
+    fetch('/api/dbs/approve', 'POST', id)
+        .then(j => dispatch(updateBookings(j)))
+};
+
+export const unapproveDBS = id => dispatch => {
+    fetch('/api/dbs/unapprove', 'POST', id)
+        .then(j => dispatch(updateBookings(j)))
+};
