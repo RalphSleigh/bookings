@@ -464,7 +464,8 @@ const underFives = (event, participants) => {
         .filter(p => isUnderFive(event, p));
     if (filteredParticipants.length > 0) return [{
         line:  `${filteredParticipants.length} ${filteredParticipants.length > 1 ? 'people' : 'person'} under five for free`,
-        total: 0
+        total: 0,
+        discountTotal: 0
     }];
     else return [];
 };
