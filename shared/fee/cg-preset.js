@@ -438,7 +438,7 @@ const linesWithPartial = (combined, booking) => reduce(combined, (a, c, i) => [.
 
 const cancelledFee = (event, participants, booking) => {
     let maxToUse
-    if(moment().isBefore(booking.bookingDeadline)) {
+    if(moment().isBefore(event.bookingDeadline)) {
         maxToUse = participants.length
     } else {
         maxToUse = Math.max(booking.maxParticipants || 0, participants.length);
