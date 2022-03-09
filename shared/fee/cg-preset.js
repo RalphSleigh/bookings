@@ -437,11 +437,17 @@ const linesWithPartial = (combined, booking) => reduce(combined, (a, c, i) => [.
 })], [])], []);
 
 const cancelledFee = (event, participants, booking) => {
+    let maxToUse
+    if(moment().isBefore(booking.event.bookingDeadline)) {
+        maxToUse = participants.length
+    } else {
+        maxToUse = Math.max(booking.maxParticipants || 0, participants.length);
+    }
 
-    if (!booking.maxParticipants || booking.maxParticipants <= participants.length || event.feeData.cancel === 0) return [];
+    if (!maxToUse || maxToUse <= participants.length || event.feeData.cancel === 0) return [];
     return [{
-        line:  `${booking.maxParticipants - participants.length} cancelled bookings at £${event.feeData.cancel}`,
-        total: (booking.maxParticipants - participants.length) * event.feeData.cancel
+        line:  `${maxToUse - participants.length} cancelled bookings at £${event.feeData.cancel}`,
+        total: (maxToUse - participants.length) * event.feeData.cancel
     }]
 };
 
