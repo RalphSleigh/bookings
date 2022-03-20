@@ -206,7 +206,8 @@ export default class Participants extends React.Component {
             id: 'presets',
             accessor: row => row,
             Cell: row => {
-                return row.original.e.partialDatesData.find(d => d.mask === row.original.p.days).name
+                const data = row.original.e.partialDatesData.find(d => d.mask === row.original.p.days)
+                return data ? data.name : 'Unknown'
             },
             Header: "Attendance",
             sortMethod: partialAttendanceSort,
