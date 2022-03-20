@@ -55,7 +55,6 @@ export default class Participants extends React.Component {
         let mask = 0;
 
 
-
         for (let m = startDate; m.isBefore(endDate); m.add(1, 'days')) {
             days.push({label: m.format("dddd Do"), value: Math.pow(2, mask)});
             mask++;
@@ -114,7 +113,7 @@ export default class Participants extends React.Component {
 
     subRow = (row) => {
 
-        const event = row.original.E.toJS();
+        const event = row.original.e;
 
         const village = event.villages.find(v => row.original.b.villageId === v.id);
         const organisation = event.organisations.find(o => row.original.b.organisationId === o.id);
@@ -168,15 +167,15 @@ export default class Participants extends React.Component {
         const data = participants.map(p => {
             const b = bookings.find(b => b.id === p.bookingId);
             return {
-                name:      p.name,
-                dob:       p.age,
-                age:       p.displayAge,
-                diet:      p.diet,
+                name: p.name,
+                dob: p.age,
+                age: p.displayAge,
+                diet: p.diet,
                 createdAt: p.prettyCreatedAt,
-                district:  b.district,
-                p:         p,
-                b:         b,
-                E:         this.props.Event
+                district: b.district,
+                p: p,
+                b: b,
+                e: event
             };
         });
 
@@ -198,17 +197,33 @@ export default class Participants extends React.Component {
                 Header: "Age",
                 sortable: true,
                 sortMethod: dobSort,
-                Cell: row => row.original.age
+                Cell: row => row.original.age,
+                //width: 120
             },
-                     {accessor: "diet", Header: "Diet", sortable: true, minWidth: 70},
-                     {id:            'createdAt',
-                         accessor:   row => row,
-                         Cell:       row => row.original.createdAt,
-                         sortMethod: createdSort,
-                         Header:     "Created At",
-                         sortable:   true,
-                         minWidth:   50
-                     });
+            {accessor: "diet", Header: "Diet", sortable: true, minWidth: 50});
+
+        if (event.partialDates === 'presets') columns.push({
+            id: 'presets',
+            accessor: row => row,
+            Cell: row => {
+                return row.original.e.partialDatesData.find(d => d.mask === row.original.p.days).name
+            },
+            Header: "Attendance",
+            sortMethod: partialAttendanceSort,
+            //width: 150,
+            sortable: true
+        });
+
+        columns.push(
+            {
+                id: 'createdAt',
+                accessor: row => row,
+                Cell: row => row.original.createdAt,
+                sortMethod: createdSort,
+                Header: "Created At",
+                sortable: true,
+                //minWidth: 50
+            });
 
         if(event.partialDates === 'free')columns.push({
             id:         'popcount',
@@ -291,9 +306,13 @@ const daysSort = (a, b) => {
     return bitCount(a.p.days) - bitCount(b.p.days);
 }
 
+const partialAttendanceSort = (a, b) => {
+    return a.p.days - b.p.days;
+}
+
 const nameSort = (a, b) => {
-    var splitA = a.name.split(" ");
-    var splitB = b.name.split(" ");
+    var splitA = a.name.trim().split(" ");
+    var splitB = b.name.trim().split(" ");
     var lastA = splitA[splitA.length - 1];
     var lastB = splitB[splitB.length - 1];
 
