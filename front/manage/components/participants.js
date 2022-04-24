@@ -64,7 +64,7 @@ export default class Participants extends React.Component {
             const b = this.props.bookings.find(b => b.id === p.bookingId);
 
             const dates = event.partialDatesData.find(d => d.mask === p.days)
-            const attend = dates.name || 'Unknown'
+            const attend = data ? data.name : 'Unknown'
 
             const fields = [p.id,
                 p.name,
