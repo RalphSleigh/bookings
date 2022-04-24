@@ -63,6 +63,9 @@ export default class Participants extends React.Component {
         const exportedData = this.props.participants.map(p => {
             const b = this.props.bookings.find(b => b.id === p.bookingId);
 
+            const dates = event.partialDatesData.find(d => d.mask === p.days)
+            const attend = dates.name || 'Unknown'
+
             const fields = [p.id,
                 p.name,
                 p.displayAge,
@@ -70,7 +73,7 @@ export default class Participants extends React.Component {
                 p.diet,
                 p.dietExtra,
                 p.medical,
-                p.days,
+                attend,
                 b.userName,
                 b.userEmail,
                 b.userContact,
@@ -78,6 +81,7 @@ export default class Participants extends React.Component {
                 b.emergencyPhone,
                 eol.crlf(b.note || ''),
                 p.externalExtra.adultFirstAid,
+                p.externalExtra.adultEmail,
                 p.createdAt,
                 p.updatedAt];
 
@@ -92,7 +96,7 @@ export default class Participants extends React.Component {
             return fields
         });
 
-        const headers = ['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Created At', 'Updated At']
+        const headers = ['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Membership email', 'Created At', 'Updated At']
 
         if(event.partialDates === 'free') {
 
