@@ -380,6 +380,7 @@ const getBookingsAndCombineScopes = async function (user, event) {
 
             i += 5
             data = await db.booking.scope(scope).findAndCountAll({limit:5, offset: i})
+            global.gc()
         }
     }
 
