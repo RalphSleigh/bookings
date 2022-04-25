@@ -35,11 +35,11 @@ bookings.getUserBookings = (req, res) => {
     });
 };
 
-const getUserScopes = (user, event) => {
+const getUserScopes = (user, event, participants = true) => {
 
     const scopes = [];
 
-    if (user.roles.find(role => role.name === "admin") || user.id === event.userId) scopes.push({method: ['Limited', event.id, null, null, 'defaultScope', true]});
+    if (user.roles.find(role => role.name === "admin") || user.id === event.userId) scopes.push({method: ['Limited', event.id, null, null, participants ? 'defaultScope': null, true]});
 
     user.roles.filter(r => r.eventId === event.id && r.name !== 'book').forEach(r => {
 
@@ -57,7 +57,7 @@ const getUserScopes = (user, event) => {
                 participantScope = "defaultScope";
         }
 
-        scopes.push({method: ['Limited', event.id, r.villageId, r.organisationId, participantScope, includePayments]})
+        scopes.push({method: ['Limited', event.id, r.villageId, r.organisationId, participants ? participantScope : null, includePayments]})
     });
 
     return scopes;
@@ -362,7 +362,7 @@ const getBookingAndCombineScopes = async function (user, booking) {
 
 const getBookingsAndCombineScopes = async function (user, event) {
 
-    const scopes = getUserScopes(user, event);
+    const scopes = getUserScopes(user, event, false);
     console.log(`getting details for ${scopes.length} scopes`)
     console.log(scopes)
 
@@ -371,12 +371,13 @@ const getBookingsAndCombineScopes = async function (user, event) {
         let i = 0
         let data = await db.booking.scope(scope).findAndCountAll({limit:5, offset: i})
         while(data.rows.length > 0) {
-            const rawData = data.rows.filter(r => r).map(b => {
+            for(const b of data.rows.filter(r => r)){
                 const rawB = b.get({raw: true})
-                rawB.participants = rawB.participants.map(p => p.get({raw: true}))
+                const participants = await db.participant.scope(scope.method[4]).findAll({where: {bookingId: {[Op.eq]: rawB.id}}})
+                rawB.participants = participants.map(p => p.get({raw: true}))
                 obj[rawB.id] = obj[rawB.id] || {}
                 _.merge(obj[rawB.id], rawB)
-            })
+            }
             i += 5
             data = await db.booking.scope(scope).findAndCountAll({limit:5, offset: i})
         }

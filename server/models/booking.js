@@ -124,7 +124,9 @@ module.exports = (sequelize, DataTypes) => {
                         }
                     };
 
-            const include = [{model: models.participant.scope(scope)}];
+            const include = [];
+
+            if(scope) include.push({model: models.participant.scope(scope)})
 
             if (includePayments) include.push({model: models.payment});
                 return {where: where, include: include}
