@@ -358,6 +358,8 @@ const getBookingAndCombineScopes = async function (user, booking) {
 const getBookingsAndCombineScopes = async function (user, event) {
 
     const scopes = getUserScopes(user, event);
+    console.log(`getting details for ${scopes.length} scopes`)
+    console.log(scopes)
     const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
 
     const obj = results.filter(r => r).reduce((a, c) => {
