@@ -368,14 +368,19 @@ const getBookingsAndCombineScopes = async function (user, event) {
 
     let results = []
     for(const scope of scopes) {
-        const data = await db.booking.scope(scope).findAll()
-        const rawData = data.filter(r => r).map(b => {
-            const rawB = b.get({raw:true})
-            rawB.participants = rawB.participants.map(p => p.get({raw: true}))
-            return rawB
-        })
+        let i = 0
+        let data = await db.booking.scope(scope).findAndCountAll({limit:5, offset: i})
+        while(data.rows.length > 0) {
+            const rawData = data.rows.filter(r => r).map(b => {
+                const rawB = b.get({raw: true})
+                rawB.participants = rawB.participants.map(p => p.get({raw: true}))
+                return rawB
+            })
+            results.push(rawData)
 
-        results.push(rawData)
+            i += 5
+            data = await db.booking.scope(scope).findAndCountAll({limit:5, offset: i})
+        }
     }
 
     const obj = results.reduce((a, c) => {
