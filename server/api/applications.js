@@ -4,6 +4,7 @@ const updateAssociation = require('./util.js').updateAssociation;
 const Op = db.Sequelize.Op;
 const wrapper = require('../errors');
 const email = require('../email.js');
+const {getEventDetails} = require("./util");
 
 
 const application = {};
@@ -48,7 +49,7 @@ application.approveApplication = async function (req, res) {
                          });
     const user = await db.user.scope('withData').findOne({where: {id: {[Op.eq]: application.userId}}});
     await application.destroy();
-    const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: application.eventId}}});
+    const event = await getEventDetails(application.eventId)
 
     const values = {event: event, user: user};
     email.single(user.email, 'applicationApproved', values);
@@ -64,13 +65,12 @@ application.declineApplication = (req, res) => {
         eventId = a.eventId;
         return a.destroy();
     })
-    .then(() => db.event.scope('details').findOne({where: {id: {[Op.eq]: eventId}}}))
+    .then(() => getEventDetails(eventId))
     .then(event => {
         if (event === null) res.status(404).end();
         else res.json({events: [event]});
     });
 };
-
 
 module.exports = wrapper(application);
 

@@ -2,6 +2,7 @@ const db = require('../orm.js');
     const log = require('../logging.js');
     const Op = db.Sequelize.Op;
     const wrapper = require('../errors');
+    const getEventDetails = require('./util.js').getEventDetails;
 
     const role = {};
 
@@ -10,7 +11,8 @@ const db = require('../orm.js');
 
         await db.role.create(req.body);
 
-        const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: req.body.eventId}}});
+        const event = await getEventDetails(req.body.eventId)
+
         res.json({events: [event]});
     };
 
@@ -22,7 +24,7 @@ const db = require('../orm.js');
 
         await role.destroy();
 
-        const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: role.eventId}}});
+        const event = await getEventDetails(req.body.eventId)
         res.json({events: [event]});
     };
 

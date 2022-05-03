@@ -19,7 +19,8 @@ fs
         return (file.indexOf('.') !== 0);
     })
     .forEach(file => {
-        const model = sequelize['import'](path.join(modelsDir, file));
+        const imported = require(path.join(modelsDir, file))
+        const model = imported(sequelize, Sequelize.DataTypes)
         db[model.name] = model;
     });
 

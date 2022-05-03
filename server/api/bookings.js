@@ -19,12 +19,12 @@ bookings.getUserBookings = (req, res) => {
     db.booking.findAll({
                            where:
                                {
-                                   $or:
-                                       [{guestUUID: req.cookies.guestUUID},
+                                   [Op.or]:
+                                       [{guestUUID: {[Op.eq]:req.cookies.guestUUID}},
                                            {
-                                               $and:
-                                                   [{userId: req.user.id},
-                                                       {userId: {$not: 1}}
+                                               [Op.and]:
+                                                   [{userId: {[Op.eq]: req.user.id}},
+                                                       {userId: {[Op.not]: 1}}
                                                    ]
                                            }]
                                }, include: [{model: db.participant}, {model: db.payment}]
@@ -211,12 +211,12 @@ bookings.deleteBooking = (req, res) => {
     .then(() => db.booking.findAll({
                                        where:
                                            {
-                                               $or:
-                                                   [{guestUUID: req.cookies.guestUUID},
+                                               [Op.or]:
+                                                   [{guestUUID: {[Op.eq]: req.cookies.guestUUID}},
                                                        {
-                                                           $and:
-                                                               [{userId: req.user.id},
-                                                                   {userId: {$not: 1}}
+                                                           [Op.and]:
+                                                               [{userId: {[Op.eq]: req.user.id}},
+                                                                   {userId: {[Op.not]: 1}}
                                                                ]
                                                        }]
                                            }, include: [{model: db.participant}]
