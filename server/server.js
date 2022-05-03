@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 //We need the babel loader require overwrite thing to load ES6 style imports in the shared folder, this is apparently not ideal in production, and we should switch it out again when node supports import LTS
 require("@babel/register");
-
+const v8 = require('v8');
+const totalHeapSize = v8.getHeapStatistics().total_available_size;
+const totalHeapSizeGb = (totalHeapSize / 1024 / 1024 / 1024).toFixed(2);
+console.log('totalHeapSizeGb: ', totalHeapSizeGb);
 require("../config.js")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
     .then(config => {
 
