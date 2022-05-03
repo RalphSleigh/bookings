@@ -68,7 +68,7 @@ bookings.getEventBookings = async function (req, res) {
     //need to loop over a users roles and assemble the data they are allowed to see
     const event = await db.event.findOne({where: {id: {[Op.eq]: req.params.eventId}}});
 
-    const flat = await getBookingsAndCombineScopes(req.user, event, 0)
+    const flat = await getBookingsAndCombineScopes(req.user, event)
 
     res.json({bookings: flat});
 
@@ -360,15 +360,10 @@ const getBookingAndCombineScopes = async function (user, booking) {
     return [obj]
 }
 
-const getBookingsAndCombineScopes = async function (user, event, offset=0) {
+const getBookingsAndCombineScopes = async function (user, event) {
 
     const scopes = getUserScopes(user, event);
-    const results = []
-
-    for(const scope of scopes) {
-        const result = await db.booking.scope(scope).findAll({limit: 20, offset: offset});
-        results.push(result)
-    }
+    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
 
     const obj = results.filter(r => r).reduce((a, c) => {
 
