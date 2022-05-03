@@ -22,12 +22,35 @@ const db = require('../orm.js');
             });
     };
 
-    event.getDetails = (req, res) => {
-        db.event.scope('details').findOne({where: {id: req.params.eventId}})
-            .then(event => {
-                if (event === null) res.status(404).end();
-                else res.json({events: [event]});
-            });
+    event.getDetails = async (req, res) => {
+        /*
+        models.event.addScope('details',
+            {
+                include: [{model: models.role, include: [models.user, models.organisation, models.village]},
+                    {model: models.organisation},
+                    {model: models.application, include: [models.user]},
+                    {model: models.village},
+                    {model: models.user}]
+            },
+            {override: true});
+         */
+
+        const event = await db.event.findOne({where: {id: req.params.eventId}, include:[db.role, db.village, db.organisation, db.application, db.user]})
+        if (event === null) res.status(404).end();
+        else {
+            const users = await db.user.findAll();
+            event.roles.forEach(r => {
+                r = r.get({raw:true})
+                r.user = users.find(u => u.id === r.userId)
+                r.village = event.villages.find(v => v.id === r.villageId)
+                r.organisation = event.organisations.find(o => o.id === r.organisationId)
+            })
+            event.applications.forEach(a => {
+                a = a.get({raw:true})
+                a.user = users.find(u => u.id === a.userId)
+            })
+            res.json({events: [event]});
+        }
     };
 
 
