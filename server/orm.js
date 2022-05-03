@@ -6,7 +6,7 @@ const log = require('./logging.js');
 
 const sequelize = new Sequelize(config.DB_URL, {
     operatorsAliases: Sequelize.Op.Aliases,
-    logging:          false
+    logging:          console.log
 });
 
 const db = {};
