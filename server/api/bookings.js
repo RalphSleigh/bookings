@@ -366,7 +366,7 @@ const getBookingsAndCombineScopes = async function (user, event, offset=0) {
     const results = []
 
     for(const scope of scopes) {
-        const result = await db.booking.scope(scope).findAll({limit: 2, offset: offset});
+        const result = await db.booking.scope(scope).findAll({limit: 20, offset: offset});
         results.push(result)
     }
 
