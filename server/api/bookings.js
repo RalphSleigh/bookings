@@ -368,7 +368,8 @@ const getBookingsAndCombineScopes = async function (user, event, offset=0) {
     const obj = {}
 
     for(const scope of scopes) {
-        const results = await db.booking.findAll({where: {eventId: {[Op.eq]: event.id}}});
+        //const results = await db.booking.findAll({where: {eventId: {[Op.eq]: event.id}}});
+        const results = []
         results.filter(r => r).reduce((a, c) => {
             a[c.id] = a[c.id] || {}
             const item = c.get({plain: true})
