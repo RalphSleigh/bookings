@@ -80,47 +80,47 @@ module.exports = (sequelize, DataTypes) => {
                 let where = null;
 
                 if (village !== null && organisation !== null) where = {
-                    "$and": {
+                    [Op.and]: {
                         eventId: {
-                            "$eq": event
+                            [Op.eq]: event
                         },
-                        "$or": {
+                        [Op.or]: {
                             organisationId: {
-                                "$eq": organisation
+                                [Op.eq]: organisation
                             },
                             villageId: {
-                                "$eq": organisation
+                                [Op.eq]: organisation
                             }
                         }
                     }
                 };
 
                 else if (village === null && organisation !== null) where = {
-                    "$and": {
+                    [Op.and]: {
                         eventId: {
-                            "$eq": event
+                            [Op.eq]: event
                         },
                         organisationId: {
-                            "$eq": organisation
+                            [Op.eq]: organisation
                         }
                     }
                 };
 
 
                 else if (village !== null && organisation === null) where = {
-                    "$and": {
+                    [Op.and]: {
                         eventId: {
-                            "$eq": event
+                            [Op.eq]: event
                         },
                         villageId: {
-                            "$eq": village
+                            [Op.eq]: village
                         }
                     }
                 };
 
                 else where = {
                         eventId: {
-                            "$eq": event
+                            [Op.eq]: event
                         }
                     };
 
