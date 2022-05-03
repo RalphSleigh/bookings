@@ -370,6 +370,9 @@ const getBookingsAndCombineScopes = async function (user, event, offset=0) {
         results.push(result)
     }
 
+    return []
+
+
     const obj = results.filter(r => r).reduce((a, c) => {
 
         c.forEach(b => {
