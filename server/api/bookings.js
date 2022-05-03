@@ -363,20 +363,29 @@ const getBookingAndCombineScopes = async function (user, booking) {
 const getBookingsAndCombineScopes = async function (user, event, offset=0) {
 
     const scopes = getUserScopes(user, event);
-
-    //const [results, metadata] = await db.sequelize.query(`SELECT "booking".*, "participants"."id" AS "participants.id", "participants"."name" AS "participants.name", "participants"."age" AS "participants.age", "participants"."diet" AS "participants.diet", "participants"."dietExtra" AS "participants.dietExtra", "participants"."medical" AS "participants.medical", "participants"."days" AS "participants.days", "participants"."externalExtra" AS "participants.externalExtra", "participants"."internalExtra" AS "participants.internalExtra", "participants"."createdAt" AS "participants.createdAt", "participants"."updatedAt" AS "participants.updatedAt", "participants"."bookingId" AS "participants.bookingId", "payments"."id" AS "payments.id", "payments"."type" AS "payments.type", "payments"."amount" AS "payments.amount", "payments"."note" AS "payments.note", "payments"."bookingId" AS "payments.bookingId", "payments"."createdAt" AS "payments.createdAt", "payments"."updatedAt" AS "payments.updatedAt" FROM (SELECT "booking"."id", "booking"."userName", "booking"."userEmail", "booking"."userContact", "booking"."district", "booking"."paymentType", "booking"."paid", "booking"."note", "booking"."emergencyName", "booking"."emergencyPhone", "booking"."campWith", "booking"."guestUUID", "booking"."maxParticipants", "booking"."externalExtra", "booking"."internalExtra", "booking"."createdAt", "booking"."updatedAt", "booking"."organisationId", "booking"."userId", "booking"."villageId", "booking"."eventId" FROM "bookings" AS "booking" WHERE "booking"."eventId" = 2) AS "booking" LEFT OUTER JOIN "participants" AS "participants" ON "booking"."id" = "participants"."bookingId" LEFT OUTER JOIN "payments" AS "payments" ON "booking"."id" = "payments"."bookingId";`);
-    const obj = {}
+    const results = []
 
     for(const scope of scopes) {
-        const results = await db.booking.findAll({where: {eventId: {[Op.eq]: event.id}}});
-        results.filter(r => r).reduce((a, c) => {
-            a[c.id] = a[c.id] || {}
-            const item = c.get({plain: true})
-            item.participants = []
-            _.merge(a[c.id], item)
-            return a
-        }, obj);
+        const result = await db.booking.scope(scope).findAll({limit: 2, offset: offset});
+        results.push(result)
     }
+
+    return []
+
+
+    const obj = results.filter(r => r).reduce((a, c) => {
+
+        c.forEach(b => {
+
+            a[b.id] = a[b.id] || {}
+
+            _.merge(a[b.id], b.get({plain: true}))
+
+        });
+
+        return a
+
+    }, {});
 
     const flat = []
 
