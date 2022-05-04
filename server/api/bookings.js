@@ -180,7 +180,7 @@ bookings.editBooking = (req, res) => {
         }
     }).catch(e => {
         log.error({message: "Error editing booking id error is {e} id was {id}",
-        e: e,
+        e: e,stack,
         id: req.body.id})
     });
 };
