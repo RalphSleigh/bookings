@@ -361,42 +361,30 @@ const getBookingAndCombineScopes = async function (user, booking) {
 }
 
 const getBookingsAndCombineScopes = async function (user, event) {
-
-    const scopes = getUserScopes(user, event, false);
+    const scopes = getUserScopes(user, event);
     console.log(`getting details for ${scopes.length} scopes`)
     console.log(scopes)
+    const results = await Promise.all(scopes.map(s => db.booking.scope(s).findAll()));
 
-    const obj = {}
-    for(const scope of scopes) {
-        let i = 0
-        let data = await db.booking.scope(scope).findAndCountAll({limit:5, offset: i})
-        while(data.rows.length > 0) {
-            for(const b of data.rows.filter(r => r)){
-                const rawB = b.get({raw: true})
-                const participants = await db.participant.scope(scope.method[4]).findAll({where: {bookingId: {[Op.eq]: rawB.id}}})
-                rawB.participants = participants.map(p => p.get({raw: true}))
-                obj[rawB.id] = obj[rawB.id] || {}
-                _.merge(obj[rawB.id], rawB)
-            }
-            i += 5
-            data = await db.booking.scope(scope).findAndCountAll({limit:5, offset: i})
-        }
-    }
-    /*
-    const obj = results.reduce((a, c) => {
+    const obj = results.filter(r => r).reduce((a, c) => {
+
         c.forEach(b => {
+
             a[b.id] = a[b.id] || {}
-            _.merge(a[b.id], b)
+
+            _.merge(a[b.id], b.get({plain: true}))
+
         });
+
         return a
+
     }, {});
 
-     */
-
     const flat = []
-    for (let key in obj) flat.push(obj[key])
-    return flat
 
+    for (let key in obj) flat.push(obj[key])
+
+    return flat
 }
 
 
