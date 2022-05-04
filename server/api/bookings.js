@@ -178,11 +178,7 @@ bookings.editBooking = (req, res) => {
             email.single(booking.userEmail, 'updated', emailData);
             email.toManagers('managerBookingUpdated', emailData);
         }
-    }).catch(e => {
-        log.error({message: "Error editing booking id error is {e} id was {id}",
-        e: e,stack,
-        id: req.body.id})
-    });
+    })
 };
 
 bookings.togglePaid = (req, res) => {
