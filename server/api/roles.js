@@ -10,7 +10,8 @@ const db = require('../orm.js');
 
         await db.role.create(req.body);
 
-        const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: req.body.eventId}}});
+        const event = await getEventDetails(req.body.eventId)
+
         res.json({events: [event]});
     };
 
@@ -22,7 +23,7 @@ const db = require('../orm.js');
 
         await role.destroy();
 
-        const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: role.eventId}}});
+        const event = await getEventDetails(role.eventId)
         res.json({events: [event]});
     };
 
