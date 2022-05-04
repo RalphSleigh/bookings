@@ -24,7 +24,7 @@ const db = require('../orm.js');
 
         await role.destroy();
 
-        const event = await getEventDetails(req.body.eventId)
+        const event = await getEventDetails(role.eventId)
         res.json({events: [event]});
     };
 
