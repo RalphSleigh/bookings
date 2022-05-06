@@ -221,7 +221,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
                 message: "{errorMessage} on {url} for {user}",
                 errorMessage: error.message,
                 url: req.url,
-                user: req.user.userName
+                user: req.user ? req.user.userName : 'Undefined username'
             });
             log.debug(error.stack);
             res.status(500).json({message: error.message});
