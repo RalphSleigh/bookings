@@ -22,6 +22,7 @@ import {
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import faPlus from '@fortawesome/fontawesome-free-solid/faPlus'
+import W from "../../../shared/woodcraft";
 
 //import W from '../../../shared/woodcraft.js'
 
@@ -37,10 +38,10 @@ class Villages extends React.Component {
         this.addVillage = this.addVillage.bind(this);
     };
 
-    static panelClass(total) {
-        if (total < 80) return "panel panel-success";
-        if (total < 100) return "panel panel-warning";
-        return "panel panel-danger";
+    static textColour(total) {
+        if (total < 80) return "green";
+        if (total < 100) return "gold";
+        return "red";
     };
 
     updateVillageName(e) {
@@ -106,6 +107,8 @@ class Villages extends React.Component {
                         cursor: 'pointer'
                     };
 
+                    const participantList = b.participants.length < 6 ? b.participants.map(p => <li>{p.name}</li>) : null
+
                     return (
                         <div ref={provided.innerRef}
                              style={style}
@@ -114,6 +117,7 @@ class Villages extends React.Component {
                                 <CardBody>
                                     <CardTitle>{(event.bigCampMode ? b.district : b.userName) + " (" + b.size + ")"}</CardTitle>
                                     <p>{b.campWith}</p>
+                                    <p><ul>{participantList}</ul></p>
                                 </CardBody>
                             </Card>
                         </div>)
@@ -121,6 +125,17 @@ class Villages extends React.Component {
             </Draggable>);
 
         const villageBoxes = villages.map(v => {
+
+            const groups = W.reduce((a, w) => {
+                const people = v.bookings.reduce((acc,c) => {
+                    const current = c.participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.singular)
+                    acc += current.length
+                    return acc
+                },0)
+                if (people === 0) return a;
+                return a + ` ${w.name}: ${people}`;
+            }, '');
+
 
             const bookings = v.bookings.map(b =>
 
@@ -157,7 +172,8 @@ class Villages extends React.Component {
                                 {provided.placeholder}
                             </div>
                             <p>
-                                <b>Total: {v.participants}</b>
+                                <b style={{color:Villages.textColour(v.participants)}}>Total: {v.participants}</b><br />
+                                <span style={{fontSize:"80%"}}>{groups}</span>
                             </p>
                         </CardBody>
                     </Card>
