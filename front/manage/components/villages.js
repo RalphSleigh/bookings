@@ -73,7 +73,7 @@ class Villages extends React.Component {
     renameVillage(id, oldName) {
         return e => {
             const newName = prompt("Rename Village", oldName)
-            if(newName !== "") this.props.renameVillage(id, newName);
+            if(newName && newName !== "") this.props.renameVillage(id, newName);
             e.preventDefault();
         }
     }
