@@ -36,6 +36,7 @@ class Villages extends React.Component {
         this.onDragEnd = this.onDragEnd.bind(this);
         this.updateVillageName = this.updateVillageName.bind(this);
         this.addVillage = this.addVillage.bind(this);
+        this.renameVillage = this.renameVillage.bind(this);
     };
 
     static textColour(total) {
@@ -69,6 +70,14 @@ class Villages extends React.Component {
         }
     }
 
+    renameVillage(id, oldName) {
+        return e => {
+            const newName = prompt("Rename Village", oldName)
+            if(newName !== "") this.props.renameVillage(id, newName);
+            e.preventDefault();
+        }
+    }
+
     onDragEnd(result) {
         if (result.destination === null) return;
         const bookingId = parseInt(/b([\d]+)/.exec(result.draggableId)[1]);
@@ -93,6 +102,15 @@ class Villages extends React.Component {
                 return {...b, size: participants.filter(p => p.bookingId === b.id).length}
             }).sort((a, b) => b.size - a.size);
             return v;
+        }).sort((a,b) => {
+            const numberA = /Village ([0-9]+)/.exec(a.name)
+            const numberB = /Village ([0-9]+)/.exec(b.name)
+
+            if(numberA && numberB){
+                return parseInt(numberA[1]) - parseInt(numberB[1])
+            } else {
+                return (a.name || "").localeCompare((b.name || ""))
+            }
         });
 
         const unassignedBookings = bookings.filter(b => b.villageId === null).map(b => {
@@ -107,7 +125,7 @@ class Villages extends React.Component {
                         cursor: 'pointer'
                     };
 
-                    const participantList = b.participants.length < 6 ? b.participants.map(p => <li>{p.name}</li>) : null
+                    const participantList = b.participants.length < 6 ? b.participants.map(p => <li key={p.id}>{p.name}</li>) : null
 
                     return (
                         <div ref={provided.innerRef}
@@ -117,7 +135,7 @@ class Villages extends React.Component {
                                 <CardBody>
                                     <CardTitle>{(event.bigCampMode ? b.district : b.userName) + " (" + b.size + ")"}</CardTitle>
                                     <p>{b.campWith}</p>
-                                    <p><ul>{participantList}</ul></p>
+                                    <ul>{participantList}</ul>
                                 </CardBody>
                             </Card>
                         </div>)
@@ -125,7 +143,6 @@ class Villages extends React.Component {
             </Draggable>);
 
         const villageBoxes = villages.map(v => {
-
             const groups = W.reduce((a, w) => {
                 const people = v.bookings.reduce((acc,c) => {
                     const current = c.participants.filter((p) => p.ageGroup === '' ? false : p.ageGroup === w.singular)
@@ -166,7 +183,7 @@ class Villages extends React.Component {
                                     aria-label="Close"><span aria-hidden="true"><FontAwesomeIcon
                                 icon={faTimes}/></span>
                             </Button>
-                            <CardTitle>{v.name}</CardTitle>
+                            <CardTitle onClick={this.renameVillage(v.id, v.name)}>{v.name}</CardTitle>
                             <div ref={provided.innerRef} style={{minHeight: "20px"}}>
                                 {bookings}
                                 {provided.placeholder}

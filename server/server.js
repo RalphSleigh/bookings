@@ -133,6 +133,7 @@ require("../config.js")()//config returns a promise the first time then overwrit
         server.post('/api/village/assign', P.assignVillage, bookings.assignVillage);
         server.post('/api/village/create', P.addVillage, events.addVillage);
         server.post('/api/village/delete', P.deleteVillage, events.deleteVillage);
+        server.post('/api/village/rename', P.deleteVillage, events.renameVillage);
 
         server.post('/api/payment/add', P.addPayment, bookings.addPayment);
         server.post('/api/payment/delete', P.addPayment, bookings.deletePayment);

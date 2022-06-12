@@ -56,6 +56,14 @@ export const deleteVillage = id => dispatch => {
     });
 };
 
+export const renameVillage = (id, name) => dispatch => {
+    fetch('/api/village/rename', "POST", {id: id, name: name})
+        .then(j => {
+            dispatch(updateEvents(j));
+            dispatch(updateBookings(j));
+        });
+};
+
 export const assignVillage = (bookingId, villageId) => dispatch => {
     fetch('/api/village/assign', "POST", {bookingId: bookingId, villageId: villageId})
     .then(j => {
