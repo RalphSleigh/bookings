@@ -86,6 +86,15 @@ const db = require('../orm.js');
         res.json({events: [event], bookings: bookings});
     };
 
+event.renameVillage = async function (req, res) {
+    const village = await db.village.findOne({where: {id: {[Op.eq]: req.body.id}}});
+    village.name = req.body.name
+    await village.save();
+
+    const event = await getEventDetails(village.eventId)
+    res.json({events: [event]});
+};
+
 event.transfer = async function (req, res) {
     const event = await db.event.findOne({where: {id: req.params.eventId}});
     event.userId = req.params.userId
