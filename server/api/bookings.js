@@ -236,9 +236,24 @@ bookings.addPayment = async function (req, res, next) {
     await db.payment.create(req.body);
 
     const booking = await db.booking.findOne({
+        where:   {id: {[Op.eq]: req.body.bookingId}},
+        include: [{model: db.event}]
+    }); //get the booking, but we can't send this as dangerous scope.
+
+    const bookings = await getBookingAndCombineScopes(req.user, booking)
+
+    res.json({bookings: bookings});
+};
+
+bookings.syncMax = async function (req, res, next) {
+    const booking = await db.booking.findOne({
                                                  where:   {id: {[Op.eq]: req.body.bookingId}},
-                                                 include: [{model: db.event}]
+                                                 include: [{model: db.participant}, {model: db.event}]
                                              }); //get the booking, but we can't send this as dangerous scope.
+
+    booking.maxParticipants = booking.participants.length;
+
+    await booking.save()
 
     const bookings = await getBookingAndCombineScopes(req.user, booking)
 

@@ -38,6 +38,7 @@ export default class Money extends React.Component {
         this.updateNote = this.updateNote.bind(this);
         this.addPayment = this.addPayment.bind(this);
         this.deletePayement = this.deletePayement.bind(this);
+        this.syncMax = this.syncMax.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -85,6 +86,11 @@ export default class Money extends React.Component {
         }
     }
 
+    syncMax(e) {
+        this.props.syncMax(this.state.expanded)
+        e.preventDefault();
+    }
+
     closedRow(b, event) {
 
         let org = {name: ''};
@@ -103,8 +109,11 @@ export default class Money extends React.Component {
 
         const classNames = (paid - owed >= 0 ? "table-success" : '') + (this.state.expanded !== 0 && this.state.expanded !== b.id ? ' fadeOut' : '');
 
+        const payRef = paymentReference(b.id);
+
         return <tr key={b.id} onClick={this.expand(b.id)} className={classNames}>
             <td>+</td>
+            <td>{payRef}</td>
             <td>{name}</td>
             <td><Currency
                 quantity={owed}
@@ -125,10 +134,12 @@ export default class Money extends React.Component {
 
         b.payments = b.payments || [];
 
+        const payRef = paymentReference(b.id);
+
         let org = {name: ''};
         if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
 
-        const name = event.bigCampMode ? b.district + org.name : b.userName;
+        const name = event.bigCampMode ? `${b.district} -  ${org.name} (${payRef})` : b.userName;
         let owed = this.getFeesOwed(event, b.participants, b, false).reduce((a, c) => parseFloat(c.total) + a, 0);
         const paid = b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0);
 
@@ -138,7 +149,7 @@ export default class Money extends React.Component {
         this.totalPaid += paid;
 
         const adjustmentRow = b.payments.filter(p => p.type === 'adjustment').map((r, i) => <tr
-            key={`adjust` + b.id + r.id}>
+            key={`adjust` + b.id + r.id}><td></td>
             <td><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={this.deletePayement(r.id)} icon={faTimes}/></td>
             <td>{Moment(r.updatedAt).format('L') + ' ' + r.note}</td>
             <td><RedCurrency
@@ -150,7 +161,7 @@ export default class Money extends React.Component {
         </tr>);
 
         const paymentRows = b.payments.filter(p => p.type === 'payment').map((r, i) => <tr
-            key={`payment` + b.id + r.id}>
+            key={`payment` + b.id + r.id}><td></td>
             <td><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={this.deletePayement(r.id)} icon={faTimes}/></td>
             <td>{Moment(r.updatedAt).format('L') + ' ' + r.note}</td>
             <td></td>
@@ -162,7 +173,7 @@ export default class Money extends React.Component {
         </tr>);
 
         const feeRows = this.getFeesOwed(event, b.participants, b, false).map((r, i) => <tr key={`owed` + b.id + i}>
-            <td></td>
+            <td></td><td></td>
             <td>{r.line}</td>
             <td><Currency
                 quantity={r.total}
@@ -174,22 +185,23 @@ export default class Money extends React.Component {
 
         return <React.Fragment key={b.id}>
             <tr onClick={this.expand(0)} style={{borderTop: 'solid black 3px'}}>
-                <td></td>
-                <td colSpan={4}><b>{name}</b></td>
+                <td></td><td></td>
+                <td colSpan={3}><b>{name}</b></td>
+                <td><Button color="success" onClick={this.syncMax}>Remove Cancellation Fees</Button></td>
             </tr>
             <tr>
-                <td></td>
+                <td></td><td></td>
                 <td style={{borderBottom: 'solid #888888 2px'}} colSpan={4}><b>Fees</b></td>
             </tr>
             {feeRows}
             {adjustmentRow}
             <tr>
-                <td></td>
+                <td></td><td></td>
                 <td style={{borderBottom: 'solid #888888 2px'}} colSpan={4}><b>Payments</b></td>
             </tr>
             {paymentRows}
             <tr style={{borderBottom: 'solid #888888 2px', borderTop: 'solid #888888 2px'}}>
-                <td></td>
+                <td></td><td></td>
                 <td><b>Total:</b></td>
                 <td><b><Currency
                     quantity={owed}
@@ -205,7 +217,7 @@ export default class Money extends React.Component {
                 /></b></td>
             </tr>
             <tr style={{borderBottom: 'solid black 3px'}}>
-                <td></td>
+                <td></td><td></td>
                 <td colSpan={4}>
                     <FormGroup row>
                         <Label sm={3}>Amount</Label>
@@ -259,6 +271,7 @@ export default class Money extends React.Component {
                     <thead>
                     <tr>
                         <th></th>
+                        <th>Reference</th>
                         <th>Booking</th>
                         <th>Fees</th>
                         <th>Payments</th>
@@ -272,6 +285,7 @@ export default class Money extends React.Component {
                         <td>
                             <b>Total</b>
                         </td>
+                        <td></td>
                         <td>
                             <b><Currency
                                 quantity={this.totalOwed}

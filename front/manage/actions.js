@@ -92,6 +92,11 @@ export const deletePayment = payment => dispatch => {
         .then(j => dispatch(updateBookings(j)))
 }
 
+export const syncMax = id => dispatch => {
+    fetch('/api/booking/syncMax', 'POST', {bookingId: id})
+        .then(j => dispatch(updateBookings(j)))
+}
+
 export const approveMembership = id => dispatch => {
     fetch('/api/membership/approve', 'POST', id)
         .then(j => dispatch(updateBookings(j)))
