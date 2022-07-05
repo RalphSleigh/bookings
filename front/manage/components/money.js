@@ -88,6 +88,7 @@ export default class Money extends React.Component {
 
     syncMax(e) {
         this.props.syncMax(this.state.expanded)
+        e.stopPropagation();
         e.preventDefault();
     }
 
