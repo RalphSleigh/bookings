@@ -39,6 +39,7 @@ export default class Money extends React.Component {
         this.updateNote = this.updateNote.bind(this);
         this.addPayment = this.addPayment.bind(this);
         this.deletePayement = this.deletePayement.bind(this);
+        this.syncMax = this.syncMax.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -84,6 +85,11 @@ export default class Money extends React.Component {
 
             e.preventDefault();
         }
+    }
+
+    syncMax(e) {
+        this.props.syncMax(this.state.expanded)
+        e.preventDefault();
     }
 
     closedRow(b, event) {
@@ -181,7 +187,8 @@ export default class Money extends React.Component {
         return <React.Fragment key={b.id}>
             <tr onClick={this.expand(0)} style={{borderTop: 'solid black 3px'}}>
                 <td></td><td></td>
-                <td colSpan={4}><b>{name}</b></td>
+                <td colSpan={3}><b>{name}</b></td>
+                <td><Button color="success" onClick={this.syncMax}>Remove Cancellation Fees</Button></td>
             </tr>
             <tr>
                 <td></td><td></td>
