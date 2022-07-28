@@ -82,6 +82,7 @@ export default class Participants extends React.Component {
                 eol.crlf(b.note || ''),
                 p.externalExtra.adultFirstAid,
                 p.externalExtra.adultEmail,
+                p.externalExtra.photoConsent,
                 p.createdAt,
                 p.updatedAt];
 
@@ -96,7 +97,7 @@ export default class Participants extends React.Component {
             return fields
         });
 
-        const headers = ['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Membership email', 'Created At', 'Updated At']
+        const headers = ['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Photo', 'Membership email', 'Created At', 'Updated At']
 
         if(event.partialDates === 'free') {
 
