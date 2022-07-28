@@ -81,8 +81,8 @@ export default class Participants extends React.Component {
                 b.emergencyPhone,
                 eol.crlf(b.note || ''),
                 p.externalExtra.adultFirstAid,
-                p.externalExtra.adultEmail,
                 p.externalExtra.photoConsent,
+                p.externalExtra.adultEmail,
                 p.createdAt,
                 p.updatedAt];
 
