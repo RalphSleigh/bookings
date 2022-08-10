@@ -48,17 +48,11 @@ class EventList extends React.Component {
     render() {
         const user = this.props.User.toJS();
         let events = this.props.Events.toSet()
-            .filter(e => new Date(e.get("startDate")) > new Date())
             .sort((a, b) => a.get("startDate").localeCompare(b.get("startDate")))
             .map((e) =>
                 <Event User={user} {...e.toJS()} key={e.get("id")}/>)
             .toArray();
 
-        let previousEvents = this.props.Events.toSet().filter(e => manageEvent(user, e.toJS()) && new Date(e.get("startDate")) < new Date())
-            .sort((a, b) => a.get("startDate").localeCompare(b.get("startDate")) * -1)
-            .map((e) =>
-                <Event User={user} {...e.toJS()} key={e.get("id")}/>)
-            .toArray();
 
 
         return (<React.Fragment>
@@ -67,18 +61,6 @@ class EventList extends React.Component {
                     {events}
                 </Col>
             </Row>
-            { previousEvents.length > 0 ? <React.Fragment>
-            <Row>
-                <Col>
-                    <h4>Previous Events</h4>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    {previousEvents}
-                </Col>
-            </Row>
-            </React.Fragment> : null }
             <Row>
                 <Col>
                     <CreateButton clickCreate={this.clickCreate}/>
