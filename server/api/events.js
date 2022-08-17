@@ -1,6 +1,7 @@
 const db = require('../orm.js');
     const log = require('../logging.js');
     const updateAssociation = require('./util.js').updateAssociation;
+    const getEventDetails = require('./util.js').getEventDetails;
     const Op = db.Sequelize.Op;
     const wrapper = require('../errors');
 
@@ -22,12 +23,10 @@ const db = require('../orm.js');
             });
     };
 
-    event.getDetails = (req, res) => {
-        db.event.scope('details').findOne({where: {id: req.params.eventId}})
-            .then(event => {
-                if (event === null) res.status(404).end();
-                else res.json({events: [event]});
-            });
+    event.getDetails = async (req, res) => {
+        const event = await getEventDetails(req.params.eventId)
+        if (event === null) res.status(404).end();
+        else res.json({events: [event]});
     };
 
 
@@ -71,7 +70,7 @@ const db = require('../orm.js');
 
     event.addVillage = async function (req, res) {
         const village = await db.village.create(req.body);
-        const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: village.eventId}}});
+        const event = await getEventDetails(village.eventId)
         res.json({events: [event]});
     };
 
@@ -79,7 +78,7 @@ const db = require('../orm.js');
         const village = await db.village.findOne({where: {id: {[Op.eq]: req.body.id}}});
         await village.destroy();
 
-        const event = await db.event.scope('details').findOne({where: {id: {[Op.eq]: village.eventId}}});
+        const event = await getEventDetails(village.eventId)
         const bookings = await db.booking.findAll({
             where:
                 {eventId: {[Op.eq]: event.id}}, include: [{model: db.participant}]

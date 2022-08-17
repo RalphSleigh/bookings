@@ -319,7 +319,9 @@ export class ThanksRow extends React.Component {
 
 export function emailHTML(event, booking) {
 
-    const rows = getFeesOwed(event, booking.participants, booking).map((r, i) => <tr key={i}>
+    const feesOwed = getFeesOwed(event, booking.participants, booking);
+
+    const rows = feesOwed.map((r, i) => <tr key={i}>
         <td>{r.line}</td>
         <td><b><Currency
             quantity={r.total}
@@ -327,7 +329,7 @@ export function emailHTML(event, booking) {
         /></b></td>
     </tr>);
 
-    const total = rows.length > 1 ? <tr>
+    const total = <tr>
         <td><b>Total</b></td>
         <td><b><Currency
             quantity={feesOwed.reduce((a, c) => {
@@ -335,7 +337,7 @@ export function emailHTML(event, booking) {
             }, 0)}
             currency="GBP"
         /></b></td>
-    </tr> : null;
+    </tr>;
 
     return (<Item>
         <table>

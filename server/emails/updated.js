@@ -9,6 +9,7 @@ import {
 import React         from 'react'
 import ReactMarkdown from 'react-markdown'
 import feeFactory    from '../../shared/fee/feeFactory.js'
+import paymentReference from "../../shared/paymentReference";
 
 export function html(values) {
 
@@ -17,6 +18,8 @@ export function html(values) {
     const fees = feeFactory(values.event).emailHTML(values.event, values)
 
     let button = '';
+
+    const payRef = paymentReference(values.id);
 
     switch(values.user.remoteId.substr(0,4)) {
         case 'goog':
@@ -36,7 +39,7 @@ export function html(values) {
     return renderEmail(
         <Email title={`Booking Confirmation for ${values.event.name}`}>
             <Item>
-                <p>Hi {values.userName},</p>
+                <p> Hi {values.userName},</p>
                 <p>You have updated your booking for {values.event.name}, You have
                     booked {values.participants.length} {values.participants.length === 1 ? 'person' : 'people'}:</p>
                 <p>

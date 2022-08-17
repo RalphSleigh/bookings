@@ -2,6 +2,7 @@ const db = require('../orm.js');
     const log = require('../logging.js');
     const Op = db.Sequelize.Op;
     const wrapper = require('../errors');
+    const getEventDetails = require('./util.js').getEventDetails;
 
     const role = {};
 

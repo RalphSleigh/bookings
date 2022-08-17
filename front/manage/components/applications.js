@@ -25,6 +25,13 @@ export default class Applications extends React.Component {
         super(props);
         this.state = {organisations: {}, notes: {}};
 
+        const event = this.props.Event.toJS();
+
+        (event.applications || []).map(a => {
+            this.state.notes[a.id] = a.message;
+            console.log(a.messsage)
+        });
+
         this.approve = this.approve.bind(this);
         this.decline = this.decline.bind(this);
         this.setOrganisation = this.setOrganisation.bind(this);
@@ -113,21 +120,22 @@ const ApplicationRow = props => {
             </CardTitle>
             <Row>
                 <Col sm={7}>
-                    <p>{props.application.message}</p>
+                    <ReactMarkdown escapeHtml={true} source={props.application.message}/>
                 </Col>
                 <Col sm={5}>
                     {approveText}
-                    <FormGroup row>
+                    <FormGroup>
                         <Label>
                             Note:
                         </Label>
-                        <Col>
+
                             <Input
-                                type="text"
+                                type="textarea"
+                                rows={7}
                                 value={props.note || ''}
                                 onChange={props.updateNote}
                             />
-                        </Col>
+
                     </FormGroup>
                     <FormGroup row>
                         <Col>
