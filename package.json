@@ -59,7 +59,7 @@
     "cookie-session": "^2.0.0-alpha.2",
     "csv-file-creator": "^1.0.7",
     "debounce": "^1.1.0",
-    "email-templates": "^3",
+    "email-templates": "^10",
     "eol": "^0.9.1",
     "exponential-backoff": "^2.2.0",
     "express": "^4.16.3",
