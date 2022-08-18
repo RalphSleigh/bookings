@@ -1,7 +1,7 @@
 const moment = require('moment');
 //this file contains age groups, etc
 
-const woodcraft = [
+export const woodcraft = [
     {
         name: "Woodchips",
         singular: "Woodchip",
@@ -43,5 +43,3 @@ const woodcraft = [
         getAge: event => moment(event.startDate).subtract(19, 'years').toISOString()
     },
 ];
-
-module.exports = woodcraft;

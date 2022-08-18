@@ -7,8 +7,6 @@ services:
       dockerfile: dockerfile
     expose:
       - 8080
-    environment:
-      - BOOKINGS_VAULT_URL
     depends_on:
       - db
   db:

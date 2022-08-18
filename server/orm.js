@@ -1,4 +1,4 @@
-const config = require("../config");
+import {config} from '../config'
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
@@ -16,7 +16,7 @@ const modelsDir = path.join(__dirname, 'models');
 fs
     .readdirSync(modelsDir)
     .filter(file => {
-        return (file.indexOf('.') !== 0);
+        return ((file.indexOf('.') !== 0) && !(file.endsWith(".map")))
     })
     .forEach(file => {
         const imported = require(path.join(modelsDir, file))

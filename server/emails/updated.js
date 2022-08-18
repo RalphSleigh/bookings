@@ -8,7 +8,7 @@ import {
 }                    from 'react-html-email'
 import React         from 'react'
 import ReactMarkdown from 'react-markdown'
-import feeFactory    from '../../shared/fee/feeFactory.js'
+import feeFactory    from '../../shared/fee/feeFactory.ts'
 import paymentReference from "../../shared/paymentReference";
 
 export function html(values) {

@@ -6,53 +6,45 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 const PROD = (process.env.NODE_ENV === 'production');
 
-
 console.log(PROD);
 
 module.exports = {
+    mode: PROD ? 'production' : 'development',
     entry: {
-        app: './front/index.js',
-        vendor: ['babel-polyfill',
-            'whatwg-fetch',
-            'react',
-            'redux',
-            'react-redux',
-            'react-dom',
-            'immutable',
-            'moment',
-            'redux-auth-wrapper',
-            'lodash/cloneDeep',
-            'lodash/map',
-            'react-markdown',
-            'react-table',
-            'react-router',
-            'react-beautiful-dnd',
-            'react-bootstrap-typeahead',
-            'react-widgets',
-            'reactstrap',
-            'bootstrap/dist/css/bootstrap.css',
-            'recharts'
-        ]
+        app: './front/index.tsx',
     },
 
     resolve: {
         alias: {
             '@fortawesome/fontawesome-free-solid$': '@fortawesome/fontawesome-free-solid/shakable.es.js',
             "react-html-email":'react'
-        }
+        },
+        fallback: {
+            "path": false
+        },
+        extensions: ['.ts', '.tsx', '.js', '.json']
     },
 
     output: {
         path: path.resolve('public'),
-        filename: 'bundle.js'
+        filename: 'bundle.[name].js'
     },
 
     module: {
-        rules: [{
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
+            /*
+            {
             test:    /\.js$/,
 
             use:     ['babel-loader']
-        }, {
+        },
+        */
+        {
             test: /\.css$/,
             use: ['style-loader', 'css-loader', 'resolve-url-loader']
         }, {
@@ -68,9 +60,34 @@ module.exports = {
         fs: '{}'
     },
 
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            minSize: 1000,
+            minRemainingSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 30,
+            maxInitialRequests: 30,
+            enforceSizeThreshold: 50000,
+            cacheGroups: {
+                defaultVendors: {
+                    name:"vendor",
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                    reuseExistingChunk: true,
+                },
+                default: {
+                    name:"initial",
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true,
+                },
+            },
+        },
+    },
+
     plugins: [
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/),
-        new webpack.optimize.CommonsChunkPlugin({name: "vendor", filename: "vendor.bundle.js"})
     ]
 };
 

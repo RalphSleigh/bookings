@@ -1,4 +1,4 @@
-var config = require('../config.js');
+const { config } = require('../config');
 const log = require("./logging.js");
 
 const url = require('url').URL;

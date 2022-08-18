@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./server_built",
+    "allowJs": true,
+    "target": "es5",
+    "jsx": "react",
+    "sourceMap": true
+  },
+  "include": ["./server/**/*", "./shared/**/*", "config.ts"]
+}

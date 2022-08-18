@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require("../config.js")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
+require("../config.ts")()//config returns a promise the first time then overwrites its own module.exports to return a plain object on subsequent requires.
 .then(async config => {
     const readline = require('readline');
     const bcrypt = require('bcrypt-nodejs');
