@@ -6,6 +6,7 @@ import Moment     from 'moment'
 //import { manageEventCheck } from '../permission.js'
 import feeFactory from '../../../shared/fee/feeFactory.js'
 import update     from 'immutability-helper';
+import csv from 'csv-file-creator'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
@@ -40,6 +41,33 @@ export default class Money extends React.Component {
         this.addPayment = this.addPayment.bind(this);
         this.deletePayement = this.deletePayement.bind(this);
         this.syncMax = this.syncMax.bind(this);
+        this.exportCSV = this.exportCSV.bind(this);
+    }
+
+    exportCSV() {
+
+        const event = this.props.Event.toJS();
+
+        const bookingRows = bookings
+        .sort(propSort(event.bigCampMode ? 'district' : 'userName'))
+        .reduce((a, b) => {
+
+            let org = {name: ''};
+            if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
+
+            let owed = this.getFeesOwed(event, b.participants, b, false).reduce((a, c) => parseFloat(c.total) + a, 0);
+
+            const rows = [[paymentReference(b.id),b.district, org.name, "fee", owed, "", "", ""],
+                        ...b.payments.filter(p => p.type === 'adjustment').map(p => [paymentReference(b.id),b.district, org.name, "adjust", p.amount, "", p.note, p.createdAt]),
+                        ...b.payments.filter(p => p.type === 'payment').map(p => [paymentReference(b.id),b.district, org.name, "payment", "",  p.amount, p.note, p.createdAt])]
+
+        }, []);
+
+        const headers = ['code','district','org','type','fee','payment','note','date']
+
+        const fileName = this.props.Event.get('name') + "-Money-" + Moment().format('YYYY-MM-DD') + ".csv";
+
+        csv(fileName, [headers, ...exportedData]);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -269,6 +297,7 @@ export default class Money extends React.Component {
         return (<Row>
             <Col>
                 <h3>Money</h3>
+                <Button className="float-right" onClick={this.exportCSV}>Export CSV</Button>
                 <Table striped size="sm">
                     <thead>
                     <tr>
