@@ -1,11 +1,11 @@
-import React      from 'react'
-import Currency   from 'react-currency-formatter';
-import Moment     from 'moment'
+import React from 'react'
+import Currency from 'react-currency-formatter';
+import Moment from 'moment'
 
 //import bookings from '../bookings'
 //import { manageEventCheck } from '../permission.js'
 import feeFactory from '../../../shared/fee/feeFactory.js'
-import update     from 'immutability-helper';
+import update from 'immutability-helper';
 import csv from 'csv-file-creator'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
@@ -26,7 +26,7 @@ import W from '../../../shared/woodcraft.js'
 import paymentReference from "../../../shared/paymentReference";
 
 
-const RedCurrency = props => props.quantity < 0 ? <span style={{color: 'red'}}><Currency {...props} /></span> :
+const RedCurrency = props => props.quantity < 0 ? <span style={{ color: 'red' }}><Currency {...props} /></span> :
     <Currency {...props} />
 
 export default class Money extends React.Component {
@@ -34,7 +34,7 @@ export default class Money extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {expanded: 0, amount: 0, note: ''};
+        this.state = { expanded: 0, amount: 0, note: '' };
         this.expand = this.expand.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
         this.updateNote = this.updateNote.bind(this);
@@ -47,27 +47,28 @@ export default class Money extends React.Component {
     exportCSV() {
 
         const event = this.props.Event.toJS();
-
+        const bookings = this.props.bookings;
         const bookingRows = bookings
-        .sort(propSort(event.bigCampMode ? 'district' : 'userName'))
-        .reduce((a, b) => {
+            .sort(propSort(event.bigCampMode ? 'district' : 'userName'))
+            .reduce((a, b) => {
 
-            let org = {name: ''};
-            if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
+                let org = { name: '' };
+                if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
 
-            let owed = this.getFeesOwed(event, b.participants, b, false).reduce((a, c) => parseFloat(c.total) + a, 0);
+                let owed = this.getFeesOwed(event, b.participants, b, false).reduce((a, c) => parseFloat(c.total) + a, 0);
 
-            const rows = [[paymentReference(b.id),b.district, org.name, "fee", owed, "", "", ""],
-                        ...b.payments.filter(p => p.type === 'adjustment').map(p => [paymentReference(b.id),b.district, org.name, "adjust", p.amount, "", p.note, p.createdAt]),
-                        ...b.payments.filter(p => p.type === 'payment').map(p => [paymentReference(b.id),b.district, org.name, "payment", "",  p.amount, p.note, p.createdAt])]
+                const rows = [[paymentReference(b.id), b.district, org.name, "fee", owed, "", "", ""],
+                ...b.payments.filter(p => p.type === 'adjustment').map(p => [paymentReference(b.id), b.district, org.name, "adjust", p.amount, "", p.note, p.createdAt]),
+                ...b.payments.filter(p => p.type === 'payment').map(p => [paymentReference(b.id), b.district, org.name, "payment", "", p.amount, p.note, p.createdAt])]
 
-        }, []);
+                return [...a, ...rows]
+            }, []);
 
-        const headers = ['code','district','org','type','fee','payment','note','date']
+        const headers = ['code', 'district', 'org', 'type', 'fee', 'payment', 'note', 'date']
 
         const fileName = this.props.Event.get('name') + "-Money-" + Moment().format('YYYY-MM-DD') + ".csv";
 
-        csv(fileName, [headers, ...exportedData]);
+        csv(fileName, [headers, ...bookingRows]);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -78,16 +79,16 @@ export default class Money extends React.Component {
 
     expand(id) {
         return e => {
-            this.setState(update(this.state, {expanded: {$set: id}}));
+            this.setState(update(this.state, { expanded: { $set: id } }));
         }
     }
 
     updateAmount(e) {
-        this.setState(update(this.state, {amount: {$set: e.target.value}}));
+        this.setState(update(this.state, { amount: { $set: e.target.value } }));
     }
 
     updateNote(e) {
-        this.setState(update(this.state, {note: {$set: e.target.value}}));
+        this.setState(update(this.state, { note: { $set: e.target.value } }));
     }
 
     deletePayement(id) {
@@ -109,7 +110,7 @@ export default class Money extends React.Component {
                 bookingId: this.state.expanded
             });
 
-            this.setState(update(this.state, {note: {$set: ''}, amount: {$set: 0}}));
+            this.setState(update(this.state, { note: { $set: '' }, amount: { $set: 0 } }));
 
             e.preventDefault();
         }
@@ -123,7 +124,7 @@ export default class Money extends React.Component {
 
     closedRow(b, event) {
 
-        let org = {name: ''};
+        let org = { name: '' };
         if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
 
         b.payments = b.payments || [];
@@ -166,7 +167,7 @@ export default class Money extends React.Component {
 
         const payRef = paymentReference(b.id);
 
-        let org = {name: ''};
+        let org = { name: '' };
         if (event.bigCampMode && event.organisationsEnabled) org = event.organisations.find(o => o.id === b.organisationId);
 
         const name = event.bigCampMode ? `${b.district} -  ${org.name} (${payRef})` : b.userName;
@@ -180,7 +181,7 @@ export default class Money extends React.Component {
 
         const adjustmentRow = b.payments.filter(p => p.type === 'adjustment').map((r, i) => <tr
             key={`adjust` + b.id + r.id}><td></td>
-            <td><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={this.deletePayement(r.id)} icon={faTimes}/></td>
+            <td><FontAwesomeIcon style={{ cursor: 'pointer' }} onClick={this.deletePayement(r.id)} icon={faTimes} /></td>
             <td>{Moment(r.updatedAt).format('L') + ' ' + r.note}</td>
             <td><RedCurrency
                 quantity={r.amount}
@@ -192,7 +193,7 @@ export default class Money extends React.Component {
 
         const paymentRows = b.payments.filter(p => p.type === 'payment').map((r, i) => <tr
             key={`payment` + b.id + r.id}><td></td>
-            <td><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={this.deletePayement(r.id)} icon={faTimes}/></td>
+            <td><FontAwesomeIcon style={{ cursor: 'pointer' }} onClick={this.deletePayement(r.id)} icon={faTimes} /></td>
             <td>{Moment(r.updatedAt).format('L') + ' ' + r.note}</td>
             <td></td>
             <td><RedCurrency
@@ -214,23 +215,23 @@ export default class Money extends React.Component {
         </tr>);
 
         return <React.Fragment key={b.id}>
-            <tr onClick={this.expand(0)} style={{borderTop: 'solid black 3px'}}>
+            <tr onClick={this.expand(0)} style={{ borderTop: 'solid black 3px' }}>
                 <td></td><td></td>
                 <td colSpan={3}><b>{name}</b></td>
                 <td><Button color="success" onClick={this.syncMax}>Remove Cancellation Fees</Button></td>
             </tr>
             <tr>
                 <td></td><td></td>
-                <td style={{borderBottom: 'solid #888888 2px'}} colSpan={4}><b>Fees</b></td>
+                <td style={{ borderBottom: 'solid #888888 2px' }} colSpan={4}><b>Fees</b></td>
             </tr>
             {feeRows}
             {adjustmentRow}
             <tr>
                 <td></td><td></td>
-                <td style={{borderBottom: 'solid #888888 2px'}} colSpan={4}><b>Payments</b></td>
+                <td style={{ borderBottom: 'solid #888888 2px' }} colSpan={4}><b>Payments</b></td>
             </tr>
             {paymentRows}
-            <tr style={{borderBottom: 'solid #888888 2px', borderTop: 'solid #888888 2px'}}>
+            <tr style={{ borderBottom: 'solid #888888 2px', borderTop: 'solid #888888 2px' }}>
                 <td></td><td></td>
                 <td><b>Total:</b></td>
                 <td><b><Currency
@@ -246,7 +247,7 @@ export default class Money extends React.Component {
                     currency="GBP"
                 /></b></td>
             </tr>
-            <tr style={{borderBottom: 'solid black 3px'}}>
+            <tr style={{ borderBottom: 'solid black 3px' }}>
                 <td></td><td></td>
                 <td colSpan={4}>
                     <FormGroup row>
@@ -256,20 +257,20 @@ export default class Money extends React.Component {
                                 <div className="input-group-prepend">
                                     <span className="input-group-text">£</span>
                                 </div>
-                                <Input type="number" onChange={this.updateAmount} value={this.state.amount}/>
+                                <Input type="number" onChange={this.updateAmount} value={this.state.amount} />
                             </InputGroup>
                         </Col>
                         <Col sm={6}>
                             <Button color="success" disabled={this.state.amount <= 0}
-                                    onClick={this.addPayment('payment')}>Add Payment</Button>{' '}
+                                onClick={this.addPayment('payment')}>Add Payment</Button>{' '}
                             <Button color="warning"
-                                    onClick={this.addPayment('adjustment')}>Add Price Adjustment</Button>
+                                onClick={this.addPayment('adjustment')}>Add Price Adjustment</Button>
                         </Col>
                     </FormGroup>
                     <FormGroup row>
                         <Label sm={3}>Note</Label>
                         <Col sm={9}>
-                            <Input onChange={this.updateNote} value={this.state.note}/>
+                            <Input onChange={this.updateNote} value={this.state.note} />
                         </Col>
                     </FormGroup>
                 </td>
@@ -291,8 +292,8 @@ export default class Money extends React.Component {
         const bookingRows = bookings
             .sort(propSort(event.bigCampMode ? 'district' : 'userName'))
             .map(b => {
-            return b.id === this.state.expanded ? this.openRow(b, event) : this.closedRow(b, event);
-        });
+                return b.id === this.state.expanded ? this.openRow(b, event) : this.closedRow(b, event);
+            });
 
         return (<Row>
             <Col>
@@ -300,42 +301,42 @@ export default class Money extends React.Component {
                 <Button className="float-right" onClick={this.exportCSV}>Export CSV</Button>
                 <Table striped size="sm">
                     <thead>
-                    <tr>
-                        <th></th>
-                        <th>Reference</th>
-                        <th>Booking</th>
-                        <th>Fees</th>
-                        <th>Payments</th>
-                        <th>Outstanding</th>
-                    </tr>
+                        <tr>
+                            <th></th>
+                            <th>Reference</th>
+                            <th>Booking</th>
+                            <th>Fees</th>
+                            <th>Payments</th>
+                            <th>Outstanding</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {bookingRows}
-                    <tr>
-                        <td></td>
-                        <td>
-                            <b>Total</b>
-                        </td>
-                        <td></td>
-                        <td>
-                            <b><Currency
-                                quantity={this.totalOwed}
-                                currency="GBP"
-                            /></b>
-                        </td>
-                        <td><b>
-                            <Currency
-                                quantity={this.totalPaid}
-                                currency="GBP"
-                            /></b>
-                        </td>
-                        <td><b>
-                            <Currency
-                                quantity={this.totalOwed - this.totalPaid}
-                                currency="GBP"
-                            /></b>
-                        </td>
-                    </tr>
+                        {bookingRows}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <b>Total</b>
+                            </td>
+                            <td></td>
+                            <td>
+                                <b><Currency
+                                    quantity={this.totalOwed}
+                                    currency="GBP"
+                                /></b>
+                            </td>
+                            <td><b>
+                                <Currency
+                                    quantity={this.totalPaid}
+                                    currency="GBP"
+                                /></b>
+                            </td>
+                            <td><b>
+                                <Currency
+                                    quantity={this.totalOwed - this.totalPaid}
+                                    currency="GBP"
+                                /></b>
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
             </Col>
@@ -343,7 +344,7 @@ export default class Money extends React.Component {
     }
 }
 
-const propSort = prop => (a,b) => {
+const propSort = prop => (a, b) => {
     const x = a[prop].toLowerCase();
     const y = b[prop].toLowerCase();
     return x < y ? -1 : x > y ? 1 : 0;
