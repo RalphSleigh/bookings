@@ -69,6 +69,7 @@ export default class Bookings extends React.Component {
             const paid = b.payments ? b.payments.filter(p => p.type === 'payment').reduce((a, c) => a + parseFloat(c.amount), 0) : 0;
 
             owed = b.payments ? b.payments.filter(p => p.type === 'adjustment').reduce((a, c) => a + parseFloat(c.amount), owed) : owed;
+            const village = event.villages && b.villageId ? event.villages.find(v => v.id == b.villageId).name : ""
 
             return [b.id,
             b.userName,
@@ -83,11 +84,12 @@ export default class Bookings extends React.Component {
                 '£' + owed,
                 '£' + paid,
                 '£' + (owed - paid),
+            village,
             b.createdAt,
                 b.updatedAt]
         });
         const fileName = this.props.Event.get('name') + "-Bookings-" + Moment().format('YYYY-MM-DD') + ".csv";
-        csv(fileName, [['id', 'Name', 'District', 'e-mail', 'Phone', 'Participants', 'Payment type', 'Emergency name', 'Emergency Contact', 'Note', 'Money Owed', 'Money Paid', 'Outstanding Balance', 'Created', 'Updated'], ...exportedData]);
+        csv(fileName, [['id', 'Name', 'District', 'e-mail', 'Phone', 'Participants', 'Payment type', 'Emergency name', 'Emergency Contact', 'Note', 'Money Owed', 'Money Paid', 'Outstanding Balance', 'Village', 'Created', 'Updated'], ...exportedData]);
     }
 
     markPaid(id) {

@@ -66,6 +66,8 @@ export default class Participants extends React.Component {
             const dates = event.partialDatesData.find(d => d.mask === p.days)
             const attend = dates ? dates.name : 'Unknown'
 
+            const village = event.villages && b.villageId ? event.villages.find(v => v.id == b.villageId).name : ""
+
             const fields = [p.id,
                 p.name,
                 p.displayAge,
@@ -83,6 +85,7 @@ export default class Participants extends React.Component {
                 p.externalExtra.adultFirstAid,
                 p.externalExtra.photoConsent,
                 p.externalExtra.adultEmail,
+                village,
                 p.createdAt,
                 p.updatedAt];
 
@@ -97,7 +100,7 @@ export default class Participants extends React.Component {
             return fields
         });
 
-        const headers = ['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Photo', 'Membership email', 'Created At', 'Updated At']
+        const headers = ['id', 'Name', 'Age Group', 'DOB', 'Diet', 'Requirements &  Allergies', 'Medical', 'Attendance', 'Booking Name', 'Booking e-mail', 'Booking Phone', 'Emergency name', 'Emergency Contact', 'Note', 'First Aid', 'Photo', 'Membership email','Village', 'Created At', 'Updated At']
 
         if(event.partialDates === 'free') {
 
